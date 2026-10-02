@@ -1,0 +1,601 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using GardenVR.Capture;
+using GardenVR.Input;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+namespace GardenVR.Sundial
+{
+    /// <summary>
+    /// Materials and the card mesh <see cref="DialView.Build"/> hangs on the drawn-dial FBX.
+    /// DialSetup saves these as assets so the prefab keeps them.
+    /// </summary>
+    public sealed class DialLibrary
+    {
+        public Material Face, Rim, Soil, Gnomon, Tiles, Catcher, Shadow, Halo;
+        public Material Morning, Midday, WindDown;
+        public Texture2D[] MorningCards, MiddayCards, WindDownCards;
+        public Texture2D[] Halos;
+        public Mesh Card, ShadowMesh, CatcherQuad;
+    }
+
+    /// <summary>
+    /// The drawn dial on the desk. Look comes only from state: halo, which arc it sits on,
+    /// gnomon angle, plant stage and bloom, the 21 tiles, boil, and time.
+    /// Interim plant cards are the three IWSDK drawings (stage 0..2).
+    /// </summary>
+    [DisallowMultipleComponent]
+    [ExecuteAlways]
+    public sealed class DialView : MonoBehaviour, ICaptureState
+    {
+        public const int TilesPerArc = 7;
+        public const int TileCount = 21;
+        public const float OutlinePixels = 3f;
+        public const float BoilPixels = 1f;
+
+        // SVG dial face, degrees. 0 is +X (image right), 90 is +Z (image top, far side).
+        public const float MorningArc0 = 212f;
+        public const float MorningArc1 = 112f;
+        public const float MiddayArc0 = 106f;
+        public const float MiddayArc1 = 22f;
+        public const float WindDownArc0 = 16f;
+        public const float WindDownArc1 = -76f;
+
+        [Header("State")]
+        [Range(0f, 1f)] public float halo = 1f;
+        public string haloTarget = "midday";
+        public float gnomonDeg = 105f;
+        public int stageMorning = 2;
+        public int stageMidday = 2;
+        public int stageWinddown = 1;
+        public float bloomMorning;
+        public float bloomMidday;
+        public float bloomWinddown;
+        public int[] tiles =
+        {
+            1, 1, 3, 1, 2, 1, 1,
+            1, 2, 3, 1, 1, 3, 4,
+            3, 1, 1, 2, 1, 3, 4
+        };
+        public bool boil = true;
+        public float time = 1f;
+
+        [Header("Wired by Build")]
+        public float faceY = 0.012f;
+        public float faceRadius = 0.1472f;
+        public Renderer haloRenderer;
+        public Transform shadow;
+        public Transform[] uprightCards;
+        public Material[] boilMats;
+        public Material[] plantMats;
+        public Texture2D[] morningCards;
+        public Texture2D[] middayCards;
+        public Texture2D[] windDownCards;
+        public Texture2D[] haloTextures;
+        public MeshRenderer tileRenderer;
+
+        Texture2D _stateTex;
+        bool _hooked;
+        const float TileRadius = 0.74f;
+
+        static readonly string[] ArcIds = { "morning", "midday", "winddown" };
+        // Card spots read off the owner's frame, in units of the face radius. x is right, z is away.
+        static readonly Vector2[] PlantSpot =
+        {
+            new Vector2(-0.55f, -0.20f),
+            new Vector2(0.40f, -0.04f),
+            new Vector2(0.60f, -0.40f)
+        };
+        static readonly Vector2[] PlantSize =
+        {
+            new Vector2(0.045f, 0.057f),
+            new Vector2(0.044f, 0.066f),
+            new Vector2(0.036f, 0.045f)
+        };
+
+        public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
+        {
+            if (state != null)
+            {
+                foreach (var pair in state)
+                    ApplyKey(pair.Key, pair.Value);
+            }
+            HookCamera();
+            Apply();
+        }
+
+        public void Apply()
+        {
+            EnsureStateTexture();
+            WriteStateTexture();
+            if (tileRenderer != null && _stateTex != null)
+            {
+                var block = new MaterialPropertyBlock();
+                tileRenderer.GetPropertyBlock(block);
+                block.SetTexture("_StateTex", _stateTex);
+                tileRenderer.SetPropertyBlock(block);
+            }
+
+            int haloArc = ArcIndex(haloTarget);
+            ApplyPlant(0, stageMorning, bloomMorning);
+            ApplyPlant(1, stageMidday, bloomMidday);
+            ApplyPlant(2, stageWinddown, bloomWinddown);
+
+            float breathe = 0.85f + 0.15f * Mathf.Sin(time * 4f);
+            float amount = Mathf.Clamp01(halo) * breathe;
+            if (haloRenderer != null)
+            {
+                haloRenderer.enabled = amount > 0.01f;
+                if (haloTextures != null && haloArc >= 0 && haloArc < haloTextures.Length && haloTextures[haloArc] != null)
+                {
+                    var mat = haloRenderer.sharedMaterial;
+                    if (mat != null) mat.SetTexture("_MainTex", haloTextures[haloArc]);
+                }
+            }
+            Material haloMat = haloRenderer != null ? haloRenderer.sharedMaterial : null;
+            if (haloMat != null)
+            {
+                haloMat.SetColor("_Color", new Color(1.6f, 1.25f, 0.55f) * amount);
+                haloMat.SetColor("_Color2", new Color(0.85f, 0.62f, 0.28f) * amount);
+            }
+
+            if (shadow != null)
+            {
+                float deg = 180f - gnomonDeg;
+                float rad = deg * Mathf.Deg2Rad;
+                var dir = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
+                if (dir.sqrMagnitude < 1e-8f) dir = Vector3.forward;
+                shadow.localRotation = Quaternion.LookRotation(dir, Vector3.up);
+                // Clear the soil mound (peak is about 8 mm above the paper) or the wash is buried.
+                shadow.localPosition = new Vector3(0f, faceY + 0.011f, 0f);
+            }
+
+            float boilPx = boil ? BoilPixels : 0f;
+            if (boilMats != null)
+            {
+                for (int i = 0; i < boilMats.Length; i++)
+                {
+                    Material mat = boilMats[i];
+                    if (mat == null) continue;
+                    if (mat.HasProperty("_BoilTime")) mat.SetFloat("_BoilTime", time);
+                    if (mat.HasProperty("_T")) mat.SetFloat("_T", time);
+                    if (mat.HasProperty("_BoilPx")) mat.SetFloat("_BoilPx", boilPx);
+                    if (mat.HasProperty("_Boil")) mat.SetFloat("_Boil", 0f);
+                }
+            }
+            PlaceHalo(haloArc);
+        }
+
+        /// <summary>
+        /// Builds the dial under this object from the drawn_dial model and one tile mesh.
+        /// A second call replaces the children. The caller saves the generated meshes as assets.
+        /// </summary>
+        public void Build(GameObject model, Mesh tileMesh, DialLibrary library)
+        {
+            if (model == null) throw new InvalidOperationException("dial model is missing");
+            if (tileMesh == null || !tileMesh.isReadable) throw new InvalidOperationException("tile mesh is not readable");
+            if (library == null || library.Card == null) throw new InvalidOperationException("dial library is missing a card mesh");
+
+            for (int i = transform.childCount - 1; i >= 0; i--)
+                DestroyObject(transform.GetChild(i).gameObject);
+
+            model.transform.SetParent(transform, false);
+            model.transform.localPosition = Vector3.zero;
+            model.transform.localRotation = Quaternion.identity;
+            model.transform.localScale = Vector3.one;
+
+            Transform top = Require(model.transform, "DialTop");
+            Transform side = Require(model.transform, "DialSide");
+            Transform soil = Require(model.transform, "Soil");
+            Transform pen = Require(model.transform, "Gnomon");
+            SetMat(top, library.Face, false);
+            SetMat(side, library.Rim, false);
+            SetMat(soil, library.Soil, false);
+            SetMat(pen, library.Gnomon, false);
+
+            Renderer topRenderer = top.GetComponent<Renderer>();
+            faceY = topRenderer.bounds.max.y;
+            faceRadius = Mathf.Max(topRenderer.bounds.extents.x, topRenderer.bounds.extents.z);
+            if (faceRadius < 0.05f) throw new InvalidOperationException("dial face radius is " + faceRadius.ToString("0.000"));
+
+            morningCards = library.MorningCards;
+            middayCards = library.MiddayCards;
+            windDownCards = library.WindDownCards;
+            haloTextures = library.Halos;
+            plantMats = new[] { library.Morning, library.Midday, library.WindDown };
+
+            var cards = new List<Transform>();
+            for (int arc = 0; arc < 3; arc++)
+            {
+                Vector2 spot = PlantSpot[arc];
+                Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.004f, spot.y * faceRadius);
+                var card = Card(transform, ArcIds[arc], plantMats[arc], pos, PlantSize[arc], library.Card);
+                card.name = "plant." + ArcIds[arc];
+                var box = card.AddComponent<BoxCollider>();
+                box.center = new Vector3(0f, 0.5f, 0f);
+                box.size = new Vector3(1f, 1f, 0.08f);
+                var target = card.AddComponent<IntentTarget>();
+                target.Id = "plant." + ArcIds[arc];
+                cards.Add(card.transform);
+            }
+
+            var haloGo = Card(transform, "PinchHalo", library.Halo, Vector3.zero, Vector2.one, library.Card);
+            haloRenderer = haloGo.GetComponent<Renderer>();
+            cards.Add(haloGo.transform);
+            uprightCards = cards.ToArray();
+
+            Mesh placed = CombineTiles(tileMesh);
+            var tilesGo = new GameObject("Tiles");
+            tilesGo.transform.SetParent(transform, false);
+            tilesGo.AddComponent<MeshFilter>().sharedMesh = placed;
+            tileRenderer = tilesGo.AddComponent<MeshRenderer>();
+            tileRenderer.sharedMaterial = library.Tiles;
+            tileRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            tileRenderer.receiveShadows = false;
+
+            for (int i = 0; i < TileCount; i++)
+            {
+                int arc = i / TilesPerArc;
+                int slot = i % TilesPerArc;
+                float deg = ArcSlot(arc, slot);
+                Vector3 pos = OnFace(deg, faceRadius * TileRadius, faceY + 0.001f);
+                var proxy = new GameObject("tile." + ArcIds[arc] + "." + slot);
+                proxy.transform.SetParent(transform, false);
+                proxy.transform.localPosition = pos;
+                proxy.transform.localRotation = TileRotation(deg);
+                var box = proxy.AddComponent<BoxCollider>();
+                box.center = new Vector3(0f, 0.004f, 0f);
+                box.size = new Vector3(0.014f, 0.01f, 0.012f);
+                var target = proxy.AddComponent<IntentTarget>();
+                target.Id = "tile." + ArcIds[arc] + "." + slot;
+            }
+
+            var catcher = new GameObject("TableShadowCatcher");
+            catcher.transform.SetParent(transform, false);
+            catcher.transform.localPosition = new Vector3(0f, -0.0015f, 0f);
+            catcher.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            // A hair past the 30 cm rim. The fade ends inside this quad, so the edge itself adds nothing.
+            catcher.transform.localScale = new Vector3(0.36f, 0.36f, 1f);
+            catcher.AddComponent<MeshFilter>().sharedMesh = library.CatcherQuad;
+            catcher.AddComponent<MeshRenderer>();
+            SetMat(catcher.transform, library.Catcher, false);
+
+            var shadowGo = new GameObject("GnomonShadow");
+            shadowGo.transform.SetParent(transform, false);
+            shadowGo.AddComponent<MeshFilter>().sharedMesh = library.ShadowMesh;
+            shadowGo.AddComponent<MeshRenderer>();
+            SetMat(shadowGo.transform, library.Shadow, false);
+            shadow = shadowGo.transform;
+
+            boilMats = new[]
+            {
+                library.Rim, library.Soil, library.Gnomon, library.Tiles,
+                library.Morning, library.Midday, library.WindDown, library.Halo
+            };
+        }
+
+        public Mesh BuiltTileMesh => tileRenderer != null ? tileRenderer.GetComponent<MeshFilter>().sharedMesh : null;
+
+        public void Face(Camera cam)
+        {
+            if (cam == null || uprightCards == null) return;
+            for (int i = 0; i < uprightCards.Length; i++)
+            {
+                Transform card = uprightCards[i];
+                if (card == null) continue;
+                Vector3 toCam = cam.transform.position - card.position;
+                toCam.y = 0f;
+                if (toCam.sqrMagnitude < 1e-8f) continue;
+                float sway = 0f;
+                if (boil && i < 3)
+                    sway = Mathf.Sin(time * (Mathf.PI * 2f / 4f) + i * 1.7f) * 2f;
+                card.rotation = Quaternion.LookRotation(toCam, Vector3.up) * Quaternion.Euler(sway, 0f, 0f);
+            }
+        }
+
+        void OnEnable()
+        {
+            HookCamera();
+            Apply();
+        }
+
+        void OnDisable()
+        {
+            if (!_hooked) return;
+            RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
+            _hooked = false;
+        }
+
+        void HookCamera()
+        {
+            RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
+            RenderPipelineManager.beginCameraRendering += OnBeginCamera;
+            _hooked = true;
+        }
+
+        void OnBeginCamera(ScriptableRenderContext context, Camera cam)
+        {
+            if (cam == null || cam.cameraType != CameraType.Game) return;
+            Face(cam);
+        }
+
+        void ApplyKey(string key, string value)
+        {
+            switch (key)
+            {
+                case "halo": halo = ParseFloat(key, value); break;
+                case "haloTarget": haloTarget = string.IsNullOrEmpty(value) ? "midday" : value; break;
+                case "gnomonDeg": gnomonDeg = ParseFloat(key, value); break;
+                case "time": time = ParseFloat(key, value); break;
+                case "boil": boil = ParseBool(value); break;
+                case "stage.morning": stageMorning = ParseStage(value); break;
+                case "stage.midday": stageMidday = ParseStage(value); break;
+                case "stage.winddown": stageWinddown = ParseStage(value); break;
+                case "bloom.morning": bloomMorning = ParseFloat(key, value); break;
+                case "bloom.midday": bloomMidday = ParseFloat(key, value); break;
+                case "bloom.winddown": bloomWinddown = ParseFloat(key, value); break;
+                case "tiles.morning": WriteTileDigits(0, value); break;
+                case "tiles.midday": WriteTileDigits(7, value); break;
+                case "tiles.winddown": WriteTileDigits(14, value); break;
+                case "tiles": WriteTileDigits(0, value); break;
+                default:
+                    throw new FormatException("DialView has no state field '" + key + "'");
+            }
+        }
+
+        void ApplyPlant(int arc, int stage, float bloom)
+        {
+            if (plantMats == null || arc >= plantMats.Length || plantMats[arc] == null) return;
+            int card = Mathf.Clamp(stage, 0, 2);
+            if (bloom >= 0.5f) card = 2;
+            Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
+            if (set != null && card < set.Length && set[card] != null)
+                plantMats[arc].SetTexture("_MainTex", set[card]);
+            if (uprightCards == null || arc >= uprightCards.Length || uprightCards[arc] == null) return;
+            Vector2 size = PlantSize[arc];
+            float growth = 0.62f + 0.19f * Mathf.Clamp(stage, 0, 2);
+            if (bloom >= 0.5f) growth *= 1.08f;
+            // Z matches the height so the 3 cm bow on the 1 m card stays a slight curl.
+            uprightCards[arc].localScale = new Vector3(size.x * growth, size.y * growth, size.y * growth);
+        }
+
+        void PlaceHalo(int arc)
+        {
+            if (haloRenderer == null || uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
+            Transform plant = uprightCards[arc];
+            Transform haloTransform = haloRenderer.transform;
+            float extra = 1.14f;
+            haloTransform.localPosition = plant.localPosition + new Vector3(0f, -0.004f, 0f);
+            haloTransform.localRotation = plant.localRotation;
+            haloTransform.localScale = plant.localScale * extra;
+        }
+
+        void EnsureStateTexture()
+        {
+            if (_stateTex != null && _stateTex.width == TileCount) return;
+            _stateTex = new Texture2D(TileCount, 1, TextureFormat.RGBA32, false, true)
+            {
+                name = "DialTileState",
+                filterMode = FilterMode.Point,
+                wrapMode = TextureWrapMode.Clamp
+            };
+        }
+
+        void WriteStateTexture()
+        {
+            if (_stateTex == null) return;
+            if (tiles == null || tiles.Length != TileCount)
+                throw new InvalidOperationException("DialView.tiles must hold 21 values");
+            var pixels = new Color32[TileCount];
+            for (int i = 0; i < TileCount; i++)
+            {
+                int state = Mathf.Clamp(tiles[i], 0, 4);
+                int arc = i / TilesPerArc;
+                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), 0, 255);
+            }
+            _stateTex.SetPixels32(pixels);
+            _stateTex.Apply(false, false);
+        }
+
+        Mesh CombineTiles(Mesh source)
+        {
+            Vector3[] srcV = source.vertices;
+            Vector3[] srcN = source.normals;
+            Vector2[] srcUv = source.uv;
+            var srcNxy = new List<Vector2>();
+            var srcNz = new List<Vector2>();
+            source.GetUVs(1, srcNxy);
+            source.GetUVs(2, srcNz);
+            Color[] srcC = source.colors;
+            int[] srcT = source.triangles;
+            int vertCount = srcV.Length;
+            bool hasNxy = srcNxy.Count == vertCount;
+            bool hasNz = srcNz.Count == vertCount;
+            bool hasColor = srcC != null && srcC.Length == vertCount;
+            if (!hasNxy)
+                Debug.LogWarning("[DialView] tile has no Nxy uv; the ink hull will use the shading normal");
+
+            var verts = new List<Vector3>(vertCount * TileCount);
+            var normals = new List<Vector3>(vertCount * TileCount);
+            var uv = new List<Vector2>(vertCount * TileCount);
+            var nxy = new List<Vector2>(vertCount * TileCount);
+            var nz = new List<Vector2>(vertCount * TileCount);
+            var tileUv = new List<Vector2>(vertCount * TileCount);
+            var colors = new List<Color>(vertCount * TileCount);
+            var tris = new List<int>(srcT.Length * TileCount);
+
+            for (int i = 0; i < TileCount; i++)
+            {
+                int arc = i / TilesPerArc;
+                int slot = i % TilesPerArc;
+                float deg = ArcSlot(arc, slot);
+                Vector3 pos = OnFace(deg, faceRadius * TileRadius, faceY);
+                Quaternion rot = TileRotation(deg);
+                int bas = verts.Count;
+                for (int v = 0; v < vertCount; v++)
+                {
+                    verts.Add(pos + rot * srcV[v]);
+                    Vector3 shading = srcN != null && srcN.Length == vertCount ? srcN[v] : Vector3.up;
+                    normals.Add(rot * shading);
+                    uv.Add(srcUv != null && srcUv.Length == vertCount ? srcUv[v] : new Vector2(0.5f, 0.5f));
+                    Vector3 smooth = shading;
+                    if (hasNxy && hasNz)
+                        smooth = new Vector3(srcNxy[v].x, srcNxy[v].y, srcNz[v].x) * 2f - Vector3.one;
+                    else if (hasColor)
+                        smooth = new Vector3(srcC[v].r, srcC[v].g, srcC[v].b) * 2f - Vector3.one;
+                    if (smooth.sqrMagnitude > 1e-8f) smooth.Normalize();
+                    smooth = rot * smooth;
+                    nxy.Add(new Vector2(smooth.x * 0.5f + 0.5f, smooth.y * 0.5f + 0.5f));
+                    nz.Add(new Vector2(smooth.z * 0.5f + 0.5f, 0f));
+                    tileUv.Add(new Vector2(i, arc));
+                    colors.Add(new Color(smooth.x * 0.5f + 0.5f, smooth.y * 0.5f + 0.5f, smooth.z * 0.5f + 0.5f, 1f));
+                }
+                for (int t = 0; t < srcT.Length; t++) tris.Add(srcT[t] + bas);
+            }
+
+            var mesh = new Mesh { name = "TilesPlaced" };
+            mesh.indexFormat = verts.Count > 65000 ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
+            mesh.SetVertices(verts);
+            mesh.SetNormals(normals);
+            mesh.SetUVs(0, uv);
+            mesh.SetUVs(1, nxy);
+            mesh.SetUVs(2, nz);
+            mesh.SetUVs(3, tileUv);
+            mesh.SetColors(colors);
+            mesh.SetTriangles(tris, 0);
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        static float ArcMid(int arc)
+        {
+            float a0, a1;
+            ArcEnds(arc, out a0, out a1);
+            return a0 - Mathf.Repeat(a0 - a1, 360f) * 0.5f;
+        }
+
+        static float ArcSlot(int arc, int slot)
+        {
+            float a0, a1;
+            ArcEnds(arc, out a0, out a1);
+            float span = Mathf.Repeat(a0 - a1, 360f);
+            float t = 0.12f + 0.76f * (slot / 6f);
+            return a0 - span * t;
+        }
+
+        static void ArcEnds(int arc, out float a0, out float a1)
+        {
+            if (arc == 0) { a0 = MorningArc0; a1 = MorningArc1; }
+            else if (arc == 1) { a0 = MiddayArc0; a1 = MiddayArc1; }
+            else { a0 = WindDownArc0; a1 = WindDownArc1; }
+        }
+
+        static Vector3 OnFace(float deg, float radius, float y)
+        {
+            float rad = deg * Mathf.Deg2Rad;
+            return new Vector3(Mathf.Cos(rad) * radius, y, Mathf.Sin(rad) * radius);
+        }
+
+        static Quaternion TileRotation(float deg)
+        {
+            float rad = deg * Mathf.Deg2Rad;
+            // Long axis (local +X) follows the arc as the slot index increases (angle decreases).
+            var tangent = new Vector3(Mathf.Sin(rad), 0f, -Mathf.Cos(rad));
+            float yaw = Mathf.Atan2(tangent.x, tangent.z) * Mathf.Rad2Deg;
+            return Quaternion.Euler(0f, yaw, 0f);
+        }
+
+        static int ArcIndex(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return 1;
+            string n = name.Trim().ToLowerInvariant();
+            if (n == "morning" || n == "sunrise") return 0;
+            if (n == "midday") return 1;
+            if (n == "winddown" || n == "dusk") return 2;
+            throw new FormatException("DialView haloTarget is not an arc: " + name);
+        }
+
+        static GameObject Card(Transform parent, string name, Material material, Vector3 pos, Vector2 size, Mesh mesh)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var renderer = go.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            go.transform.localPosition = pos;
+            go.transform.localScale = new Vector3(size.x, size.y, size.y);
+            return go;
+        }
+
+        static void SetMat(Transform t, Material material, bool cast)
+        {
+            var renderer = t.GetComponent<Renderer>();
+            if (renderer == null) throw new InvalidOperationException(t.name + " has no renderer");
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = cast ? ShadowCastingMode.On : ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+        }
+
+        static Transform Require(Transform root, string name)
+        {
+            Transform[] all = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < all.Length; i++)
+            {
+                if (all[i].name == name && all[i].GetComponent<MeshFilter>() != null) return all[i];
+            }
+            var names = new List<string>();
+            for (int i = 0; i < all.Length; i++)
+                if (all[i].GetComponent<MeshFilter>() != null) names.Add(all[i].name);
+            throw new InvalidOperationException("drawn dial is missing mesh " + name + " (have " + string.Join(", ", names) + ")");
+        }
+
+        void WriteTileDigits(int start, string digits)
+        {
+            if (tiles == null || tiles.Length != TileCount)
+                tiles = new int[TileCount];
+            if (string.IsNullOrEmpty(digits)) throw new FormatException("DialView tiles are empty");
+            int count = start == 0 && digits.Length == TileCount ? TileCount : TilesPerArc;
+            if (digits.Length < count) throw new FormatException("DialView tiles need " + count + " digits: " + digits);
+            for (int i = 0; i < count; i++)
+            {
+                char c = digits[i];
+                if (c < '0' || c > '4') throw new FormatException("DialView tile digit is not 0..4: " + c);
+                tiles[start + i] = c - '0';
+            }
+        }
+
+        static int ParseStage(string text)
+        {
+            float value = ParseFloat("stage", text);
+            return Mathf.Clamp(Mathf.RoundToInt(value), 0, 2);
+        }
+
+        static bool ParseBool(string text)
+        {
+            if (text == "1" || string.Equals(text, "on", StringComparison.OrdinalIgnoreCase) || string.Equals(text, "true", StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (text == "0" || string.Equals(text, "off", StringComparison.OrdinalIgnoreCase) || string.Equals(text, "false", StringComparison.OrdinalIgnoreCase))
+                return false;
+            throw new FormatException("DialView boil is not on or off: " + text);
+        }
+
+        static float ParseFloat(string key, string text)
+        {
+            float value;
+            if (!float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                throw new FormatException("DialView state " + key + " is not a number: " + text);
+            return value;
+        }
+
+        static void DestroyObject(UnityEngine.Object obj)
+        {
+            if (obj == null) return;
+            if (Application.isPlaying) Destroy(obj);
+            else DestroyImmediate(obj);
+        }
+    }
+}
