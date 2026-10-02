@@ -3,7 +3,7 @@
   "displayName": "Garden VR Capture",
   "version": "0.1.0",
   "unity": "6000.6",
-  "description": "Batchmode screenshot/video capture, side-by-side composer and scripted input playback for tests.",
+  "description": "Batchmode shots, image checks, side-by-sides, budget measurement and PlayMode sequence recording.",
   "dependencies": {
     "com.gardenvr.input": "0.1.0"
   }
