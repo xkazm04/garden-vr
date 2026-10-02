@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 1:1
+native_size: 1024x1024
+stored_size: 1024x1024
+source_name: condensation
+processing: R coverage, G highlight, B soft haze; horizontal seamless blend for the jar wrap; max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+A macro photograph of clear water droplets clinging to glass, scattered across a pure black background. Beads range from tiny specks to a few larger drops, each with a bright cyan-white specular highlight and a soft transparent body. The droplets are the only subject, evenly distributed, sharp, and ready to read as a texture.

@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 1:1
+native_size: 1024x1024
+stored_size: 1024x1024
+source_name: moss_tuft
+processing: keyed off black, trimmed to the clump, max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+A single bright clump of cushion moss floats in the center of a pure black frame, with a wide margin of pure black on every side. The clump is irregular and starry, lit from the front, with vivid mint-green tips and deeper green bases. Macro photograph, sharp, the whole tuft fully inside the frame.

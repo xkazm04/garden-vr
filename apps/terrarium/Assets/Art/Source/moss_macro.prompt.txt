@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 1:1
+native_size: 1024x1024
+stored_size: 1024x1024
+source_name: moss_macro
+processing: seamless edge blend, graded toward the style-bible hex, max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+Edge-to-edge seamless texture of cushion moss photographed from directly above. Every part of the frame is moss, including the corners: irregular clumps of tiny overlapping leaves, deep green crevices and brighter yellow-green tips, damp and soft. Even diffuse light, the same density from center to corner, a tileable macro photograph.

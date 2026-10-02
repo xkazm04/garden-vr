@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 1:1
+native_size: 1024x1024
+stored_size: 1024x1024
+source_name: cork
+processing: seamless edge blend, graded toward the style-bible hex, max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+Edge-to-edge seamless texture of natural wine cork, warm tan-brown bark covered in small oval pores and fine granules. The same pore density reaches every corner. Even diffuse light, matte, a tileable macro photograph of cork filling the whole frame.

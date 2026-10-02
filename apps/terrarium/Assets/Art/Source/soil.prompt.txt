@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 1:1
+native_size: 1024x1024
+stored_size: 1024x1024
+source_name: soil
+processing: seamless edge blend, graded toward the style-bible hex, max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+Edge-to-edge seamless texture of very dark damp forest loam, nearly black with a deep green undertone, fine crumbs and a few pale sand grains. The same darkness reaches every corner. Even low light, a tileable macro photograph of bare soil filling the whole frame.

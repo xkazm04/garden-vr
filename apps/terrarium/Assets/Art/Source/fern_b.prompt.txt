@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 2:3
+native_size: 832x1248
+stored_size: 683x1024
+source_name: fern_b
+processing: keyed off black, trimmed to the frond, edge emission from a distance field, max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+A single broader fern frond stands centered on a pure black background, fully inside the frame with a wide margin of pure black around every leaflet. The pinnae are slightly arched and uneven, with lacy leaflets and deep black gaps between them, pale green blades and a luminous mint rim. Front-lit macro photograph, sharp, nothing else in the frame.
