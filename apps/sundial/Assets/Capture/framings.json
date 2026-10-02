@@ -1,4 +1,25 @@
 {
-  "overrides": {},
-  "additions": []
+  "overrides": {
+    "DialG1": {
+      "eye": [0, 0.322, -0.411],
+      "lookAt": [0, 0.012, 0],
+      "fov": 30,
+      "lensShift": [3.6, 0.5],
+      "plate": "plate-dial.png",
+      "width": 1824,
+      "height": 1024
+    }
+  },
+  "additions": [
+    {
+      "name": "DialSeated",
+      "eye": [0, 0.407796, -0.475608],
+      "lookAt": [0, 0.031187, -0.146722],
+      "fov": 90,
+      "lensShift": [0, 0],
+      "plate": null,
+      "width": 1824,
+      "height": 1024
+    }
+  ]
 }
