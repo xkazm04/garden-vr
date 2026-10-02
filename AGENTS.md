@@ -35,6 +35,12 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 - Unity editor: `C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe`. Use `-batchmode -nographics -quit
   -projectPath apps/<app> -executeMethod ...` for builds/tests and `-batchmode` (with graphics) for captures.
   Never run two Unity instances on the same project at once.
+- **Run Unity (and any long process) in the foreground and wait for it.** In headless mode your run ENDS the moment
+  you finish a turn without a tool call, so never end a turn "waiting for" a background process. Use
+  `Start-Process -Wait -FilePath <Unity.exe> -ArgumentList ...` (PowerShell does not wait on GUI-subsystem exes
+  otherwise), then read the log.
+- **Unity 6.6 API notes:** `Object.GetInstanceID()` is obsolete as an error (CS0619) - use `GetEntityId()`; package
+  versions must be the 6.6-compatible ones already in `Packages/manifest.json` (Input System 1.20.0, URP 17.6.0).
 - Verify before you claim: run the tests, capture the screenshot, read the log. A claim you did not run is "not run".
 - **Commit atomically** on your own branch (`agent/<app>`), one commit per finished sub-step, with a clear message.
   Never push. Never rewrite history. Never commit `Library/`, `Temp/`, `Logs/`, builds or `.env`.
