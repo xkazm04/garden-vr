@@ -1,6 +1,4 @@
 asset: halo_sunrise.png
-date: 2026-10-02
-method: dilated silhouette of plant_sunrise_0, gold #F5C76A, scripted
-sources: plant_sunrise.png
+method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
+note: painted by code (IWSDK seat SVG), interim
 derived_from_art_reference: no
-sha256: 77a8808d465f9b6fb5194e71b4c63b7ccc4148bda11eaf089b3a677cc97ab48e

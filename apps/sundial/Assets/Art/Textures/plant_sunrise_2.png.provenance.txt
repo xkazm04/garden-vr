@@ -1,7 +1,4 @@
 asset: plant_sunrise_2.png
-date: 2026-10-02
-method: composed by tools/blender/sundial_textures.py
-sources: plant_sunrise.png
-note: boil frame 2: outline resampled from plant_sunrise.png, interior pixels copied
+method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
+note: painted by code (IWSDK seat SVG), interim
 derived_from_art_reference: no
-sha256: c6ad3a424034e3ff05079c2debcfe021cb82c515f4146e1c84465700b5966609
