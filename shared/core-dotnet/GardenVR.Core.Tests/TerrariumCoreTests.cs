@@ -91,6 +91,19 @@ public class BreathRitualTests
     {
         Assert.Throws<ArgumentException>(() => new PinchDetector(engageAt: 0.5f, releaseAt: 0.6f));
     }
+
+    [Fact]
+    public void Sundial_config_completes_in_three_calm_breaths()
+    {
+        // Sundial dusk ritual: three breaths, holds shorter than 1.5 s are fidgets.
+        var config = new BreathConfig { TargetBreaths = 3, MinInhaleSeconds = 1.5f };
+        var s = new SimulatedHand(seed: 11).Rest(1f).Breaths(3, inhale: 4f, exhale: 4f).Drive(new BreathSession(config));
+        Assert.Equal(3, s.TargetBreaths);
+        Assert.Equal(BreathPhase.Complete, s.Phase);
+        Assert.Equal(3, s.Breaths);
+        Assert.Equal(3, s.Events.Count(e => e.Kind == BreathEventKind.BreathCounted));
+        Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.ShortInhaleIgnored);
+    }
 }
 
 public class GardenTests
@@ -128,11 +141,20 @@ public class GardenTests
     }
 
     [Fact]
-    public void Every_seventh_frond_flowers()
+    public void Flower_opens_at_six_fronds_not_every_seventh()
     {
-        var g = new Garden(); GrowthAnswer last = default;
-        for (int d = 0; d < 7; d++) last = g.CompleteRitual(Day0 + d * 2); // practice every other day still flowers
-        Assert.True(last.Flower); Assert.Equal(1, g.Flowers);
+        // D5 replaced the spike's every-7th rule. Six practice days open the first flower;
+        // the seventh frond does not.
+        var g = new Garden();
+        GrowthAnswer sixth = default;
+        for (int d = 0; d < 6; d++) sixth = g.CompleteRitual(Day0 + d);
+        Assert.Equal(6, g.Fronds);
+        Assert.True(sixth.Flower);
+        Assert.Equal(1, g.Flowers);
+        var seventh = g.CompleteRitual(Day0 + 6);
+        Assert.False(seventh.Flower);
+        Assert.Equal(1, g.Flowers);
+        Assert.Equal(7, g.Fronds);
     }
 
     [Fact]

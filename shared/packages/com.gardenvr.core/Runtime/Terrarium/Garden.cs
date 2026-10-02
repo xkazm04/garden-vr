@@ -10,7 +10,7 @@ namespace GardenVR.Core
     {
         public readonly bool NewFrond;        // first ritual of the day: one permanent frond
         public readonly bool Recovered;       // the garden was drooping and lifts again
-        public readonly bool Flower;          // every 7th frond opens a flower
+        public readonly bool Flower;          // a new frond at 6, 12, 18, ... opens a flower
         public readonly int DewBeads;         // extra rituals on the same day add dew, never extra fronds
         public GrowthAnswer(bool f, bool r, bool fl, int dew) { NewFrond = f; Recovered = r; Flower = fl; DewBeads = dew; }
     }
@@ -21,11 +21,14 @@ namespace GardenVR.Core
     ///  2. One frond per day of practice; more sessions that day add dew, so growth cannot be farmed.
     ///  3. Missed days lower Vitality (a droop the scene shows), floored at 0.6 - the garden never dies.
     ///  4. The next completed ritual restores full vitality at once: a missed day is always recoverable.
+    ///  5. The first flower opens at 6 fronds, then one more every 6 (6, 12, 18, ...).
     /// Days are integers (days since 2000-01-01, local calendar) so the core never touches a clock.
     /// </summary>
     public sealed class Garden
     {
         public const float VitalityFloor = 0.6f;
+        public const int FirstFlowerAt = 6;   // one miss in a week still flowers on day 7
+        public const int FlowerEvery = 6;
         readonly List<int> _frondDays = new List<int>();
         public IReadOnlyList<int> FrondDays => _frondDays;
         public int Fronds => _frondDays.Count;
@@ -35,7 +38,7 @@ namespace GardenVR.Core
         /// <summary>How many times the user came back after a gap. Shown as a kindness, never as a count of misses.</summary>
         public int Returns { get; private set; }
 
-        public int Flowers => Fronds / 7;
+        public int Flowers => Fronds < FirstFlowerAt ? 0 : 1 + (Fronds - FirstFlowerAt) / FlowerEvery;
 
         public int DaysSinceRitual(int today) => LastRitualDay.HasValue ? Math.Max(0, today - LastRitualDay.Value) : 0;
 
@@ -62,7 +65,7 @@ namespace GardenVR.Core
             DewToday = 0;
             LastRitualDay = today;
             _frondDays.Add(today);
-            return new GrowthAnswer(true, drooping, Fronds % 7 == 0, 0);
+            return new GrowthAnswer(true, drooping, OpensFlower(Fronds), 0);
         }
 
         // ---- persistence: one plain line, versioned, human-readable on disk ----
@@ -96,5 +99,9 @@ namespace GardenVR.Core
         }
 
         public static int DayNumber(DateTime localDate) => (int)(localDate.Date - new DateTime(2000, 1, 1)).TotalDays;
+
+        /// <summary>True when this frond count is 6, 12, 18, ...</summary>
+        static bool OpensFlower(int fronds) =>
+            fronds >= FirstFlowerAt && (fronds - FirstFlowerAt) % FlowerEvery == 0;
     }
 }
