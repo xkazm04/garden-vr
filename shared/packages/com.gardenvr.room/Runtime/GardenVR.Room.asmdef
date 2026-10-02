@@ -1,0 +1,16 @@
+{
+  "name": "GardenVR.Room",
+  "rootNamespace": "GardenVR.Room",
+  "references": [
+    "GardenVR.Input"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

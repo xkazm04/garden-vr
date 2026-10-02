@@ -1,0 +1,8 @@
+{
+  "name": "com.gardenvr.audio",
+  "displayName": "Garden VR Audio",
+  "version": "0.1.0",
+  "unity": "6000.6",
+  "description": "Cue-based audio service: named cues, a manifest of generated clips, ducking and calm mixing rules.",
+  "dependencies": {}
+}

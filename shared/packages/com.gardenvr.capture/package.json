@@ -1,0 +1,10 @@
+{
+  "name": "com.gardenvr.capture",
+  "displayName": "Garden VR Capture",
+  "version": "0.1.0",
+  "unity": "6000.6",
+  "description": "Batchmode screenshot/video capture, side-by-side composer and scripted input playback for tests.",
+  "dependencies": {
+    "com.gardenvr.input": "0.1.0"
+  }
+}

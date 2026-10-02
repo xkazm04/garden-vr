@@ -1,0 +1,10 @@
+{
+  "name": "com.gardenvr.room",
+  "displayName": "Garden VR Room",
+  "version": "0.1.0",
+  "unity": "6000.6",
+  "description": "PC stand-in for passthrough: room plates, desk anchor, seated camera rig at seated eye height.",
+  "dependencies": {
+    "com.gardenvr.input": "0.1.0"
+  }
+}

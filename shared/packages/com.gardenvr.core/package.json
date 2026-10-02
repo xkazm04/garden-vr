@@ -1,0 +1,8 @@
+{
+  "name": "com.gardenvr.core",
+  "displayName": "Garden VR Core",
+  "version": "0.1.0",
+  "unity": "6000.6",
+  "description": "Engine-free rules: habits, ledger, growth, breath ritual, clock, persistence. No UnityEngine; compiled by shared/core-dotnet for dotnet test.",
+  "dependencies": {}
+}

@@ -1,0 +1,8 @@
+{
+  "name": "com.gardenvr.fx",
+  "displayName": "Garden VR FX",
+  "version": "0.1.0",
+  "unity": "6000.6",
+  "description": "Shared URP shaders and effects: halo cards, emissive glow, shadow catcher, toon ramp, ink outline, boiling lines.",
+  "dependencies": {}
+}

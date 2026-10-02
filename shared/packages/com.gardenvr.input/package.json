@@ -1,0 +1,8 @@
+{
+  "name": "com.gardenvr.input",
+  "displayName": "Garden VR Input",
+  "version": "0.1.0",
+  "unity": "6000.6",
+  "description": "Hand-intent abstraction (Pinch, PinchHold, Release, Poke, Look, PalmOpen) with a keyboard/mouse provider for PC; an XR hands provider plugs in later.",
+  "dependencies": {}
+}

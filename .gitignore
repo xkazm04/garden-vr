@@ -1,0 +1,41 @@
+# Unity (per app)
+apps/*/[Ll]ibrary/
+apps/*/[Tt]emp/
+apps/*/[Oo]bj/
+apps/*/[Bb]uild/
+apps/*/[Bb]uilds/
+apps/*/[Ll]ogs/
+apps/*/[Uu]ser[Ss]ettings/
+apps/*/MemoryCaptures/
+apps/*/Recordings/
+apps/*/*.csproj
+apps/*/*.sln
+apps/*/*.slnx
+apps/*/.vs/
+apps/*/.idea/
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+sysinfo.txt
+crashlytics-build.properties
+*.apk
+*.aab
+
+# .NET
+shared/core-dotnet/**/bin/
+shared/core-dotnet/**/obj/
+shared/core-dotnet/TestResults/
+
+# Node
+node_modules/
+
+# Blender
+*.blend1
+
+# Secrets and local state
+.env
+.env.*
+!.env.example
+orchestration/runs/**/*.log
+orchestration/running/
+*.tmp
