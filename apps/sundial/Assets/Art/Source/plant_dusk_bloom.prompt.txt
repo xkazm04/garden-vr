@@ -1,0 +1,6 @@
+name: plant_dusk_bloom
+tool: image_edit
+aspect_ratio: 2:3
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: The same lavender on the same pure white background. Keep the stems, the narrow leaves, and the ink. The purple flower spikes are fuller, with more open florets along each spike.

@@ -1,0 +1,9 @@
+asset: dial_face.png
+date: 2026-10-02
+method: composed by tools/blender/sundial_textures.py
+sources: wash_morning.png, wash_midday.png, wash_dusk.png, paper.png
+generator: image_gen washes and paper, scripted arcs, pencil, ticks, ink rim
+size: 2048
+lettering: none
+derived_from_art_reference: no
+sha256: 4275df5846d4eca754f071dfe62f70b6eb12ecdb9bf00055e465ca0ab0cc4768

@@ -1,0 +1,6 @@
+name: soil
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: An overhead painting of garden soil done in ink and gouache on warm paper, filling the frame edge to edge. Soft umber and tawny washes, darker pools, thousands of tiny ink stipple crumbs, and a few pale pebble marks. It reads as a drawing with visible brush and pen, matte, no plants, no text.

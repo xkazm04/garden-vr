@@ -1,0 +1,7 @@
+asset: plant_sunrise_0.png
+date: 2026-10-02
+method: composed by tools/blender/sundial_textures.py
+sources: plant_sunrise.png
+note: boil frame 0: outline resampled from plant_sunrise.png, interior pixels copied
+derived_from_art_reference: no
+sha256: 0e6a1c44372c812be6bfcd89bfbda396f4462dda658d4683bc63959015be7731

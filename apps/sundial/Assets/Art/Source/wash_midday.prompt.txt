@@ -1,0 +1,6 @@
+name: wash_midday
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: A square sheet of warm watercolour paper covered edge to edge with a loose midday wash. Pale peach and coral bloom into a few deeper rose pools, with granulation, soft wet edges, and the tooth of the paper showing through. No objects, no lines, no letters, only the wash.

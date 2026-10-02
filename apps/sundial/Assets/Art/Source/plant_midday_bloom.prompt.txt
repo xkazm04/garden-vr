@@ -1,0 +1,6 @@
+name: plant_midday_bloom
+tool: image_edit
+aspect_ratio: 2:3
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: The same pink flowering stem on the same pure white background. Keep the stem, the leaves, and the ink contours. The blossoms are more fully open, the petals spread a little wider, and one more small flower has opened near the top.
