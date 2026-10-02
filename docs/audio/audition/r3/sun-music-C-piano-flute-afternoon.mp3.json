@@ -1,9 +1,0 @@
-{
- "kind": "music",
- "prompt": "gentle hand-drawn animation film feeling: a warm soft acoustic piano melody that wanders and returns, light pizzicato strings and a soft flute answering, sunny afternoon in a kitchen, hopeful and tender, slow tempo, no drums, quiet",
- "seconds": 30,
- "out": "docs/audio/audition/r3/sun-music-C-piano-flute-afternoon.mp3",
- "bytes": 479862,
- "creditsBefore": 45734,
- "creditsAfter": 45119
-}
