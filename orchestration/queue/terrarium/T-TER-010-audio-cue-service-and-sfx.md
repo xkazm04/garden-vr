@@ -6,6 +6,12 @@ depends: [T-TER-005]
 estimate_min: 120
 touches: [shared/packages/com.gardenvr.audio/**, tools/audio/mixdown.mjs, tools/audio/ledger.jsonl, apps/terrarium/Assets/Audio/**, apps/terrarium/Assets/Scripts/**, apps/terrarium/Assets/Tests/**, orchestration/runs/terrarium/T-TER-010/**]
 ---
+> **HOST OVERRIDE (2026-10-02): audio ASSETS are produced by the dedicated audio agent** (branch `agent/audio`, merged
+> to main by the host). **Do not call `tools/audio/elevenlabs.mjs` in this task.** Build/consume the code and wiring
+> only, reading `apps/<app>/Assets/Audio/cues.json` and `Voice/lines.json` in the format fixed in
+> `docs/audio/CHOICES.md` ("Manifest contract"). Owner choices in `docs/audio/CHOICES.md` outrank the bible. If an
+> asset is not merged yet when you run, wire the cue as a placeholder (bible section 2) and list it in REPORT.md.
+
 ## Goal
 `com.gardenvr.audio` (you own it; Sundial consumes it in T-SUN-012) plays named cues from a manifest with buses,
 priority bands, ducking, cooldowns and variant rotation exactly as `docs/audio/AUDIO-BIBLE.md` section 2 says, logs every

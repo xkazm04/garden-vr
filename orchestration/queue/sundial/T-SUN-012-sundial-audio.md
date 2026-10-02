@@ -6,6 +6,12 @@ depends: [T-TER-010, T-SUN-009]
 estimate_min: 100
 touches: [apps/sundial/Assets/Audio/**, apps/sundial/Assets/Scripts/**, apps/sundial/Assets/Tests/**, tools/audio/ledger.jsonl, orchestration/runs/sundial/T-SUN-012/**]
 ---
+> **HOST OVERRIDE (2026-10-02): audio ASSETS are produced by the dedicated audio agent** (branch `agent/audio`, merged
+> to main by the host). **Do not call `tools/audio/elevenlabs.mjs` in this task.** Build/consume the code and wiring
+> only, reading `apps/<app>/Assets/Audio/cues.json` and `Voice/lines.json` in the format fixed in
+> `docs/audio/CHOICES.md` ("Manifest contract"). Owner choices in `docs/audio/CHOICES.md` outrank the bible. If an
+> asset is not merged yet when you run, wire the cue as a placeholder (bible section 2) and list it in REPORT.md.
+
 ## Goal
 The Sundial sounds like paper, ink and wood in a daylit kitchen, never like a game: the cue set in AUDIO-BIBLE 3.2
 generated and wired through the shared cue service (owned by terrarium: consume it), three unpulsed 30 s arc beds that

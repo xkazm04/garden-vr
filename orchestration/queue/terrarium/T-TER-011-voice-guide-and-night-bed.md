@@ -6,6 +6,12 @@ depends: [T-TER-010]
 estimate_min: 100
 touches: [apps/terrarium/Assets/Audio/**, apps/terrarium/Assets/Scripts/**, apps/terrarium/Assets/Tests/**, tools/audio/ledger.jsonl, orchestration/runs/terrarium/T-TER-011/**]
 ---
+> **HOST OVERRIDE (2026-10-02): audio ASSETS are produced by the dedicated audio agent** (branch `agent/audio`, merged
+> to main by the host). **Do not call `tools/audio/elevenlabs.mjs` in this task.** Build/consume the code and wiring
+> only, reading `apps/<app>/Assets/Audio/cues.json` and `Voice/lines.json` in the format fixed in
+> `docs/audio/CHOICES.md` ("Manifest contract"). Owner choices in `docs/audio/CHOICES.md` outrank the bible. If an
+> asset is not merged yet when you run, wire the cue as a placeholder (bible section 2) and list it in REPORT.md.
+
 ## Goal
 An optional voice guide that follows the user's breath (lines start on the intent, never before it), rendered as baked
 clips whose measured durations fit their windows, plus one unpulsed 90 s night bed, both off until chosen. The
