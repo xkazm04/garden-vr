@@ -1,0 +1,9 @@
+tool: image_gen
+aspect_ratio: 2:3
+native_size: 832x1248
+stored_size: 683x1024
+source_name: fern_a
+processing: keyed off black, trimmed to the frond, edge emission from a distance field, max side 1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+prompt:
+A single sword-fern frond stands vertical and centered, filling the frame from a short rachis at the bottom to a pointed tip at the top. The frond is bipinnate and lacy, with irregular pinnae of uneven lengths and fine leaflets separated by deep gaps, colored a soft yellow-green with a brighter mint edge along each leaflet. It is a front-lit botanical macro photograph on a pure black background, sharp from base to tip, with natural asymmetry.
