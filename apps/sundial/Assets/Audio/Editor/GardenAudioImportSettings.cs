@@ -20,8 +20,8 @@ namespace GardenVR.AudioImport
             s.compressionFormat = AudioCompressionFormat.Vorbis;
             s.quality = 0.6f;
             s.sampleRateSetting = AudioSampleRateSetting.PreserveSampleRate;
+            s.preloadAudioData = !streams;
             importer.defaultSampleSettings = s;
-            importer.preloadAudioData = !streams;
             importer.loadInBackground = streams;
         }
     }
