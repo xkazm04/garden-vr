@@ -1,0 +1,6 @@
+name: plant_sunrise
+tool: image_gen
+aspect_ratio: 2:3
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: A small rosemary-like herb sprig drawn as a frame of a hand-animated film, centered on a pure white background with a wide white margin. Several slender stems carry paired narrow leaves. Clean confident ink contours of varying weight, flat sage-green cel colour with one softer shade step, a few pencil construction ticks left in the leaves. No pot, no ground, no shadow, no text.

@@ -1,0 +1,7 @@
+asset: plant_dusk_2.png
+date: 2026-10-02
+method: composed by tools/blender/sundial_textures.py
+sources: plant_dusk.png
+note: boil frame 2: outline resampled from plant_dusk.png, interior pixels copied
+derived_from_art_reference: no
+sha256: e253c9c9ee1243865ce075b8ed58fe2eca34de85f45dcb631573f0024d2ceb42

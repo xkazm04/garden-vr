@@ -1,0 +1,6 @@
+name: paper
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: A square close-up of blank warm cotton watercolour paper, ivory with a faint honey tone, showing fibre, tooth, and a few soft deckle variations. Even diffuse light, no drawing, no text, no picture.

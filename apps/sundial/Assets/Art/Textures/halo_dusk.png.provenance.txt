@@ -1,0 +1,6 @@
+asset: halo_dusk.png
+date: 2026-10-02
+method: dilated silhouette of plant_dusk_0, gold #F5C76A, scripted
+sources: plant_dusk.png
+derived_from_art_reference: no
+sha256: d22d9c0cd6eed6a0e7a4b84e3d7cf59e819bff7637fefc566415ac3750c56d94

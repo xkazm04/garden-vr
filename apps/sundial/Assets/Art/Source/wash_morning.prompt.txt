@@ -1,0 +1,6 @@
+name: wash_morning
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: A square sheet of warm watercolour paper covered edge to edge with a loose sunrise wash. Pale cream and honey at the edges pool into soft ochre and a few deeper amber blooms, with visible granulation, feathered wet edges, and the tooth of the paper. No objects, no lines, no letters, only the gold wash.

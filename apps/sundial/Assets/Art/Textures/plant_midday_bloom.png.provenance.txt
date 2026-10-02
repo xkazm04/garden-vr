@@ -1,0 +1,7 @@
+asset: plant_midday_bloom.png
+date: 2026-10-02
+method: composed by tools/blender/sundial_textures.py
+sources: plant_midday.png
+note: bloom state from plant_midday_bloom.png (image_edit of the same plant)
+derived_from_art_reference: no
+sha256: 2bb15be22061c745037fffc65e35a31bd9ed576ce3c22e7f7a2c1cac2653cd96

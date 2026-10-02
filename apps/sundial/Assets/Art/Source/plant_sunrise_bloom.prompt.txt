@@ -1,0 +1,6 @@
+name: plant_sunrise_bloom
+tool: image_edit
+aspect_ratio: 2:3
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: The same rosemary sprig on the same pure white background. Keep the stems, the paired leaves, the ink contours, and the sage green. A few tiny cream blossoms are just opening at the tips of the upper stems.

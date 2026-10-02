@@ -1,0 +1,6 @@
+name: plant_midday
+tool: image_gen
+aspect_ratio: 2:3
+date: 2026-10-02
+derived_from_art_reference: no
+prompt: A small flowering plant drawn as a frame of a hand-animated film, centered on a pure white background with a wide white margin all around. One upright green stem holds several open pink five-petal blossoms and two buds, with a few simple leaves. Clean confident ink contours of varying weight, flat cel colour with one softer shade step. The whole plant is fully inside the frame. No pot, no ground, no shadow, no text.
