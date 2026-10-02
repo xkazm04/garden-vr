@@ -1,0 +1,14 @@
+tool: image_gen
+date: 2026-10-02
+aspect_ratio: 2:3
+native_file: 12.jpg
+stored_size: 832x1248
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+note: moss_tuft_3 in the atlas is a horizontal flip of moss_tuft_2 (the fourth tuft generation was rate-limited)
+prompt:
+A shorter broader fern frond, bipinnate and lacy, centered on a pure black background with a wide black margin. One side has longer pinnae than the other, and a few leaflets are missing so the silhouette is ragged. Soft yellow-green with a mint edge. Front-lit macro photograph, fully inside the frame, no ground shadow.
+
+retry: image_edit 2026-10-03, native_file 17.jpg, source fern_v1.png
+retry_prompt:
+Keep this pale yellow-green bipinnate fern, but place it on a pure black background that reaches every edge of the image, with black space around every leaflet. Remove the gray frame and the rectangle. Make the silhouette ragged: pinnae of uneven length, a few leaflets missing, one side longer than the other, and a slightly hooked tip. Front-lit, sharp, the whole frond inside the frame.
+why: the first plate had a gray letterbox. The black field was being keyed as solid.

@@ -19,3 +19,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   on separate branches: a dependency counts only once its code is on main and merged into the dependent branch. The
   queue now distinguishes `done/` (same agent) from `merged/` (cross-agent). Target: agent-operations / fleet
   orchestration.
+- 2026-10-03 - **An instruction does not fix a runner-level failure mode.** After `AGENTS.md` forbade ending a turn while
+  Unity ran, Grok did it again (T-TER-005, 64 turns, "Unity is compiling ... the prefab wire-up runs as soon as that
+  compile succeeds"). The fix that holds is in the runner: a clean exit without the required artefact resumes the same
+  session (`grok -r <sessionId> -p "continue..."`, verified to keep context) up to twice. Target: agent-operations /
+  unattended-build-loop.

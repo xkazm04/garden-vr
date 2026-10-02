@@ -24,31 +24,31 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _EmissionTex:
-        m_Texture: {fileID: 2800000, guid: 6fcc67f97354588428ac1bbb74658ba7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 79ef0e63e6dda3648b9da2e3e95ad382, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 6fcc67f97354588428ac1bbb74658ba7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 79ef0e63e6dda3648b9da2e3e95ad382, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TopTex:
-        m_Texture: {fileID: 2800000, guid: 6fcc67f97354588428ac1bbb74658ba7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 79ef0e63e6dda3648b9da2e3e95ad382, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Cutoff: 0
-    - _GradBottom: 0.75
-    - _GradTop: 1.08
-    - _RimPower: 2.2
+    - _GradBottom: 0.72
+    - _GradTop: 1.18
+    - _RimPower: 2.6
     - _Shell: 0
-    - _TopAmount: 1
-    - _TopTile: 20
-    - _Tri: 0
+    - _TopAmount: 0.12
+    - _TopTile: 24
+    - _Tri: 24
     m_Colors:
-    - _Emission: {r: 0.1, g: 0.42, b: 0.2, a: 1}
-    - _GradY: {r: 0.03, g: 0.048, b: 0, a: 0}
-    - _Rim: {r: 0.2, g: 0.6, b: 0.28, a: 1}
+    - _Emission: {r: 0.035, g: 0.11, b: 0.055, a: 1}
+    - _GradY: {r: 0.028, g: 0.048, b: 0, a: 0}
+    - _Rim: {r: 0.28, g: 0.62, b: 0.36, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

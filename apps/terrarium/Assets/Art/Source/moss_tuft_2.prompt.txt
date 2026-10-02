@@ -1,0 +1,9 @@
+tool: image_gen
+date: 2026-10-02
+aspect_ratio: 1:1
+native_file: 9.jpg
+stored_size: 1024x1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+note: moss_tuft_3 in the atlas is a horizontal flip of moss_tuft_2 (the fourth tuft generation was rate-limited)
+prompt:
+A lopsided cushion of velvety moss, seen from above, centered on a pure black background with a wide black margin. Denser on one side, darker gaps, bright mint tips. Macro photograph, the whole tuft inside the frame, no ground shadow.

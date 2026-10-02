@@ -32,7 +32,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TopTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d4c1440f95bbe8042a9dabd1a7c7f70b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -42,8 +42,8 @@ Material:
     - _GradTop: 1.1
     - _RimPower: 3
     - _Shell: 0
-    - _TopAmount: 0
-    - _TopTile: 10
+    - _TopAmount: 1
+    - _TopTile: 6
     - _Tri: 0
     m_Colors:
     - _Emission: {r: 0.03, g: 0.18, b: 0.1, a: 1}

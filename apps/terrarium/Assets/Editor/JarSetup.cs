@@ -26,7 +26,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "halo", "mist",
-            "moss_band", "moss_card", "moss_fuzz", "moss_tile", "moss_top", "ring", "soil_band", "spore"
+            "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_tile", "moss_top", "ring", "soil_band", "spore"
         };
 
         [MenuItem("Garden VR/Terrarium/Build Jar")]
@@ -63,11 +63,14 @@ namespace GardenVR.Terrarium.Editor
                 bool linear = name == "condensation" || name == "ring" || name == "fern_emission";
                 bool repeat = name.IndexOf("band", StringComparison.Ordinal) >= 0
                     || name.IndexOf("side", StringComparison.Ordinal) >= 0
-                    || name == "condensation";
+                    || name == "condensation"
+                    || name == "moss_macro";
                 importer.textureType = TextureImporterType.Default;
                 importer.sRGBTexture = !linear;
                 importer.alphaIsTransparency = alpha;
                 importer.mipmapEnabled = true;
+                importer.mipMapsPreserveCoverage = alpha;
+                importer.alphaTestReferenceValue = 0.5f;
                 importer.wrapMode = repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp;
                 importer.maxTextureSize = 2048;
                 importer.textureCompression = TextureImporterCompression.Uncompressed;
@@ -145,19 +148,37 @@ namespace GardenVR.Terrarium.Editor
             });
             library.Moss = Mat("Jar_Moss", "Fidelity/Glow", m =>
             {
-                m.SetTexture("_MainTex", Tex("moss_band"));
+                // Triplanar so the macro is not a strip stretched over a dome. Per-clump UVs are on the mesh too.
+                m.SetTexture("_MainTex", Tex("moss_macro"));
                 m.SetColor("_Tint", Color.white);
-                m.SetTexture("_EmissionTex", Tex("moss_band"));
-                m.SetColor("_Emission", new Color(0.05f, 0.22f, 0.10f));
-                m.SetColor("_Rim", new Color(0.20f, 0.60f, 0.28f));
-                m.SetFloat("_RimPower", 2.2f);
-                m.SetFloat("_GradBottom", 0.75f);
-                m.SetFloat("_GradTop", 1.08f);
-                m.SetVector("_GradY", new Vector4(0.03f, 0.048f, 0f, 0f));
-                m.SetTexture("_TopTex", Tex("moss_band"));
-                m.SetFloat("_TopTile", 20f);
-                m.SetFloat("_TopAmount", 1f);
+                m.SetTexture("_EmissionTex", Tex("moss_macro"));
+                m.SetColor("_Emission", new Color(0.035f, 0.11f, 0.055f));
+                m.SetColor("_Rim", new Color(0.28f, 0.62f, 0.36f));
+                m.SetFloat("_RimPower", 2.6f);
+                m.SetFloat("_GradBottom", 0.72f);
+                m.SetFloat("_GradTop", 1.18f);
+                m.SetVector("_GradY", new Vector4(0.028f, 0.048f, 0f, 0f));
+                m.SetTexture("_TopTex", Tex("moss_macro"));
+                // One texture width is about 4 cm, so a cushion in the photo stays cushion-sized on the mound.
+                m.SetFloat("_TopTile", 24f);
+                m.SetFloat("_TopAmount", 0.12f);
+                m.SetFloat("_Tri", 24f);
+                m.SetFloat("_Cutoff", 0f);
+            });
+            library.MossCard = Mat("Jar_MossCard", "Fidelity/Glow", m =>
+            {
+                m.SetTexture("_MainTex", Tex("moss_card"));
+                m.SetColor("_Tint", Color.white);
+                m.SetTexture("_EmissionTex", Tex("moss_card"));
+                m.SetColor("_Emission", new Color(0.05f, 0.16f, 0.08f));
+                m.SetColor("_Rim", new Color(0.22f, 0.48f, 0.30f));
+                m.SetFloat("_RimPower", 2.4f);
+                m.SetFloat("_Cutoff", 0.48f);
+                m.SetFloat("_GradBottom", 0.85f);
+                m.SetFloat("_GradTop", 1.2f);
+                m.SetVector("_GradY", new Vector4(0.03f, 0.05f, 0f, 0f));
                 m.SetFloat("_Tri", 0f);
+                m.SetFloat("_TopAmount", 0f);
             });
             library.Soil = Mat("Jar_Soil", "Fidelity/Glow", m =>
             {
@@ -170,6 +191,10 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_GradBottom", 0.9f);
                 m.SetFloat("_GradTop", 1.1f);
                 m.SetVector("_GradY", new Vector4(0f, 0.03f, 0f, 0f));
+                // The lathe cap pinches into a starburst once the moss no longer covers it.
+                m.SetTexture("_TopTex", Tex("soil_band"));
+                m.SetFloat("_TopTile", 6f);
+                m.SetFloat("_TopAmount", 1f);
             });
             library.Cork = Mat("Jar_Cork", "Fidelity/Glow", m =>
             {
@@ -190,11 +215,11 @@ namespace GardenVR.Terrarium.Editor
             Material Fern(string materialName, float emissionScale) => Mat(materialName, "Fidelity/Glow", m =>
             {
                 m.SetTexture("_MainTex", Tex("fern_albedo"));
-                m.SetColor("_Tint", new Color(0.80f, 1.05f, 0.82f));
+                m.SetColor("_Tint", new Color(0.94f, 1.02f, 0.92f));
                 m.SetTexture("_EmissionTex", Tex("fern_emission"));
                 m.SetColor("_Emission", new Color(0.35f, 1.0f, 0.62f) * emissionScale);
                 m.SetColor("_Rim", Color.black);
-                m.SetFloat("_Cutoff", 0.5f);
+                m.SetFloat("_Cutoff", 0.28f);
                 m.SetFloat("_GradBottom", 0.85f);
                 m.SetFloat("_GradTop", 1.0f);
                 m.SetVector("_GradY", new Vector4(0.04f, 0.1f, 0f, 0f));
@@ -315,6 +340,8 @@ namespace GardenVR.Terrarium.Editor
             try
             {
                 var view = root.AddComponent<JarView>();
+                if (root.GetComponent<JarRitualController>() == null)
+                    root.AddComponent<JarRitualController>();
                 var model = (GameObject)PrefabUtility.InstantiatePrefab(modelPrefab);
                 if (model == null) throw new InvalidOperationException("could not instance " + ModelPath);
                 PrefabUtility.UnpackPrefabInstance(model, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);

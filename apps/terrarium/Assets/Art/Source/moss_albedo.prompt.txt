@@ -1,0 +1,14 @@
+tool: image_gen
+date: 2026-10-02
+aspect_ratio: 1:1
+native_file: 14.jpg
+stored_size: 1024x1024
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+note: moss_tuft_3 in the atlas is a horizontal flip of moss_tuft_2 (the fourth tuft generation was rate-limited)
+prompt:
+Seamless macro photograph of cushion moss seen straight from above, filling the frame edge to edge so the pattern continues off every side. Anonymous velvety clumps of uneven size, deep teal-green crevices, and bright yellow-green rim-lit tips. Even diffuse light, the same density in every corner, no landmark clump, no flowers, no soil, no border.
+
+retry: image_gen 2026-10-03, native_file 16.jpg, aspect_ratio 1:1
+retry_prompt:
+Seamless macro photograph of cushion moss seen straight from above, filling the frame edge to edge so the pattern continues off every side. Many small anonymous velvety clumps of similar size, packed tightly, with deep teal-green crevices and bright yellow-green rim-lit tips. Even diffuse light and the same density in every corner. The field is uniform, a texture of small cushions with no single shape that stands out, no flower, no soil, and no border.
+why: the first plate had one large rosette that repeated in every tile. This plate replaces it. key_alpha.py then flattens the broad lighting and offset-blends the seam.
