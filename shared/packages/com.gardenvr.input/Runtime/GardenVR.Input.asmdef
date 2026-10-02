@@ -1,7 +1,9 @@
 {
   "name": "GardenVR.Input",
   "rootNamespace": "GardenVR.Input",
-  "references": [],
+  "references": [
+        "Unity.InputSystem"
+    ],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
