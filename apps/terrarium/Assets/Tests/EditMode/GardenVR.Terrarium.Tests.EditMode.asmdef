@@ -4,6 +4,7 @@
     "references": [
         "GardenVR.Input",
         "GardenVR.Core",
+        "GardenVR.Room",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
