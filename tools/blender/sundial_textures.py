@@ -88,8 +88,11 @@ PENCIL = np.array([138, 129, 120], np.float32)  # #8A8178
 PAPER = np.array([243, 238, 226], np.float32)   # #F3EEE2
 SOIL_MEAN = np.array([160, 131, 108], np.float32)  # #A0836C
 
-# SVG dial angles: 0 is +X, 90 is up the page. Bands are thick on purpose.
-# name, wash file, a0, a1, pale, mid, wet. Angles match dial_svg.mjs.
+# 0 is +X, 90 is up the page. Bands are thick on purpose.
+# Wider than dial_svg.mjs (sunrise 212 to 112, dusk 16 to -76). The first
+# side-by-side left a blank wedge at the front, so sunrise starts at 242
+# and dusk ends at -100. About 18 degrees of paper remains. The .mjs is unchanged.
+# name, wash file, a0, a1, pale, mid, wet.
 ARCS = [
     ("sunrise", "wash_morning", 242, 112, (246, 222, 183), (226, 184, 102), (217, 118, 42)),
     ("midday", "wash_midday", 106, 22, (244, 182, 161), (227, 156, 130), (201, 72, 63)),
