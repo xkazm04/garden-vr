@@ -1,0 +1,9 @@
+{
+ "kind": "music",
+ "prompt": "watercolour daylight: a fingerpicked nylon guitar melody, simple and singable, with a warm soft Rhodes and a distant glockenspiel echo, unhurried and optimistic, like a quiet morning sketchbook, no drums, no bass drops, quiet",
+ "seconds": 30,
+ "out": "docs/audio/audition/r3/sun-music-D-nylon-guitar-sketchbook.mp3",
+ "bytes": 479862,
+ "creditsBefore": 45119,
+ "creditsAfter": 45119
+}

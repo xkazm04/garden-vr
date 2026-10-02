@@ -1,0 +1,11 @@
+{
+ "kind": "tts",
+ "voice": "tiLGT9eftokjCKvXtgmt",
+ "model": "eleven_multilingual_v2",
+ "chars": 104,
+ "text": "Good evening. Your dusk plant is waiting. Pinch and hold for three slow breaths, whenever you are ready.",
+ "out": "docs/audio/audition/r3/voice-annabel-sundial.mp3",
+ "bytes": 99100,
+ "creditsBefore": 45734,
+ "creditsAfter": 45734
+}
