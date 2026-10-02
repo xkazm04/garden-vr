@@ -39,3 +39,8 @@ node_modules/
 orchestration/runs/**/*.log
 orchestration/running/
 *.tmp
+
+# Host-side raw agent output (agents' REPORT.md files are committed on their branches, not these)
+orchestration/runs/*/T-*/grok.*
+orchestration/runs/*/loop.*
+orchestration/runs/host/
