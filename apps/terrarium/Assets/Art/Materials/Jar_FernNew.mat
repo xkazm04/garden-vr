@@ -37,7 +37,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Cutoff: 0.5
+    - _Cutoff: 0.28
     - _GradBottom: 0.85
     - _GradTop: 1
     - _RimPower: 2.5
@@ -46,9 +46,9 @@ Material:
     - _TopTile: 10
     - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0.315, g: 0.9, b: 0.55799997, a: 0.9}
+    - _Emission: {r: 0.3885, g: 1.11, b: 0.6882, a: 1.11}
     - _GradY: {r: 0.04, g: 0.1, b: 0, a: 0}
     - _Rim: {r: 0, g: 0, b: 0, a: 1}
-    - _Tint: {r: 0.8, g: 1.05, b: 0.82, a: 1}
+    - _Tint: {r: 0.94, g: 1.02, b: 0.92, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using GardenVR.Capture;
+using GardenVR.Core;
 using GardenVR.Input;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -14,7 +15,7 @@ namespace GardenVR.Terrarium
     /// </summary>
     public sealed class JarLibrary
     {
-        public Material Glass, Moss, Soil, Cork, Fern, FernNew, Fiddle, Seedling, Dew;
+        public Material Glass, Moss, MossCard, Soil, Cork, Fern, FernNew, Fiddle, Seedling, Dew;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         public Mesh Quad;
     }
@@ -45,6 +46,13 @@ namespace GardenVR.Terrarium
         [Range(0f, 1f)] public float fog = 0.45f;
         [Range(0.6f, 1f)] public float vitality = 1f;
         public float time = 3f;
+        /// <summary>Picks which authored frond atlas column each placed frond uses.</summary>
+        public int shapeSeed = 4;
+        public BreathPhase phase = BreathPhase.Waiting;
+        /// <summary>Seconds since the answer began. Negative means the answer is not playing.</summary>
+        public float answerTime = -1f;
+        /// <summary>Spore step this frame. Negative keeps the capture resim from <see cref="time"/>.</summary>
+        public float sporeStep = -1f;
 
         [Header("Wired by Build")]
         public MeshFilter fiddle;
@@ -54,6 +62,7 @@ namespace GardenVR.Terrarium
         public Material ringMat;
         public Material glassMat;
         public Material mossMat;
+        public Material mossCardMat;
         public Material coilHaloMat;
         public Material jarHaloMat;
         public Material newFrondMat;
@@ -67,6 +76,19 @@ namespace GardenVR.Terrarium
         Vector3[][] _shapes;
         Vector3[] _scratch;
         bool _hooked;
+        Mesh[] _frondVariants;
+        Transform[] _frondSlots;
+        int _shownSeed = int.MinValue;
+        bool _frondScaleCached;
+        Vector3 _frondBaseScale;
+        bool _dewPathReady;
+        Vector3 _dewTipLocal;
+        Vector3 _dewBaseLocal;
+        bool _sporesLive;
+
+        static readonly Color RingMint = new Color(0.75f, 1.35f, 1.05f);
+        static readonly Color RingAnswer = new Color(1.3f, 1.8f, 1.4f);
+        static readonly Color RingGold = new Color(1.55f, 1.25f, 0.62f);
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
@@ -79,7 +101,12 @@ namespace GardenVR.Terrarium
                     case "breath": breath = value; break;
                     case "uncoil": uncoil = value; break;
                     case "fog": fog = value; break;
-                    case "answer": answer = value; break;
+                    case "answer":
+                        answer = value;
+                        // A completed answer still (G2) has no clock of its own. Show the settled gold end.
+                        if (value >= 1f && answerTime < 0f) answerTime = 2.2f;
+                        break;
+                    case "shapeSeed": shapeSeed = (int)value; break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
                     default:
@@ -92,34 +119,49 @@ namespace GardenVR.Terrarium
 
         public void Apply()
         {
-            BlendFiddle();
-            if (fiddle != null)
-            {
-                var fiddleRenderer = fiddle.GetComponent<Renderer>();
-                if (fiddleRenderer != null) fiddleRenderer.enabled = answer < 0.5f;
-            }
-            if (newFrond != null) newFrond.enabled = answer >= 0.5f;
-            if (dew != null) dew.enabled = answer >= 0.5f;
+            ApplyFrondVariants();
+            bool answering = answerTime >= 0f;
+            if (answering) ApplyAnswerMotion();
+            else ApplyRestMotion();
 
-            float pulse = answer > 0f ? Mathf.Exp(-Mathf.Pow((answer - 0.75f) / 0.2f, 2f)) : 0f;
+            float pulse = !answering && answer > 0f ? Mathf.Exp(-Mathf.Pow((answer - 0.75f) / 0.2f, 2f)) : 0f;
+            float ripple = 0f;
+            float gold = 0f;
+            if (answering)
+            {
+                // Moss ripple runs 1.5 s starting at 0.6 s. The ring closes gold over 0.6 s from the same moment and stays.
+                if (answerTime >= 0.6f && answerTime <= 2.1f)
+                    ripple = Mathf.Sin(Mathf.Clamp01((answerTime - 0.6f) / 1.5f) * Mathf.PI);
+                gold = Mathf.Clamp01((answerTime - 0.6f) / 0.6f);
+            }
             float life = Mathf.Clamp(vitality, 0.6f, 1f);
             if (ringMat != null)
             {
-                ringMat.SetFloat("_Fill", answer > 0f ? 1f : breath);
-                ringMat.SetColor("_Color", Color.Lerp(new Color(0.75f, 1.35f, 1.05f), new Color(1.3f, 1.8f, 1.4f), pulse));
+                ringMat.SetFloat("_Fill", answering || answer > 0f ? 1f : breath);
+                ringMat.SetColor("_Color", answering
+                    ? Color.Lerp(RingMint, RingGold, gold)
+                    : Color.Lerp(RingMint, RingAnswer, pulse));
             }
             if (glassMat != null)
             {
                 glassMat.SetFloat("_Fog", fog);
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
             }
-            if (mossMat != null) mossMat.SetColor("_Emission", new Color(0.10f, 0.42f, 0.20f) * (1f + 1.2f * pulse));
+            float mossGlow = answering ? ripple : pulse;
+            if (mossMat != null)
+                mossMat.SetColor("_Emission", new Color(0.035f, 0.11f, 0.055f) * (1f + (answering ? 1.6f : 1.1f) * mossGlow));
+            if (mossCardMat != null)
+                mossCardMat.SetColor("_Emission", new Color(0.05f, 0.16f, 0.08f) * (1f + (answering ? 1.4f : 1.0f) * mossGlow));
             if (coilHaloMat != null)
                 coilHaloMat.SetColor("_Color", new Color(0.30f, 0.85f, 0.45f) * (answer > 0f ? 0.45f + 0.5f * pulse : 0.55f + 0.25f * Mathf.Sin(breath * Mathf.PI)));
             if (jarHaloMat != null)
                 jarHaloMat.SetColor("_Color", new Color(0.05f, 0.22f, 0.15f) * (1f + 0.6f * pulse + 0.25f * Mathf.Sin(breath * Mathf.PI)));
             if (fernMat != null) fernMat.SetColor("_Emission", FernEmission * 0.75f * life);
-            if (newFrondMat != null) newFrondMat.SetColor("_Emission", FernEmission * (0.9f + 0.6f * pulse) * life);
+            if (newFrondMat != null)
+            {
+                float frondGlow = answering ? 0.35f + 0.45f * ripple : pulse;
+                newFrondMat.SetColor("_Emission", FernEmission * (0.9f + 0.6f * frondGlow) * life);
+            }
             if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * life);
 
             if (mist != null)
@@ -165,6 +207,9 @@ namespace GardenVR.Terrarium
             Transform mt = model.transform;
             SetMat(Require(mt, "Jar"), library.Glass);
             SetMat(Require(mt, "Moss"), library.Moss);
+            Transform skirt = Require(mt, "MossSkirt");
+            SetMat(skirt, library.MossCard);
+            mossCardMat = library.MossCard;
             SetMat(Require(mt, "Soil"), library.Soil);
             SetMat(Require(mt, "Cork"), library.Cork);
 
@@ -198,7 +243,16 @@ namespace GardenVR.Terrarium
             seed2.localRotation = Quaternion.Euler(0f, 70f, 0f) * seed.localRotation;
             seed2.localScale = Vector3.one * 0.45f;
 
-            Transform frond = Require(mt, "Frond");
+            Transform v0 = Require(mt, "FrondV0");
+            Transform v1 = Require(mt, "FrondV1");
+            Transform v2 = Require(mt, "FrondV2");
+            _frondVariants = new[] { MeshOf(v0), MeshOf(v1), MeshOf(v2) };
+            SetMat(v0, library.Fern);
+            Transform frond = Instantiate(v0.gameObject, mt).transform;
+            frond.name = "Frond";
+            v0.gameObject.SetActive(false);
+            v1.gameObject.SetActive(false);
+            v2.gameObject.SetActive(false);
             SetMat(frond, library.Fern);
             Quaternion axis = frond.localRotation;
             frond.localPosition = new Vector3(-0.010f, 0.040f, 0.004f);
@@ -212,6 +266,9 @@ namespace GardenVR.Terrarium
             Transform fnew = Instantiate(frond.gameObject, mt).transform;
             fnew.name = "FrondNew";
             SetMat(fnew, library.FernNew);
+            _frondSlots = new[] { frond, frondR, fnew };
+            _shownSeed = int.MinValue;
+            ApplyFrondVariants();
             fnew.localPosition = new Vector3(0.002f, 0.042f, -0.004f);
             fnew.localRotation = Quaternion.Euler(-12f, 0f, 6f) * axis;
             fnew.localScale = Vector3.one * 0.95f;
@@ -336,9 +393,130 @@ namespace GardenVR.Terrarium
             _live.RecalculateBounds();
         }
 
+        void ApplyFrondVariants()
+        {
+            if (_frondSlots == null || _frondSlots.Length == 0) return;
+            if (_frondVariants == null || _frondVariants.Length != 3 || _frondVariants[0] == null)
+            {
+                Transform a = FindMesh(transform, "FrondV0");
+                Transform b = FindMesh(transform, "FrondV1");
+                Transform c = FindMesh(transform, "FrondV2");
+                if (a == null || b == null || c == null) return;
+                _frondVariants = new[] { MeshOf(a), MeshOf(b), MeshOf(c) };
+            }
+            if (_shownSeed == shapeSeed) return;
+            _shownSeed = shapeSeed;
+            for (int i = 0; i < _frondSlots.Length; i++)
+            {
+                Transform slot = _frondSlots[i];
+                if (slot == null) continue;
+                int mod = (shapeSeed + i) % _frondVariants.Length;
+                if (mod < 0) mod += _frondVariants.Length;
+                var filter = slot.GetComponent<MeshFilter>();
+                if (filter != null) filter.sharedMesh = _frondVariants[mod];
+            }
+            _dewPathReady = false;
+        }
+
+        static Transform FindMesh(Transform root, string name)
+        {
+            Transform[] all = root.GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < all.Length; i++)
+            {
+                if (all[i].name == name && all[i].GetComponent<MeshFilter>() != null) return all[i];
+            }
+            return null;
+        }
+
+        void ApplyRestMotion()
+        {
+            BlendFiddle();
+            if (fiddle != null)
+            {
+                var fiddleRenderer = fiddle.GetComponent<Renderer>();
+                if (fiddleRenderer != null) fiddleRenderer.enabled = answer < 0.5f;
+            }
+            if (newFrond != null) newFrond.enabled = answer >= 0.5f;
+            if (dew != null) dew.enabled = answer >= 0.5f;
+        }
+
+        /// <summary>
+        /// Bible answer: frond settles over 0.8 s, dew rolls tip to base for 1.2 s from 0.4 s.
+        /// </summary>
+        void ApplyAnswerMotion()
+        {
+            BlendFiddle();
+            if (fiddle != null)
+            {
+                var fiddleRenderer = fiddle.GetComponent<Renderer>();
+                if (fiddleRenderer != null) fiddleRenderer.enabled = false;
+            }
+            if (newFrond != null)
+            {
+                newFrond.enabled = true;
+                if (!_frondScaleCached)
+                {
+                    _frondBaseScale = newFrond.transform.localScale;
+                    _frondScaleCached = true;
+                }
+                float settle = Mathf.Clamp01(answerTime / 0.8f);
+                float eased = 1f - (1f - settle) * (1f - settle);
+                newFrond.transform.localScale = _frondBaseScale * Mathf.Lerp(0.92f, 1f, eased);
+            }
+            if (dew != null)
+            {
+                EnsureDewPath();
+                bool rolling = answerTime >= 0.4f;
+                dew.enabled = rolling;
+                if (rolling && _dewPathReady && newFrond != null)
+                {
+                    float roll = Mathf.Clamp01((answerTime - 0.4f) / 1.2f);
+                    float eased = 1f - (1f - roll) * (1f - roll);
+                    Vector3 tip = newFrond.transform.TransformPoint(_dewTipLocal);
+                    Vector3 root = newFrond.transform.TransformPoint(_dewBaseLocal);
+                    dew.transform.position = Vector3.Lerp(tip, root, eased);
+                }
+            }
+        }
+
+        void EnsureDewPath()
+        {
+            if (_dewPathReady || newFrond == null) return;
+            var filter = newFrond.GetComponent<MeshFilter>();
+            Mesh mesh = filter != null ? filter.sharedMesh : null;
+            if (mesh == null || !mesh.isReadable || mesh.vertexCount == 0 || mesh.uv == null || mesh.uv.Length != mesh.vertexCount)
+                return;
+            Vector3[] vertices = mesh.vertices;
+            Vector2[] uv = mesh.uv;
+            int tip = 0;
+            int root = 0;
+            for (int i = 1; i < vertices.Length; i++)
+            {
+                if (uv[i].y > uv[tip].y) tip = i;
+                if (uv[i].y < uv[root].y) root = i;
+            }
+            _dewTipLocal = vertices[tip];
+            _dewBaseLocal = vertices[root];
+            _dewPathReady = true;
+        }
+
         void DriveSpores()
         {
             if (spores == null) return;
+            if (sporeStep >= 0f)
+            {
+                if (!_sporesLive)
+                {
+                    spores.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    spores.useAutoRandomSeed = false;
+                    spores.randomSeed = 5;
+                    spores.Simulate(12f, true, true, true);
+                    _sporesLive = true;
+                }
+                if (sporeStep > 0f) spores.Simulate(sporeStep, true, false, false);
+                return;
+            }
+            _sporesLive = false;
             spores.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             spores.useAutoRandomSeed = false;
             spores.randomSeed = 5;

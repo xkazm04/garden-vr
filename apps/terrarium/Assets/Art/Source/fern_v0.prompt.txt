@@ -1,0 +1,9 @@
+tool: image_gen
+date: 2026-10-02
+aspect_ratio: 2:3
+native_file: 15.jpg
+stored_size: 832x1248
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+note: moss_tuft_3 in the atlas is a horizontal flip of moss_tuft_2 (the fourth tuft generation was rate-limited)
+prompt:
+A single bipinnate fern frond stands vertical and centered on a pure black background, with black space around every leaflet. The lace is irregular: pinnae of uneven length, deep gaps, leaflets that do not mirror across the rachis. Pale yellow-green blades with a brighter mint edge. Front-lit botanical macro, sharp, the whole frond inside the frame, no ground shadow.

@@ -7,6 +7,11 @@ apps/terrarium/Assets/Art/Models, resolved from the current working directory.
 import bpy, bmesh, math, os, sys
 from mathutils import Vector, noise
 
+_HERE = os.path.dirname(os.path.abspath(__file__))
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
+import terrarium_moss
+
 random_seed = 4
 import random
 random.seed(random_seed)
@@ -85,16 +90,8 @@ cork = [(0.0, 0.1395), (0.0372, 0.1395), (0.0386, 0.1388), (0.0393, 0.1375), (0.
 lathe("Cork", cork, 96, uv_v=[1.0, 1.0, 0.95, 0.9, 0.35, 0.1, 0.0, 0.0])
 # soil: the dark layer under the moss
 lathe("Soil", [(0.0, 0.004), (0.0428, 0.004), (0.0436, 0.016), (0.0436, 0.030), (0.0, 0.031)], 96, uv_v=[0, 0, 0.45, 1.0, 1.0])
-# moss mound: lathe dome wrapped in the moss band (cylindrical UV, v = height), noise-clumped silhouette.
-# The cap gets a planar texture in the shader, so the lathe pole never shows.
-moss_prof = [(0.0436, 0.027), (0.0436, 0.031), (0.0425, 0.036), (0.0395, 0.0405), (0.034, 0.0440), (0.025, 0.0468), (0.013, 0.0482), (0.0, 0.0486)]
-m = lathe("Moss", moss_prof, 160, uv_v=[0.05, 0.2, 0.36, 0.5, 0.6, 0.66, 0.69, 0.70])
-for v in m.data.vertices:
-    p = v.co; h = (p.z - 0.031) / 0.018
-    if h > 0.05:
-        n = noise.noise(Vector((p.x * 170, p.y * 170, 0.4))) * 0.0020 + noise.noise(Vector((p.x * 560, p.y * 560, 1.3))) * 0.0007
-        d = Vector((p.x, p.y, 0)).normalized() if Vector((p.x, p.y)).length > 1e-5 else Vector((0, 0, 0))
-        v.co = p + d * n * 0.5 + Vector((0, 0, n * h))
+# Moss is clump cushions plus a 32-card skirt (terrarium_moss.py), not a lathe dome.
+moss_names = terrarium_moss.build()
 
 
 # fiddlehead: a swept tube along stem + logarithmic coil. Five uncoil states share topology.
@@ -149,7 +146,8 @@ for s_ in states: tube(f"Fiddle{int(s_ * 100)}", fiddle_points(s_))
 
 
 # frond card: a V-folded, arched strip that carries the painted pinnate texture (alpha-tested in Unity)
-def frond(name, w=0.040, h=0.082, fold=0.30, arch=0.016, cols=6, rows=20):
+def frond(name, w=0.040, h=0.082, fold=0.30, arch=0.016, cols=6, rows=20, uv_col=0, uv_cols=3):
+    """V-folded card. UV.x selects one column of the 3-frond atlas."""
     bm = bmesh.new(); uv = bm.loops.layers.uv.new(); grid = []
     for j in range(rows + 1):
         v = j / rows; row = []
@@ -162,11 +160,13 @@ def frond(name, w=0.040, h=0.082, fold=0.30, arch=0.016, cols=6, rows=20):
         for i in range(cols):
             f = bm.faces.new((grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i]))
             for l, (uu, vv) in zip(f.loops, ((i / cols, j / rows), ((i + 1) / cols, j / rows), ((i + 1) / cols, (j + 1) / rows), (i / cols, (j + 1) / rows))):
-                l[uv].uv = (uu, vv)
+                l[uv].uv = ((uv_col + uu) / uv_cols, vv)
     return obj_from_bm(bm, name)
 
 
-frond("Frond")
+frond("FrondV0", uv_col=0)
+frond("FrondV1", w=0.036, h=0.074, fold=0.24, arch=0.012, uv_col=1)
+frond("FrondV2", w=0.044, h=0.086, fold=0.36, arch=0.020, uv_col=2)
 
 
 # seedling: two cupped leaves on a short stem
@@ -196,7 +196,18 @@ tube("SeedStem", [Vector((0, 0, 0)), Vector((0.0005, 0, 0.006)), Vector((0, 0, 0
 
 # convert to Y-up for Unity happens in the exporter (axis_up='Y'); Blender Z is up here
 fbx_path = os.path.join(OUT, "night_jar.fbx")
-export(["Jar", "Cork", "Soil", "Moss", "Fiddle0", "Fiddle25", "Fiddle50", "Fiddle75", "Fiddle100", "Frond", "Seedling", "SeedStem"], fbx_path)
+names = ["Jar", "Cork", "Soil"] + moss_names + [
+    "Fiddle0", "Fiddle25", "Fiddle50", "Fiddle75", "Fiddle100",
+    "FrondV0", "FrondV1", "FrondV2", "Seedling", "SeedStem"]
+export(names, fbx_path)
+total = 0
+for _name in names:
+    me = bpy.data.objects[_name].data
+    me.calc_loop_triangles()
+    tris = len(me.loop_triangles)
+    total += tris
+    print("[hero] tris", _name, tris)
+print("[hero] tris TOTAL", total)
 
 # triangle census for the cost table
 reset(); bpy.ops.import_scene.fbx(filepath=fbx_path)
