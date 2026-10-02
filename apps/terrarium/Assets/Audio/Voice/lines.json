@@ -15,8 +15,8 @@
    "trigger": "RitualStart",
    "window_s": 4,
    "file": "Voice/vo.ter.open.01.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 2.78,
+   "take": 1
   },
   {
    "id": "vo.ter.open.02",
@@ -24,8 +24,8 @@
    "trigger": "RitualStart",
    "window_s": 4,
    "file": "Voice/vo.ter.open.02.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 2.95,
+   "take": 3
   },
   {
    "id": "vo.ter.in.01",
@@ -33,17 +33,20 @@
    "trigger": "PinchHold",
    "window_s": 1.8,
    "file": "Voice/vo.ter.in.01.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 1.26,
+   "take": 2
   },
   {
    "id": "vo.ter.in.02",
-   "text": "And in, slowly.",
+   "text": "In, slowly.",
    "trigger": "PinchHold",
    "window_s": 1.8,
    "file": "Voice/vo.ter.in.02.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 1.77,
+   "take": 2,
+   "was": "And in, slowly.",
+   "script_rev": 2,
+   "rewording": "first renders overran the window (2.1 s and 2.3 s against 1.8 s)"
   },
   {
    "id": "vo.ter.in.03",
@@ -51,8 +54,8 @@
    "trigger": "PinchHold",
    "window_s": 1.8,
    "file": "Voice/vo.ter.in.03.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 1.56,
+   "take": 3
   },
   {
    "id": "vo.ter.out.01",
@@ -60,8 +63,8 @@
    "trigger": "Release",
    "window_s": 2.5,
    "file": "Voice/vo.ter.out.01.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 1.31,
+   "take": 3
   },
   {
    "id": "vo.ter.out.02",
@@ -69,8 +72,8 @@
    "trigger": "Release",
    "window_s": 2.5,
    "file": "Voice/vo.ter.out.02.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 2.09,
+   "take": 3
   },
   {
    "id": "vo.ter.out.03",
@@ -78,8 +81,8 @@
    "trigger": "Release",
    "window_s": 2.5,
    "file": "Voice/vo.ter.out.03.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 1.54,
+   "take": 2
   },
   {
    "id": "vo.ter.mid.01",
@@ -87,18 +90,21 @@
    "trigger": "AfterBreath3",
    "window_s": 4,
    "file": "Voice/vo.ter.mid.01.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 3.01,
+   "take": 1
   },
   {
    "id": "vo.ter.last.01",
-   "text": "One more. The last one.",
+   "text": "One last breath.",
    "trigger": "PinchHold (breath 6)",
    "window_s": 1.8,
    "file": "Voice/vo.ter.last.01.mp3",
-   "measured_s": null,
-   "take": null,
-   "note": "added by the audio agent: the plan outline lists 12 of the 14 lines; this and vo.ter.resume.01 complete the count"
+   "measured_s": 1.54,
+   "take": 2,
+   "note": "added by the audio agent: the plan outline lists 12 of the 14 lines; this and vo.ter.resume.01 complete the count",
+   "was": "One more. The last one.",
+   "script_rev": 2,
+   "rewording": "first renders overran the window (2.1 s and 2.3 s against 1.8 s)"
   },
   {
    "id": "vo.ter.close.01",
@@ -106,8 +112,8 @@
    "trigger": "Answer",
    "window_s": 4,
    "file": "Voice/vo.ter.close.01.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 3.07,
+   "take": 2
   },
   {
    "id": "vo.ter.close.02",
@@ -115,8 +121,8 @@
    "trigger": "Answer",
    "window_s": 4,
    "file": "Voice/vo.ter.close.02.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 2.25,
+   "take": 3
   },
   {
    "id": "vo.ter.return.01",
@@ -124,8 +130,8 @@
    "trigger": "FirstRitualAfterGap",
    "window_s": 4,
    "file": "Voice/vo.ter.return.01.mp3",
-   "measured_s": null,
-   "take": null
+   "measured_s": 3.72,
+   "take": 1
   },
   {
    "id": "vo.ter.resume.01",
@@ -133,8 +139,8 @@
    "trigger": "ResumeFromPause",
    "window_s": 4,
    "file": "Voice/vo.ter.resume.01.mp3",
-   "measured_s": null,
-   "take": null,
+   "measured_s": 1.75,
+   "take": 2,
    "note": "added by the audio agent (see vo.ter.last.01)"
   }
  ]
