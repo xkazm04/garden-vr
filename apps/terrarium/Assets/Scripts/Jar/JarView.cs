@@ -503,6 +503,7 @@ namespace GardenVR.Terrarium
         void DriveSpores()
         {
             if (spores == null) return;
+            AlignSporeVelocity();
             if (sporeStep >= 0f)
             {
                 if (!_sporesLive)
@@ -524,6 +525,22 @@ namespace GardenVR.Terrarium
             // which is what moves the spores between a mid-breath still and a later one.
             float seconds = 12f + Mathf.Max(0f, time);
             spores.Simulate(seconds, true, true, true);
+        }
+
+        bool _sporeVelocityAligned;
+
+        /// <summary>
+        /// Unity 6 rejects a velocity module whose axes are not the same curve mode.
+        /// The saved jar has Y as two constants and X/Z as constants, which logs an error on Simulate.
+        /// </summary>
+        void AlignSporeVelocity()
+        {
+            if (_sporeVelocityAligned || spores == null) return;
+            var velocity = spores.velocityOverLifetime;
+            velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0.002f, 0.006f);
+            velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+            _sporeVelocityAligned = true;
         }
 
         ParticleSystem BuildSpores(Material material)
@@ -556,7 +573,9 @@ namespace GardenVR.Terrarium
             noise.frequency = 0.6f;
             var velocity = ps.velocityOverLifetime;
             velocity.enabled = true;
+            velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
             velocity.y = new ParticleSystem.MinMaxCurve(0.002f, 0.006f);
+            velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
             var color = ps.colorOverLifetime;
             color.enabled = true;
             var gradient = new Gradient();
