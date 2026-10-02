@@ -48,7 +48,7 @@ function nextTask() {
   return null;
 }
 
-function runGrok(task) {
+async function runGrok(task) {
   const id = task.id || task.file.replace(/\.md$/, '');
   const runDir = O('runs', app, id); fs.mkdirSync(runDir, { recursive: true });
   const taskPath = O('running', task.file);
@@ -59,18 +59,34 @@ function runGrok(task) {
     `Finish by writing ${wt}/orchestration/runs/${app}/${id}/REPORT.md with the evidence the task asks for, and commit it.`,
     `If you are blocked, still write REPORT.md explaining exactly what blocked you, with the error output.`,
   ].join('\n');
-  const args = ['-p', prompt, '-m', model, '--reasoning-effort', effort, '--output-format', 'json',
+  const flags = ['-m', model, '--reasoning-effort', effort, '--output-format', 'json',
     '--always-approve', '--permission-mode', 'bypassPermissions', '--cwd', wt];
-  return new Promise((resolve) => {
-    const t0 = Date.now();
+  const once = (args, tag) => new Promise((resolve) => {
     const child = spawn('grok', args, { cwd: wt, env: { ...process.env, GROK_AGENT_DASHBOARD: '0' }, shell: false, windowsHide: true });
-    const out = fs.createWriteStream(path.join(runDir, 'grok.json'));
-    const err = fs.createWriteStream(path.join(runDir, 'grok.stderr.log'));
+    const out = fs.createWriteStream(path.join(runDir, `grok${tag}.json`));
+    const err = fs.createWriteStream(path.join(runDir, `grok${tag}.stderr.log`));
     child.stdout.pipe(out); child.stderr.pipe(err);
     const timer = setTimeout(() => { log(`${id}: timeout after ${timeoutMin} min, killing`); child.kill('SIGTERM'); }, timeoutMin * 60000);
-    child.on('close', (code) => { clearTimeout(timer); resolve({ id, code, wallS: Math.round((Date.now() - t0) / 1000) }); });
-    child.on('error', (e) => { clearTimeout(timer); log(`${id}: spawn error ${e.message}`); resolve({ id, code: -1, wallS: 0 }); });
+    child.on('close', (code) => { clearTimeout(timer); resolve(code); });
+    child.on('error', (e) => { clearTimeout(timer); log(`${id}: spawn error ${e.message}`); resolve(-1); });
   });
+  const sessionOf = (tag) => { try { const t = fs.readFileSync(path.join(runDir, `grok${tag}.json`), 'utf8'); return JSON.parse(t.slice(t.indexOf('{'))).sessionId; } catch { return null; } };
+  const report = path.join(wt, 'orchestration', 'runs', app, id, 'REPORT.md');
+  const t0 = Date.now();
+  let code = await once(['-p', prompt, ...flags], '');
+  // Headless Grok ends its run whenever it ends a turn, including "I'll read the log when Unity finishes" (measured
+  // twice: T-SUN-001, T-TER-005). A clean exit with no REPORT.md is resumed in the same session, at most twice.
+  let session = sessionOf('');
+  for (let n = 1; n <= 2 && code === 0 && !fs.existsSync(report) && session; n++) {
+    log(`${id}: exited without REPORT.md, resuming session (continuation ${n})`);
+    code = await once(['-r', session, '-p', [
+      'Continue the task. Your previous turn ended while you were waiting on a process (likely Unity), so nothing after that ran.',
+      'Check whether that process finished (read its log; if it is still running, wait for it in the FOREGROUND, e.g. poll in one blocking command).',
+      'Then finish the remaining steps, verify, commit, and write the REPORT.md. Do not end your turn until REPORT.md is committed.',
+    ].join('\n'), ...flags], `.cont${n}`);
+    session = sessionOf(`.cont${n}`) || session;
+  }
+  return { id, code, wallS: Math.round((Date.now() - t0) / 1000) };
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
