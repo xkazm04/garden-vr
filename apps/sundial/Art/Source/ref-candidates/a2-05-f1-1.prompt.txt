@@ -1,0 +1,7 @@
+﻿id: A/2-05-F1
+aspect: 16:9
+prompt: |
+  Style: hand-drawn animation linework placed into a real photographed room. The sundial garden is drawn like a frame of a hand-animated film: clean confident ink contours of varying weight, flat cel colours with a single soft shade step, loose watercolour washes filling the three arcs, a few pencil construction lines and tiny tick marks, slight paper grain only on the drawn object; the surrounding kitchen stays a real photograph with natural light and depth. First-person view from a seated person's eyes at a real kitchen table in daylight. Floating just below eye level, a plate-sized round sundial garden bed with three arcs for morning, midday and dusk, a slender inked gnomon casting a soft painted shadow at midday, one small drawn plant in each arc beside seven little tiles, some coloured, some pale. The person's real bare right hand pinches toward the midday plant, and a hand-drawn sparkle ring answers the pinch. The contrast between drawn object and real room is the focal point.
+
+shared negative: text, letters, numbers, clock numerals, captions, watermark, logo, signature, UI panels, menus, frame border, extra fingers, six fingers, fused fingers, missing fingers, deformed hands, twisted wrists, game controller, VR headset visible, smartphone, screen, cluttered background, faces, blurry, low resolution, jpeg artifacts
+extra negative: 3D render, CGI, plastic, photorealistic plants, chibi characters, faces, speech bubbles, manga text, screen tones covering the room
