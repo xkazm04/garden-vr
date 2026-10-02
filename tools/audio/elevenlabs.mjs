@@ -40,11 +40,21 @@ function args(argv) {
   return out;
 }
 
+
+// ElevenLabs rate-limits bursts (429); back off and retry rather than fail a batch half-way.
+async function xfetch(url, init, tries = 6) {
+  for (let i = 0; ; i++) {
+    const r = await fetch(url, init);
+    if (r.status !== 429 || i >= tries - 1) return r;
+    await new Promise((res) => setTimeout(res, 4000 * 2 ** i));
+  }
+}
+
 const key = () => { loadEnv(); if (!process.env.ELEVENLABS_API_KEY) die('ELEVENLABS_API_KEY not found (.env)'); return process.env.ELEVENLABS_API_KEY; };
 function die(msg, extra) { console.error(JSON.stringify({ ok: false, error: msg, ...extra }, null, 1)); process.exit(1); }
 
 async function credits() {
-  const r = await fetch(`${API}/v1/user/subscription`, { headers: { 'xi-api-key': key() } });
+  const r = await xfetch(`${API}/v1/user/subscription`, { headers: { 'xi-api-key': key() } });
   if (!r.ok) die('subscription lookup failed', { status: r.status, body: await r.text() });
   const d = await r.json();
   return { tier: d.tier, used: d.character_count, limit: d.character_limit, remaining: d.character_limit - d.character_count, resetsAt: new Date(d.next_character_count_reset_unix * 1000).toISOString() };
@@ -57,7 +67,7 @@ async function guard(estimate, label) {
 }
 
 async function postAudio(url, body, out) {
-  const r = await fetch(url, { method: 'POST', headers: { 'xi-api-key': key(), 'content-type': 'application/json', accept: 'audio/mpeg' }, body: JSON.stringify(body) });
+  const r = await xfetch(url, { method: 'POST', headers: { 'xi-api-key': key(), 'content-type': 'application/json', accept: 'audio/mpeg' }, body: JSON.stringify(body) });
   if (!r.ok) die('generation failed', { status: r.status, body: (await r.text()).slice(0, 600) });
   const buf = Buffer.from(await r.arrayBuffer());
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
