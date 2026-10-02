@@ -1,0 +1,349 @@
+{
+ "app": "sundial",
+ "version": 1,
+ "cues": [
+  {
+   "id": "amb.kitchen",
+   "clips": [
+    "Sfx/amb.kitchen.v1.ogg"
+   ],
+   "bus": "ambient",
+   "space": "2d",
+   "priorityBand": 3,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": true,
+   "placeholder": false
+  },
+  {
+   "id": "dial.appear",
+   "clips": [
+    "Sfx/dial.appear.v1.mp3",
+    "Sfx/dial.appear.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "tend.tock",
+   "clips": [
+    "Sfx/tend.tock.v1.mp3",
+    "Sfx/tend.tock.v2.mp3",
+    "Sfx/tend.tock.v3.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.08,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "tile.ink",
+   "clips": [
+    "Sfx/tile.ink.v1.mp3",
+    "Sfx/tile.ink.v2.mp3",
+    "Sfx/tile.ink.v3.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.15,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "tend.undo",
+   "clips": [
+    "Sfx/tend.undo.v1.mp3",
+    "Sfx/tend.undo.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.3,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "tile.hatch",
+   "clips": [
+    "Sfx/tile.hatch.v1.mp3",
+    "Sfx/tile.hatch.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.3,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "packet.open",
+   "clips": [
+    "Sfx/packet.open.v1.mp3",
+    "Sfx/packet.open.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.3,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "seed.drop",
+   "clips": [
+    "Sfx/seed.drop.v1.mp3",
+    "Sfx/seed.drop.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.5,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "bloom.flutter",
+   "clips": [
+    "Sfx/bloom.flutter.v1.mp3",
+    "Sfx/bloom.flutter.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.5,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "dusk.chime",
+   "clips": [
+    "Sfx/dusk.chime.v1.mp3",
+    "Sfx/dusk.chime.v2.mp3",
+    "Sfx/dusk.chime.v3.mp3"
+   ],
+   "bus": "reward",
+   "space": "3d",
+   "priorityBand": 1,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "tab.tap",
+   "clips": [
+    "Sfx/tab.tap.v1.mp3",
+    "Sfx/tab.tap.v2.mp3"
+   ],
+   "bus": "interaction",
+   "space": "3d",
+   "priorityBand": 2,
+   "maxConcurrent": 1,
+   "cooldownS": 0.2,
+   "pitchJitter": 0.03,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "bed.morning",
+   "clips": [
+    "Music/bed.morning.ogg"
+   ],
+   "bus": "music",
+   "space": "2d",
+   "priorityBand": 4,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": true,
+   "placeholder": false
+  },
+  {
+   "id": "bed.midday",
+   "clips": [
+    "Music/bed.midday.ogg"
+   ],
+   "bus": "music",
+   "space": "2d",
+   "priorityBand": 4,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": true,
+   "placeholder": false
+  },
+  {
+   "id": "bed.dusk",
+   "clips": [
+    "Music/bed.dusk.ogg"
+   ],
+   "bus": "music",
+   "space": "2d",
+   "priorityBand": 4,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": true,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.open.01",
+   "clips": [
+    "Voice/vo.sun.open.01.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.in.01",
+   "clips": [
+    "Voice/vo.sun.in.01.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.in.02",
+   "clips": [
+    "Voice/vo.sun.in.02.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.out.01",
+   "clips": [
+    "Voice/vo.sun.out.01.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.out.02",
+   "clips": [
+    "Voice/vo.sun.out.02.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.last.01",
+   "clips": [
+    "Voice/vo.sun.last.01.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.close.01",
+   "clips": [
+    "Voice/vo.sun.close.01.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  },
+  {
+   "id": "vo.sun.first.01",
+   "clips": [
+    "Voice/vo.sun.first.01.mp3"
+   ],
+   "bus": "voice",
+   "space": "2d",
+   "priorityBand": 0,
+   "maxConcurrent": 1,
+   "cooldownS": 0,
+   "pitchJitter": 0,
+   "gainDb": 0,
+   "loop": false,
+   "placeholder": false
+  }
+ ]
+}

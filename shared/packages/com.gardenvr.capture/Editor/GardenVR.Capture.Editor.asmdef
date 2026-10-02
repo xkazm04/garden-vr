@@ -1,0 +1,19 @@
+{
+  "name": "GardenVR.Capture.Editor",
+  "rootNamespace": "GardenVR.Capture.Editor",
+  "references": [
+    "GardenVR.Capture",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

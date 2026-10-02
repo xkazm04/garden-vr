@@ -1,0 +1,85 @@
+{
+ "app": "sundial",
+ "voice_id": "3Tw8C9N2okjMpXowdRPp",
+ "model": "eleven_multilingual_v2",
+ "settings": {
+  "stability": 0.65,
+  "similarity": 0.75,
+  "style": 0.1
+ },
+ "script_rev": 1,
+ "lines": [
+  {
+   "id": "vo.sun.open.01",
+   "text": "Three breaths to close the day.",
+   "trigger": "RitualStart",
+   "window_s": 4,
+   "file": "Voice/vo.sun.open.01.mp3",
+   "measured_s": 2.33,
+   "take": 2
+  },
+  {
+   "id": "vo.sun.in.01",
+   "text": "Breathe in.",
+   "trigger": "PinchHold",
+   "window_s": 1.8,
+   "file": "Voice/vo.sun.in.01.mp3",
+   "measured_s": 1.24,
+   "take": 1
+  },
+  {
+   "id": "vo.sun.in.02",
+   "text": "In, slowly.",
+   "trigger": "PinchHold",
+   "window_s": 1.8,
+   "file": "Voice/vo.sun.in.02.mp3",
+   "measured_s": 1.54,
+   "take": 3
+  },
+  {
+   "id": "vo.sun.out.01",
+   "text": "And out.",
+   "trigger": "Release",
+   "window_s": 2.5,
+   "file": "Voice/vo.sun.out.01.mp3",
+   "measured_s": 1.18,
+   "take": 3
+  },
+  {
+   "id": "vo.sun.out.02",
+   "text": "Let it go.",
+   "trigger": "Release",
+   "window_s": 2.5,
+   "file": "Voice/vo.sun.out.02.mp3",
+   "measured_s": 1.27,
+   "take": 3
+  },
+  {
+   "id": "vo.sun.last.01",
+   "text": "One more.",
+   "trigger": "PinchHold (breath 3)",
+   "window_s": 1.8,
+   "file": "Voice/vo.sun.last.01.mp3",
+   "measured_s": 1.08,
+   "take": 2
+  },
+  {
+   "id": "vo.sun.close.01",
+   "text": "That's the day. Goodnight.",
+   "trigger": "RitualComplete",
+   "window_s": 4,
+   "file": "Voice/vo.sun.close.01.mp3",
+   "measured_s": 1.96,
+   "take": 3
+  },
+  {
+   "id": "vo.sun.first.01",
+   "text": "Here is your day.",
+   "trigger": "FirstRun (voice guide on)",
+   "window_s": 4,
+   "file": "Voice/vo.sun.first.01.mp3",
+   "measured_s": 1.54,
+   "take": 3
+  }
+ ]
+}

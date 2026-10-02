@@ -1,0 +1,147 @@
+{
+ "app": "terrarium",
+ "voice_id": "3Tw8C9N2okjMpXowdRPp",
+ "model": "eleven_multilingual_v2",
+ "settings": {
+  "stability": 0.65,
+  "similarity": 0.75,
+  "style": 0.1
+ },
+ "script_rev": 2,
+ "lines": [
+  {
+   "id": "vo.ter.open.01",
+   "text": "Let's take six slow breaths together.",
+   "trigger": "RitualStart",
+   "window_s": 4,
+   "file": "Voice/vo.ter.open.01.mp3",
+   "measured_s": 2.78,
+   "take": 1
+  },
+  {
+   "id": "vo.ter.open.02",
+   "text": "Settle in. The jar will follow you.",
+   "trigger": "RitualStart",
+   "window_s": 4,
+   "file": "Voice/vo.ter.open.02.mp3",
+   "measured_s": 2.95,
+   "take": 3
+  },
+  {
+   "id": "vo.ter.in.01",
+   "text": "Breathe in.",
+   "trigger": "PinchHold",
+   "window_s": 1.8,
+   "file": "Voice/vo.ter.in.01.mp3",
+   "measured_s": 1.26,
+   "take": 2
+  },
+  {
+   "id": "vo.ter.in.02",
+   "text": "In, slowly.",
+   "trigger": "PinchHold",
+   "window_s": 1.8,
+   "file": "Voice/vo.ter.in.02.mp3",
+   "measured_s": 1.77,
+   "take": 2,
+   "was": "And in, slowly.",
+   "script_rev": 2,
+   "rewording": "first text \"And in, slowly.\" rendered 2.10 to 2.25 s on all three takes against a 1.8 s window"
+  },
+  {
+   "id": "vo.ter.in.03",
+   "text": "Fill up gently.",
+   "trigger": "PinchHold",
+   "window_s": 1.8,
+   "file": "Voice/vo.ter.in.03.mp3",
+   "measured_s": 1.56,
+   "take": 3
+  },
+  {
+   "id": "vo.ter.out.01",
+   "text": "And let go.",
+   "trigger": "Release",
+   "window_s": 2.5,
+   "file": "Voice/vo.ter.out.01.mp3",
+   "measured_s": 1.31,
+   "take": 3
+  },
+  {
+   "id": "vo.ter.out.02",
+   "text": "Let it out, softly.",
+   "trigger": "Release",
+   "window_s": 2.5,
+   "file": "Voice/vo.ter.out.02.mp3",
+   "measured_s": 2.09,
+   "take": 3
+  },
+  {
+   "id": "vo.ter.out.03",
+   "text": "All the way out.",
+   "trigger": "Release",
+   "window_s": 2.5,
+   "file": "Voice/vo.ter.out.03.mp3",
+   "measured_s": 1.54,
+   "take": 2
+  },
+  {
+   "id": "vo.ter.mid.01",
+   "text": "Halfway. The fern is listening.",
+   "trigger": "AfterBreath3",
+   "window_s": 4,
+   "file": "Voice/vo.ter.mid.01.mp3",
+   "measured_s": 3.01,
+   "take": 1
+  },
+  {
+   "id": "vo.ter.last.01",
+   "text": "One last breath.",
+   "trigger": "PinchHold (breath 6)",
+   "window_s": 1.8,
+   "file": "Voice/vo.ter.last.01.mp3",
+   "measured_s": 1.54,
+   "take": 2,
+   "note": "added by the audio agent: the plan outline lists 12 of the 14 lines; this and vo.ter.resume.01 complete the count",
+   "was": "One more. The last one.",
+   "script_rev": 2,
+   "rewording": "first text \"One more. The last one.\" rendered 2.34 to 2.48 s on all three takes against a 1.8 s window"
+  },
+  {
+   "id": "vo.ter.close.01",
+   "text": "Six breaths. This frond stays.",
+   "trigger": "Answer",
+   "window_s": 4,
+   "file": "Voice/vo.ter.close.01.mp3",
+   "measured_s": 3.07,
+   "take": 2
+  },
+  {
+   "id": "vo.ter.close.02",
+   "text": "Rest here as long as you like.",
+   "trigger": "Answer",
+   "window_s": 4,
+   "file": "Voice/vo.ter.close.02.mp3",
+   "measured_s": 2.25,
+   "take": 3
+  },
+  {
+   "id": "vo.ter.return.01",
+   "text": "Welcome back. Everything you grew is still here.",
+   "trigger": "FirstRitualAfterGap",
+   "window_s": 4,
+   "file": "Voice/vo.ter.return.01.mp3",
+   "measured_s": 3.72,
+   "take": 1
+  },
+  {
+   "id": "vo.ter.resume.01",
+   "text": "Whenever you are ready.",
+   "trigger": "ResumeFromPause",
+   "window_s": 4,
+   "file": "Voice/vo.ter.resume.01.mp3",
+   "measured_s": 1.75,
+   "take": 2,
+   "note": "added by the audio agent (see vo.ter.last.01)"
+  }
+ ]
+}
