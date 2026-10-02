@@ -23,7 +23,7 @@ const effort = opt('effort', 'high'); const timeoutMin = Number(opt('timeout-min
 if (!app || !wt) { console.error('need --app and --worktree'); process.exit(1); }
 
 const O = (...p) => path.join(main, 'orchestration', ...p);
-for (const d of ['queue/' + app, 'running', 'done', 'failed', 'runs/' + app]) fs.mkdirSync(O(d), { recursive: true });
+for (const d of ['queue/' + app, 'running', 'done', 'merged', 'failed', 'runs/' + app]) fs.mkdirSync(O(d), { recursive: true });
 const log = (m) => { const line = `[${new Date().toISOString()}] [${app}] ${m}`; console.log(line); fs.appendFileSync(O('runs', app, 'loop.log'), line + '\n'); };
 
 const front = (txt) => {
@@ -32,13 +32,18 @@ const front = (txt) => {
   f.depends = (f.depends || '').replace(/[\[\]]/g, '').split(',').map((s) => s.trim()).filter(Boolean);
   return f;
 };
-const doneIds = () => new Set(fs.readdirSync(O('done')).map((n) => (n.match(/^(T-[A-Z]+-\d+)/) || [])[1]).filter(Boolean));
+const ids = (dir) => new Set(fs.readdirSync(O(dir)).map((n) => (n.match(/^(T-[A-Z]+-\d+)/) || [])[1]).filter(Boolean));
+// A dependency on this agent's own task is met when it is done (the code is already on this branch). A dependency on
+// the OTHER agent's task is met only once the host has merged it to main and moved it to merged/ - the code must exist
+// here before work that builds on it starts.
+const PREFIX = { terrarium: 'T-TER-', sundial: 'T-SUN-' }[app];
+const depMet = (d, done, merged) => merged.has(d) || (d.startsWith(PREFIX) && done.has(d));
 
 function nextTask() {
-  const done = doneIds();
+  const done = ids('done'), merged = ids('merged');
   for (const n of fs.readdirSync(O('queue', app)).filter((n) => n.endsWith('.md')).sort()) {
     const f = front(fs.readFileSync(O('queue', app, n), 'utf8'));
-    if (f.depends.every((d) => done.has(d))) return { file: n, ...f };
+    if (f.depends.every((d) => depMet(d, done, merged))) return { file: n, ...f };
   }
   return null;
 }
@@ -74,6 +79,10 @@ while (true) {
   if (fs.existsSync(O('STOP-' + app))) { log('STOP file present, exiting'); break; }
   const task = nextTask();
   if (!task) { await sleep(120000); continue; }
+  // Pull in whatever the host merged since the last task (shared packages, the other agent's work).
+  await new Promise((res) => { const g = spawn('git', ['-C', wt, 'merge', '--no-edit', 'main'], { windowsHide: true });
+    let o = ''; g.stdout.on('data', (d) => (o += d)); g.stderr.on('data', (d) => (o += d));
+    g.on('close', (code) => { if (code !== 0) { log(`merge main failed, aborting merge: ${o.trim().slice(0, 300)}`); spawn('git', ['-C', wt, 'merge', '--abort']); } else log(`merged main: ${o.trim().split(/\r?\n/)[0]}`); res(); }); });
   fs.renameSync(O('queue', app, task.file), O('running', task.file));
   log(`start ${task.file}`);
   const r = await runGrok(task);
