@@ -1,0 +1,13 @@
+{"t":0,"intent":"PinchHold","target":"jar","dur":4}
+{"t":4,"intent":"Release","target":"jar"}
+{"t":9,"intent":"PinchHold","target":"jar","dur":4.2}
+{"t":13.2,"intent":"Release","target":"jar"}
+{"t":18.7,"intent":"PinchHold","target":"jar","dur":4.5}
+{"t":23.2,"intent":"Release","target":"jar"}
+{"t":29.2,"intent":"PinchHold","target":"jar","dur":4.1}
+{"t":33.3,"intent":"Release","target":"jar"}
+{"t":38.5,"intent":"PinchHold","target":"jar","dur":4.3}
+{"t":42.8,"intent":"Release","target":"jar"}
+{"t":48.6,"intent":"PinchHold","target":"jar","dur":4.4}
+{"t":53,"intent":"Release","target":"jar"}
+{"t":53,"intent":"Look","target":"jar","dur":6}
