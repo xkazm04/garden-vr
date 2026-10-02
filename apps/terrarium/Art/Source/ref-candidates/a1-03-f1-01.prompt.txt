@@ -1,0 +1,11 @@
+tool: image_gen
+date: 2026-10-02
+aspect_ratio: 16:9
+native_file: 3.jpg
+stored_size: 1280x720
+gate: A1-03-F1
+status: provisional, owner picks at R2, not an anchor
+negative: text, letters, numbers, clock numerals, captions, watermark, logo, signature, UI panels, menus, frame border, extra fingers, six fingers, fused fingers, missing fingers, deformed hands, twisted wrists, game controller, VR headset visible, smartphone, screen, cluttered background, faces, blurry, low resolution, jpeg artifacts, neon, cyberpunk, harsh bloom, horror, glowing eyes
+variation: Candidate one, the dew bead still touching the frond tip.
+prompt:
+Style: soft bioluminescent night garden. Dim room, the terrarium is the main light source, moss and fern edges glowing gentle mint, tiny drifting golden spores, subtle glass rim light, deep teal shadows, hushed and sleepy, no harsh contrast. First-person view from a seated person's eyes at a real wooden desk in a dark bedroom at night, mixed-reality look, the room barely visible. On the desk within arm's reach a palm-sized glass terrarium jar with a cork lid; inside, a fern frond has just finished unfurling and settles into place, a single bead of glowing dew rolling off its tip, a slow ripple of brighter mint light spreading through the moss. The person's bare right hand is opening from a pinch, fingers relaxing, softly lit by the jar from below. A faint complete ring of light circles the jar's base. The moment of a small reward, quiet and earned; the new frond, the dew bead and the relaxing hand are the focal points.
