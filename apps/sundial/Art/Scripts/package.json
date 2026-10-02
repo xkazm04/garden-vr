@@ -1,0 +1,9 @@
+{
+  "name": "sundial-art-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Rasterise the sundial dial face. playwright-core drives system Chrome; it does not download a browser.",
+  "dependencies": {
+    "playwright-core": "1.55.1"
+  }
+}
