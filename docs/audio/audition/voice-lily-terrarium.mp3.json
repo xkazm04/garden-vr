@@ -1,0 +1,11 @@
+{
+ "kind": "tts",
+ "voice": "pFZP5JQG7iQjIQuC4Bku",
+ "model": "eleven_multilingual_v2",
+ "chars": 101,
+ "text": "Hold, and breathe in slowly. Now let go, and breathe out. The fern follows you, one breath at a time.",
+ "out": "docs/audio/audition/voice-lily-terrarium.mp3",
+ "bytes": 126685,
+ "creditsBefore": 50019,
+ "creditsAfter": 50019
+}

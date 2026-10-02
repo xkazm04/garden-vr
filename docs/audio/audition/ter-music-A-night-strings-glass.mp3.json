@@ -1,0 +1,9 @@
+{
+ "kind": "music",
+ "prompt": "very quiet ambient pad at night, warm low strings and distant soft glass tones, slowly evolving, no percussion, no melody, no build-up, intimate, sleepy",
+ "seconds": 20,
+ "out": "docs/audio/audition/ter-music-A-night-strings-glass.mp3",
+ "bytes": 321037,
+ "creditsBefore": 52529,
+ "creditsAfter": 52529
+}
