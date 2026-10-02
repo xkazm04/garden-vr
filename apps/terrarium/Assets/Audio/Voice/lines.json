@@ -7,7 +7,7 @@
   "similarity": 0.75,
   "style": 0.1
  },
- "script_rev": 1,
+ "script_rev": 2,
  "lines": [
   {
    "id": "vo.ter.open.01",
@@ -46,7 +46,7 @@
    "take": 2,
    "was": "And in, slowly.",
    "script_rev": 2,
-   "rewording": "first renders overran the window (2.1 s and 2.3 s against 1.8 s)"
+   "rewording": "first text \"And in, slowly.\" rendered 2.10 to 2.25 s on all three takes against a 1.8 s window"
   },
   {
    "id": "vo.ter.in.03",
@@ -104,7 +104,7 @@
    "note": "added by the audio agent: the plan outline lists 12 of the 14 lines; this and vo.ter.resume.01 complete the count",
    "was": "One more. The last one.",
    "script_rev": 2,
-   "rewording": "first renders overran the window (2.1 s and 2.3 s against 1.8 s)"
+   "rewording": "first text \"One more. The last one.\" rendered 2.34 to 2.48 s on all three takes against a 1.8 s window"
   },
   {
    "id": "vo.ter.close.01",
