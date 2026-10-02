@@ -1,8 +1,4 @@
 asset: soil.png
-date: 2026-10-02
-method: composed by tools/blender/sundial_textures.py
-sources: soil.png (image_gen gouache and ink stipple)
-size: 1024
+method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
+note: painted by code (IWSDK seat SVG), interim
 derived_from_art_reference: no
-sha256: 115290d3e56abb20d48941c7594914c425a93b2831cbda295438243b9f026b61
-note: graded toward #A0836C; extra ink stipple added in script. Not a photograph.

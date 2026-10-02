@@ -1,7 +1,4 @@
 asset: plant_dusk_1.png
-date: 2026-10-02
-method: composed by tools/blender/sundial_textures.py
-sources: plant_dusk.png
-note: boil frame 1: outline resampled from plant_dusk.png, interior pixels copied
+method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
+note: painted by code (IWSDK seat SVG), interim
 derived_from_art_reference: no
-sha256: f2e6085ed89a7b5b3a0edd0aad0831b7315a61607045d6b3b992ebdab1227879

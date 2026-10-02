@@ -1,7 +1,4 @@
 asset: plant_midday_2.png
-date: 2026-10-02
-method: composed by tools/blender/sundial_textures.py
-sources: plant_midday.png
-note: boil frame 2: outline resampled from plant_midday.png, interior pixels copied
+method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
+note: painted by code (IWSDK seat SVG), interim
 derived_from_art_reference: no
-sha256: 4c4126b19e476482fb6e51ffc097a05a92021ed50ebcd038aa0d76299034fc30

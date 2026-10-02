@@ -1,6 +1,4 @@
 asset: halo_midday.png
-date: 2026-10-02
-method: dilated silhouette of plant_midday_0, gold #F5C76A, scripted
-sources: plant_midday.png
+method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
+note: painted by code (IWSDK seat SVG), interim
 derived_from_art_reference: no
-sha256: 9d67824680ab85fa6e530c7cbb10f9b990cdc6ab4493cd0f3b08237e9b47bdda
