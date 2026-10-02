@@ -1,0 +1,11 @@
+tool: image_gen
+date: 2026-10-02
+aspect_ratio: 16:9
+native_file: 4.jpg
+stored_size: 1280x720
+gate: A1-03-F2
+status: provisional, owner picks at R2, not an anchor
+negative: text, letters, numbers, clock numerals, captions, watermark, logo, signature, UI panels, menus, frame border, extra fingers, six fingers, fused fingers, missing fingers, deformed hands, twisted wrists, game controller, VR headset visible, smartphone, screen, cluttered background, faces, blurry, low resolution, jpeg artifacts, neon, cyberpunk, harsh bloom, horror, glowing eyes
+variation: Candidate one.
+prompt:
+Style: soft bioluminescent night garden. Dim room, the terrarium is the main light source, moss and fern edges glowing gentle mint, tiny drifting golden spores, subtle glass rim light, deep teal shadows, hushed and sleepy, no harsh contrast. First-person view from a seated person's eyes at a real desk at night, mixed-reality look. A palm-sized glass terrarium jar holds a small lush fern garden grown over a week: seven fronds of slightly different sizes, each glowing a little differently, the newest brightest, a first tiny luminous flower opening at the centre, one quieter frond still healthy but unlit where a day was missed. The person's bare hand rests open beside the jar. Calm pride, nothing wilted or sad; the garden's week is readable at a glance.

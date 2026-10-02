@@ -1,0 +1,9 @@
+tool: image_edit
+date: 2026-10-03
+aspect_ratio: 1:1
+native_file: 18.jpg
+source: moss_albedo.png (the first cushion plate, native 14.jpg)
+pixels: generated, not cropped or keyed from shared/assets/art-reference/
+note: image_edit kept a central rosette. key_alpha.py quilts patches of this plate so the rosette cannot repeat, and raises crevice contrast.
+prompt:
+Keep this top-down velvety cushion moss, the deep teal-green crevices, and the bright yellow-green tips. Replace the large flower-like rosette in the centre with the same small irregular cushions that fill the rest of the frame. Make the brightness even from the centre out to every edge, a uniform field of anonymous cushions with no circular glow and no shape that stands out. The pattern fills the frame edge to edge.

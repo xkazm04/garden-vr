@@ -38,7 +38,7 @@ Material:
     - _T: 0
     - _ZTest: 4
     m_Colors:
-    - _Color: {r: 0.24000001, g: 0.68, b: 0.35999998, a: 0.8}
+    - _Color: {r: 0.135, g: 0.3825, b: 0.20249999, a: 0.45}
     - _Color2: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
