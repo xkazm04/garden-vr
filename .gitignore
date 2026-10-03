@@ -32,6 +32,10 @@ node_modules/
 # Blender
 *.blend1
 
+# Fidelity lab. CUDA torch lives here; recreate it from tools/fidelity/README.md.
+tools/fidelity/.venv/
+tools/fidelity/**/__pycache__/
+
 # Secrets and local state
 .env
 .env.*
