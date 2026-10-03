@@ -29,8 +29,6 @@ namespace GardenVR.Sundial
         public static bool SuppressBreathOffer;
 
         static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
-        static readonly Color Ink = new Color(0.165f, 0.149f, 0.133f, 1f);
-        static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.96f);
         static readonly Color Pencil = new Color(0.541f, 0.506f, 0.471f, 1f);
         static readonly Color Gold = new Color(0.961f, 0.780f, 0.416f, 0.55f);
 
@@ -49,7 +47,6 @@ namespace GardenVR.Sundial
         float _firstTendAt = -1f;
         float _ritualDoneAt = -1f;
 
-        Font _font;
         Material _card;
         Texture2D _white;
         Texture2D _ring;
@@ -408,9 +405,8 @@ namespace GardenVR.Sundial
             _glow = Circle(true);
             _upright = UprightQuad();
             _flat = FlatQuad();
-            _font = Resources.Load<Font>("FirstRunHand");
-            if (_font == null) _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (_font != null)
+            Font hand = InkLetter.Hand;
+            if (hand != null)
             {
                 var chars = new System.Text.StringBuilder();
                 chars.Append(SeedCatalog.DayCaption);
@@ -421,7 +417,7 @@ namespace GardenVR.Sundial
                     chars.Append(SeedCatalog.All[i].Title);
                     chars.Append(SeedCatalog.All[i].Cue);
                 }
-                _font.RequestCharactersInTexture(chars.ToString(), 64, FontStyle.Normal);
+                hand.RequestCharactersInTexture(chars.ToString(), 64, FontStyle.Normal);
             }
             string[] arcs = { "morning", "midday", "winddown" };
             for (int i = 0; i < arcs.Length; i++)
@@ -433,6 +429,7 @@ namespace GardenVR.Sundial
                 _seeds[i].SetActive(false);
             }
             _caption = MakeText("DayCaption", SeedCatalog.DayCaption, 56, 0.0042f, null);
+            InkLetter.AttachNote(_caption.transform, new Vector2(0.24f, 0.050f));
             _caption.SetActive(false);
             _construction = MakeQuad("PencilConstruction", _flat, _ring, Pencil, null);
             _construction.SetActive(false);
@@ -447,9 +444,7 @@ namespace GardenVR.Sundial
             if (_restore != null) return;
             _restore = new GameObject("RestorePrompt");
             _restore.transform.SetParent(transform, false);
-            var paper = MakeQuad("chip", _upright, _white, Paper, null);
-            paper.transform.SetParent(_restore.transform, false);
-            paper.transform.localScale = new Vector3(0.16f, 0.07f, 1f);
+            InkLetter.AttachNote(_restore.transform, new Vector2(0.20f, 0.086f));
             var title = MakeText("title", SeedCatalog.RestoreTitle, 48, 0.0024f, null);
             title.transform.SetParent(_restore.transform, false);
             title.transform.localPosition = new Vector3(0f, 0.012f, -0.001f);
@@ -503,9 +498,7 @@ namespace GardenVR.Sundial
                     string line = preset.Title + "\n" + preset.Cue;
                     GameObject chip = new GameObject("chip." + preset.Key);
                     chip.transform.SetParent(transform, false);
-                    var paper = MakeQuad("paper", _upright, _white, Paper, null);
-                    paper.transform.SetParent(chip.transform, false);
-                    paper.transform.localScale = new Vector3(0.155f, 0.034f, 1f);
+                    InkLetter.AttachNote(chip.transform, new Vector2(0.20f, 0.052f));
                     var text = MakeText("label", line, 40, 0.00155f, SeedCatalog.PresetId(preset));
                     text.transform.SetParent(chip.transform, false);
                     text.transform.localPosition = new Vector3(0f, 0f, -0.001f);
@@ -523,7 +516,7 @@ namespace GardenVR.Sundial
             toward.Normalize();
             for (int i = 0; i < _chips.Count; i++)
             {
-                _chips[i].transform.position = origin + Vector3.up * (0.05f + i * 0.038f) + toward * 0.03f;
+                _chips[i].transform.position = origin + Vector3.up * (0.05f + i * 0.056f) + toward * 0.03f;
             }
         }
 
@@ -648,13 +641,7 @@ namespace GardenVR.Sundial
         GameObject FinishText(GameObject go, string text, int fontSize, float characterSize, string id)
         {
             var mesh = go.AddComponent<TextMesh>();
-            mesh.text = text;
-            mesh.anchor = TextAnchor.MiddleCenter;
-            mesh.alignment = TextAlignment.Center;
-            mesh.fontSize = fontSize;
-            mesh.characterSize = characterSize;
-            mesh.color = Ink;
-            if (_font != null) mesh.font = _font;
+            InkLetter.Apply(mesh, text, fontSize, characterSize);
             var renderer = mesh.GetComponent<MeshRenderer>();
             if (renderer != null)
             {
