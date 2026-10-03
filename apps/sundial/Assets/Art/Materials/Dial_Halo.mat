@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3008
+  m_CustomRenderQueue: 3012
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4ad218f2a4c335f4ab5f0c80db0dcab6, type: 3}
+        m_Texture: {fileID: 2800000, guid: fdfd7d8f5b951a8448105d1b78b65b54, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -33,18 +33,23 @@ Material:
     - _BoilFps: 10
     - _BoilPx: 1
     - _BoilTime: 2.9
+    - _CardLight: 0
     - _Coverage: 0
     - _Dst: 1
+    - _Falloff: 0
     - _Fill: 1
+    - _Fit: 1.18
     - _Mask: 0
     - _Ring: 0
+    - _Silhouette: 5.040038
     - _Sparkle: 0
     - _Src: 1
     - _T: 2.9
     - _ZTest: 4
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.8248572, g: 0.6775613, b: 0.33878064, a: 0.73647964}
-    - _Color2: {r: 0.15024185, g: 0.11489083, b: 0.05302654, a: 0.14729594}
+    - _Color: {r: 1.0780249, g: 0.83268124, b: 0.34199408, a: 0.74346536}
+    - _Color2: {r: 0.7806386, g: 0.6096416, b: 0.23790891, a: 0.74346536}
+    - _Focus: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

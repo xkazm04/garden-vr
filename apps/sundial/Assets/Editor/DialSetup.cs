@@ -24,6 +24,9 @@ namespace GardenVR.Sundial.Editor
         public const string PrefabPath = "Assets/Prefabs/Dial.prefab";
         public const string MaterialDir = "Assets/Art/Materials";
         public const string CardPath = "Assets/Art/Models/DialCard.asset";
+        public const string CrossPath = "Assets/Art/Models/DialCross.asset";
+        public const string PoolPath = "Assets/Art/Models/DialPool.asset";
+        public const string ContactPath = "Assets/Art/Models/PlantContacts.asset";
         public const string ShadowPath = "Assets/Art/Models/DialShadow.asset";
         public const string CatcherPath = "Assets/Art/Models/DialCatcher.asset";
         public const string TilesLivePath = "Assets/Art/Models/TilesLive.asset";
@@ -194,6 +197,50 @@ namespace GardenVR.Sundial.Editor
             }
         }
 
+        /// <summary>16 frames of the pinch halo, 8 fps. Writes halo/f0000.png .. f0015.png.</summary>
+        [MenuItem("Garden VR/Sundial/Halo Reel")]
+        public static void HaloReel()
+        {
+            try
+            {
+                if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.Null)
+                    throw new InvalidOperationException("no graphics device; run HaloReel without -nographics");
+                ShaderUtil.allowAsyncCompilation = false;
+                EditorSceneManager.OpenScene(SceneSetup.ScenePath, OpenSceneMode.Single);
+                DialView view = UnityEngine.Object.FindAnyObjectByType<DialView>();
+                if (view == null) throw new InvalidOperationException("DialView missing from " + SceneSetup.ScenePath);
+                Transform dialRoot = FindDialRoot();
+                DisableWorldPlates();
+                Camera cam = CreateDialCamera(dialRoot);
+                Texture2D plate = LoadPlate(Path.Combine(Application.dataPath, "Art", "Plates", "plate-dial.png"));
+                AttachPlate(cam, plate);
+                Warm(view);
+                string dir = Path.Combine(RunDir(), "halo");
+                Directory.CreateDirectory(dir);
+                UnityEngine.Object.DestroyImmediate(FrameGrab.RenderToTexture(cam, 320, 180, 1));
+                const int frames = 16;
+                for (int frame = 0; frame < frames; frame++)
+                {
+                    view.halo = 1f;
+                    view.haloTarget = "midday";
+                    view.gnomonDeg = 105f;
+                    view.boil = true;
+                    view.time = frame / 8f;
+                    view.Apply();
+                    Texture2D shot = FrameGrab.RenderToTexture(cam, FrameWidth, FrameHeight, 4);
+                    File.WriteAllBytes(Path.Combine(dir, "f" + frame.ToString("0000") + ".png"), shot.EncodeToPNG());
+                    UnityEngine.Object.DestroyImmediate(shot);
+                }
+                UnityEngine.Object.DestroyImmediate(plate);
+                Debug.Log("[DialSetup] halo frames " + frames + " dir=" + dir);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[DialSetup] FAIL " + e);
+                EditorApplication.Exit(1);
+            }
+        }
+
         static string RunDir()
         {
             string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
@@ -306,6 +353,8 @@ namespace GardenVR.Sundial.Editor
             var library = new DialLibrary
             {
                 Card = SaveCard(),
+                Cross = SaveCross(),
+                PoolMesh = SavePool(),
                 ShadowMesh = SaveShadow(),
                 CatcherQuad = SaveCatcher(),
                 MorningCards = StageCards("sunrise"),
@@ -327,10 +376,11 @@ namespace GardenVR.Sundial.Editor
             library.Face = Toon("Dial_Face", Tex("dial_face"), false, 0f, -0.45f, 0.045f, new Color(1.03f, 1.00f, 0.97f), new Color(0.97f, 0.94f, 0.90f));
             library.Rim = Toon("Dial_Rim", Tex("dial_paper"), true, 1.6f, 0.02f, 0.04f, new Color(1.02f, 0.99f, 0.96f), new Color(0.94f, 0.90f, 0.84f));
             library.Soil = Toon("Dial_Soil", Tex("soil_bed"), false, 0f, -0.05f, 0.055f, new Color(1.02f, 0.98f, 0.94f), new Color(0.86f, 0.78f, 0.68f));
-            // Shade stays light enough that the gold collar and the nib both read.
-            library.Gnomon = Toon("Dial_Gnomon", Tex("gnomon"), true, 2.2f, 0.02f, 0.04f, new Color(1.04f, 0.98f, 0.90f), new Color(0.86f, 0.78f, 0.68f));
-            library.Gnomon.SetColor("_Spec", new Color(0.35f, 0.28f, 0.12f, 1f));
-            library.Gnomon.SetFloat("_SpecStep", 0.9f);
+            // Cool steel. A warm shade turned the nib back into a brass pen.
+            library.Gnomon = Toon("Dial_Gnomon", Tex("gnomon"), true, 1.15f, 0.18f, 0.02f, new Color(1.02f, 1.03f, 1.06f), new Color(0.78f, 0.80f, 0.84f));
+            library.Gnomon.SetColor("_Spec", new Color(0.55f, 0.57f, 0.60f, 1f));
+            library.Gnomon.SetFloat("_SpecStep", 0.84f);
+            library.Gnomon.SetColor("_Ink", new Color(0.165f, 0.149f, 0.133f, 1f));
             // Painted tiles. A hull on a paper-thin card just blooms a dark blob.
             library.Tiles = Toon("Dial_Tile", Texture2D.whiteTexture, false, 0f, -0.1f, 0.02f, Color.white, new Color(0.96f, 0.93f, 0.88f));
             library.Tiles.SetFloat("_TileMode", 1f);
@@ -348,10 +398,10 @@ namespace GardenVR.Sundial.Editor
             library.Bloom.renderQueue = 2460;
             library.Halo = Mat("Dial_Halo", "Fidelity/Card", m =>
             {
-                m.SetTexture("_MainTex", library.Halos[9]);
-                m.SetColor("_Color", new Color(1.22f, 0.94f, 0.48f, 1f));
-                m.SetColor("_Color2", new Color(1.08f, 0.68f, 0.28f, 1f));
-                // Additive. Texture R is the inked rim, G is the soft bloom. No post FX.
+                m.SetTexture("_MainTex", library.MiddayCards[4]);
+                m.SetColor("_Color", new Color(1.45f, 1.12f, 0.46f, 1f));
+                m.SetColor("_Color2", new Color(1.05f, 0.82f, 0.32f, 1f));
+                // Additive. The shader dilates the plant alpha into a gold line and a soft bloom.
                 m.SetFloat("_Src", (float)BlendMode.One);
                 m.SetFloat("_Dst", (float)BlendMode.One);
                 m.SetFloat("_Boil", 0f);
@@ -361,10 +411,51 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Coverage", 0f);
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
-                // FCard's sparkle block adds an unscaled neighbour bloom. Leave it off.
-                // The warm pool is the halo texture's G channel.
                 m.SetFloat("_Sparkle", 0f);
-                m.renderQueue = 3008;
+                m.SetFloat("_Silhouette", 6.0f);
+                m.SetFloat("_Fit", 1.18f);
+                m.SetFloat("_Falloff", 0f);
+                m.renderQueue = 3012;
+            });
+            library.Pool = Mat("Dial_HaloPool", "Fidelity/Card", m =>
+            {
+                m.SetTexture("_MainTex", Texture2D.whiteTexture);
+                m.SetColor("_Color", new Color(1.25f, 0.96f, 0.42f, 1f));
+                m.SetColor("_Color2", Color.black);
+                m.SetFloat("_Src", (float)BlendMode.One);
+                m.SetFloat("_Dst", (float)BlendMode.One);
+                m.SetFloat("_Boil", 0f);
+                m.SetFloat("_BoilPx", 0f);
+                m.SetFloat("_ZWrite", 0f);
+                m.SetFloat("_ZTest", (float)CompareFunction.LessEqual);
+                m.SetFloat("_Coverage", 0f);
+                m.SetFloat("_Mask", 0f);
+                m.SetFloat("_Ring", 0f);
+                m.SetFloat("_Sparkle", 0f);
+                m.SetFloat("_Silhouette", 0f);
+                m.SetFloat("_Falloff", 1.65f);
+                m.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.62f, 0f));
+                m.renderQueue = 3004;
+            });
+            library.Contact = Mat("Dial_Contact", "Fidelity/Card", m =>
+            {
+                m.SetTexture("_MainTex", Texture2D.whiteTexture);
+                m.SetColor("_Color", new Color(0.20f, 0.14f, 0.10f, 0.50f));
+                m.SetColor("_Color2", Color.black);
+                m.SetFloat("_Src", (float)BlendMode.SrcAlpha);
+                m.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
+                m.SetFloat("_Boil", 0f);
+                m.SetFloat("_BoilPx", 0f);
+                m.SetFloat("_ZWrite", 0f);
+                m.SetFloat("_ZTest", (float)CompareFunction.LessEqual);
+                m.SetFloat("_Coverage", 0f);
+                m.SetFloat("_Mask", 0f);
+                m.SetFloat("_Ring", 0f);
+                m.SetFloat("_Sparkle", 0f);
+                m.SetFloat("_Silhouette", 0f);
+                m.SetFloat("_Falloff", 1.45f);
+                m.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.48f, 0f));
+                m.renderQueue = 2992;
             });
             library.Catcher = Mat("Dial_Catcher", "Fidelity/ShadowCatcher", m =>
             {
@@ -464,6 +555,7 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Coverage", 1f);
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
+                m.SetFloat("_CardLight", 0.38f);
                 m.renderQueue = 2450;
             });
         }
@@ -490,42 +582,92 @@ namespace GardenVR.Sundial.Editor
 
         static Mesh SaveCard()
         {
-            return SaveMesh(CardPath, "DialCard", mesh =>
+            return SaveMesh(CardPath, "DialCard", mesh => FillCard(mesh, false));
+        }
+
+        static Mesh SaveCross()
+        {
+            return SaveMesh(CrossPath, "DialCross", mesh => FillCard(mesh, true));
+        }
+
+        static Mesh SavePool()
+        {
+            return SaveMesh(PoolPath, "DialPool", mesh =>
             {
-                const int rows = 6;
-                int count = (rows + 1) * 2;
-                var verts = new Vector3[count];
-                var uv = new Vector2[count];
-                var colors = new Color[count];
-                var tris = new int[rows * 6];
-                for (int i = 0; i <= rows; i++)
+                mesh.vertices = new[]
                 {
-                    float y = i / (float)rows;
-                    float z = Mathf.Sin(y * Mathf.PI) * 0.03f;
-                    verts[i * 2] = new Vector3(-0.5f, y, z);
-                    verts[i * 2 + 1] = new Vector3(0.5f, y, z);
-                    uv[i * 2] = new Vector2(0f, y);
-                    uv[i * 2 + 1] = new Vector2(1f, y);
-                    colors[i * 2] = Color.white;
-                    colors[i * 2 + 1] = Color.white;
-                }
-                int t = 0;
-                for (int i = 0; i < rows; i++)
-                {
-                    int a = i * 2;
-                    tris[t++] = a;
-                    tris[t++] = a + 2;
-                    tris[t++] = a + 1;
-                    tris[t++] = a + 1;
-                    tris[t++] = a + 2;
-                    tris[t++] = a + 3;
-                }
-                mesh.vertices = verts;
-                mesh.uv = uv;
-                mesh.colors = colors;
-                mesh.triangles = tris;
+                    new Vector3(-0.5f, 0f, -0.5f), new Vector3(0.5f, 0f, -0.5f),
+                    new Vector3(0.5f, 0f, 0.5f), new Vector3(-0.5f, 0f, 0.5f)
+                };
+                mesh.uv = new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
+                mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };
+                mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+                mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
             });
+        }
+
+        /// <summary>
+        /// One curved card, or three crossed copies. The middle card bulges toward +Z.
+        /// Wings yaw ±38 degrees and sit behind the front card, so the hero frame stays one drawing
+        /// and a moved camera still sees a second edge.
+        /// </summary>
+        static void FillCard(Mesh mesh, bool crossed)
+        {
+            const int cols = 8;
+            const int rows = 6;
+            float[] yaws = crossed ? new[] { -38f, 0f, 38f } : new[] { 0f };
+            int vertsPer = (cols + 1) * (rows + 1);
+            var verts = new Vector3[vertsPer * yaws.Length];
+            var uv = new Vector2[verts.Length];
+            var colors = new Color[verts.Length];
+            var tris = new int[cols * rows * 6 * yaws.Length];
+            int t = 0;
+            for (int c = 0; c < yaws.Length; c++)
+            {
+                float yaw = yaws[c] * Mathf.Deg2Rad;
+                float cos = Mathf.Cos(yaw);
+                float sin = Mathf.Sin(yaw);
+                bool front = !crossed || c == 1;
+                float back = front ? 0f : 0.06f;
+                float side = !crossed || front ? 0f : (c == 0 ? -0.012f : 0.012f);
+                int b = c * vertsPer;
+                for (int j = 0; j <= rows; j++)
+                {
+                    float v = j / (float)rows;
+                    for (int i = 0; i <= cols; i++)
+                    {
+                        float u = i / (float)cols;
+                        float x = u - 0.5f + side;
+                        float z = Mathf.Cos((u - 0.5f) * Mathf.PI) * 0.11f - back;
+                        float rx = x * cos + z * sin;
+                        float rz = -x * sin + z * cos;
+                        int vi = b + j * (cols + 1) + i;
+                        verts[vi] = new Vector3(rx, v, rz);
+                        uv[vi] = new Vector2(u, v);
+                        colors[vi] = Color.white;
+                    }
+                }
+                for (int j = 0; j < rows; j++)
+                {
+                    for (int i = 0; i < cols; i++)
+                    {
+                        int a = b + j * (cols + 1) + i;
+                        tris[t++] = a;
+                        tris[t++] = a + (cols + 1);
+                        tris[t++] = a + 1;
+                        tris[t++] = a + 1;
+                        tris[t++] = a + (cols + 1);
+                        tris[t++] = a + (cols + 1) + 1;
+                    }
+                }
+            }
+            mesh.vertices = verts;
+            mesh.uv = uv;
+            mesh.colors = colors;
+            mesh.triangles = tris;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
         }
 
         static Mesh SaveShadow()
@@ -590,6 +732,7 @@ namespace GardenVR.Sundial.Editor
                 PrefabUtility.UnpackPrefabInstance(model, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
                 view.Build(model, tileMesh, library);
                 PersistTiles(view);
+                PersistContact(view);
                 view.Apply();
                 ExpectTargets(view);
                 GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
@@ -617,6 +760,18 @@ namespace GardenVR.Sundial.Editor
             copy.name = "TilesLive";
             AssetDatabase.CreateAsset(copy, TilesLivePath);
             view.tileRenderer.GetComponent<MeshFilter>().sharedMesh = copy;
+        }
+
+        static void PersistContact(DialView view)
+        {
+            Mesh live = view.BuiltContactMesh;
+            if (live == null) throw new InvalidOperationException("contact mesh was not built");
+            if (AssetDatabase.LoadAssetAtPath<Mesh>(ContactPath) != null) AssetDatabase.DeleteAsset(ContactPath);
+            var copy = UnityEngine.Object.Instantiate(live);
+            copy.name = "PlantContacts";
+            AssetDatabase.CreateAsset(copy, ContactPath);
+            view.contactRenderer.GetComponent<MeshFilter>().sharedMesh = copy;
+            Debug.Log("[DialSetup] contacts verts=" + copy.vertexCount + " tris=" + (copy.triangles.Length / 3));
         }
 
         static void ExpectTargets(DialView view)

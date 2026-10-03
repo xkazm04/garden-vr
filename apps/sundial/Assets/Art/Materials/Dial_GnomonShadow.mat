@@ -33,11 +33,15 @@ Material:
     - _BoilFps: 10
     - _BoilPx: 0
     - _BoilTime: -1
+    - _CardLight: 0
     - _Coverage: 0
     - _Dst: 10
+    - _Falloff: 0
     - _Fill: 1
+    - _Fit: 1
     - _Mask: 0
     - _Ring: 0
+    - _Silhouette: 0
     - _Sparkle: 0
     - _Src: 5
     - _T: 0
@@ -46,5 +50,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Focus: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
