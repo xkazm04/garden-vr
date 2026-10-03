@@ -1,0 +1,7 @@
+name: sparkle_ring_1
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-03
+derived_from_art_reference: no
+prompt: Centered on a pure white background with a wide empty white margin, a hand-drawn sparkle ring. A loose circle of tiny stars, dots and short fountain-pen strokes, the middle left empty white. Warm near-black ink with a few lilac and pale gold specks, confident contours of varying weight, like a frame of a hand-animated film. No plant, no text, no shadow.
+note: Paper keyed to alpha. Kept PNG is the keyed drawing. Raw generation is sparkle_ring_1.raw.jpg.
