@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using GardenVR.Audio;
 using GardenVR.Core;
 using GardenVR.Input;
 using UnityEngine;
@@ -13,7 +14,8 @@ namespace GardenVR.Sundial
     /// <summary>
     /// Glance and pinch. Look paints the halo after the provider's dwell (scripted looks dwell here).
     /// Pinch arms a deferred tend, plays the tock, pulses the plant and fills today's tile.
-    /// The undo mark cancels inside 6 s. Palm open, system pause and quit commit early.
+    /// The undo mark cancels inside 6 s. Palm open puts the dial away and brings it back,
+    /// and commits a waiting tend. Focus loss pauses without hiding the dial.
     /// App code never reads a keyboard or a mouse.
     /// </summary>
     [DisallowMultipleComponent]
@@ -28,6 +30,12 @@ namespace GardenVR.Sundial
         public const string CueInk = "tile.ink";
         public const string CueUndo = "tend.undo";
         public const string CueHatch = "tile.hatch";
+        public const string CueFlutter = "bloom.flutter";
+        public const string CueAppear = "dial.appear";
+        public const string CueRoom = "amb.kitchen";
+        public const string CuePacket = "packet.open";
+        public const string CueSeed = "seed.drop";
+        public const string CueFirst = "vo.sun.first.01";
         public const string PromptYesId = "prompt.backfill.yes";
         public const string PromptNoId = "prompt.backfill.no";
         public const string PromptQuestion = "Did it happen?";
@@ -40,10 +48,17 @@ namespace GardenVR.Sundial
         DialView _view;
         SundialService _service;
         FirstRunWizard _wizard;
+        SettingsTabs _settings;
+        Vector3 _dialHome;
+        bool _dialHomeReady;
         IHandIntentSource _source;
         KeyboardMouseIntentSource _keyboard;
         bool _subscribed;
         readonly List<string> _cues = new List<string>();
+        AudioCueService _audio;
+        readonly ArcBeds _beds = new ArcBeds();
+        bool _kitchen;
+        bool _dialCue;
 
         string _dwellId;
         float _dwellTime;
@@ -84,6 +99,9 @@ namespace GardenVR.Sundial
 
         public SundialService Service { get { return _service; } }
         public FirstRunWizard Wizard { get { return _wizard; } }
+        public SettingsTabs Settings { get { return _settings; } }
+        /// <summary>Palm open has put the dial under the desk. A second palm brings it back.</summary>
+        public bool Dismissed { get; private set; }
         public IHandIntentSource Source { get { return _source; } }
         public SundialState State { get { return _service == null ? null : _service.State; } }
         public string StateJson { get { return _service == null ? "" : _service.StateJson; } }
@@ -103,6 +121,7 @@ namespace GardenVR.Sundial
         public bool FastClock { get { return _service != null && _service.FastClock; } }
         public bool OverlayVisible { get; private set; }
         public IReadOnlyList<string> Cues { get { return _cues; } }
+        public AudioCueService Audio { get { EnsureAudio(); return _audio; } }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install()
@@ -125,6 +144,17 @@ namespace GardenVR.Sundial
             if (_wizard != null) _wizard.SetSource(source);
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.SetSource(source);
+        }
+
+        /// <summary>
+        /// Focus loss. A waiting tend is written. A breath in progress holds still.
+        /// The dial stays on the desk. Palm open is the gesture that puts it away.
+        /// </summary>
+        public void NotifyFocusLost()
+        {
+            CommitEarly();
+            DuskRitualController dusk = GetComponent<DuskRitualController>();
+            if (dusk != null) dusk.NotifyFocusLost();
         }
 
         public bool ShiftDay(int delta)
@@ -166,10 +196,17 @@ namespace GardenVR.Sundial
                 : SaveDirectoryOverride;
             IClock clock = ClockOverride ?? new SystemClock();
             _service = new SundialService(clock, directory);
+            EnsureAudio();
+            PushAudio();
             if (GetComponent<FirstRunWizard>() == null)
                 _wizard = gameObject.AddComponent<FirstRunWizard>();
             else
                 _wizard = GetComponent<FirstRunWizard>();
+            if (GetComponent<SettingsTabs>() == null)
+                _settings = gameObject.AddComponent<SettingsTabs>();
+            else
+                _settings = GetComponent<SettingsTabs>();
+            RememberDialHome();
             if (_view != null)
             {
                 _view.halo = 0f;
@@ -243,6 +280,7 @@ namespace GardenVR.Sundial
             UpdatePulse(dt);
             UpdateFill(dt);
             PushView();
+            UpdateAudio();
             RefreshAsks();
             UpdateSweep(dt);
             _view.time += dt;
@@ -300,7 +338,11 @@ namespace GardenVR.Sundial
             if (intent.Kind == HandIntentKind.Look) OnLook(intent.TargetId);
             else if (intent.Kind == HandIntentKind.Pinch) OnPinch(intent.TargetId);
             else if (intent.Kind == HandIntentKind.Poke) OnPoke(intent.TargetId);
-            else if (intent.Kind == HandIntentKind.PalmOpen) CommitEarly();
+            else if (intent.Kind == HandIntentKind.PalmOpen)
+            {
+                CommitEarly();
+                SetDismissed(!Dismissed);
+            }
         }
 
         void OnLook(string id)
@@ -330,7 +372,23 @@ namespace GardenVR.Sundial
 
         void OnPoke(string id)
         {
+            if (_settings != null && _settings.HandlePoke(id)) return;
             TryBackfillGesture(id);
+        }
+
+        void RememberDialHome()
+        {
+            if (_dialHomeReady) return;
+            _dialHome = transform.localPosition;
+            _dialHomeReady = true;
+        }
+
+        void SetDismissed(bool away)
+        {
+            RememberDialHome();
+            Dismissed = away;
+            transform.localPosition = away ? _dialHome + new Vector3(0f, -3f, 0f) : _dialHome;
+            if (_wizard != null) _wizard.Held = away;
         }
 
         void OnPinch(string id)
@@ -356,8 +414,9 @@ namespace GardenVR.Sundial
             if (plant.Window[6] != TileState.Today) return;
 
             _service.Arm(habit.Id);
-            PlayCue(CueTock);
-            PlayCue(CueInk);
+            Play(CueTock, At("plant." + arc));
+            Play(CueInk, At("tile." + arc + ".6"));
+            Play(CueFlutter, At("plant." + arc));
             _pendingArc = arc;
             _pulseArc = SundialArcs.Index(arc);
             _pulsing = true;
@@ -374,7 +433,7 @@ namespace GardenVR.Sundial
         {
             if (!_service.IsPending || _pendingArc != arc) return;
             if (!_service.Cancel()) return;
-            PlayCue(CueUndo);
+            Play(CueUndo, At("tile." + arc + ".6"));
             ClearTendVisual();
         }
 
@@ -433,6 +492,8 @@ namespace GardenVR.Sundial
             if (HoldSweep || _sweepBegun || _view == null || _service == null || _service.State == null) return;
             _sweepBegun = true;
             _swept = 0f;
+            if (_wizard == null || !_wizard.Running)
+                NotifyDialAppear();
             if (_service.ReducedMotion || SnapSweep)
             {
                 _sweeping = false;
@@ -516,16 +577,92 @@ namespace GardenVR.Sundial
             }
             _view.waiting = due >= 0 ? 1f : 0f;
             if (due >= 0) _view.waitingTarget = SundialArcs.FromIndex(due);
-            _view.boil = _service.Boil;
+            // Reduced motion stops the boil. The saved boil flag stays, so turning it off brings the line back.
+            _view.boil = _service.Boil && !_service.ReducedMotion;
             _view.reducedMotion = _service.ReducedMotion;
         }
 
-        void PlayCue(string id)
+        /// <summary>Turns the guide and the arc beds on for a mixdown run. Both stay off until the save says otherwise.</summary>
+        public void UseVoiceAndBeds()
         {
-            if (string.IsNullOrEmpty(id)) return;
-            _cues.Add(id);
-            // The cue service lands later. Calling the id is the contract. A missing clip is harmless.
-            Debug.Log("[Sundial] cue " + id);
+            if (_service == null) return;
+            _service.SetVoice(true);
+            _service.SetBeds(true);
+            UpdateAudio();
+        }
+
+        /// <summary>The dial drawing itself. Once per session. The first run calls this when the page appears.</summary>
+        public void NotifyDialAppear()
+        {
+            if (_dialCue) return;
+            _dialCue = true;
+            Play(CueAppear, transform);
+        }
+
+        /// <summary>The first-run line, and only when the voice guide is on. The ink caption is already on the page.</summary>
+        public void PlayFirstRunLine()
+        {
+            if (_service == null || !_service.Voice) return;
+            Play(CueFirst, null);
+        }
+
+        public bool Play(string id, Transform at)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+            PushAudio();
+            bool played = _audio != null && _audio.Play(id, at, 0f);
+            if (played || Remember(id))
+            {
+                _cues.Add(id);
+                Debug.Log("[Sundial] cue " + id);
+            }
+            return played;
+        }
+
+        void EnsureAudio()
+        {
+            if (_audio != null) return;
+            _audio = GetComponent<AudioCueService>();
+            if (_audio == null) _audio = gameObject.AddComponent<AudioCueService>();
+        }
+
+        void PushAudio()
+        {
+            if (_service == null) return;
+            EnsureAudio();
+            if (_audio == null) return;
+            if (_audio.Mute != _service.Mute) _audio.Mute = _service.Mute;
+            _audio.VoiceGuide = _service.Voice;
+            _audio.Beds = _service.Beds;
+        }
+
+        void UpdateAudio()
+        {
+            PushAudio();
+            if (_audio == null || _service == null) return;
+            if (!_kitchen && !_service.Mute && _audio.Play(CueRoom, null, 0f))
+            {
+                _kitchen = true;
+                _cues.Add(CueRoom);
+                Debug.Log("[Sundial] cue " + CueRoom);
+            }
+            ArcId? arc = _service.State == null ? (ArcId?)null : _service.State.Arc;
+            string bed = _beds.Sync(_audio, _service.Beds && !_service.Mute, arc);
+            if (!string.IsNullOrEmpty(bed))
+                Play(bed, null);
+        }
+
+        static bool Remember(string id)
+        {
+            if (id == CueRoom) return false;
+            if (id.StartsWith("bed.", StringComparison.Ordinal)) return false;
+            return true;
+        }
+
+        Transform At(string name)
+        {
+            Transform found = FindNamed(name);
+            return found != null ? found : transform;
         }
 
         void ShowUndo(string arc)
@@ -676,10 +813,11 @@ namespace GardenVR.Sundial
 
         void ConfirmBackfill()
         {
-            HabitDef habit = _service == null || string.IsNullOrEmpty(_promptArc) ? null : _service.HabitForArc(_promptArc);
+            string arc = _promptArc;
+            HabitDef habit = _service == null || string.IsNullOrEmpty(arc) ? null : _service.HabitForArc(arc);
             TendResult result = habit == null ? null : _service.BackfillYesterday(habit);
             ClosePrompt();
-            if (result != null && result.Ok) PlayCue(CueHatch);
+            if (result != null && result.Ok) Play(CueHatch, At("tile." + arc + ".5"));
         }
 
         void RefreshAsks()
@@ -864,7 +1002,7 @@ namespace GardenVR.Sundial
             _subscribed = false;
         }
 
-        void OnSystemPause() { CommitEarly(); }
+        void OnSystemPause() { NotifyFocusLost(); }
 
         static float ClampStep(float dt)
         {

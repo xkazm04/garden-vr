@@ -45,3 +45,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   neon again in T-TER-020). Rule: once a look is accepted, lock it (values + the approving frame in a LOCKED file) and
   make every later art task run a per-region regression diff against the approved frame. Target: game-production / art
   pipeline; software-engineering / quality-gates (golden-image regression).
+- 2026-10-03 - **Typography is the art pass nobody queues.** Both apps' journey tasks shipped user-facing text in Unity's
+  default sans font on grey/black boxes (and literal "?" placeholder glyphs) inside otherwise styled scenes; every art
+  task had targeted objects and materials, none named text. Rule: the style bible and the art tasks must include
+  typography and UI surfaces, with a "no default font" grep in the gate. Target: game-production / art direction;
+  software-engineering / design-tokens.

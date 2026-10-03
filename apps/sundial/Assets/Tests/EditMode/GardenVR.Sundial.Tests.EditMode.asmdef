@@ -3,6 +3,10 @@
   "rootNamespace": "GardenVR.Sundial.Tests.EditMode",
   "references": [
     "GardenVR.Capture",
+    "GardenVR.Sundial",
+    "GardenVR.Core",
+    "GardenVR.Input",
+    "GardenVR.Audio",
     "UnityEngine.TestRunner",
     "UnityEditor.TestRunner"
   ],

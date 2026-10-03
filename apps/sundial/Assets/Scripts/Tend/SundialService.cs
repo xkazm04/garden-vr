@@ -83,6 +83,9 @@ namespace GardenVR.Sundial
         public bool FastClock { get { return _clock.TimeScale > 1.5f; } }
         public bool ReducedMotion { get { return _save != null && _save.Settings != null && _save.Settings.ReducedMotion; } }
         public bool Boil { get { return _save == null || _save.Settings == null || _save.Settings.Boil; } }
+        public bool Mute { get { return _save != null && _save.Settings != null && _save.Settings.Mute; } }
+        public bool Voice { get { return _save != null && _save.Settings != null && _save.Settings.Voice; } }
+        public bool Beds { get { return _save != null && _save.Settings != null && _save.Settings.Beds; } }
 
         public SundialService(IClock clock, string directory)
         {
@@ -202,11 +205,20 @@ namespace GardenVR.Sundial
             return true;
         }
 
-        public void SetReducedMotion(bool on)
+        public void SetReducedMotion(bool on) { EditSettings(s => s.ReducedMotion = on); }
+
+        public void SetMute(bool on) { EditSettings(s => s.Mute = on); }
+
+        public void SetVoice(bool on) { EditSettings(s => s.Voice = on); }
+
+        public void SetBeds(bool on) { EditSettings(s => s.Beds = on); }
+
+        void EditSettings(Action<SundialSettings> edit)
         {
-            if (_save == null) return;
+            if (_save == null || edit == null) return;
             if (_save.Settings == null) _save.Settings = new SundialSettings();
-            _save.Settings.ReducedMotion = on;
+            edit(_save.Settings);
+            Persist();
         }
 
         public void Arm(string habitId)
