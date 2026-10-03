@@ -18,6 +18,8 @@ Shader "Fidelity/JarGlass"
         _Drops ("Droplet strength", Range(0,2)) = 1.15
         _Refract ("Edge refraction, pixels", Range(0, 48)) = 36
         _Streak ("Streak", Color) = (0.50, 0.66, 0.74, 0.12)
+        _Studio ("S1 studio strip, six faces", 2D) = "black" {}
+        _DropN ("S1 droplets (RG normal, B height, A mask)", 2D) = "black" {}
     }
     SubShader
     {
@@ -35,6 +37,7 @@ Shader "Fidelity/JarGlass"
             #pragma vertex vert
             #pragma fragment fragB
             #pragma multi_compile_instancing
+            #pragma multi_compile_local _ _S1_ON
             V vert(A i) { return GlassVert(i); }
             half4 fragB(V i) : SV_Target { return GlassShade(i, 1); }
             ENDHLSL
@@ -49,6 +52,7 @@ Shader "Fidelity/JarGlass"
             #pragma vertex vert
             #pragma fragment fragF
             #pragma multi_compile_instancing
+            #pragma multi_compile_local _ _S1_ON
             V vert(A i) { return GlassVert(i); }
             half4 fragF(V i) : SV_Target { return GlassShade(i, 0); }
             ENDHLSL

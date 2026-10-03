@@ -272,8 +272,10 @@ def px_per_cm(world_y_m):
 def brown_span(render, y, x0=700, x1=1150):
     band = render[y, x0:x1]
     red, green, blue = band[:, 0], band[:, 1], band[:, 2]
-    mask = (red > green + 8) & (red > blue + 8) & (red > 90)
-    xs = np.where(mask)[0]
+    # Tan is the locked stopper. Dark is the s1 reference cork (red still leads, but under 80).
+    tan = (red > green + 8) & (red > blue + 8) & (red > 90)
+    dark = (red > green + 4) & (red > blue + 4) & (red > 12) & (red < 80) & (green < 50)
+    xs = np.where(tan | dark)[0]
     if len(xs) == 0:
         return 0, None, None
     return int(len(xs)), int(x0 + xs.min()), int(x0 + xs.max())
@@ -282,7 +284,9 @@ def brown_span(render, y, x0=700, x1=1150):
 def center_is_cork(render, y):
     """Stopper centre, including the pale lip. Green glass under it fails this."""
     mean = render[y, 880:960].mean(axis=0)
-    return bool(mean[0] > 140 and mean[0] + 12 > mean[1] and mean[0] > mean[2] + 15)
+    tan = mean[0] > 140 and mean[0] + 12 > mean[1] and mean[0] > mean[2] + 15
+    dark = 12 < mean[0] < 80 and mean[0] > mean[1] + 3 and mean[0] > mean[2] + 3 and mean[1] < 50
+    return bool(tan or dark)
 
 
 def measure_dimensions(render, plate):

@@ -95,6 +95,8 @@ namespace GardenVR.Terrarium
         /// <summary>Spore step this frame. Negative keeps the capture resim from <see cref="time"/>.</summary>
         public float sporeStep = -1f;
         float _corkPuff;
+        /// <summary>Empty or "a" is the locked look. "s1" is the structured-glass spike.</summary>
+        string _variant = "";
 
         [Header("Wired by Build")]
         public MeshFilter fiddle;
@@ -103,6 +105,7 @@ namespace GardenVR.Terrarium
         public Renderer dew;
         public Material ringMat;
         public Material glassMat;
+        public Material corkMat;
         public Material mossMat;
         public Material mossCardMat;
         public Material soilMat;
@@ -169,6 +172,9 @@ namespace GardenVR.Terrarium
         /// <summary>Fronds lit in the look-back, birth order. Negative means the replay is off.</summary>
         public int LookLit { get { return _lookLit; } }
         public bool LookHeld { get { return _lookHeld; } }
+        /// <summary>"a" is the locked glass and cork. "s1" is the structured-glass spike.</summary>
+        public string Variant { get { return string.IsNullOrEmpty(_variant) ? "a" : _variant; } }
+        public bool StructuredGlass { get { return _variant == "s1"; } }
 
         struct GardenLook
         {
@@ -220,6 +226,7 @@ namespace GardenVR.Terrarium
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
             if (state == null) return;
+            _variant = "";
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
             int capCompanions = 0;
@@ -239,6 +246,14 @@ namespace GardenVR.Terrarium
                 if (pair.Key == "etch")
                 {
                     etch = pair.Value;
+                    continue;
+                }
+                if (pair.Key == "variant")
+                {
+                    string name = pair.Value ?? "";
+                    if (name != "" && name != "a" && name != "s1")
+                        throw new FormatException("JarView variant must be a or s1: " + name);
+                    _variant = name == "s1" ? "s1" : "";
                     continue;
                 }
                 float value = Parse(pair.Key, pair.Value);
@@ -428,6 +443,58 @@ namespace GardenVR.Terrarium
             return Color.Lerp(cool, warm, warmth);
         }
 
+        static void SetStructuredKeyword(Material material, bool on)
+        {
+            if (material == null || material.shader == null) return;
+            var keyword = new LocalKeyword(material.shader, "_S1_ON");
+            if (keyword.isValid) material.SetKeyword(keyword, on);
+            else if (on) material.EnableKeyword("_S1_ON");
+            else material.DisableKeyword("_S1_ON");
+        }
+
+        Material CorkMaterial()
+        {
+            if (corkMat != null) return corkMat;
+            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null && renderers[i].name == "Cork")
+                {
+                    corkMat = renderers[i].sharedMaterial;
+                    return corkMat;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Variant A restores the locked tan cork. Variant s1 is the reference value:
+        /// dark brown in shade, with a cool lit rim on the cap edge.
+        /// </summary>
+        void ApplyCork(bool structured)
+        {
+            Material cork = CorkMaterial();
+            if (cork == null) return;
+            if (!structured)
+            {
+                cork.SetColor("_Tint", Color.white);
+                cork.SetColor("_Emission", Color.black);
+                cork.SetColor("_Rim", Color.black);
+                cork.SetFloat("_RimPower", 4f);
+                cork.SetFloat("_GradBottom", 1.12f);
+                cork.SetFloat("_GradTop", 0.84f);
+                cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+                return;
+            }
+            cork.SetColor("_Tint", new Color(0.11f, 0.070f, 0.045f, 1f));
+            cork.SetColor("_Emission", Color.black);
+            cork.SetColor("_Rim", new Color(0.34f, 0.38f, 0.36f, 1f));
+            cork.SetFloat("_RimPower", 1.7f);
+            cork.SetFloat("_GradBottom", 0.55f);
+            cork.SetFloat("_GradTop", 1.15f);
+            cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+        }
+
         public void Apply()
         {
             ResolveFrondSlots();
@@ -476,7 +543,9 @@ namespace GardenVR.Terrarium
                 // A near-white streak at 0.46 was a hard column in the pane. Keep the stroke, under the cap.
                 glassMat.SetColor("_Streak", SeasonColor(GlassStreakCool, GlassStreakWarm, seasonWarmth));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
+                SetStructuredKeyword(glassMat, _variant == "s1");
             }
+            ApplyCork(_variant == "s1");
             float recoveredWave = 0f;
             if (_hasLook && _look.Recovered && recoveredTime >= 0f && recoveredTime <= 2.5f)
                 recoveredWave = Mathf.Sin(Mathf.Clamp01(recoveredTime / 2.5f) * Mathf.PI);
@@ -639,6 +708,7 @@ namespace GardenVR.Terrarium
             model.transform.localScale = Vector3.one;
 
             glassMat = library.Glass;
+            corkMat = library.Cork;
             mossMat = library.Moss;
             soilMat = library.Soil;
             seedlingMat = library.Seedling;

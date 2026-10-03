@@ -19,6 +19,8 @@ Shader "Fidelity/Glass"
         _Drops ("Droplet strength", Range(0,2)) = 1
         _Refract ("Edge refraction, pixels", Range(0, 48)) = 0
         _Streak ("Streak", Color) = (0.8, 1, 0.95, 0.35)
+        _Studio ("S1 studio strip, six faces", 2D) = "black" {}
+        _DropN ("S1 droplets (RG normal, B height, A mask)", 2D) = "black" {}
     }
     SubShader
     {

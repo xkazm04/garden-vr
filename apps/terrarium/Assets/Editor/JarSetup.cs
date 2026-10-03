@@ -27,6 +27,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "fiddle_hairs", "halo", "mist",
+            "s1_drops", "s1_studio",
             "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_macro_b", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
         };
 
@@ -61,14 +62,15 @@ namespace GardenVR.Terrarium.Editor
                 var importer = AssetImporter.GetAtPath(path) as TextureImporter;
                 if (importer == null) throw new InvalidOperationException("texture missing: " + path);
                 bool alpha = name == "fern_albedo" || name == "moss_card" || name == "moss_fuzz" || name == "mist" || name == "petal";
-                bool linear = name == "condensation" || name == "ring" || name == "fern_emission";
+                bool linear = name == "condensation" || name == "ring" || name == "fern_emission" || name == "s1_drops";
                 bool repeat = name.IndexOf("band", StringComparison.Ordinal) >= 0
                     || name.IndexOf("side", StringComparison.Ordinal) >= 0
                     || name == "condensation"
                     || name == "cork_top"
                     || name == "moss_macro"
                     || name == "moss_macro_b"
-                    || name == "fiddle_hairs";
+                    || name == "fiddle_hairs"
+                    || name == "s1_drops";
                 importer.textureType = TextureImporterType.Default;
                 importer.sRGBTexture = !linear;
                 importer.alphaIsTransparency = alpha;
@@ -76,6 +78,13 @@ namespace GardenVR.Terrarium.Editor
                 importer.mipMapsPreserveCoverage = alpha;
                 importer.alphaTestReferenceValue = 0.5f;
                 importer.wrapMode = repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp;
+                if (name == "s1_drops")
+                {
+                    importer.wrapModeU = TextureWrapMode.Repeat;
+                    importer.wrapModeV = TextureWrapMode.Clamp;
+                }
+                if (name == "s1_studio")
+                    importer.mipmapEnabled = false;
                 if (name == "fiddle_hairs")
                 {
                     // The crozier is about a centimetre wide on screen. The default mip drops the hairs.
@@ -151,6 +160,8 @@ namespace GardenVR.Terrarium.Editor
             {
                 m.SetTexture("_Cond", Tex("condensation"));
                 m.SetTexture("_Bead", Tex("droplet_normal"));
+                m.SetTexture("_Studio", Tex("s1_studio"));
+                m.SetTexture("_DropN", Tex("s1_drops"));
                 // Clear pane. Volume is edge absorption. See Assets/Art/LOCKED.md.
                 m.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.004f));
                 m.SetColor("_Rim", new Color(0.48f, 0.72f, 0.78f, 0.32f));

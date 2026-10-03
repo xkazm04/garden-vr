@@ -32,6 +32,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 181293230760fb44bb30f4633fef804f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DropN:
+        m_Texture: {fileID: 2800000, guid: c8f2d5b30a1e4d7f9b4c6e8a2f0d1b53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Studio:
+        m_Texture: {fileID: 2800000, guid: b7e1c4a29f0d4c6e8a3b5d7f1e9c0a42, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Drops: 1.15
