@@ -46,9 +46,9 @@ Material:
     - _TopTile: 24
     - _Tri: 24
     m_Colors:
-    - _Emission: {r: 0.035, g: 0.11, b: 0.055, a: 1}
+    - _Emission: {r: 0.075, g: 0.24, b: 0.12, a: 1}
     - _GradY: {r: 0.028, g: 0.048, b: 0, a: 0}
-    - _Rim: {r: 0.28, g: 0.62, b: 0.36, a: 1}
+    - _Rim: {r: 0.17999999, g: 0.414, b: 0.2475, a: 0.45}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

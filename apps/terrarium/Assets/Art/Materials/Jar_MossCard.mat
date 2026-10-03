@@ -46,7 +46,7 @@ Material:
     - _TopTile: 10
     - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0.05, g: 0.16, b: 0.08, a: 1}
+    - _Emission: {r: 0.09, g: 0.28, b: 0.14, a: 1}
     - _GradY: {r: 0.03, g: 0.05, b: 0, a: 0}
     - _Rim: {r: 0.22, g: 0.48, b: 0.3, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
