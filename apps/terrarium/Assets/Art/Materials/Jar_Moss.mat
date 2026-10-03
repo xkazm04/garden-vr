@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jar_Moss
-  m_Shader: {fileID: 4800000, guid: 88fd645f85b6421448a0135ed11607d4, type: 3}
+  m_Shader: {fileID: 4800000, guid: d91c6e4a2b704f1e8c5a7d3f0e6b8a15, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -43,15 +43,20 @@ Material:
     m_Floats:
     - _Cutoff: 0
     - _Edge: 0
+    - _FarEnd: 0.46
+    - _FarMip: 3.6
+    - _FarStart: 0.36
     - _GradBottom: 0.58
     - _GradTop: 1.02
     - _RimPower: 3.2
     - _Shell: 0
     - _Soft: 0
     - _TopAmount: 0.92
+    - _TopEmit: 0.32
     - _TopTile: 52
     - _Trans: 0
     - _Tri: 52
+    - _Velvet: 1
     m_Colors:
     - _Emission: {r: 0.16, g: 0.48, b: 0.26, a: 1}
     - _GradY: {r: 0.016, g: 0.032, b: 0, a: 0}

@@ -26,7 +26,7 @@ namespace GardenVR.Terrarium
         public const float WordsTime = 8f;
         public const float QuietSeconds = 4f;
         public const float IdleSeconds = 8f;
-        public const float GhostCycleSeconds = 1.5f;
+        public const float GhostCycleSeconds = 3.4f;
         public const float WordFadeSeconds = 0.45f;
 
         readonly Dictionary<string, float> _times = new Dictionary<string, float>();
@@ -36,8 +36,7 @@ namespace GardenVR.Terrarium
         TextMeshPro _words;
         Renderer _ghostRenderer;
         Material _ghostMat;
-        Texture2D _openHand;
-        Texture2D _pinchHand;
+        Vector3 _ghostRest;
 
         bool _reduced;
         bool _replayIntro;
@@ -50,7 +49,6 @@ namespace GardenVR.Terrarium
         bool _arrivalMoved;
         int _answerLine;
         int _events;
-        int _ghostFrame;
         float _idle;
         float _ghostClock;
         float _alpha;
@@ -290,13 +288,32 @@ namespace GardenVR.Terrarium
             GhostVisible = show && _ghostRenderer != null;
             if (_ghostRenderer != null && _ghostRenderer.enabled != GhostVisible)
                 _ghostRenderer.enabled = GhostVisible;
-            if (!GhostVisible || _ghostMat == null || _reduced) return;
+            if (!GhostVisible || _ghostMat == null) return;
+            if (_reduced || !_ghostMat.HasProperty("_Pinch"))
+            {
+                if (_ghostMat.HasProperty("_Pinch")) _ghostMat.SetFloat("_Pinch", 0f);
+                _ghostRenderer.transform.localPosition = _ghostRest;
+                return;
+            }
             _ghostClock += dt;
-            if (_ghostClock < GhostCycleSeconds) return;
-            _ghostClock = 0f;
-            _ghostFrame = 1 - _ghostFrame;
-            Texture2D frame = _ghostFrame == 0 ? _openHand : _pinchHand;
-            if (frame != null) _ghostMat.SetTexture("_MainTex", frame);
+            if (_ghostClock >= GhostCycleSeconds) _ghostClock -= GhostCycleSeconds;
+            float u = GhostCycleSeconds <= 0.0001f ? 0f : _ghostClock / GhostCycleSeconds;
+            float pinch = PinchAmount(u);
+            _ghostMat.SetFloat("_Pinch", pinch);
+            if (_ghostMat.HasProperty("_Rim"))
+                _ghostMat.SetFloat("_Rim", Mathf.Lerp(GhostHandLook.RimStrength, GhostHandLook.RimStrength * 1.16f, pinch));
+            float bob = Mathf.Sin(u * Mathf.PI * 2f) * 0.0011f;
+            _ghostRenderer.transform.localPosition = _ghostRest + new Vector3(0f, bob, 0f);
+        }
+
+        /// <summary>Open, ease into the pinch, hold, ease open. The ends rest so the hold reads.</summary>
+        static float PinchAmount(float u)
+        {
+            if (u < 0.18f) return 0f;
+            if (u < 0.40f) return Mathf.SmoothStep(0f, 1f, (u - 0.18f) / 0.22f);
+            if (u < 0.70f) return 1f;
+            if (u < 0.90f) return 1f - Mathf.SmoothStep(0f, 1f, (u - 0.70f) / 0.20f);
+            return 0f;
         }
 
         void TickAfterAnswer()
@@ -372,32 +389,22 @@ namespace GardenVR.Terrarium
 
         void BuildGhost()
         {
-            _openHand = Resources.Load<Texture2D>("Ghost/hand-open");
-            _pinchHand = Resources.Load<Texture2D>("Ghost/hand-pinch");
-            if (_openHand == null)
+            Texture2D open = Resources.Load<Texture2D>("Ghost/hand-open");
+            Texture2D pinch = Resources.Load<Texture2D>("Ghost/hand-pinch");
+            if (open == null)
             {
                 Debug.LogError("[FirstRun] ghost hand texture missing");
                 return;
             }
-            Shader shader = Shader.Find("Fidelity/Card");
-            if (shader == null) shader = Shader.Find("Sprites/Default");
-            if (shader == null) return;
+            _ghostMat = GhostHandLook.Create(open, pinch, 0f);
+            if (_ghostMat == null) return;
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
             go.name = "GhostHand";
             Collider collider = go.GetComponent<Collider>();
             if (collider != null) Destroy(collider);
             go.transform.SetParent(transform, false);
-            go.transform.localPosition = new Vector3(0.078f, 0.072f, -0.02f);
-            go.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            go.transform.localScale = new Vector3(0.052f, 0.070f, 1f);
-            _ghostMat = new Material(shader) { name = "GhostHand" };
-            _ghostMat.SetTexture("_MainTex", _openHand);
-            _ghostMat.SetColor("_Color", Color.white);
-            _ghostMat.SetFloat("_Src", (float)BlendMode.SrcAlpha);
-            _ghostMat.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
-            _ghostMat.SetFloat("_Ring", 0f);
-            _ghostMat.SetFloat("_Boil", 0f);
-            _ghostMat.SetFloat("_ZWrite", 0f);
+            GhostHandLook.Pose(go.transform);
+            _ghostRest = go.transform.localPosition;
             _ghostRenderer = go.GetComponent<Renderer>();
             _ghostRenderer.sharedMaterial = _ghostMat;
             _ghostRenderer.shadowCastingMode = ShadowCastingMode.Off;

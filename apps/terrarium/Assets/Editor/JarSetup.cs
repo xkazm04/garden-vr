@@ -162,9 +162,10 @@ namespace GardenVR.Terrarium.Editor
                 m.SetColor("_Streak", new Color(0.90f, 1f, 0.96f, 0.46f));
                 m.SetShaderPassEnabled("SRPDefaultUnlit", false);
             });
-            library.Moss = Mat("Jar_Moss", "Fidelity/Glow", m =>
+            library.Moss = Mat("Jar_Moss", "Fidelity/MossVelvet", m =>
             {
                 // Locked emission from T-TER-019. Triplanar, so the macro is not a strip over the carpet.
+                // MossVelvet matches Glow on the JarG1 plate (28.2 deg). The seated 60 deg lens crosses _FarStart.
                 m.SetTexture("_MainTex", Tex("moss_macro"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_macro"));
@@ -179,10 +180,17 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_TopAmount", 0.92f);
                 m.SetFloat("_Tri", 52f);
                 m.SetFloat("_Cutoff", 0f);
+                m.SetFloat("_FarStart", 0.36f);
+                m.SetFloat("_FarEnd", 0.46f);
+                m.SetFloat("_FarMip", 3.6f);
+                m.SetFloat("_Velvet", 1f);
+                m.SetFloat("_TopEmit", 0.32f);
                 m.enableInstancing = true;
             });
-            library.MossCard = Mat("Jar_MossCard", "Fidelity/Glow", m =>
+            library.MossCard = Mat("Jar_MossCard", "Fidelity/MossVelvet", m =>
             {
+                // Same Glow equation on the JarG1 plate. The tuft sheet is what reads as cells from the chair,
+                // so the seated lens blurs the colour and keeps the alpha at mip 0.
                 m.SetTexture("_MainTex", Tex("moss_card"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_card"));
@@ -197,6 +205,11 @@ namespace GardenVR.Terrarium.Editor
                 m.SetVector("_GradY", new Vector4(0.018f, 0.032f, 0f, 0f));
                 m.SetFloat("_Tri", 0f);
                 m.SetFloat("_TopAmount", 0f);
+                m.SetFloat("_FarStart", 0.36f);
+                m.SetFloat("_FarEnd", 0.46f);
+                m.SetFloat("_FarMip", 4.5f);
+                m.SetFloat("_Velvet", 0.85f);
+                m.SetFloat("_TopEmit", 0.40f);
                 m.enableInstancing = true;
             });
             library.Soil = Mat("Jar_Soil", "Fidelity/Glow", m =>
