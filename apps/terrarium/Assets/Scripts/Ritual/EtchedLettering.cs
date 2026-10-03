@@ -186,26 +186,16 @@ namespace GardenVR.Terrarium
         public static Renderer Ghost(Transform parent, bool showing)
         {
             Texture2D open = Resources.Load<Texture2D>("Ghost/hand-open");
+            Texture2D pinch = Resources.Load<Texture2D>("Ghost/hand-pinch");
             if (open == null || parent == null) return null;
-            Shader shader = Shader.Find("Fidelity/Card");
-            if (shader == null) shader = Shader.Find("Sprites/Default");
-            if (shader == null) return null;
+            Material mat = GhostHandLook.Create(open, pinch, 0f);
+            if (mat == null) return null;
             var go = GameObject.CreatePrimitive(PrimitiveType.Quad);
             go.name = "GhostHand";
             Collider collider = go.GetComponent<Collider>();
             if (collider != null) Object.DestroyImmediate(collider);
             go.transform.SetParent(parent, false);
-            go.transform.localPosition = new Vector3(0.078f, 0.072f, -0.02f);
-            go.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            go.transform.localScale = new Vector3(0.052f, 0.070f, 1f);
-            var mat = new Material(shader) { name = "GhostHand" };
-            mat.SetTexture("_MainTex", open);
-            mat.SetColor("_Color", Color.white);
-            mat.SetFloat("_Src", (float)BlendMode.SrcAlpha);
-            mat.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
-            mat.SetFloat("_Ring", 0f);
-            mat.SetFloat("_Boil", 0f);
-            mat.SetFloat("_ZWrite", 0f);
+            GhostHandLook.Pose(go.transform);
             var renderer = go.GetComponent<Renderer>();
             renderer.sharedMaterial = mat;
             renderer.shadowCastingMode = ShadowCastingMode.Off;

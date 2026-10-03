@@ -35,7 +35,7 @@ State for that frame: `breath=0.5,uncoil=0.3,fog=0.45,time=3`, framing `JarG1`. 
 
 ## Moss and glow emission
 
-The mound uses `Fidelity/Glow` again, with the T-TER-019 material. `Fidelity/Moss` is not assigned. `JarView.Apply` still multiplies emission by the breath pulse. At rest the colours are these.
+The mound and the moss cards use `Fidelity/MossVelvet`. On the JarG1 plate (28.2 deg) that shader is the Glow equation, and the values below stay. `Fidelity/Moss` is not assigned. `JarView.Apply` still multiplies emission by the breath pulse. At rest the colours are these. The seated rig is a 60 deg lens. That is not part of this table. Both moss materials use `_FarStart` 0.36 and `_FarEnd` 0.46, which are tan of half the vertical field of view. `Jar_Moss` adds `_FarMip` 3.6, `_Velvet` 1, `_TopEmit` 0.32. `Jar_MossCard` adds `_FarMip` 4.5, `_Velvet` 0.85, `_TopEmit` 0.40, and keeps its cutout alpha at mip 0. The seated lens also keeps 0.72 of the emission. Those terms are off at the plate.
 
 | Material | Emission | Tip (y0, y1, floor, peak) above the jar | Other |
 | --- | --- | --- | --- |
