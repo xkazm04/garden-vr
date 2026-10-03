@@ -1,6 +1,6 @@
 # Locked looks
 
-A later task may change a locked value only when its task file says so. The jar silhouette is not locked. T-TER-023 replaced the cylinder with a symmetric mason profile. Glass clarity stays at the T-TER-019 values. Cork, jar shape, and fronds stay locked. T-TER-032 replaces the moss and holds the glow between the floor and ceiling below.
+A later task may change a locked value only when its task file says so. The jar silhouette is not locked. T-TER-023 replaced the cylinder with a symmetric mason profile. T-TER-033 replaces the glass. Cork, jar shape, fronds, and the T-TER-032 moss stay locked. The glow stays between the floor and ceiling below.
 
 ## Approving frame
 
@@ -28,11 +28,11 @@ State for that frame: `breath=0.5,uncoil=0.3,fog=0.45,time=3`, framing `JarG1`.
 
 Relative luminance, IEC sRGB decoded to CIE Y, from 0 to 1. `spec_anchor.py` reports the floor and the ceiling. A sample is inside when the printed 4-decimal value, clamped to 1, sits on the closed interval. The reference passes all three. T-TER-030 is under the glass floor and the ring floor. T-TER-028 is over the glass ceiling.
 
-| Measure | Rect (x, y, w, h) | Floor | Ceiling | Reference | T-TER-032 |
-| --- | --- | --- | --- | --- | --- |
-| Crozier peak | (860, 420, 100, 100) | 0.70 | 1.0 | 0.9878 | 0.9743 |
-| Glass mean | (760, 368, 28, 36) | 0.145 | 0.280 | 0.1834 | 0.1804 |
-| Ring peak | (700, 850, 420, 140) | 0.60 | 1.0 | 1.0 | 0.8385 |
+| Measure | Rect (x, y, w, h) | Floor | Ceiling | Reference | T-TER-032 | T-TER-033 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Crozier peak | (860, 420, 100, 100) | 0.70 | 1.0 | 0.9878 | 0.9743 | 0.9805 |
+| Glass mean | (760, 368, 28, 36) | 0.145 | 0.280 | 0.1834 | 0.1804 | 0.2150 |
+| Ring peak | (700, 850, 420, 140) | 0.60 | 1.0 | 1.0 | 0.8385 | 0.8385 |
 
 ## Glow frame (T-TER-032)
 
@@ -45,24 +45,24 @@ State for that frame: `breath=0.5,uncoil=0.3,fog=0.45,time=3`, framing `JarG1`.
 
 ## Glass (`Fidelity/JarGlass` and `Fidelity/Glass`)
 
-`JarView.Apply` and `JarSetup` write the same colours. Tint, volume, drops, beads, the fog cap, and the back pass are the T-TER-019 clarity lock. Rim, inner light, and inner height are the T-TER-032 glow. The streak stays at the T-TER-030 value.
+T-TER-033. `JarView.Apply` and `JarSetup` write the same colours. Rim, inner light, and inner height stay at the T-TER-032 glow. The streak stays at the T-TER-030 value. The pane is clear. Thickness is a screen-space fresnel: a bright outer line, a dark edge-on band, and a second inner line, a few pixels wide, including the lip and the rounded base. Refraction is an inward shift of the opaque copy, `_Refract` 36 pixels, strongest at the silhouette. `_Refract` at or below 0.5 keeps the previous `Fidelity/Glass` look and does not sample that copy. `GardenURP` requires the opaque texture at full resolution for the jar.
 
 | Property | Value |
 | --- | --- |
-| `_Tint` | (0.75, 0.94, 0.84, 0.018) |
+| `_Tint` | (0.75, 0.94, 0.84, 0.004) |
 | `_Rim` | (0.48, 0.72, 0.78, 0.32), `_RimPower` 2.40 |
 | `_Inner` | (0.34, 0.86, 0.48, 1) |
 | `_InnerY` | (0.078, 0.052, 0, 0) full through the moss and the crozier, gone by about 13 cm |
-| `_Volume` | (0.30, 0.78, 0.52, 0.10) wall tint, not a cavity fill |
+| `_Volume` | (0.42, 0.62, 0.66, 0.75) edge tint and darken, not a cavity fill |
 | `_VolumeY` | (0.038, 0.072, 0, 0) |
 | `_Drops` | 1.15 |
+| `_Refract` | 36 on the jar. 0 on shared `Fidelity/Glass` |
 | `_Streak` | (0.50, 0.66, 0.74, 0.12) |
 | Back pass | off (`SRPDefaultUnlit` disabled) |
-| Bead window | object y 0.094 to 0.124, in both glass shaders |
+| Beads | `droplet_normal.png`. Straight wall, object y about 0.068 to 0.090 when `_Fog` is at least 0.30. The clear line rises to 0.092 as `_Fog` falls to 0 |
 | Air light | `_Inner.rgb * column * lerp(0.35, 1.0, cavity) * 0.22` |
 | Emission cap | rim, inner, and volume rgb are min'd with linear `#E8FFF4` (0.804, 1.0, 0.903) before they are added |
-| Wall opacity | `wall * column * _Volume.a` on `JarGlass`. On shared `FGlass`, `wall * column * 0.10` |
-| Fog cap | 0.30 |
+| Fog | jar path caps haze at 0.10 and only where condensation B is set. Shared `Fidelity/Glass` at `_Refract` 0 keeps the 0.30 cap |
 
 ## Moss and glow emission
 
