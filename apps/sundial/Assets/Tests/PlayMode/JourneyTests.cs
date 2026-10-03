@@ -51,8 +51,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             string dir = SundialPlay.FreshDir();
             SundialController controller = null;
             yield return Boot(dir, SundialPlay.Clock1420(), c => controller = c);
-            AudioCueService.SuppressAutoLoad = true;
-            AudioCueService audio = controller.gameObject.AddComponent<AudioCueService>();
+            AudioCueService audio = controller.GetComponent<AudioCueService>();
+            Assert.IsNotNull(audio, "the dial has no cue service");
             Assert.IsNotNull(controller.Settings);
             Assert.IsFalse(controller.Settings.Open);
             Assert.AreEqual(SettingsTabs.TabLabel, controller.Settings.Label(SettingsTabs.TabId));

@@ -52,6 +52,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(DuskRitualController.OfferLine, LineText("BreathPrompt"));
             Assert.IsFalse(DuskRitualController.OfferLine.Contains("\u2014"));
             Assert.AreEqual(TileState.Today, Wind(controller).Window[6]);
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GARDEN_CUE_LOG")))
+                controller.UseVoiceAndBeds();
 
             SundialPlay.Play(controller, DuskScripts.ThreeBreaths());
             float app = 0f;
