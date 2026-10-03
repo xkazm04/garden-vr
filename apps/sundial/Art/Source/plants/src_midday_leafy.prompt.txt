@@ -1,0 +1,7 @@
+Style: hand-drawn animation linework placed into a real photographed room. The sundial garden is drawn like a frame of a hand-animated film: clean confident ink contours of varying weight, flat cel colours with a single soft shade step, loose watercolour washes filling the three arcs, a few pencil construction lines and tiny tick marks, slight paper grain only on the drawn object; the surrounding kitchen stays a real photograph with natural light and depth.
+
+A midday coral plant. Coral stems, green leaves with a coral blush, one shade step, a light coral wash. Soil mound at the bottom centre. Stage leafy: about two thirds of the mature height.
+
+Framing: single plant, centred, base at the bottom centre, on plain white paper, no shadow, no text.
+Negative: 3D render, CGI, plastic, photorealistic plants, chibi characters, faces, speech bubbles, manga text, screen tones covering the room.
+The model call led with the white-paper framing. Putting the style sentence first made the model photograph the plant on a sheet in a kitchen; those plates were rejected.

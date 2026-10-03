@@ -1,4 +1,0 @@
-asset: plant_midday_0.png
-method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
-note: painted by code (IWSDK seat SVG), interim
-derived_from_art_reference: no

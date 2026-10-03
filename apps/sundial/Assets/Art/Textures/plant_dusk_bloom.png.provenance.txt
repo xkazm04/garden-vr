@@ -1,7 +1,0 @@
-asset: plant_dusk_bloom.png
-date: 2026-10-02
-method: composed by tools/blender/sundial_textures.py
-sources: plant_dusk.png
-note: bloom state from plant_dusk_bloom.png (image_edit of the same plant)
-derived_from_art_reference: no
-sha256: 2f6127b51e1cfbcf4977b7c3f4a7c6562e6f99b52ad1dc2eecc9b7f7038a6065

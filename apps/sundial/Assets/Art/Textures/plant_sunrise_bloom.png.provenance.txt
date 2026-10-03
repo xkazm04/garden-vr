@@ -1,7 +1,0 @@
-asset: plant_sunrise_bloom.png
-date: 2026-10-02
-method: composed by tools/blender/sundial_textures.py
-sources: plant_sunrise.png
-note: bloom state from plant_sunrise_bloom.png (image_edit of the same plant)
-derived_from_art_reference: no
-sha256: 2bf6514568ef9f106cc4fa51a147ce67992b3f98097b92be1ceadc226306c1b7

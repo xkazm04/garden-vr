@@ -1,0 +1,7 @@
+Style: hand-drawn animation linework placed into a real photographed room. The sundial garden is drawn like a frame of a hand-animated film: clean confident ink contours of varying weight, flat cel colours with a single soft shade step, loose watercolour washes filling the three arcs, a few pencil construction lines and tiny tick marks, slight paper grain only on the drawn object; the surrounding kitchen stays a real photograph with natural light and depth.
+
+A sunrise herb sprig. Sage and olive cel leaves, one warm shade step, a light ochre wash. Soil mound at the bottom centre. Stage sprout: two leaves on a short stem.
+
+Framing: single plant, centred, base at the bottom centre, on plain white paper, no shadow, no text.
+Negative: 3D render, CGI, plastic, photorealistic plants, chibi characters, faces, speech bubbles, manga text, screen tones covering the room.
+The model call led with the white-paper framing. Putting the style sentence first made the model photograph the plant on a sheet in a kitchen; those plates were rejected.
