@@ -114,6 +114,7 @@ namespace GardenVR.Input
             if (Pressed(raw.F2, _prev.F2)) DevCommandRaised?.Invoke(DevCommand.AutoPace);
             if (Pressed(raw.BracketLeft, _prev.BracketLeft)) DevCommandRaised?.Invoke(DevCommand.PreviousDay);
             if (Pressed(raw.BracketRight, _prev.BracketRight)) DevCommandRaised?.Invoke(DevCommand.NextDay);
+            if (Pressed(raw.T, _prev.T)) DevCommandRaised?.Invoke(DevCommand.ClockFast);
         }
 
         void UpdatePalm(in RawKbm raw, float dt, Ray ray)

@@ -114,6 +114,7 @@ namespace GardenVR.Input
             raw.F2 = keyboard.f2Key.isPressed;
             raw.BracketLeft = keyboard.leftBracketKey.isPressed;
             raw.BracketRight = keyboard.rightBracketKey.isPressed;
+            raw.T = keyboard.tKey.isPressed;
             raw.MousePosition = mouse.position.ReadValue();
             raw.MouseDelta = mouse.delta.ReadValue();
             raw.Dt = Time.unscaledDeltaTime;
