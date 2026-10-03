@@ -61,6 +61,7 @@ namespace GardenVR.Sundial
         GUIStyle _overlayStyle;
 
         public SundialService Service { get { return _service; } }
+        public IHandIntentSource Source { get { return _source; } }
         public SundialState State { get { return _service == null ? null : _service.State; } }
         public string StateJson { get { return _service == null ? "" : _service.StateJson; } }
         public Ledger Ledger { get { return _service == null ? null : _service.Ledger; } }
@@ -76,10 +77,12 @@ namespace GardenVR.Sundial
         static void Install()
         {
             if (!Application.isPlaying) return;
-            if (UnityEngine.Object.FindAnyObjectByType<SundialController>() != null) return;
             DialView view = UnityEngine.Object.FindAnyObjectByType<DialView>();
             if (view == null) return;
-            view.gameObject.AddComponent<SundialController>();
+            if (UnityEngine.Object.FindAnyObjectByType<SundialController>() == null)
+                view.gameObject.AddComponent<SundialController>();
+            if (UnityEngine.Object.FindAnyObjectByType<DuskRitualController>() == null)
+                view.gameObject.AddComponent<DuskRitualController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -88,6 +91,8 @@ namespace GardenVR.Sundial
             _source = source;
             _keyboard = source as KeyboardMouseIntentSource;
             if (isActiveAndEnabled) Subscribe();
+            DuskRitualController dusk = GetComponent<DuskRitualController>();
+            if (dusk != null) dusk.SetSource(source);
         }
 
         public bool ShiftDay(int delta)
@@ -255,6 +260,8 @@ namespace GardenVR.Sundial
             HabitDef habit = _service.HabitForArc(arc);
             PlantState plant = _service.PlantFor(habit);
             if (habit == null || plant == null || plant.Window == null || plant.Window.Length < 7) return;
+            // The wind-down habit is the dusk ritual. A quick pinch does not keep it.
+            if (habit.Kind == HabitKind.InAppRitual) return;
             // A second pinch the same day, or a pinch while one tend is still waiting, leaves the picture alone.
             if (_service.IsPending) return;
             if (plant.Window[6] != TileState.Today) return;
