@@ -43,6 +43,8 @@ namespace GardenVR.Core
         public string FirstRunStep;
         /// <summary>A ritual was started and not finished. The next launch offers it back. It does not start itself.</summary>
         public bool RitualOpen;
+        /// <summary>The garden day three good things was finished. The three things are not stored.</summary>
+        public int? GladDay;
         public Dictionary<string, JsonValue> Extra;
         public Dictionary<string, JsonValue> SettingsExtra;
         public Dictionary<string, Dictionary<string, JsonValue>> HabitExtra;
@@ -92,6 +94,8 @@ namespace GardenVR.Core
             if (obj.Has("FirstRunStep") && !obj.Get("FirstRunStep").IsNull)
                 save.FirstRunStep = obj.Get("FirstRunStep").AsString();
             if (obj.Has("RitualOpen")) save.RitualOpen = obj.Get("RitualOpen").AsBool();
+            if (obj.Has("GladDay") && !obj.Get("GladDay").IsNull)
+                save.GladDay = obj.Get("GladDay").AsInt();
             return save;
         }
 
@@ -124,6 +128,7 @@ namespace GardenVR.Core
             if (settings.Count > 0) obj.Set("Settings", settings);
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
             if (save.RitualOpen) obj.Set("RitualOpen", JsonValue.Bool(true));
+            if (save.GladDay.HasValue) obj.Set("GladDay", JsonValue.Number(save.GladDay.Value));
             obj.Restore(save.Extra);
             return obj;
         }
@@ -131,7 +136,7 @@ namespace GardenVR.Core
         static readonly string[] RootKnown =
         {
             "SchemaVersion", "FrondDays", "DewToday", "LastRitualDay", "Returns", "RitualsCompleted",
-            "Habits", "Tends", "Settings", "FirstRunStep", "RitualOpen"
+            "Habits", "Tends", "Settings", "FirstRunStep", "RitualOpen", "GladDay"
         };
 
         static readonly string[] SettingKnown =

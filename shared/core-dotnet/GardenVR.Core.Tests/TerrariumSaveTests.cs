@@ -96,6 +96,7 @@ public class TerrariumSaveTests
         Assert.DoesNotContain("HoldMode", json);
         Assert.DoesNotContain("Mute", json);
         Assert.DoesNotContain("RitualOpen", json);
+        Assert.DoesNotContain("GladDay", json);
         Assert.DoesNotContain("Settings", json);
 
         var changed = new TerrariumSave();
