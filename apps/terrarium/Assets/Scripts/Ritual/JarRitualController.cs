@@ -85,6 +85,7 @@ namespace GardenVR.Terrarium
         bool _lookPlaying;
         bool _lookArmed;
         bool _corkPinch;
+        GladRitual _glad;
 
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
         static readonly Color DotDim = new Color(0.015f, 0.04f, 0.028f);
@@ -151,6 +152,11 @@ namespace GardenVR.Terrarium
                 return !_lookFrames[_lookIndex].Kept;
             }
         }
+        public int GladPlaced { get { return _glad != null ? _glad.Placed : 0; } }
+        public bool GladSettled { get { return _glad != null && _glad.Settled; } }
+        public bool GladBuilt { get { return _glad != null && _glad.Built; } }
+        public string GladLine { get { return _glad != null ? _glad.Line : null; } }
+        public float GladDropY(int leaf) { return _glad != null ? _glad.DropLocalY(leaf) : 0f; }
         public bool HoldingBreath => _holdVisual;
         public float PausedFor => _pausedFor;
         public float AppTime => _appTime;
@@ -371,6 +377,7 @@ namespace GardenVR.Terrarium
             EnsureAudio();
             SyncMute();
             LatchGap();
+            EnsureGlad();
         }
 
         void Start()
@@ -394,6 +401,7 @@ namespace GardenVR.Terrarium
             Log("SessionStart");
             _director = gameObject.AddComponent<FirstRunDirector>();
             _director.Begin(this);
+            EnsureGlad();
             if (_service != null && _service.RitualOpen && !_service.RestoreOffered)
                 OfferRitualBack();
         }
@@ -539,6 +547,7 @@ namespace GardenVR.Terrarium
             PaintDots(_session.Breaths);
             TickLook(_latchedPause ? 0f : dt);
             PushGarden();
+            TickGlad(dt);
             if (_director != null) _director.Tick(dt);
         }
 
@@ -739,6 +748,19 @@ namespace GardenVR.Terrarium
                 SetVoiceGuide(!on);
                 return;
             }
+            if (intent.Kind == HandIntentKind.Pinch && _glad != null && _glad.Owns(intent.TargetId))
+            {
+                if (GladInputOpen())
+                {
+                    int leaf;
+                    if (_glad.TryPinch(intent.TargetId, out leaf))
+                    {
+                        Play("dew.drop", _glad.DropTransform(leaf), 0f);
+                        CountGlad();
+                    }
+                }
+                return;
+            }
             if (intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
                 HandleHabitIntent(intent);
             if (_guide != null && _session != null
@@ -814,6 +836,44 @@ namespace GardenVR.Terrarium
             else if (command == DevCommand.NextDay) ShiftDay(1);
             else if (command == DevCommand.PreviousDay) ShiftDay(-1);
             else if (command == DevCommand.SeedPackets) OfferSeedPackets();
+        }
+
+        void EnsureGlad()
+        {
+            if (_glad != null || _view == null) return;
+            _glad = gameObject.AddComponent<GladRitual>();
+            _glad.Bind(_view);
+        }
+
+        void TickGlad(float dt)
+        {
+            if (_glad == null || _service == null) return;
+            int? done = _service.Document != null ? _service.Document.GladDay : null;
+            _glad.Sync(done, _service.TodayIndex);
+            bool show = GladInputOpen() && !(_answered && _answerTime >= 0f && _answerTime < 3f);
+            _glad.Tick(dt, show, ReducedMotionOn);
+        }
+
+        bool GladInputOpen()
+        {
+            if (_service == null || _service.RestoreOffered) return false;
+            if (_awaitContinue || _lookPlaying || _latchedPause) return false;
+            if (_session == null) return false;
+            if (_session.Phase == BreathPhase.Inhaling || _session.Phase == BreathPhase.Exhaling || _session.Phase == BreathPhase.Paused)
+                return false;
+            return true;
+        }
+
+        void CountGlad()
+        {
+            if (_glad == null || _service == null || !_glad.Session.Complete || _glad.Counted) return;
+            GrowthAnswer answer;
+            if (!_service.TryCompleteGlad(_glad.Session, out answer)) return;
+            _glad.NoteCounted(_service.TodayIndex);
+            _garden = _service.Garden;
+            _lastAnswer = answer;
+            Log("GladDone");
+            PushGarden();
         }
 
         void PushIdle()
