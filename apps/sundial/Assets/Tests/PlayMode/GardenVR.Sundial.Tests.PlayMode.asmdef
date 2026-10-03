@@ -6,6 +6,7 @@
         "GardenVR.Core",
         "GardenVR.Input",
         "GardenVR.Capture",
+        "GardenVR.Audio",
         "UnityEngine.TestRunner"
     ],
     "includePlatforms": [],

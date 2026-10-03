@@ -96,6 +96,12 @@ namespace GardenVR.Sundial
             return count;
         }
 
+        /// <summary>Focus loss. The breath stays where it was. A fresh pinch continues it. It does not start over.</summary>
+        public void NotifyFocusLost()
+        {
+            LatchPause();
+        }
+
         public void SetSource(IHandIntentSource source)
         {
             if (_source == source) return;

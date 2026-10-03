@@ -67,6 +67,8 @@ namespace GardenVR.Sundial
 
         public string Step { get { return _step; } }
         public bool Running { get { return _running; } }
+        /// <summary>Palm dismiss freezes the drawing. The step and the clocks stay where they were.</summary>
+        public bool Held;
         public bool RestoreVisible { get { return _restore != null && _restore.activeSelf; } }
         public float FirstTendAt { get { return _firstTendAt; } }
         public float RitualDoneAt { get { return _ritualDoneAt; } }
@@ -167,6 +169,7 @@ namespace GardenVR.Sundial
         void Update()
         {
             if (!Application.isPlaying || _service == null) return;
+            if (Held) return;
             float dt = Time.deltaTime;
             if (dt < 0f) dt = 0f;
             if (dt > 0.1f) dt = 0.1f;
