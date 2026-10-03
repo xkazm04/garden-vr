@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using GardenVR.Capture;
 using GardenVR.Input;
 using UnityEngine;
@@ -150,7 +151,25 @@ namespace GardenVR.Sundial
                 }
             }
             Debug.Log("[FirstRun] record closed frames=" + _frames + " code=" + code);
-            Application.Quit(code);
+            // Application.Quit is ignored in the editor, so play mode would spin forever.
+            if (Application.isEditor)
+                StopEditorPlay(code);
+            else
+                Application.Quit(code);
+        }
+
+        static void StopEditorPlay(int code)
+        {
+            Type prefs = Type.GetType("UnityEditor.EditorPrefs, UnityEditor");
+            if (prefs != null)
+            {
+                MethodInfo setInt = prefs.GetMethod("SetInt", new[] { typeof(string), typeof(int) });
+                if (setInt != null) setInt.Invoke(null, new object[] { "sundial.firstRun.recordCode", code });
+            }
+            Type editor = Type.GetType("UnityEditor.EditorApplication, UnityEditor");
+            PropertyInfo playing = editor == null ? null : editor.GetProperty("isPlaying", BindingFlags.Static | BindingFlags.Public);
+            if (playing != null) playing.SetValue(null, false, null);
+            else Application.Quit(code);
         }
 
         void OnDestroy()

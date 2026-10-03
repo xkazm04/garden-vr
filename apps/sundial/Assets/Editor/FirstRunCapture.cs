@@ -52,7 +52,9 @@ namespace GardenVR.Sundial.Editor
             if (state == PlayModeStateChange.EnteredEditMode && EditorPrefs.GetBool(FirstRunCapture.PrefExit, false))
             {
                 EditorPrefs.SetBool(FirstRunCapture.PrefExit, false);
-                EditorApplication.Exit(0);
+                int code = EditorPrefs.GetInt("sundial.firstRun.recordCode", 0);
+                EditorPrefs.DeleteKey("sundial.firstRun.recordCode");
+                EditorApplication.Exit(code);
             }
         }
     }
