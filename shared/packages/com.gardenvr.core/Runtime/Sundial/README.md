@@ -48,3 +48,7 @@ Oldest first, today last. `Before` for a day before `CreatedDay`. A live tend is
 ```
 
 `arc` is null when the minute is between 03:00 and 06:00. Enum values are the C# names.
+
+## Stretch reach
+
+`StretchSession` is the morning ritual. Three marks, in order. A sample counts only when `PalmCommit` is true and `LookMark` is the next index. A repeat or a later mark is ignored and does not lower `Stretch`. `Stretch` is earned reaches / 3 and only rises. Completion sets `TendAuthorised` for `ArcId.Morning` with `TendSource.Ritual`. `ConsumeTend` returns true once. The session does not write the ledger. The app does, with `TendRitual`.

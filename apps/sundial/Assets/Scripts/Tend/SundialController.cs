@@ -15,7 +15,8 @@ namespace GardenVR.Sundial
     /// Glance and pinch. Look paints the halo after the provider's dwell (scripted looks dwell here).
     /// Pinch arms a deferred tend, plays the tock, pulses the plant and fills today's tile.
     /// The undo mark cancels inside 6 s. Palm open puts the dial away and brings it back,
-    /// and commits a waiting tend. Focus loss pauses without hiding the dial.
+    /// unless it lands on a morning stretch mark, which the stretch ritual claims.
+    /// A dismiss still commits a waiting tend. Focus loss pauses without hiding the dial.
     /// App code never reads a keyboard or a mouse.
     /// </summary>
     [DisallowMultipleComponent]
@@ -129,6 +130,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<SundialController>();
             if (UnityEngine.Object.FindAnyObjectByType<DuskRitualController>() == null)
                 view.gameObject.AddComponent<DuskRitualController>();
+            if (UnityEngine.Object.FindAnyObjectByType<StretchRitualController>() == null)
+                view.gameObject.AddComponent<StretchRitualController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -140,6 +143,8 @@ namespace GardenVR.Sundial
             if (_wizard != null) _wizard.SetSource(source);
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.SetSource(source);
+            StretchRitualController stretch = GetComponent<StretchRitualController>();
+            if (stretch != null) stretch.SetSource(source);
         }
 
         /// <summary>
@@ -337,6 +342,8 @@ namespace GardenVR.Sundial
             else if (intent.Kind == HandIntentKind.Poke) OnPoke(intent.TargetId);
             else if (intent.Kind == HandIntentKind.PalmOpen)
             {
+                StretchRitualController stretch = GetComponent<StretchRitualController>();
+                if (stretch != null && stretch.ClaimsPalm(intent)) return;
                 CommitEarly();
                 SetDismissed(!Dismissed);
             }

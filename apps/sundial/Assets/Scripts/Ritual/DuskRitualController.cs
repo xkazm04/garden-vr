@@ -222,6 +222,8 @@ namespace GardenVR.Sundial
         {
             if (intent.Kind == HandIntentKind.PalmOpen)
             {
+                StretchRitualController stretch = GetComponent<StretchRitualController>();
+                if (stretch != null && stretch.ClaimsPalm(intent)) return;
                 LatchPause();
                 return;
             }

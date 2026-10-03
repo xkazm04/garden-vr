@@ -454,6 +454,8 @@ namespace GardenVR.Sundial
                 gameObject.AddComponent<SundialController>();
             if (GetComponent<DuskRitualController>() == null)
                 gameObject.AddComponent<DuskRitualController>();
+            if (GetComponent<StretchRitualController>() == null)
+                gameObject.AddComponent<StretchRitualController>();
         }
 
         void OnEnable()
