@@ -1,0 +1,4 @@
+asset: packet-winddown.png
+method: generated sheet, then cropped and white keyed
+note: Crop of packet-sheet.png, right packet (dusty mauve, crescent). Same prompt as packet-sheet.prompt.txt. White keyed out. Sheet prompt apps/sundial/Art/Source/packets/packet-sheet.prompt.txt. Not copied from the art reference.
+derived_from_art_reference: no

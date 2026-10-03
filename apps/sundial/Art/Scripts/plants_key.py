@@ -668,6 +668,15 @@ def process():
             save_png(TEX / ("bloom_%s_%s.png" % (arc, bloom)), over)
             cover = float((over[:, :, 3] > 24).mean())
             print("  bloom %s %s alpha cover %.3f" % (arc, bloom, cover))
+        # Living colour is last, and it does not touch alpha. A re-key stays fresh.
+        from plants_freshen import blossoms_on_card, freshen
+        for name in list(cards):
+            mask = blossoms_on_card(cards[name]) if arc == "sunrise" and name in ("bud", "open") else None
+            cards[name] = freshen(cards[name], arc, name, mask)
+            if name in ("bud", "open"):
+                save_png(TEX / ("bloom_%s_%s.png" % (arc, name)), cards[name])
+            else:
+                save_png(TEX / ("plant_%s_%s.png" % (arc, name)), cards[name])
         placed[arc] = cards
     run = Path(os.environ["GARDEN_RUN_DIR"]) if os.environ.get("GARDEN_RUN_DIR") else RUN
     contact(placed, run / "plants-contact.png")

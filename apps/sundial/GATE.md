@@ -1,0 +1,24 @@
+# Sundial gate
+
+Pack for the owner read on 2026-10-23. Each row is pass, fail, or needs-owner. Host rows cite a file from this run. Owner rows stay needs-owner until the owner witnesses them.
+
+| id | status | witness | evidence | note |
+|---|---|---|---|---|
+| U1 | pass | host | orchestration/runs/sundial/T-SUN-019/u1-firstrun.txt | FirstRun_FirstTendAndDusk passed. firstTendAt=51.98 s, ritualDoneAt=144.59 s. Caps are 60 s and 180 s. |
+| U2 | needs-owner | owner | apps/sundial/GATE.md | A first-time person, fresh save, stopwatch, no notes outside the app. That session has not been run. |
+| U3 | pass | host | orchestration/runs/sundial/T-SUN-019/dotnet-test.txt | dotnet test Passed 92, Failed 0, 164 ms. Property test Lifetime_and_stage_never_decrease_over_one_thousand_seeded_lives in shared/core-dotnet/GardenVR.Core.Tests/SundialTests.cs. |
+| U4 | needs-owner | owner | apps/sundial/GATE.md | Owner use on at least 4 of 7 days from 2026-10-15 through 2026-10-21. Today in this run is 2026-10-03, so that window has not opened. |
+| U5 | pass | host | orchestration/runs/sundial/T-SUN-019/grep-u5.txt | Case-insensitive search of both apps' Assets. Sundial hits are LoadOutcome.Failed identifiers and JourneyTests.cs:716, which asserts a cue does not contain streak, fail, shame, or wilt. Terrarium hits are the same Failed identifier, comments, one debug log, and the jar glass streak shader. No user-facing shaming sentence. |
+| S1 | pass | host | orchestration/runs/sundial/T-SUN-019/grep-s1.txt | apps/*/Assets and shared/packages *.cs. Two hits, both in KeyboardMouseIntentSource.cs lines 93-94. |
+| S2 | pass | host | orchestration/runs/sundial/T-SUN-019/playback-10x.txt | CanonicalJourney_TenRuns, one PlayMode process, ten scene loads. SHA256 4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d on all ten. End-state JSON is string-equal. identical=true. |
+| S3 | pass | host | orchestration/runs/sundial/T-SUN-019/s3-response.txt | Response_TwoFrames. dtFrames=1, limit=2. Frame numbers sit near 120030 because this case ran after the long journey. |
+| S4 | pass | host | orchestration/runs/sundial/T-SUN-019/playmode.xml | PauseAt_Offer, PauseAt_Inhale1, PauseAt_Exhale1, PauseAt_Inhale2, PauseAt_Inhale3 all Passed in that xml. |
+| S5 | pass | host | orchestration/runs/sundial/T-SUN-019/cold-start.txt | Windowed player Build/sundial/Sundial.exe. Median engine of runs 1-3 is 0.600 s. Median wall is 2.023 s. Cap is 4 s. |
+| S6 | needs-owner | owner | apps/sundial/GATE.md | Owner completes the journey and rates the core gesture. That session has not been run. |
+| A1 | needs-owner | owner | orchestration/runs/sundial/T-SUN-020/REPORT.md | Latest side-by-sides are firstrun.sbs.png, missed.sbs.png, day7.sbs.png, settings.sbs.png in that folder. Owner score of at least 4 of 5 on every frame is still open. |
+| A2 | fail | host | orchestration/runs/sundial/T-SUN-019/a2-a3.txt | Palette delta-E, line width, and object size were not measured in this task. |
+| A3 | fail | host | orchestration/runs/sundial/T-SUN-019/a2-a3.txt | Gemini judge was not run. Grok does not score the frames. |
+| A4 | pass | host | orchestration/runs/sundial/T-SUN-019/provenance-census.txt | 49 shipped pngs, each with a .provenance.txt. Full-file SHA256 against the four reference frames: 0 matches. Native-scale exact crop search: 0 hits. |
+| A5 | pass | host | orchestration/runs/sundial/T-SUN-019/measure.json | DialG1 dial: 18 draws, 7456 tris, 16 renderers, 0 shadow casters, every listed texture <= 1024. Post-processing is off on GardenURP, GardenRenderer, and SeatedRig. transparentMeanLayers 1.194 is recorded on the dial. |
+| A6 | needs-owner | owner | orchestration/runs/sundial/T-SUN-019/loudness.txt | Mix remeasured at -20.9 LUFS and -4.2 dBFS true peak. Voice stems sit 10.0 to 10.1 dB above bed.midday (narration-margin.txt). The T-SUN-012 cue table places vo.sun.out.01 at 2.503 s and 9.303 s. Owner listen is still open. |
+| A7 | needs-owner | owner | orchestration/runs/sundial/T-SUN-019/playmode.xml | ReducedMotion_ShowsEndStates passed in 0.258 s. FirstRun_ReducedMotion and Dusk_ReducedMotion_SameTiming also passed. Owner watch of the 60 s capture orchestration/runs/sundial/T-SUN-009/dusk.mp4 is still open. |

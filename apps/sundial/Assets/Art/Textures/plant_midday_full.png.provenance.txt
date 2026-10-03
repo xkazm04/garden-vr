@@ -1,0 +1,4 @@
+asset: plant_midday_full.png
+method: recoloured by apps/sundial/Art/Scripts/plants_freshen.py
+note: Same ink and alpha as the keyed card. Fills moved to a living hue. Not copied from the art reference.
+derived_from_art_reference: no
