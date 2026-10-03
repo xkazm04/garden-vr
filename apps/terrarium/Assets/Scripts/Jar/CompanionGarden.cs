@@ -372,5 +372,58 @@ namespace GardenVR.Terrarium
             if (species == CompanionSpecies.StarFern) return "Companions/sprig_gold";
             return "Companions/sprig_glow";
         }
+
+        /// <summary>
+        /// One authored sprig, faced the same way as the habit sprigs. The caller owns the object.
+        /// The material is named SeasonSprigMat so the season pass can release it.
+        /// </summary>
+        public static GameObject PlaceSprig(Transform parent, string objectName, Vector3 localPosition, float height, Color emission, string textureResource)
+        {
+            if (parent == null) return null;
+            Mesh body = LoadBody();
+            Shader shader = Shader.Find("Fidelity/Glow");
+            if (shader == null) shader = Shader.Find("Sprites/Default");
+            var go = new GameObject(string.IsNullOrEmpty(objectName) ? "SeasonSprig" : objectName);
+            go.transform.SetParent(parent, false);
+            Vector3 right, up, normal;
+            Quaternion facing = Facing(body, out right, out up, out normal);
+            float minY, maxY;
+            Extents(body, facing, out minY, out maxY);
+            float span = Mathf.Max(0.001f, maxY - minY);
+            float scale = height / span;
+            go.transform.localRotation = facing;
+            go.transform.localScale = new Vector3(scale, scale, scale);
+            go.transform.localPosition = new Vector3(localPosition.x, localPosition.y - minY * scale, localPosition.z);
+
+            go.AddComponent<MeshFilter>().sharedMesh = body;
+            var renderer = go.AddComponent<MeshRenderer>();
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            var mat = new Material(shader != null ? shader : Shader.Find("Sprites/Default"));
+            mat.name = "SeasonSprigMat";
+            Texture2D tex = string.IsNullOrEmpty(textureResource) ? null : Resources.Load<Texture2D>(textureResource);
+            if (tex != null)
+            {
+                mat.SetTexture("_MainTex", tex);
+                mat.SetTexture("_EmissionTex", tex);
+                mat.SetColor("_Tint", new Color(1.08f, 1.02f, 0.88f, 1f));
+            }
+            else
+            {
+                mat.SetTexture("_MainTex", Texture2D.whiteTexture);
+                mat.SetTexture("_EmissionTex", Texture2D.whiteTexture);
+                mat.SetColor("_Tint", emission);
+            }
+            mat.SetFloat("_GradBottom", 1.08f);
+            mat.SetFloat("_GradTop", 1.24f);
+            mat.SetVector("_GradY", new Vector4(0.020f, 0.070f, 0f, 0f));
+            mat.SetColor("_Emission", emission);
+            mat.SetColor("_Rim", emission * 0.35f);
+            mat.SetFloat("_RimPower", 2.2f);
+            mat.SetFloat("_Cutoff", 0.12f);
+            mat.SetFloat("_Soft", 0f);
+            renderer.sharedMaterial = mat;
+            return go;
+        }
     }
 }
