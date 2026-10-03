@@ -43,6 +43,7 @@ Material:
     - _BoilTime: -1
     - _Feather: 0.04
     - _Grain: 0.045
+    - _InkRingR: 0.12685
     - _Outline: 0
     - _OutlinePx: 0
     - _ShadowStrength: 0

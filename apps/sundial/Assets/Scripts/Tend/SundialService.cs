@@ -84,6 +84,14 @@ namespace GardenVR.Sundial
         public SundialState State { get; private set; }
         public string StateJson { get { return _stateJson; } }
         public bool StateChanged { get; private set; }
+
+        /// <summary>A rim read is up, including the settle back to now. Ledger writes wait.</summary>
+        public bool Scrubbing { get; private set; }
+
+        public void SetScrubbing(bool on)
+        {
+            Scrubbing = on;
+        }
         public Ledger Ledger { get { return _ledger; } }
         public GratitudeRecord Gratitude { get { return _gratitude; } }
         public FocusBlock Focus { get { return _focus; } }
@@ -155,6 +163,7 @@ namespace GardenVR.Sundial
         /// <summary>Opens a shadow hour at the clock. False when one is already open.</summary>
         public bool TryStartFocus()
         {
+            if (Scrubbing) return false;
             if (_focus == null) _focus = new FocusBlock();
             if (!_focus.TryStart(_clock.Now, NowMin())) return false;
             CopyFocus();
@@ -165,6 +174,7 @@ namespace GardenVR.Sundial
         /// <summary>Ends the open hour early. It still counts, and the arc it started in is tended.</summary>
         public bool TryEndFocus()
         {
+            if (Scrubbing) return false;
             if (_focus == null || !_focus.TryEndEarly(_clock.Now)) return false;
             CommitFocus();
             return true;
@@ -173,6 +183,7 @@ namespace GardenVR.Sundial
         /// <summary>Holds the hour. The gap until <see cref="ResumeFocus"/> is not counted.</summary>
         public bool PauseFocus()
         {
+            if (Scrubbing) return false;
             if (_focus == null || !_focus.TryPause(_clock.Now)) return false;
             CopyFocus();
             Persist();
@@ -182,6 +193,7 @@ namespace GardenVR.Sundial
         /// <summary>Continues a held hour. A full hour completes here and is tended.</summary>
         public bool ResumeFocus()
         {
+            if (Scrubbing) return false;
             if (_focus == null || !_focus.TryResume(_clock.Now)) return false;
             if (_focus.Phase == FocusPhase.Complete) CommitFocus();
             else
@@ -207,6 +219,7 @@ namespace GardenVR.Sundial
         /// </summary>
         public TendResult InkGratitude(int symbol)
         {
+            if (Scrubbing) return null;
             if (_save == null) return null;
             if (_gratitude == null) _gratitude = new GratitudeRecord(_save.Gratitude);
             if (!_gratitude.TryInk(Today().Index, symbol)) return null;
@@ -239,7 +252,7 @@ namespace GardenVR.Sundial
         public void Step(float dt)
         {
             _clock.Step(dt);
-            TendEvent committed = _deferred.Tick(_clock);
+            TendEvent committed = Scrubbing ? null : _deferred.Tick(_clock);
             if (committed != null)
             {
                 PendingHabitId = null;
@@ -299,6 +312,7 @@ namespace GardenVR.Sundial
         /// </summary>
         public TendResult TendRitual(string habitId)
         {
+            if (Scrubbing) return TendResult.Refused("reading");
             if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
             TendResult result = _ledger.Tend(habitId, Today(), TendSource.Ritual, _clock);
             if (result.Ok && !result.AlreadyKept) Persist();
@@ -320,6 +334,7 @@ namespace GardenVR.Sundial
         public HabitDef PlantPreset(SeedPreset preset)
         {
             if (preset == null) throw new ArgumentNullException(nameof(preset));
+            if (Scrubbing) return _save == null ? null : HabitForArc(SundialArcs.Key(preset.Group));
             if (_save == null) return null;
             if (_save.Habits == null) _save.Habits = new List<HabitDef>();
             string arcKey = SundialArcs.Key(preset.Group);
@@ -371,6 +386,7 @@ namespace GardenVR.Sundial
 
         public void Arm(string habitId)
         {
+            if (Scrubbing) return;
             if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
             if (_deferred.IsPending) throw new InvalidOperationException("a tend is already waiting to commit");
             _deferred.Arm(habitId, Today(), TendSource.Pinch, _clock);
@@ -387,6 +403,7 @@ namespace GardenVR.Sundial
 
         public TendEvent Flush()
         {
+            if (Scrubbing) return null;
             TendEvent committed = _deferred.Flush();
             PendingHabitId = null;
             if (committed != null) Persist();
@@ -405,6 +422,7 @@ namespace GardenVR.Sundial
         /// </summary>
         public bool TryShiftDay(int delta)
         {
+            if (Scrubbing) return false;
             if (delta == 0) return true;
             if (delta < 0)
             {
@@ -463,6 +481,7 @@ namespace GardenVR.Sundial
         public TendResult BackfillYesterday(HabitDef habit)
         {
             if (habit == null) throw new ArgumentNullException(nameof(habit));
+            if (Scrubbing) return TendResult.Refused("reading");
             TendResult result = SundialRules.Backfill(habit, _ledger, Today(), _clock);
             if (result != null && result.Ok) Persist();
             Recompute();

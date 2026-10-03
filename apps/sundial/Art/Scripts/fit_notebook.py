@@ -152,9 +152,16 @@ def fit_face(path):
     # shows the left side of this file. Flip so gold lands on the sunrise herb
     # (screen left), coral on the midday flower (screen far), lilac on the lavender.
     turned = Image.fromarray(out, "RGB").transpose(Image.Transpose.FLIP_LEFT_RIGHT)
+    # The warm key light roses the lilac. grade_a2 puts the pale dusk wash back on #BFA1BC
+    # and clears the painted rim so Dial_Face can draw the ring. Both steps are idempotent.
+    import sys
+    if HERE not in sys.path:
+        sys.path.insert(0, HERE)
+    import grade_a2
+    graded = grade_a2.thin_rim_ink(grade_a2.grade_dusk_wash(np.asarray(turned).astype(np.float32)))
     dest = os.path.join(TEX, "dial_face.png")
-    turned.save(dest)
-    out = np.asarray(turned)
+    Image.fromarray(np.clip(graded, 0, 255).astype(np.uint8), "RGB").save(dest)
+    out = np.asarray(Image.open(dest).convert("RGB"))
     print("face", dest)
     return out
 

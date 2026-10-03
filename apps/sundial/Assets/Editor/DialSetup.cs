@@ -392,7 +392,9 @@ namespace GardenVR.Sundial.Editor
             library.Tiles.SetTexture("_TileTex", Tex("tiles_atlas"));
             library.Tiles.SetColor("_WashMorning", new Color(0.965f, 0.871f, 0.718f, 1f));
             library.Tiles.SetColor("_WashMidday", new Color(0.957f, 0.714f, 0.631f, 1f));
-            library.Tiles.SetColor("_WashDusk", new Color(0.792f, 0.690f, 0.773f, 1f));
+            // Pre-compensated for the warm daylight (the face grade uses the same gain).
+            // On the dial this lands near the ref-1 dusk #BFA1BC instead of dusty rose.
+            library.Tiles.SetColor("_WashDusk", new Color(0.731f, 0.668f, 0.898f, 1f));
             library.Tiles.SetFloat("_BoilPx", 0f);
 
             library.Morning = Plant("Dial_PlantMorning", library.MorningCards[4]);
@@ -539,6 +541,8 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_BoilTime", -1f);
                 m.SetFloat("_TileMode", 0f);
                 m.SetColor("_Ink", new Color(0.165f, 0.149f, 0.133f, 1f));
+                // 882/1023.5 * 0.1472. Only the face draws this ring. Width is in the shader.
+                m.SetFloat("_InkRingR", name == "Dial_Face" ? 0.12685f : 0f);
                 m.SetShaderPassEnabled("SRPDefaultUnlit", hull);
             });
         }
