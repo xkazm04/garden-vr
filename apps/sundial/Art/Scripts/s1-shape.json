@@ -1,0 +1,48 @@
+{
+  "sdfMetres": 0.018,
+  "control": 1024,
+  "paper": 512,
+  "extraSamples": 3,
+  "iou": {
+    "morning": 1.0,
+    "midday": 1.0,
+    "dusk": 1.0
+  },
+  "locked": {
+    "legacyIoU": 0.7044,
+    "gradeMaskIoU": 0.9496,
+    "paintedPx": {
+      "morning": 347020,
+      "midday": 198701,
+      "dusk": 338335
+    },
+    "legacyPx": 480334,
+    "clippedPx": 130193,
+    "duskHueLeak": 0.0,
+    "stamp": true,
+    "textureHp": {
+      "morning": 3.283,
+      "midday": 4.888,
+      "dusk": 4.863
+    }
+  },
+  "repaired": {
+    "legacyIoU": 0.7091,
+    "gradeMaskIoU": 0.9466,
+    "paintedPx": {
+      "morning": 347057,
+      "midday": 198712,
+      "dusk": 340585
+    },
+    "legacyPx": 480334,
+    "clippedPx": 0,
+    "duskHueLeak": 0.0,
+    "stamp": false,
+    "textureHp": {
+      "morning": 3.338,
+      "midday": 4.903,
+      "dusk": 5.207
+    }
+  },
+  "questFallback": "s1-quest"
+}
