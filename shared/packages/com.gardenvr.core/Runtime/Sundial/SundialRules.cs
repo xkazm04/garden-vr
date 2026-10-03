@@ -76,25 +76,9 @@ namespace GardenVR.Core
             for (int i = 0; i < window.Length; i++)
             {
                 int day = today.Index - 6 + i;
-                if (day < habit.CreatedDay)
-                {
-                    window[i] = TileState.Before;
-                    continue;
-                }
-                var live = Live(ledger, habit.Id, day);
-                if (live != null)
-                {
-                    window[i] = live.Late ? TileState.Late : TileState.Kept;
-                    windowKept++;
-                }
-                else if (day == today.Index)
-                {
-                    window[i] = TileState.Today;
-                }
-                else
-                {
-                    window[i] = TileState.Missed;
-                }
+                TileState tile = TileOn(habit, ledger, day, today.Index);
+                window[i] = tile;
+                if (tile == TileState.Kept || tile == TileState.Late) windowKept++;
             }
 
             int lifetime = LifetimeKept(ledger, habit, today);
@@ -110,6 +94,24 @@ namespace GardenVR.Core
             int yesterday = today.Index - 1;
             state.CanBackfillYesterday = yesterday >= habit.CreatedDay && !ledger.IsKept(habit.Id, yesterday);
             return state;
+        }
+
+        /// <summary>
+        /// One day of the record. A day before the habit existed is blank.
+        /// A live tend is kept, or late when it was written afterwards.
+        /// Today with no tend is still open. Any earlier open day is a quiet miss.
+        /// A miss does not change any other day.
+        /// </summary>
+        public static TileState TileOn(HabitDef habit, Ledger ledger, int day, int todayIndex)
+        {
+            if (habit == null) throw new ArgumentNullException(nameof(habit));
+            if (ledger == null) throw new ArgumentNullException(nameof(ledger));
+            if (day < habit.CreatedDay) return TileState.Before;
+            TendEvent live = Live(ledger, habit.Id, day);
+            if (live != null) return live.Late ? TileState.Late : TileState.Kept;
+            if (day == todayIndex) return TileState.Today;
+            if (day > todayIndex) return TileState.Before;
+            return TileState.Missed;
         }
 
         /// <summary>15 degrees per hour, 0 at 06:00. The angle wraps every full turn.</summary>
