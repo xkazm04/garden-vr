@@ -19,6 +19,11 @@ Shader "Fidelity/Glow"
         _TopAmount ("Top blend", Range(0,1)) = 0
         _Shell ("Shell offset along normal (m)", Float) = 0
         _Tri ("Triplanar tiling for _MainTex (0 = mesh UV)", Float) = 0
+        // Focused light is off unless the radius (_LightPos.w) is positive, so older materials keep the flat gradient.
+        _LightPos ("Focused light (xyz, radius; 0 = off)", Vector) = (0, 0, 0, 0)
+        _LightColor ("Focused light colour", Color) = (0, 0, 0, 1)
+        _Trans ("Translucency", Range(0, 3)) = 0
+        _Soft ("Soft edge dither", Range(0, 0.6)) = 0
     }
     SubShader
     {
@@ -37,6 +42,7 @@ Shader "Fidelity/Glow"
             TEXTURE2D(_TopTex); SAMPLER(sampler_TopTex);
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST; half4 _Tint, _Emission, _Rim; half _RimPower, _GradBottom, _GradTop, _Cutoff, _TopTile, _TopAmount, _Shell, _Tri; float4 _GradY;
+                float4 _LightPos; half4 _LightColor; half _Trans, _Soft;
             CBUFFER_END
             struct A { float4 pos : POSITION; float3 n : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; float3 wp : TEXCOORD2; UNITY_VERTEX_OUTPUT_STEREO };
@@ -64,16 +70,38 @@ Shader "Fidelity/Glow"
                     alb = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * _Tint;
                     em = SAMPLE_TEXTURE2D(_EmissionTex, sampler_EmissionTex, i.uv).r;
                 }
-                clip(alb.a - _Cutoff);
                 if (_Shell > 0) clip(abs(n.y) - 0.45);   // fuzz only on the cap, never on the vertical skirt
                 // caps (moss top, cork top) take a planar texture so the lathe's pole never shows its radial pinch
                 half topw = _TopAmount * smoothstep(0.45, 0.75, abs(n.y));
                 half3 top = SAMPLE_TEXTURE2D(_TopTex, sampler_TopTex, i.wp.xz * _TopTile).rgb * _Tint.rgb;
                 alb.rgb = lerp(alb.rgb, top, topw); em = lerp(em, dot(top, half3(0.3, 0.6, 0.1)), topw);
+                // A zero _Soft keeps the old hard cutoff. A small dither feathers a card silhouette without a blend pass.
+                if (_Soft > 0.001)
+                {
+                    float h = frac(sin(dot(floor(i.pos.xy), float2(12.9898, 78.233))) * 43758.5453);
+                    clip(alb.a - (_Cutoff + (h - 0.5) * _Soft));
+                }
+                else
+                    clip(alb.a - _Cutoff);
                 float3 v = normalize(GetWorldSpaceViewDir(i.wp));
                 half rim = pow(1 - saturate(abs(dot(n, v))), _RimPower);
                 half g = lerp(_GradBottom, _GradTop, saturate((i.wp.y - _GradY.x) / max(1e-4, _GradY.y - _GradY.x)));
                 half3 c = alb.rgb * g + _Emission.rgb * em + _Rim.rgb * rim;
+                // Radius 0 leaves the equation above untouched. A positive radius is a soft point at the crozier or flower.
+                if (_LightPos.w > 0.001)
+                {
+                    float3 toL = _LightPos.xyz - i.wp;
+                    float dist = length(toL);
+                    float3 L = toL / max(dist, 1e-4);
+                    float atten = saturate(1.0 - dist / _LightPos.w);
+                    atten *= atten;
+                    half ndl = dot(n, L);
+                    half wrap = saturate(ndl * 0.5 + 0.5);
+                    half back = saturate(-ndl);
+                    half blade = saturate(em);
+                    c += _LightColor.rgb * (half)atten * wrap * alb.rgb;
+                    c += _LightColor.rgb * (half)atten * back * _Trans * lerp(0.35h, 1.0h, blade);
+                }
                 return half4(c, 1);
             }
             ENDHLSL

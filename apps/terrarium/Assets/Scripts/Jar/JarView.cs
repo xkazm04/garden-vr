@@ -43,8 +43,11 @@ namespace GardenVR.Terrarium
         public const float PlumeHeight = 0.132f;
         public const float PlumeCenterY = 0.188f;
 
-        static readonly Color FernEmission = new Color(0.35f, 1.0f, 0.62f);
-        static readonly Color FiddleEmission = new Color(0.30f, 0.65f, 0.22f);
+        static readonly Color FernEmission = new Color(0.045f, 0.12f, 0.07f);
+        static readonly Color FiddleEmission = new Color(0.07f, 0.16f, 0.06f);
+        static readonly Color FocusMint = new Color(0.34f, 0.68f, 0.42f, 1f);
+        static readonly Color FocusWarm = new Color(0.72f, 0.42f, 0.16f, 1f);
+        const float FocusRadius = 0.092f;
 
         [Header("State")]
         [Range(0f, 1f)] public float breath = 0.5f;
@@ -76,6 +79,8 @@ namespace GardenVR.Terrarium
         public Material glassMat;
         public Material mossMat;
         public Material mossCardMat;
+        public Material soilMat;
+        public Material seedlingMat;
         public Material coilHaloMat;
         public Material jarHaloMat;
         public Material newFrondMat;
@@ -123,10 +128,10 @@ namespace GardenVR.Terrarium
         // #F2D27A, the style-bible spore gold. The card multiplies it, so the material stays this hue.
         static readonly Color SporeGold = new Color(0.9490196f, 0.8235294f, 0.4784314f, 1f);
 
-        static readonly Color RingMint = new Color(0.95f, 1.65f, 1.25f);
-        static readonly Color RingAnswer = new Color(1.35f, 1.9f, 1.45f);
-        static readonly Color RingGold = new Color(1.65f, 1.32f, 0.62f);
-        static readonly Color SpillMint = new Color(0.16f, 0.55f, 0.34f, 1f);
+        static readonly Color RingMint = new Color(0.55f, 0.92f, 0.70f);
+        static readonly Color RingAnswer = new Color(0.70f, 1.05f, 0.78f);
+        static readonly Color RingGold = new Color(1.15f, 0.88f, 0.42f);
+        static readonly Color SpillMint = new Color(0.09f, 0.28f, 0.16f, 1f);
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
@@ -197,24 +202,24 @@ namespace GardenVR.Terrarium
             float mossGlow = answering ? ripple : pulse;
             if (mossMat != null)
             {
-                mossMat.SetColor("_Emission", new Color(0.075f, 0.24f, 0.12f) * (1f + (answering ? 2.6f : 1.15f) * mossGlow));
-                float rim = answering ? 0.55f + 1.1f * mossGlow : 0.45f;
-                mossMat.SetColor("_Rim", new Color(0.40f, 0.92f, 0.55f) * rim);
+                mossMat.SetColor("_Emission", new Color(0.012f, 0.034f, 0.018f) * (1f + 0.45f * mossGlow));
+                mossMat.SetColor("_Rim", new Color(0.16f, 0.36f, 0.20f) * (0.85f + 0.35f * mossGlow));
             }
             if (mossCardMat != null)
-                mossCardMat.SetColor("_Emission", new Color(0.09f, 0.28f, 0.14f) * (1f + (answering ? 2.2f : 1.05f) * mossGlow));
+                mossCardMat.SetColor("_Emission", new Color(0.016f, 0.045f, 0.024f) * (1f + 0.40f * mossGlow));
+            float coil = answer > 0f ? 0.55f + 0.25f * pulse : 0.75f + 0.15f * Mathf.Sin(breath * Mathf.PI);
             if (coilHaloMat != null)
-                coilHaloMat.SetColor("_Color", new Color(0.40f, 1.05f, 0.55f) * (answer > 0f ? 0.55f + 0.5f * pulse : 0.7f + 0.25f * Mathf.Sin(breath * Mathf.PI)));
+                coilHaloMat.SetColor("_Color", new Color(0.18f, 0.48f, 0.28f) * coil);
             if (jarHaloMat != null)
-                jarHaloMat.SetColor("_Color", new Color(0.14f, 0.55f, 0.34f) * (1.1f + 0.45f * pulse + 0.15f * Mathf.Sin(breath * Mathf.PI)));
-            if (fernMat != null) fernMat.SetColor("_Emission", FernEmission * 1.05f * life);
+                jarHaloMat.SetColor("_Color", new Color(0.06f, 0.18f, 0.11f) * (1f + 0.2f * pulse));
+            if (fernMat != null) fernMat.SetColor("_Emission", FernEmission * life);
             if (newFrondMat != null)
             {
-                float frondGlow = answering ? 0.45f + 0.7f * ripple : pulse;
-                float newest = day >= 7 ? 1.35f : 1f;
-                newFrondMat.SetColor("_Emission", FernEmission * (1.05f + 0.65f * frondGlow) * life * newest);
+                float frondGlow = answering ? 0.25f + 0.35f * ripple : pulse * 0.35f;
+                float newest = day >= 7 ? 1.15f : 1f;
+                newFrondMat.SetColor("_Emission", FernEmission * (1f + frondGlow) * life * newest);
             }
-            if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * 1.35f * life);
+            if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * (0.9f + 0.25f * life));
             if (dew != null && dew.sharedMaterial != null)
             {
                 dew.sharedMaterial.SetColor("_Tint", new Color(0.78f, 1f, 0.92f));
@@ -227,6 +232,57 @@ namespace GardenVR.Terrarium
             DriveSporeLook();
             DriveSpores();
             ApplyFlowers();
+            ApplyFocusedLight(day >= 7 ? FocusWarm : FocusMint);
+        }
+
+        /// <summary>
+        /// A soft point at the crozier, the new frond, or the first flower. Radius 0 in the shader
+        /// is the old flat gradient, so only these jar materials opt in.
+        /// </summary>
+        void ApplyFocusedLight(Color color)
+        {
+            Vector3 pos = FocusPoint();
+            SetLight(mossMat, pos, color);
+            SetLight(mossCardMat, pos, color);
+            SetLight(soilMat, pos, color);
+            SetLight(fernMat, pos, color);
+            SetLight(newFrondMat, pos, color);
+            SetLight(fiddleMat, pos, color);
+            SetLight(seedlingMat, pos, color);
+            SetLight(flowerMat, pos, color);
+            SetLight(_quietFern, pos, color);
+            if (day >= 7 && coilHaloMat != null)
+                coilHaloMat.SetColor("_Color", new Color(0.55f, 0.32f, 0.12f));
+            Transform coilCard = FindNamed("CoilHalo");
+            if (coilCard != null) coilCard.position = pos;
+        }
+
+        Vector3 FocusPoint()
+        {
+            if (day >= 7 && _flowerRoots != null && _flowerRoots.Count > 0 && _flowerRoots[0] != null)
+                return _flowerRoots[0].transform.position;
+            if (answer >= 0.5f && newFrond != null)
+            {
+                Bounds bounds = newFrond.bounds;
+                return new Vector3(bounds.center.x, bounds.min.y + bounds.size.y * 0.35f, bounds.center.z);
+            }
+            if (fiddle != null)
+            {
+                Renderer renderer = fiddle.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    Bounds bounds = renderer.bounds;
+                    return new Vector3(bounds.center.x, Mathf.Lerp(bounds.center.y, bounds.max.y, 0.65f), bounds.center.z);
+                }
+            }
+            return transform.TransformPoint(new Vector3(0.004f, 0.078f, 0f));
+        }
+
+        static void SetLight(Material material, Vector3 pos, Color color)
+        {
+            if (material == null || !material.HasProperty("_LightPos")) return;
+            material.SetVector("_LightPos", new Vector4(pos.x, pos.y, pos.z, FocusRadius));
+            material.SetColor("_LightColor", color);
         }
 
         /// <summary>
@@ -251,6 +307,8 @@ namespace GardenVR.Terrarium
 
             glassMat = library.Glass;
             mossMat = library.Moss;
+            soilMat = library.Soil;
+            seedlingMat = library.Seedling;
             fernMat = library.Fern;
             newFrondMat = library.FernNew;
             fiddleMat = library.Fiddle;
@@ -356,8 +414,8 @@ namespace GardenVR.Terrarium
             var bills = new List<Transform>();
             Card("BreathRing", library.Ring, new Vector3(0f, 0.0006f, 0f), new Vector2(0.152f, 0.152f), flat);
             Card("DeskSpill", library.Spill, new Vector3(0f, 0.0004f, 0.01f), new Vector2(LeanSpillWidth, LeanSpillHeight), flat);
-            bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.038f, 0f), new Vector2(LeanHaloWidth, LeanHaloHeight), Quaternion.identity).transform);
-            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.012f, 0.078f, -0.008f), new Vector2(0.02f, 0.02f), Quaternion.identity).transform);
+            bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.050f, 0f), new Vector2(0.062f, 0.048f), Quaternion.identity).transform);
+            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.006f, 0.078f, 0.002f), new Vector2(0.038f, 0.038f), Quaternion.identity).transform);
 
             // One flipbook card. The bottom sits inside the cork, so the plume leaves the lip.
             // Empty corners still count as a layer, so the card is only as wide as the soft base.
@@ -744,7 +802,8 @@ namespace GardenVR.Terrarium
             if (_quietFern == null && fernMat != null)
                 _quietFern = new Material(fernMat) { name = "Jar_FernQuiet" };
             if (_quietFern != null)
-                _quietFern.SetColor("_Emission", FernEmission * 0.38f * life);
+                _quietFern.SetColor("_Emission", FernEmission * 0.55f * life);
+                SetLight(_quietFern, FocusPoint(), day >= 7 ? FocusWarm : FocusMint);
             return _quietFern;
         }
 
@@ -803,7 +862,7 @@ namespace GardenVR.Terrarium
         void ApplyFlowers()
         {
             if (flowerMesh == null || flowerMat == null) return;
-            flowerMat.SetColor("_Emission", new Color(0.08f, 0.05f, 0.02f));
+            flowerMat.SetColor("_Emission", new Color(0.42f, 0.24f, 0.08f));
             flowerMat.SetColor("_Tint", new Color(0.95f, 0.82f, 0.55f));
             if (_builtFlowers == flowers) return;
             for (int i = _flowerRoots.Count - 1; i >= 0; i--)
@@ -832,7 +891,7 @@ namespace GardenVR.Terrarium
                     halo.transform.SetParent(go.transform, false);
                     halo.transform.localPosition = new Vector3(0f, 0.012f, -0.004f);
                     halo.transform.localRotation = Quaternion.identity;
-                    halo.transform.localScale = new Vector3(0.014f, 0.014f, 1f);
+                    halo.transform.localScale = new Vector3(0.028f, 0.028f, 1f);
                 }
                 _flowerRoots.Add(go);
             }
@@ -861,7 +920,9 @@ namespace GardenVR.Terrarium
             if (_flowerHalo != null) return _flowerHalo;
             if (jarHaloMat == null) return null;
             _flowerHalo = new Material(jarHaloMat) { name = "FlowerHalo" };
-            _flowerHalo.SetColor("_Color", SporeGold * 0.18f);
+            _flowerHalo.SetColor("_Color", SporeGold * 0.42f);
+            _flowerHalo.SetFloat("_Falloff", 1.3f);
+            _flowerHalo.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.46f, 0f));
             return _flowerHalo;
         }
 

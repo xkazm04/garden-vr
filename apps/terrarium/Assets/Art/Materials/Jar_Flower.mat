@@ -42,12 +42,16 @@ Material:
     - _GradTop: 1.2
     - _RimPower: 2.1
     - _Shell: 0
+    - _Soft: 0
     - _TopAmount: 0
     - _TopTile: 10
+    - _Trans: 0
     - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0.08, g: 0.05, b: 0.02, a: 1}
+    - _Emission: {r: 0.42, g: 0.24, b: 0.08, a: 1}
     - _GradY: {r: 0.04, g: 0.08, b: 0, a: 0}
+    - _LightColor: {r: 0.34, g: 0.68, b: 0.42, a: 1}
+    - _LightPos: {r: 0.0006574071, g: 0.08041298, b: 0.003608954, a: 0.092}
     - _Rim: {r: 1, g: 0.78, b: 0.36, a: 1}
     - _Tint: {r: 0.95, g: 0.82, b: 0.55, a: 1}
   m_BuildTextureStacks: []

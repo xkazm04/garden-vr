@@ -32,11 +32,11 @@ Material:
     m_Floats:
     - _Drops: 1
     - _Fog: 0
-    - _RimPower: 2.6
+    - _RimPower: 2.8
     m_Colors:
-    - _Inner: {r: 0.18, g: 0.62, b: 0.4, a: 1}
-    - _InnerY: {r: 0.048, g: 0.058, b: 0, a: 0}
-    - _Rim: {r: 0.62, g: 1.05, b: 0.86, a: 0.78}
+    - _Inner: {r: 0.06, g: 0.2, b: 0.12, a: 1}
+    - _InnerY: {r: 0.056, g: 0.02, b: 0, a: 0}
+    - _Rim: {r: 0.42, g: 0.78, b: 0.64, a: 0.55}
     - _Streak: {r: 0.75, g: 1, b: 0.92, a: 0.18}
     - _Tint: {r: 0.04, g: 0.11, b: 0.09, a: 0.025}
   m_BuildTextureStacks: []
