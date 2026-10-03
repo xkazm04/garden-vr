@@ -79,15 +79,67 @@ def export(names, path):
 
 # =========================================================================== JAR
 reset()
-# glass: outer wall up the profile, over the lip, and back down the inside (one closed shell, 2 mm thick)
+# glass: one outer shell plus a short lip. The old inner cylinder ran back down the body.
+# Those triangles sit in front of the moss and the overdraw pass (Cull Off) counted them even
+# though the front glass pass never showed them. The mouth stays thick; the wall is one shell.
 outer = [(0.0, 0.0), (0.038, 0.0), (0.0445, 0.003), (0.0462, 0.012), (0.0465, 0.060), (0.0462, 0.098), (0.0440, 0.110),
          (0.0400, 0.1165), (0.0378, 0.1195), (0.0376, 0.1215), (0.0388, 0.1235), (0.0390, 0.1270), (0.0378, 0.1290)]
-inner = [(r - 0.0021, y) for (r, y) in outer[2:-2]][::-1]
-prof = outer + [(0.0356, 0.1285), (0.0355, 0.1240)] + [(max(0.0, r), y) for (r, y) in inner if y > 0.004] + [(0.036, 0.004), (0.0, 0.004)]
-lathe("Jar", prof, 128)
+lip = [(0.0354, 0.1276), (0.0348, 0.1238), (0.0352, 0.1198), (0.0364, 0.1168)]
+lathe("Jar", outer + lip, 128)
+
+
+def drop_back_glass():
+    """JarG1 never shades faces that point away from the eye. The glass back pass is off.
+
+    Overdraw swaps in Fidelity/Overdraw, which is Cull Off, so those faces still add a
+    layer. Drop them. Faces that face the eye, including the near lip, stay, so the
+    rim ellipse holds from the hero camera.
+
+    Export maps Blender (x, y, z) to Unity (-x, z, y). The JarG1 eye
+    (0, 0.175, -0.44) is Blender (0, -0.44, 0.175).
+    """
+    obj = bpy.data.objects["Jar"]
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bm.normal_update()
+    cam = Vector((0.0, -0.44, 0.175))
+    doomed = []
+    for face in bm.faces:
+        view = cam - face.calc_center_median()
+        if view.dot(face.normal) <= 0.05:
+            doomed.append(face)
+    if len(doomed) < 8 or len(doomed) > len(bm.faces) - 8:
+        raise SystemExit("glass cull would delete %d of %d faces" % (len(doomed), len(bm.faces)))
+    bmesh.ops.delete(bm, geom=doomed, context="FACES")
+    bm.to_mesh(obj.data)
+    obj.data.update()
+    bm.free()
+    print("[hero] glass back faces dropped", len(doomed))
+
+
+drop_back_glass()
 # cork: slightly tapered plug with a rounded top edge
 cork = [(0.0, 0.1395), (0.0372, 0.1395), (0.0386, 0.1388), (0.0393, 0.1375), (0.0395, 0.1300), (0.0360, 0.1240), (0.0354, 0.1180), (0.0, 0.1180)]
 lathe("Cork", cork, 96, uv_v=[1.0, 1.0, 0.95, 0.9, 0.35, 0.1, 0.0, 0.0])
+
+
+def roughen_cork_lip(amplitude=0.0009):
+    """Break the lathe circle on the top lip so the cork reads as a cut, porous edge."""
+    mesh = bpy.data.objects["Cork"].data
+    for vert in mesh.vertices:
+        radial = math.hypot(vert.co.x, vert.co.y)
+        if vert.co.z < 0.133 or radial < 0.028:
+            continue
+        sample = noise.noise(Vector((vert.co.x, vert.co.y, vert.co.z)) * 90.0)
+        vert.co.x += (vert.co.x / radial) * sample * amplitude
+        vert.co.y += (vert.co.y / radial) * sample * amplitude
+        if vert.co.z > 0.1365:
+            vert.co.z += sample * 0.0007
+    mesh.update()
+    print("[hero] cork lip roughened", "{:.4f}".format(amplitude))
+
+
+roughen_cork_lip()
 # soil: the dark layer under the moss
 lathe("Soil", [(0.0, 0.004), (0.0428, 0.004), (0.0436, 0.016), (0.0436, 0.030), (0.0, 0.031)], 96, uv_v=[0, 0, 0.45, 1.0, 1.0])
 # Moss is clump cushions plus a 32-card skirt (terrarium_moss.py), not a lathe dome.

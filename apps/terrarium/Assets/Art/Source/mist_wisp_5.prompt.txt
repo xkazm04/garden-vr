@@ -1,0 +1,2 @@
+image_gen aspect_ratio 2:3. Session file images/6.jpg, kept in call order.
+A vertical ribbon of mist twists once around itself, thick and cloudy in the middle, feathered to nothing at the tips. Cool white on a pure black background, gentle and slow.

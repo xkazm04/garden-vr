@@ -1,0 +1,2 @@
+image_gen aspect_ratio 2:3. Session file images/2.jpg, kept in call order.
+A soft plume of steam bends into a gentle S-curve, wider and cloudier at the lower end and thinning to a faint thread above. Pale warm-white vapor on a pure black background, edges feathered into the dark.

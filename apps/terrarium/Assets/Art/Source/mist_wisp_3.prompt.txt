@@ -1,0 +1,2 @@
+image_gen aspect_ratio 2:3. Session file images/4.jpg, kept in call order.
+Two overlapping wisps of steam drift apart as they rise, one curling left and one curling right, both pale and translucent. Pure black background, quiet breath in cold air, soft feathered edges.

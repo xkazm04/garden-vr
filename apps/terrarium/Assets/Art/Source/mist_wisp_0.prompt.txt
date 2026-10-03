@@ -1,0 +1,2 @@
+image_gen aspect_ratio 2:3. Session file images/1.jpg, kept in call order.
+A single ribbon of translucent steam curls upward in a loose question mark, pale silver with a faint cool mint cast, soft and thin, dissolving at both ends. It floats alone on a pure black background, like a macro photograph of smoke in a dark room.

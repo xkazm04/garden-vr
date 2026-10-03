@@ -1,0 +1,2 @@
+image_edit aspect_ratio 1:1, seeded from images/11.jpg (the cork side plate). Session file images/12.jpg.
+Turn this into the cut face of the same pale cork: matte warm tan and honey, slightly more open pores, dry and rough, filling the frame edge to edge under the same soft even light.
