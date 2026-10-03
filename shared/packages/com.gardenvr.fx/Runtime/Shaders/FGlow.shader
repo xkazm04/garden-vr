@@ -99,7 +99,8 @@ Shader "Fidelity/Glow"
                     half wrap = saturate(ndl * 0.5 + 0.5);
                     half back = saturate(-ndl);
                     half blade = saturate(em);
-                    c += _LightColor.rgb * (half)atten * wrap * alb.rgb;
+                    // Part of the light is the glow itself. A dark albedo used to swallow the crozier point.
+                    c += _LightColor.rgb * (half)atten * wrap * (alb.rgb * 0.55h + 0.45h);
                     c += _LightColor.rgb * (half)atten * back * _Trans * lerp(0.35h, 1.0h, blade);
                 }
                 return half4(c, 1);

@@ -144,17 +144,19 @@ namespace GardenVR.Terrarium.Editor
             }
 
             var library = new JarLibrary { Quad = SaveQuad() };
-            library.Glass = Mat("Jar_Glass", "Fidelity/Glass", m =>
+            library.Glass = Mat("Jar_Glass", "Fidelity/JarGlass", m =>
             {
                 m.SetTexture("_Cond", Tex("condensation"));
-                m.SetColor("_Tint", new Color(0.04f, 0.11f, 0.09f, 0.025f));
-                m.SetColor("_Rim", new Color(0.42f, 0.78f, 0.64f, 0.55f));
-                m.SetFloat("_RimPower", 2.8f);
-                // Tight pool beside the moss, not a neon column up the glass.
-                m.SetColor("_Inner", new Color(0.06f, 0.20f, 0.12f));
-                m.SetVector("_InnerY", new Vector4(0.056f, 0.020f, 0f, 0f));
+                m.SetColor("_Tint", new Color(0.05f, 0.16f, 0.12f, 0.04f));
+                m.SetColor("_Rim", new Color(0.50f, 0.92f, 0.74f, 0.62f));
+                m.SetFloat("_RimPower", 2.2f);
+                m.SetColor("_Inner", new Color(0.28f, 0.85f, 0.55f));
+                m.SetVector("_InnerY", new Vector4(0.058f, 0.055f, 0f, 0f));
+                // Soft mint through the cavity. Same glass pass, so it does not add a transparent layer.
+                m.SetColor("_Volume", new Color(0.32f, 1.05f, 0.68f, 0.34f));
+                m.SetVector("_VolumeY", new Vector4(0.058f, 0.050f, 0f, 0f));
                 m.SetFloat("_Drops", 1.0f);
-                m.SetColor("_Streak", new Color(0.75f, 1f, 0.92f, 0.18f));
+                m.SetColor("_Streak", new Color(0.75f, 1f, 0.92f, 0.22f));
                 m.SetShaderPassEnabled("SRPDefaultUnlit", false);
             });
             library.Moss = Mat("Jar_Moss", "Fidelity/Glow", m =>
@@ -163,12 +165,12 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_MainTex", Tex("moss_macro"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_macro"));
-                m.SetColor("_Emission", new Color(0.012f, 0.035f, 0.018f));
-                m.SetColor("_Rim", new Color(0.16f, 0.36f, 0.20f));
+                m.SetColor("_Emission", new Color(0.035f, 0.090f, 0.048f));
+                m.SetColor("_Rim", new Color(0.28f, 0.62f, 0.36f));
                 m.SetFloat("_RimPower", 3.2f);
                 m.SetFloat("_GradBottom", 0.58f);
                 m.SetFloat("_GradTop", 1.02f);
-                m.SetVector("_GradY", new Vector4(0.030f, 0.044f, 0f, 0f));
+                m.SetVector("_GradY", new Vector4(0.016f, 0.032f, 0f, 0f));
                 m.SetTexture("_TopTex", Tex("moss_macro"));
                 // One texture width is a few cushions across the low mound.
                 m.SetFloat("_TopTile", 52f);
@@ -182,15 +184,15 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_MainTex", Tex("moss_card"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_card"));
-                m.SetColor("_Emission", new Color(0.018f, 0.050f, 0.026f));
-                m.SetColor("_Rim", new Color(0.18f, 0.42f, 0.24f));
+                m.SetColor("_Emission", new Color(0.040f, 0.100f, 0.055f));
+                m.SetColor("_Rim", new Color(0.30f, 0.66f, 0.38f));
                 m.SetFloat("_RimPower", 2.2f);
                 m.SetFloat("_Cutoff", 0.04f);
                 m.SetFloat("_Soft", 0.30f);
                 m.SetFloat("_Trans", 0.25f);
                 m.SetFloat("_GradBottom", 0.70f);
                 m.SetFloat("_GradTop", 1.08f);
-                m.SetVector("_GradY", new Vector4(0.030f, 0.046f, 0f, 0f));
+                m.SetVector("_GradY", new Vector4(0.018f, 0.032f, 0f, 0f));
                 m.SetFloat("_Tri", 0f);
                 m.SetFloat("_TopAmount", 0f);
                 m.enableInstancing = true;
@@ -199,19 +201,19 @@ namespace GardenVR.Terrarium.Editor
             {
                 m.SetTexture("_MainTex", Tex("soil_band"));
                 m.SetTexture("_EmissionTex", Tex("soil_band"));
-                m.SetColor("_Tint", new Color(0.92f, 0.96f, 0.90f));
-                m.SetColor("_Emission", new Color(0.004f, 0.012f, 0.008f));
-                m.SetColor("_Rim", new Color(0.04f, 0.10f, 0.06f));
+                m.SetColor("_Tint", new Color(0.72f, 0.88f, 0.76f));
+                m.SetColor("_Emission", new Color(0.002f, 0.006f, 0.004f));
+                m.SetColor("_Rim", new Color(0.03f, 0.08f, 0.05f));
                 m.SetFloat("_RimPower", 3.4f);
-                // Lathe UVs stretch the crumbs into bark on the taper. Triplanar keeps the pebble scale.
-                // Darker at the glass, lighter where the moss overhangs.
-                m.SetFloat("_GradBottom", 0.62f);
-                m.SetFloat("_GradTop", 1.05f);
-                m.SetVector("_GradY", new Vector4(0.004f, 0.026f, 0f, 0f));
-                m.SetFloat("_Tri", 9f);
+                // Fine crumbs. A coarse tile on the bed read as gravel.
+                // Darker where it meets the glass, still dark under the moss.
+                m.SetFloat("_GradBottom", 0.55f);
+                m.SetFloat("_GradTop", 0.82f);
+                m.SetVector("_GradY", new Vector4(0.002f, 0.024f, 0f, 0f));
+                m.SetFloat("_Tri", 22f);
                 m.SetTexture("_TopTex", Tex("soil_band"));
-                m.SetFloat("_TopTile", 9f);
-                m.SetFloat("_TopAmount", 0.8f);
+                m.SetFloat("_TopTile", 22f);
+                m.SetFloat("_TopAmount", 0.85f);
             });
             library.Cork = Mat("Jar_Cork", "Fidelity/Glow", m =>
             {
@@ -235,16 +237,16 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_MainTex", Tex("fern_albedo"));
                 m.SetColor("_Tint", new Color(0.72f, 0.92f, 0.68f));
                 m.SetTexture("_EmissionTex", Tex("fern_emission"));
-                // The wash stays low. Veins transmit the crozier light (_Trans) instead of a flat mint.
-                m.SetColor("_Emission", new Color(0.045f, 0.12f, 0.07f) * emissionScale);
-                m.SetColor("_Rim", new Color(0.12f, 0.32f, 0.18f));
-                m.SetFloat("_RimPower", 2.8f);
+                // Veins carry the backlight. The rim is the bright edge the reference shows.
+                m.SetColor("_Emission", new Color(0.22f, 0.62f, 0.36f) * emissionScale);
+                m.SetColor("_Rim", new Color(0.62f, 1.00f, 0.74f));
+                m.SetFloat("_RimPower", 1.7f);
                 m.SetFloat("_Cutoff", 0.16f);
                 m.SetFloat("_Soft", 0.20f);
                 m.SetFloat("_Trans", 1.65f);
                 m.SetFloat("_GradBottom", 0.70f);
                 m.SetFloat("_GradTop", 1.02f);
-                m.SetVector("_GradY", new Vector4(0.04f, 0.10f, 0f, 0f));
+                m.SetVector("_GradY", new Vector4(0.032f, 0.096f, 0f, 0f));
                 m.enableInstancing = true;
             });
             library.Fern = Fern("Jar_Fern", 0.75f);
@@ -256,13 +258,13 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTextureScale("_EmissionTex", new Vector2(1.2f, 2.4f));
                 m.SetColor("_Tint", new Color(0.55f, 0.84f, 0.32f));
                 m.SetTexture("_EmissionTex", Tex("fiddle_hairs"));
-                m.SetColor("_Emission", new Color(0.07f, 0.16f, 0.06f));
-                m.SetColor("_Rim", new Color(0.78f, 0.98f, 0.68f));
-                m.SetFloat("_RimPower", 1.35f);
+                m.SetColor("_Emission", new Color(0.55f, 1.12f, 0.40f));
+                m.SetColor("_Rim", new Color(0.82f, 1.00f, 0.62f));
+                m.SetFloat("_RimPower", 1.15f);
                 m.SetFloat("_Trans", 0.45f);
                 m.SetFloat("_GradBottom", 0.75f);
                 m.SetFloat("_GradTop", 1.12f);
-                m.SetVector("_GradY", new Vector4(0.05f, 0.11f, 0f, 0f));
+                m.SetVector("_GradY", new Vector4(0.032f, 0.100f, 0f, 0f));
             });
             library.Seedling = Mat("Jar_Seedling", "Fidelity/Glow", m =>
             {
@@ -285,8 +287,8 @@ namespace GardenVR.Terrarium.Editor
             library.Ring = Mat("Jar_Ring", "Fidelity/Card", m =>
             {
                 m.SetTexture("_MainTex", Tex("ring"));
-                m.SetColor("_Color", new Color(0.75f, 1.35f, 1.05f));
-                m.SetColor("_Color2", new Color(0.03f, 0.15f, 0.09f));
+                m.SetColor("_Color", new Color(0.85f, 1.45f, 1.10f));
+                m.SetColor("_Color2", new Color(0.08f, 0.28f, 0.16f));
                 m.SetFloat("_Src", (float)BlendMode.One);
                 m.SetFloat("_Dst", (float)BlendMode.One);
                 m.SetFloat("_Ring", 1f);
@@ -294,17 +296,17 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_ZTest", (float)CompareFunction.LessEqual);
                 m.renderQueue = 2990;
             });
-            library.Spill = CardMat("Jar_Spill", Tex("halo"), new Color(0.09f, 0.28f, 0.16f), Color.black, false, -11);
-            library.JarHalo = CardMat("Jar_Halo", Tex("halo"), new Color(0.06f, 0.18f, 0.11f), Color.black, false, 20);
-            library.CoilHalo = CardMat("Jar_CoilHalo", Tex("halo"), new Color(0.20f, 0.55f, 0.30f), Color.black, false, 21);
-            library.Spill.SetFloat("_Falloff", 1.65f);
-            library.Spill.SetVector("_Focus", new Vector4(0.50f, 0.42f, 0.46f, 0f));
-            library.JarHalo.SetFloat("_Falloff", 1.35f);
-            library.JarHalo.SetVector("_Focus", new Vector4(0.50f, 0.40f, 0.52f, 0f));
-            library.CoilHalo.SetFloat("_Falloff", 1.2f);
-            library.CoilHalo.SetVector("_Focus", new Vector4(0.50f, 0.50f, 0.40f, 0f));
+            library.Spill = CardMat("Jar_Spill", Tex("halo"), new Color(0.22f, 0.62f, 0.36f), Color.black, false, -11);
+            library.JarHalo = CardMat("Jar_Halo", Tex("halo"), new Color(0.16f, 0.48f, 0.30f), Color.black, false, 20);
+            library.CoilHalo = CardMat("Jar_CoilHalo", Tex("halo"), new Color(0.55f, 1.15f, 0.62f), Color.black, false, 21);
+            library.Spill.SetFloat("_Falloff", 1.35f);
+            library.Spill.SetVector("_Focus", new Vector4(0.50f, 0.46f, 0.58f, 0f));
+            library.JarHalo.SetFloat("_Falloff", 1.15f);
+            library.JarHalo.SetVector("_Focus", new Vector4(0.50f, 0.42f, 0.62f, 0f));
+            library.CoilHalo.SetFloat("_Falloff", 1.05f);
+            library.CoilHalo.SetVector("_Focus", new Vector4(0.50f, 0.50f, 0.48f, 0f));
             library.Mist = CardMat("Jar_Mist", Tex("mist"), new Color(0.84f, 0.93f, 0.90f, 0.80f), Color.black, true, 30);
-            library.Spore = CardMat("Jar_Spore", Tex("spore"), new Color(0.9490196f, 0.8235294f, 0.4784314f) * 1.35f, Color.black, false, 40);
+            library.Spore = CardMat("Jar_Spore", Tex("spore"), new Color(0.9490196f, 0.8235294f, 0.4784314f) * 1.85f, Color.black, false, 40);
             library.Flower = Mat("Jar_Flower", "Fidelity/Glow", m =>
             {
                 m.SetTexture("_MainTex", Tex("petal"));

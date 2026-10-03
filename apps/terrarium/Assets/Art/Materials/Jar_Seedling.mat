@@ -50,8 +50,8 @@ Material:
     m_Colors:
     - _Emission: {r: 0.03, g: 0.08, b: 0.04, a: 1}
     - _GradY: {r: 0, g: 0.1, b: 0, a: 0}
-    - _LightColor: {r: 0.34, g: 0.68, b: 0.42, a: 1}
-    - _LightPos: {r: 0.0006574071, g: 0.08041298, b: 0.003608954, a: 0.092}
+    - _LightColor: {r: 0.55, g: 1.2, b: 0.7, a: 1}
+    - _LightPos: {r: 0.0006574071, g: 0.06841296, b: 0.0036089527, a: 0.12}
     - _Rim: {r: 0.16, g: 0.38, b: 0.18, a: 1}
     - _Tint: {r: 0.28, g: 0.55, b: 0.24, a: 1}
   m_BuildTextureStacks: []

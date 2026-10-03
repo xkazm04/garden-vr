@@ -21,16 +21,19 @@ namespace GardenVR.Terrarium
         public const float ContinueAfterSeconds = 60f;
         public const float PausedMotion = 0.2f;
         public const string ContinuePromptId = "prompt.continue";
+        public const string RestorePromptId = "prompt.restore";
         const float EngageStrength = 0.85f;
 
         [SerializeField] JarView _view;
 
         BreathConfig _config;
         BreathSession _session;
+        GardenService _service;
         Garden _garden;
         IHandIntentSource _source;
         KeyboardMouseIntentSource _keyboard;
-        int _today;
+        GrowthAnswer _lastAnswer;
+        bool _hasAnswer;
         int _loggedEvents;
         bool _answered;
         bool _latchedPause;
@@ -54,6 +57,7 @@ namespace GardenVR.Terrarium
         Material[] _dotMats;
         Material _paceMat;
         GameObject _prompt;
+        GameObject _restore;
         GUIStyle _overlayStyle;
 
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
@@ -63,6 +67,11 @@ namespace GardenVR.Terrarium
 
         public BreathSession Session => _session;
         public Garden Garden => _garden;
+        public GardenService Service => _service;
+        public GrowthAnswer LastAnswer => _lastAnswer;
+        public bool HasAnswer => _hasAnswer;
+        public bool FirstRunStarted { get; private set; }
+        public bool RestorePromptVisible => _restore != null && _restore.activeSelf;
         public JarView View => _view;
         public bool AutoPace => _autoPace;
         public bool OverlayVisible => _overlay;
@@ -78,7 +87,40 @@ namespace GardenVR.Terrarium
 
         public TerrariumState Snapshot()
         {
-            return TerrariumState.Capture(_session, _garden, _today);
+            int today = _service != null ? _service.TodayIndex : 0;
+            return TerrariumState.Capture(_session, _garden, today);
+        }
+
+        /// <summary>A new evening in the same scene. The garden stays. The breath session starts over.</summary>
+        public void BeginEvening()
+        {
+            if (_service == null || _service.RestoreOffered) return;
+            _config = ConfigFrom(_service.Settings);
+            _session = new BreathSession(_config);
+            _answered = false;
+            _hasAnswer = false;
+            _answerTime = 0f;
+            _loggedEvents = 0;
+            _lastAnswer = new GrowthAnswer(false, false, false, 0);
+            if (_view != null)
+            {
+                _view.answer = 0f;
+                _view.answerTime = -1f;
+                _view.recoveredTime = -1f;
+                _view.uncoil = 0f;
+            }
+            _frozenBreath = 0f;
+            _pace = -1f;
+            PushGarden();
+        }
+
+        /// <summary>Development builds only. A refused step changes nothing and shows nothing.</summary>
+        public bool ShiftDay(int delta)
+        {
+            if (!DevClockAllowed() || _service == null) return false;
+            bool moved = _service.TryShiftDay(delta);
+            if (moved) PushGarden();
+            return moved;
         }
 
         public void SetSource(IHandIntentSource source)
@@ -124,18 +166,31 @@ namespace GardenVR.Terrarium
 
         void Awake()
         {
-            _config = new BreathConfig();
+            IClock clock = GardenService.ClockOverride ?? new SystemClock();
+            string directory = string.IsNullOrEmpty(GardenService.DirectoryOverride)
+                ? GardenService.DefaultDirectory()
+                : GardenService.DirectoryOverride;
+            _service = new GardenService(clock, directory);
+            _garden = _service.Garden;
+            _config = ConfigFrom(_service.Settings);
             _session = new BreathSession(_config);
-            _garden = new Garden();
-            _today = Garden.DayNumber(DateTime.Now);
+            _autoPace = _service.Settings.AutoPace;
             if (_view == null) _view = GetComponent<JarView>();
+            if (_view != null) _view.reducedMotion = _service.Settings.ReducedMotion;
         }
 
         void Start()
         {
             if (!Application.isPlaying) return;
             if (_source == null) SetSource(FindDefaultSource());
+            ApplyHoldMode();
             BuildChrome();
+            FirstRunStarted = _service != null && _service.Outcome == LoadOutcome.Fresh;
+            if (_service != null && _service.RestoreOffered)
+            {
+                FirstRunStarted = false;
+                if (_restore != null) _restore.SetActive(true);
+            }
             PushIdle();
             Log("SessionStart");
         }
@@ -165,6 +220,12 @@ namespace GardenVR.Terrarium
         void Update()
         {
             if (!Application.isPlaying || _session == null || _view == null) return;
+            if (_service != null && _service.RestoreOffered)
+            {
+                if (_restore != null && !_restore.activeSelf) _restore.SetActive(true);
+                PushGarden();
+                return;
+            }
             _updates++;
             float dt = Time.deltaTime;
             if (dt < 0f) dt = 0f;
@@ -232,7 +293,6 @@ namespace GardenVR.Terrarium
             _view.uncoil = _session.Uncoil;
             _view.fog = _session.Fog;
             _view.phase = _session.Phase;
-            _view.vitality = _garden.Vitality(_today);
             _view.time = _ambience;
             _view.sporeStep = dt * motion;
             if (_holdVisual)
@@ -245,7 +305,7 @@ namespace GardenVR.Terrarium
                 AdvancePace(dt);
             }
             PaintDots(_session.Breaths);
-            _view.Apply();
+            PushGarden();
         }
 
         void OnGUI()
@@ -321,10 +381,12 @@ namespace GardenVR.Terrarium
         void TryComplete()
         {
             if (_answered || _session.Phase != BreathPhase.Complete) return;
+            if (_service == null || _service.RestoreOffered) return;
             _answered = true;
-            _garden.CompleteRitual(_today);
+            _lastAnswer = _service.CompleteRitual();
+            _hasAnswer = true;
+            _garden = _service.Garden;
             _answerTime = 0f;
-            _view.vitality = _garden.Vitality(_today);
             Log("Answer");
         }
 
@@ -343,6 +405,23 @@ namespace GardenVR.Terrarium
             if (intent.Kind == HandIntentKind.PalmOpen)
             {
                 LatchPause();
+                return;
+            }
+            if ((intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
+                && intent.TargetId == RestorePromptId
+                && _service != null && _service.RestoreOffered)
+            {
+                if (_service.TryRestore())
+                {
+                    _garden = _service.Garden;
+                    _config = ConfigFrom(_service.Settings);
+                    _session = new BreathSession(_config);
+                    FirstRunStarted = false;
+                    if (_restore != null) _restore.SetActive(false);
+                    ApplyHoldMode();
+                    PushIdle();
+                    Log("Restored");
+                }
                 return;
             }
             if ((intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
@@ -370,6 +449,7 @@ namespace GardenVR.Terrarium
 
         void OnSystemPause()
         {
+            if (_service != null) _service.Save();
             // Batch PlayMode runs have no user focus. A startup focus-loss must not freeze the scripted ritual.
             if (Application.isBatchMode) return;
             LatchPause();
@@ -411,8 +491,11 @@ namespace GardenVR.Terrarium
 
         void OnDev(DevCommand command)
         {
+            if (!DevClockAllowed()) return;
             if (command == DevCommand.StateOverlay) _overlay = !_overlay;
             else if (command == DevCommand.AutoPace) SetAutoPace(!_autoPace);
+            else if (command == DevCommand.NextDay) ShiftDay(1);
+            else if (command == DevCommand.PreviousDay) ShiftDay(-1);
         }
 
         void PushIdle()
@@ -423,9 +506,27 @@ namespace GardenVR.Terrarium
             _view.answer = 0f;
             _view.answerTime = -1f;
             _view.phase = BreathPhase.Waiting;
-            _view.vitality = _garden.Vitality(_today);
             _frozenBreath = 0f;
             _pace = -1f;
+            PushGarden();
+        }
+
+        void PushGarden()
+        {
+            if (_view == null || _service == null || _garden == null) return;
+            bool animating = _answered && _lastAnswer.NewFrond && _answerTime >= 0f && _answerTime < 2.6f;
+            bool recovered = _answered && _lastAnswer.Recovered && _answerTime >= 0f && _answerTime <= 2.5f;
+            _view.recoveredTime = recovered ? _answerTime : -1f;
+            if (CoilWaitingFiddle()) _view.uncoil = 0f;
+            _view.PresentGarden(_garden, _service.TodayIndex, animating, recovered);
+            _view.Apply();
+        }
+
+        bool CoilWaitingFiddle()
+        {
+            if (_garden == null || _service == null || _session == null) return false;
+            if (_session.Phase != BreathPhase.Complete && _session.Phase != BreathPhase.Waiting) return false;
+            return _garden.DaysSinceRitual(_service.TodayIndex) > 0;
         }
 
         void BuildChrome()
@@ -433,6 +534,34 @@ namespace GardenVR.Terrarium
             BuildDots();
             BuildPaceRing();
             BuildPrompt();
+            BuildRestorePrompt();
+        }
+
+        static BreathConfig ConfigFrom(RitualSettings settings)
+        {
+            var config = new BreathConfig();
+            if (settings == null) return config;
+            int breaths = settings.Breaths;
+            if (breaths != 3 && breaths != 4 && breaths != 6 && breaths != 8) breaths = BreathConfigDefaults();
+            config.TargetBreaths = breaths;
+            if (settings.InhaleSec >= 1.2d) config.IdealInhaleSeconds = (float)settings.InhaleSec;
+            return config;
+        }
+
+        static int BreathConfigDefaults()
+        {
+            return 6;
+        }
+
+        void ApplyHoldMode()
+        {
+            if (_keyboard == null || _service == null || _service.Settings == null) return;
+            _keyboard.HoldMode = _service.Settings.HoldMode == "Toggle" ? HoldMode.Toggle : HoldMode.Hold;
+        }
+
+        static bool DevClockAllowed()
+        {
+            return Debug.isDebugBuild || Application.isEditor;
         }
 
         void BuildDots()
@@ -544,6 +673,36 @@ namespace GardenVR.Terrarium
             var target = _prompt.AddComponent<IntentTarget>();
             target.Id = ContinuePromptId;
             _prompt.SetActive(false);
+        }
+
+        void BuildRestorePrompt()
+        {
+            _restore = new GameObject("RestorePrompt");
+            _restore.transform.SetParent(transform, false);
+            _restore.transform.localPosition = new Vector3(0f, 0.082f, -0.09f);
+            _restore.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            var text = _restore.AddComponent<TextMesh>();
+            text.text = "restore the last copy?";
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.fontSize = 48;
+            text.characterSize = 0.0022f;
+            text.color = Etch;
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            if (font != null) text.font = font;
+            var meshRenderer = text.GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                meshRenderer.receiveShadows = false;
+            }
+            var box = _restore.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.2f, 0.04f, 0.02f);
+            _restore.SetActive(true);
+            var target = _restore.AddComponent<IntentTarget>();
+            target.Id = RestorePromptId;
+            _restore.SetActive(false);
         }
 
         void Subscribe()
