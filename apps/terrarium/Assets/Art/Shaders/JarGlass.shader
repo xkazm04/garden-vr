@@ -68,18 +68,22 @@ Shader "Fidelity/JarGlass"
             half cavity = 1.0 - wall;
             float vs = mul(UNITY_MATRIX_V, float4(i.wp, 1)).x - mul(UNITY_MATRIX_V, float4(TransformObjectToWorld(float3(0, 0, 0)) + float3(0, i.op.y, 0), 1)).x;
             half streak = (smoothstep(0.006, 0.0, abs(vs + 0.030)) + 0.6 * smoothstep(0.003, 0.0, abs(vs + 0.022))) * smoothstep(0.02, 0.05, i.op.y) * smoothstep(0.125, 0.10, i.op.y);
+            // #E8FFF4 linear. A rim or an inner light past the cap is a hard glowing edge.
+            half3 rimRgb = min(_Rim.rgb, half3(0.804, 1.0, 0.903));
+            half3 innerRgb = min(_Inner.rgb, half3(0.804, 1.0, 0.903));
+            half3 volumeRgb = min(_Volume.rgb, half3(0.804, 1.0, 0.903));
             half rimA = rim * _Rim.a;
             half dropA = drops * 0.42;
             half wallA = wall * wallH * _Volume.a;
             half baseA = _Tint.a;
             half streakA = streak * _Streak.a * (1.0 - backWall * 0.7);
             half a = saturate(baseA + rimA + dropA + fogA + wallA + streakA);
-            half3 light = _Inner.rgb * air * lerp(0.35, 1.0, cavity) * 0.22;
-            half3 fogRgb = lerp(_Inner.rgb, half3(0.82, 0.94, 0.90), 0.55);
+            half3 light = innerRgb * air * lerp(0.35, 1.0, cavity) * 0.22;
+            half3 fogRgb = lerp(innerRgb, half3(0.82, 0.94, 0.90), 0.55);
             half3 c =
                 _Tint.rgb * baseA
-                + _Rim.rgb * rimA
-                + _Volume.rgb * wallA
+                + rimRgb * rimA
+                + volumeRgb * wallA
                 + (half3(0.62, 0.92, 0.78) + cond.g * 0.25) * dropA
                 + fogRgb * fogA
                 + _Streak.rgb * streakA

@@ -49,13 +49,26 @@ namespace GardenVR.Terrarium
         public const float PlumeHeight = 0.132f;
         public const float PlumeCenterY = 0.188f;
 
-        static readonly Color FernEmission = new Color(0.22f, 0.62f, 0.36f);
-        static readonly Color FiddleEmission = new Color(0.55f, 1.12f, 0.40f);
-        static readonly Color MossEmission = new Color(0.16f, 0.48f, 0.26f);
-        static readonly Color MossCardEmission = new Color(0.12f, 0.36f, 0.20f);
-        static readonly Color FocusMint = new Color(0.55f, 1.20f, 0.70f, 1f);
-        static readonly Color FocusWarm = new Color(0.90f, 0.50f, 0.18f, 1f);
-        const float FocusRadius = 0.12f;
+        // Resting glow, under the style-bible cap #E8FFF4. Green stays the strongest channel,
+        // and it stays under 1 so a highlight can be mint without clipping to neon.
+        // The crozier tip and the dew are the bright points; the moss body is only a lift.
+        static readonly Color FernEmission = new Color(0.16f, 0.54f, 0.30f);
+        static readonly Color FernRim = new Color(0.32f, 0.50f, 0.42f);
+        static readonly Color FiddleEmission = new Color(0.46f, 0.95f, 0.55f);
+        static readonly Color FiddleRim = new Color(0.48f, 0.70f, 0.52f);
+        static readonly Color MossEmission = new Color(0.13f, 0.40f, 0.11f);
+        static readonly Color MossRim = new Color(0.18f, 0.42f, 0.16f);
+        static readonly Color MossCardEmission = new Color(0.10f, 0.30f, 0.10f);
+        static readonly Color MossCardRim = new Color(0.16f, 0.36f, 0.16f);
+        static readonly Color FocusMint = new Color(0.24f, 0.52f, 0.32f, 1f);
+        static readonly Color FocusWarm = new Color(0.55f, 0.32f, 0.12f, 1f);
+        const float FocusRadius = 0.080f;
+        static readonly Color GlassRim = new Color(0.38f, 0.58f, 0.66f, 0.26f);
+        static readonly Color GlassInner = new Color(0.18f, 0.40f, 0.26f, 1f);
+        const float GlassRimPower = 2.40f;
+        static readonly Color DewEmission = new Color(0.70f, 0.98f, 0.84f);
+        static readonly Color CoilGlow = new Color(0.42f, 0.78f, 0.50f);
+        static readonly Color JarGlow = new Color(0.10f, 0.26f, 0.16f);
 
         [Header("State")]
         [Range(0f, 1f)] public float breath = 0.5f;
@@ -173,10 +186,10 @@ namespace GardenVR.Terrarium
         // #F2D27A, the style-bible spore gold. The card multiplies it, so the material stays this hue.
         static readonly Color SporeGold = new Color(0.9490196f, 0.8235294f, 0.4784314f, 1f);
 
-        static readonly Color RingMint = new Color(0.55f, 0.92f, 0.70f);
-        static readonly Color RingAnswer = new Color(0.70f, 1.05f, 0.78f);
-        static readonly Color RingGold = new Color(1.15f, 0.88f, 0.42f);
-        static readonly Color SpillMint = new Color(0.22f, 0.62f, 0.36f, 1f);
+        static readonly Color RingMint = new Color(0.16f, 0.28f, 0.20f);
+        static readonly Color RingAnswer = new Color(0.20f, 0.34f, 0.24f);
+        static readonly Color RingGold = new Color(0.92f, 0.70f, 0.32f);
+        static readonly Color SpillMint = new Color(0.12f, 0.30f, 0.18f, 1f);
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
@@ -394,14 +407,16 @@ namespace GardenVR.Terrarium
                 glassMat.SetFloat("_Drops", 1.15f);
                 // Clear pane. Apply owns these so a stale asset cannot put the mint fill back.
                 glassMat.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
-                glassMat.SetColor("_Rim", new Color(0.90f, 1.12f, 1.00f, 0.90f));
-                glassMat.SetFloat("_RimPower", 2.35f);
-                glassMat.SetColor("_Inner", new Color(0.40f, 1.15f, 0.68f, 1f));
+                glassMat.SetColor("_Rim", GlassRim);
+                glassMat.SetFloat("_RimPower", GlassRimPower);
+                glassMat.SetColor("_Inner", GlassInner);
                 // Locked in Assets/Art/LOCKED.md from T-TER-019. Full beside the moss, gone by the shoulder.
-                glassMat.SetVector("_InnerY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                // Full beside the moss, gone before the shoulder, so the upper pane is not a glowing edge.
+                glassMat.SetVector("_InnerY", new Vector4(0.030f, 0.040f, 0f, 0f));
                 glassMat.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
                 glassMat.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
-                glassMat.SetColor("_Streak", new Color(0.90f, 1f, 0.96f, 0.46f));
+                // A near-white streak at 0.46 was a hard column in the pane. Keep the stroke, under the cap.
+                glassMat.SetColor("_Streak", new Color(0.50f, 0.66f, 0.74f, 0.12f));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
             }
             float recoveredWave = 0f;
@@ -411,46 +426,52 @@ namespace GardenVR.Terrarium
             if (mossMat != null)
             {
                 mossMat.SetColor("_Emission", MossEmission * (1f + 0.45f * mossGlow));
-                mossMat.SetColor("_Rim", new Color(0.42f, 0.90f, 0.55f) * (0.85f + 0.35f * mossGlow));
+                mossMat.SetColor("_Rim", MossRim * (0.85f + 0.35f * mossGlow));
                 SetTip(mossMat, 0.018f, 0.048f, 0.18f, 1f);
             }
             if (mossCardMat != null)
             {
                 mossCardMat.SetColor("_Emission", MossCardEmission * (1f + 0.40f * mossGlow));
+                mossCardMat.SetColor("_Rim", MossCardRim);
                 SetTip(mossCardMat, 0.020f, 0.052f, 0.22f, 1f);
             }
             float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
             if (_hasLook && _look.Gap) coil = 0.35f;
             if (_lookLit >= 0) coil = 0.35f;
             if (coilHaloMat != null)
-                coilHaloMat.SetColor("_Color", new Color(0.50f, 1.05f, 0.58f) * coil);
+                coilHaloMat.SetColor("_Color", CoilGlow * coil);
             if (jarHaloMat != null)
-                jarHaloMat.SetColor("_Color", new Color(0.16f, 0.48f, 0.30f) * (1f + 0.25f * pulse));
+                jarHaloMat.SetColor("_Color", JarGlow * (1f + 0.25f * pulse));
             if (fernMat != null)
             {
                 fernMat.SetColor("_Emission", FernEmission * life);
-                fernMat.SetFloat("_Edge", 0.32f);
-                SetTip(fernMat, 0.030f, 0.110f, 0.38f, 1f);
+                fernMat.SetColor("_Rim", FernRim);
+                fernMat.SetFloat("_Edge", 0.16f);
+                fernMat.SetFloat("_Trans", 0.75f);
+                SetTip(fernMat, 0.030f, 0.110f, 0.30f, 1f);
             }
             if (newFrondMat != null)
             {
                 float frondGlow = answering ? 0.25f + 0.35f * ripple : pulse * 0.35f;
                 float newest = day >= 7 ? 1.15f : 1f;
                 newFrondMat.SetColor("_Emission", FernEmission * (1f + frondGlow) * life * newest);
-                newFrondMat.SetFloat("_Edge", 0.42f);
-                SetTip(newFrondMat, 0.030f, 0.110f, 0.38f, 1f);
+                newFrondMat.SetColor("_Rim", FernRim);
+                newFrondMat.SetFloat("_Edge", 0.22f);
+                newFrondMat.SetFloat("_Trans", 0.75f);
+                SetTip(newFrondMat, 0.030f, 0.110f, 0.30f, 1f);
             }
             float fiddleScale = _hasLook && _look.Gap ? 0.28f : (0.9f + 0.25f * life);
             if (fiddleMat != null)
             {
                 fiddleMat.SetColor("_Emission", FiddleEmission * fiddleScale);
-                fiddleMat.SetFloat("_Edge", 0.18f);
-                SetTip(fiddleMat, 0.034f, 0.096f, 0.16f, 1f);
+                fiddleMat.SetColor("_Rim", FiddleRim);
+                fiddleMat.SetFloat("_Edge", 0.10f);
+                SetTip(fiddleMat, 0.034f, 0.096f, 0.10f, 1f);
             }
             if (dew != null && dew.sharedMaterial != null)
             {
                 dew.sharedMaterial.SetColor("_Tint", new Color(0.78f, 1f, 0.92f));
-                dew.sharedMaterial.SetColor("_Emission", new Color(0.75f, 1f, 0.88f));
+                dew.sharedMaterial.SetColor("_Emission", DewEmission);
             }
 
             ApplyLeanCards();
@@ -1521,7 +1542,7 @@ namespace GardenVR.Terrarium
             float size = Mathf.Lerp(0.028f, 0.18f, u);
             _ripple.localScale = new Vector3(size, size, 1f);
             if (_rippleMat != null)
-                _rippleMat.SetColor("_Color", new Color(0.42f, 1.05f, 0.62f) * (1.9f * (1f - u)));
+                _rippleMat.SetColor("_Color", new Color(0.28f, 0.52f, 0.36f) * (1.15f * (1f - u)));
             AddBillboard(_ripple);
         }
 
