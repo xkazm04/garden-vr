@@ -17,6 +17,8 @@ namespace GardenVR.Sundial
         public Material Face, Rim, Soil, Gnomon, Tiles, Catcher, Shadow, Halo, Pool, Contact;
         public Material Morning, Midday, WindDown, Bloom;
         public Texture2D[] MorningCards, MiddayCards, WindDownCards;
+        /// <summary>Nine species, five stages each. Index is species * 5 + stage.</summary>
+        public Texture2D[] SpeciesCards;
         public Texture2D[] BloomCards;
         public Texture2D[] Halos;
         public Mesh Card, Cross, ShadowMesh, CatcherQuad, PoolMesh;
@@ -24,15 +26,21 @@ namespace GardenVR.Sundial
 
     /// <summary>
     /// The drawn dial on the desk. Look comes only from state: halo, which arc it sits on,
-    /// gnomon angle, plant stage and bloom, the 21 tiles, boil, and time.
+    /// gnomon angle, plant stage and bloom, the 63 tiles, boil, and time.
     /// Each species has five cards (seed, sprout, young, leafy, full). Bloom is an overlay.
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteAlways]
     public sealed class DialView : MonoBehaviour, ICaptureState
     {
-        public const int TilesPerArc = 7;
-        public const int TileCount = 21;
+        public const int ArcCount = 3;
+        public const int RowsPerArc = 3;
+        public const int DaysPerRow = 7;
+        /// <summary>Three rows of seven days. Row 0 is the original one-habit arc.</summary>
+        public const int TilesPerArc = 21;
+        public const int TileCount = 63;
+        /// <summary>Unoccupied row. The tile shader clips alpha 0, so the mesh can stay one draw.</summary>
+        public const int HiddenTile = -1;
         public const float OutlinePixels = 3f;
         public const float BoilPixels = 1f;
         public const float BloomCloseSeconds = 1.2f;
@@ -56,12 +64,19 @@ namespace GardenVR.Sundial
         public float bloomMidday = 2f;
         public float bloomWinddown = 2f;
         public bool stageStrip;
-        public int[] tiles =
-        {
-            1, 1, 3, 1, 2, 1, 1,
-            1, 2, 3, 1, 1, 3, 4,
-            3, 1, 1, 2, 1, 3, 4
-        };
+        public int[] tiles = null;
+        /// <summary>Nine plants, arc * 3 + row. Heroes also mirror stageMorning, stageMidday, stageWinddown.</summary>
+        public int[] plantStage;
+        /// <summary>False hides that plant. A one-habit dial leaves the inner rows off.</summary>
+        public bool[] plantOn;
+        /// <summary>Warm glance tint. Only the plants that are due, not the whole arc.</summary>
+        public bool[] plantDue;
+        /// <summary>Species index into <see cref="speciesCards"/>. -1 uses the slot's default species.</summary>
+        public int[] plantSpecies;
+        /// <summary>-1 follows <see cref="haloTarget"/>'s row-0 plant.</summary>
+        public int haloSlot = -1;
+        /// <summary>-1 pulses the row-0 plant of <see cref="pulseArc"/>.</summary>
+        public int pulseSlot = -1;
         /// <summary>Ink flood per tile, 0 at the nib to 1 full. Null means every tile is already full.</summary>
         public float[] tileFill;
         public bool boil = true;
@@ -92,6 +107,8 @@ namespace GardenVR.Sundial
         public Texture2D[] morningCards;
         public Texture2D[] middayCards;
         public Texture2D[] windDownCards;
+        public Texture2D[] speciesCards;
+        public Transform[] plantSlots;
         public Texture2D[] haloTextures;
         public Texture2D[] bloomTextures;
         public Renderer[] bloomRenderers;
@@ -171,8 +188,11 @@ namespace GardenVR.Sundial
             }
             _bloomClock = time;
 
+            EnsureTiles();
+            EnsurePlantArrays();
             EnsureStateTexture();
             WriteStateTexture();
+            ApplyTileColliders();
             if (tileRenderer != null && _stateTex != null)
             {
                 var block = new MaterialPropertyBlock();
@@ -183,9 +203,7 @@ namespace GardenVR.Sundial
 
             int haloArc = ArcIndex(haloTarget);
             _haloArc = haloArc;
-            ApplyPlant(0, stageMorning, bloomMorning);
-            ApplyPlant(1, stageMidday, bloomMidday);
-            ApplyPlant(2, stageWinddown, bloomWinddown);
+            ApplyPlants();
             ApplyStrip();
             ApplyPulse();
             ApplyBloomFold();
@@ -195,22 +213,26 @@ namespace GardenVR.Sundial
             // 0.40 to 1 over 2.6 s. The trough stays under the clip so the breath reads.
             float breathe = reducedMotion ? 1f : 0.70f + 0.30f * Mathf.Sin(time * breathHz);
             float amount = Mathf.Clamp01(halo) * breathe;
-            int haloStage = haloArc == 0 ? stageMorning : haloArc == 1 ? stageMidday : stageWinddown;
-            Texture2D[] haloSet = haloArc == 0 ? morningCards : haloArc == 1 ? middayCards : windDownCards;
+            int haloPlantSlot = haloSlot >= 0 ? haloSlot : haloArc * RowsPerArc;
+            int haloRow = haloPlantSlot % RowsPerArc;
+            int haloStage = plantStage != null && haloPlantSlot >= 0 && haloPlantSlot < plantStage.Length
+                ? plantStage[haloPlantSlot]
+                : (haloArc == 0 ? stageMorning : haloArc == 1 ? stageMidday : stageWinddown);
             int stageCard = Mathf.Clamp(haloStage, 0, 4);
-            int bloomCard = ShownBloomCard(haloArc);
+            int bloomCard = haloRow == 0 ? ShownBloomCard(haloArc) : -1;
             int bloomTex = haloArc * 2 + Mathf.Max(bloomCard, 0);
             Texture2D bloomTex2d = null;
             if (bloomCard >= 0 && bloomTextures != null && bloomTex < bloomTextures.Length)
                 bloomTex2d = bloomTextures[bloomTex];
+            Texture2D haloCard = CardTex(haloPlantSlot, stageCard);
             if (haloRenderer != null)
             {
                 haloRenderer.enabled = !stageStrip && amount > 0.01f;
-                if (haloSet != null && stageCard < haloSet.Length && haloSet[stageCard] != null)
+                if (haloCard != null)
                 {
                     var block = new MaterialPropertyBlock();
                     haloRenderer.GetPropertyBlock(block);
-                    block.SetTexture("_MainTex", HaloMask(haloSet[stageCard], bloomTex2d));
+                    block.SetTexture("_MainTex", HaloMask(haloCard, bloomTex2d));
                     haloRenderer.SetPropertyBlock(block);
                 }
             }
@@ -350,12 +372,14 @@ namespace GardenVR.Sundial
             morningCards = library.MorningCards;
             middayCards = library.MiddayCards;
             windDownCards = library.WindDownCards;
+            speciesCards = library.SpeciesCards;
             haloTextures = library.Halos;
             bloomTextures = library.BloomCards;
             plantMats = new[] { library.Morning, library.Midday, library.WindDown };
 
             var cards = new List<Transform>();
-            for (int arc = 0; arc < 3; arc++)
+            plantSlots = new Transform[ArcCount * RowsPerArc];
+            for (int arc = 0; arc < ArcCount; arc++)
             {
                 Vector2 spot = PlantSpot[arc];
                 Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.004f, spot.y * faceRadius);
@@ -367,6 +391,27 @@ namespace GardenVR.Sundial
                 var target = card.AddComponent<IntentTarget>();
                 target.Id = "plant." + ArcIds[arc];
                 cards.Add(card.transform);
+                plantSlots[arc * RowsPerArc] = card.transform;
+            }
+            for (int arc = 0; arc < ArcCount; arc++)
+            {
+                for (int row = 1; row < RowsPerArc; row++)
+                {
+                    Vector2 spot = PlantSpot[arc];
+                    Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.004f, spot.y * faceRadius);
+                    string id = "plant." + ArcIds[arc] + ".r" + row;
+                    var card = Card(transform, id, plantMats[arc], pos, PlantSize[arc] * 0.62f, library.Cross);
+                    var box = card.AddComponent<BoxCollider>();
+                    box.center = new Vector3(0f, 0.5f, 0.02f);
+                    box.size = new Vector3(1.05f, 1f, 0.42f);
+                    box.enabled = false;
+                    var target = card.AddComponent<IntentTarget>();
+                    target.Id = id;
+                    var renderer = card.GetComponent<Renderer>();
+                    if (renderer != null) renderer.enabled = false;
+                    cards.Add(card.transform);
+                    plantSlots[arc * RowsPerArc + row] = card.transform;
+                }
             }
 
             var blooms = new Renderer[3];
@@ -412,18 +457,29 @@ namespace GardenVR.Sundial
             for (int i = 0; i < TileCount; i++)
             {
                 int arc = i / TilesPerArc;
-                int slot = i % TilesPerArc;
-                float deg = ArcSlot(arc, slot);
-                Vector3 pos = OnFace(deg, faceRadius * TileRadius, faceY + 0.001f);
-                var proxy = new GameObject("tile." + ArcIds[arc] + "." + slot);
+                int within = i % TilesPerArc;
+                int row = within / DaysPerRow;
+                int day = within % DaysPerRow;
+                float deg = RowSlot(arc, row, day);
+                float radius;
+                float t0;
+                float t1;
+                float halfL;
+                float halfW;
+                RowLayout(row, out radius, out t0, out t1, out halfL, out halfW);
+                Vector3 pos = OnFace(deg, faceRadius * radius, faceY + 0.001f);
+                string id = row == 0
+                    ? "tile." + ArcIds[arc] + "." + day
+                    : "tile." + ArcIds[arc] + ".r" + row + "." + day;
+                var proxy = new GameObject(id);
                 proxy.transform.SetParent(transform, false);
                 proxy.transform.localPosition = pos;
                 proxy.transform.localRotation = TileRotation(deg);
                 var box = proxy.AddComponent<BoxCollider>();
                 box.center = new Vector3(0f, 0.004f, 0f);
-                box.size = new Vector3(0.014f, 0.01f, 0.012f);
+                box.size = new Vector3(halfL * 2.2f, 0.01f, halfW * 2.4f);
                 var target = proxy.AddComponent<IntentTarget>();
-                target.Id = "tile." + ArcIds[arc] + "." + slot;
+                target.Id = id;
             }
 
             var catcher = new GameObject("TableShadowCatcher");
@@ -477,8 +533,9 @@ namespace GardenVR.Sundial
                     bloomRenderers[i].transform.rotation = uprightCards[i].rotation;
                 }
             }
-            if (haloRenderer != null && _haloArc >= 0 && _haloArc < 3 && uprightCards[_haloArc] != null)
-                haloRenderer.transform.rotation = uprightCards[_haloArc].rotation;
+            Transform haloPlant = HaloPlant();
+            if (haloRenderer != null && haloPlant != null)
+                haloRenderer.transform.rotation = haloPlant.rotation;
             if (stageStrip && stripRenderers != null)
             {
                 for (int i = 0; i < stripRenderers.Length; i++)
@@ -542,6 +599,7 @@ namespace GardenVR.Sundial
 
         void ApplyKey(string key, string value)
         {
+            if (ApplyRowKey(key, value)) return;
             switch (key)
             {
                 case "halo": halo = ParseFloat(key, value); break;
@@ -555,10 +613,14 @@ namespace GardenVR.Sundial
                 case "bloom.morning": bloomMorning = ParseFloat(key, value); break;
                 case "bloom.midday": bloomMidday = ParseFloat(key, value); break;
                 case "bloom.winddown": bloomWinddown = ParseFloat(key, value); break;
-                case "tiles.morning": WriteTileDigits(0, value); break;
-                case "tiles.midday": WriteTileDigits(7, value); break;
-                case "tiles.winddown": WriteTileDigits(14, value); break;
+                case "tiles.morning": WriteTileDigits(TileIndex(0, 0, 0), value); break;
+                case "tiles.midday": WriteTileDigits(TileIndex(1, 0, 0), value); break;
+                case "tiles.winddown": WriteTileDigits(TileIndex(2, 0, 0), value); break;
                 case "tiles": WriteTileDigits(0, value); break;
+                case "rows":
+                    if (value == "3") ShowAllRows();
+                    else if (value == "1") ShowHeroRows();
+                    break;
                 case "stages": stageStrip = string.Equals(value, "strip", StringComparison.OrdinalIgnoreCase); break;
                 case "waiting": waiting = Mathf.Clamp01(ParseFloat(key, value)); break;
                 case "waitingTarget": waitingTarget = string.IsNullOrEmpty(value) ? "midday" : value; break;
@@ -645,34 +707,58 @@ namespace GardenVR.Sundial
             return null;
         }
 
-        void ApplyPlant(int arc, int stage, float bloom)
+        void ApplyPlants()
         {
-            if (uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
-            Transform plant = uprightCards[arc];
+            EnsurePlantArrays();
+            plantStage[0] = stageMorning;
+            plantStage[3] = stageMidday;
+            plantStage[6] = stageWinddown;
+            for (int slot = 0; slot < ArcCount * RowsPerArc; slot++)
+            {
+                int arc = slot / RowsPerArc;
+                int row = slot % RowsPerArc;
+                float bloom = row == 0 ? BloomFor(arc) : 0f;
+                ApplyPlantSlot(slot, plantStage[slot], bloom);
+            }
+        }
+
+        float BloomFor(int arc)
+        {
+            if (arc == 0) return bloomMorning;
+            if (arc == 1) return bloomMidday;
+            return bloomWinddown;
+        }
+
+        void ApplyPlantSlot(int slot, int stage, float bloom)
+        {
+            Transform plant = PlantTransform(slot);
+            if (plant == null) return;
+            int arc = slot / RowsPerArc;
+            int row = slot % RowsPerArc;
+            bool on = SlotOn(slot);
             int card = Mathf.Clamp(stage, 0, 4);
-            bloom = PresentBloom(arc, bloom);
-            Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
+            if (row == 0) bloom = PresentBloom(arc, bloom);
             Renderer renderer = plant.GetComponent<Renderer>();
-            Color tint = PlantTint(arc);
+            Color tint = PlantTint(slot);
+            Texture2D tex = CardTex(slot, card);
             if (renderer != null)
             {
-                renderer.enabled = !stageStrip && showPlants;
-                if (set != null && card < set.Length && set[card] != null)
-                    SetMain(renderer, set[card], tint);
+                renderer.enabled = on;
+                if (on && tex != null) SetMain(renderer, tex, tint);
             }
-            Vector2 size = PlantSize[arc];
-            // The drawing already grows on the shared canvas. The quad stays one size.
-            plant.localScale = new Vector3(size.x, size.y, size.y);
-            if (bloomRenderers == null || arc >= bloomRenderers.Length || bloomRenderers[arc] == null) return;
+            Collider box = plant.GetComponent<Collider>();
+            if (box != null) box.enabled = on;
+            PlacePlant(slot, plant);
+            if (row != 0 || bloomRenderers == null || arc >= bloomRenderers.Length || bloomRenderers[arc] == null) return;
             Renderer bloomRenderer = bloomRenderers[arc];
             int which = bloom < 0.5f ? -1 : bloom < 1.5f ? 0 : 1;
-            int tex = arc * 2 + which;
-            bool show = !stageStrip && showPlants && which >= 0 && bloomTextures != null && tex < bloomTextures.Length && bloomTextures[tex] != null;
+            int bloomTex = arc * 2 + which;
+            bool show = on && which >= 0 && bloomTextures != null && bloomTex < bloomTextures.Length && bloomTextures[bloomTex] != null;
             bloomRenderer.enabled = show;
             Transform bloomTransform = bloomRenderer.transform;
             bloomTransform.localPosition = plant.localPosition + new Vector3(0f, 0.0015f, 0f);
             bloomTransform.localScale = plant.localScale;
-            if (show) SetMain(bloomRenderer, bloomTextures[tex]);
+            if (show) SetMain(bloomRenderer, bloomTextures[bloomTex]);
         }
 
         /// <summary>
@@ -806,29 +892,42 @@ namespace GardenVR.Sundial
 
         void ApplyPulse()
         {
-            if (pulse <= 0.0001f || stageStrip || uprightCards == null) return;
-            int arc = pulseArc;
-            if (arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
-            if (reducedMotion) return;
+            if (pulse <= 0.0001f || stageStrip) return;
+            int slot = pulseSlot >= 0 ? pulseSlot : pulseArc * RowsPerArc;
+            Transform plant = PlantTransform(slot);
+            if (plant == null || reducedMotion) return;
             float scale = 1f + 0.3f * Mathf.Sin(Mathf.Clamp01(pulse) * Mathf.PI);
-            Transform plant = uprightCards[arc];
             plant.localScale = plant.localScale * scale;
-            if (bloomRenderers != null && arc < bloomRenderers.Length && bloomRenderers[arc] != null)
+            int arc = slot / RowsPerArc;
+            int row = slot % RowsPerArc;
+            if (row == 0 && bloomRenderers != null && arc < bloomRenderers.Length && bloomRenderers[arc] != null)
                 bloomRenderers[arc].transform.localScale = plant.localScale;
         }
 
-        Color PlantTint(int arc)
+        Color PlantTint(int slot)
         {
             Color tint = Color.white;
-            int waitArc = TryArcIndex(waitingTarget);
-            if (waiting > 0.01f && waitArc == arc)
+            bool warm = false;
+            if (AnyDue())
+                warm = plantDue != null && slot >= 0 && slot < plantDue.Length && plantDue[slot];
+            else
             {
-                // 2.6 s opacity breath. Reduced motion holds a steady warm step.
-                float wave = reducedMotion ? 1f : 0.5f + 0.5f * Mathf.Sin(time * (Mathf.PI * 2f / 2.6f));
-                float boost = 1f + 0.32f * wave * Mathf.Clamp01(waiting);
-                tint = new Color(1.06f, 1.0f, 0.88f) * boost;
+                int waitArc = TryArcIndex(waitingTarget);
+                warm = waiting > 0.01f && slot / RowsPerArc == waitArc && slot % RowsPerArc == 0;
             }
-            if (reducedMotion && pulseArc == arc && pulse > 0.02f && pulse < 0.999f)
+            if (warm)
+            {
+                // 2.6 s breath. Reduced motion holds a steady warm step.
+                // One waiting hero stays on the old pale lift. Several due plants go gold,
+                // or a nine-plant face cannot say which ones are waiting.
+                float wave = reducedMotion ? 1f : 0.5f + 0.5f * Mathf.Sin(time * (Mathf.PI * 2f / 2.6f));
+                if (AnyDue())
+                    tint = Color.Lerp(new Color(1.08f, 1.0f, 0.82f), new Color(1.34f, 1.05f, 0.48f), 0.45f + 0.55f * wave);
+                else
+                    tint = new Color(1.06f, 1.0f, 0.88f) * (1f + 0.32f * wave * Mathf.Clamp01(waiting));
+            }
+            int pulseAt = pulseSlot >= 0 ? pulseSlot : pulseArc * RowsPerArc;
+            if (reducedMotion && pulseAt == slot && pulse > 0.02f && pulse < 0.999f)
                 tint = new Color(1.25f, 1.12f, 0.85f);
             return tint;
         }
@@ -968,8 +1067,10 @@ namespace GardenVR.Sundial
 
         void PlaceHalo(int arc)
         {
-            if (haloRenderer == null || uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
-            Transform plant = uprightCards[arc];
+            Transform plant = HaloPlant();
+            if (plant == null && arc >= 0 && arc < ArcCount && uprightCards != null && arc < uprightCards.Length)
+                plant = uprightCards[arc];
+            if (haloRenderer == null || plant == null) return;
             Transform haloTransform = haloRenderer.transform;
             haloTransform.localRotation = plant.localRotation;
             // The card's +Z faces the camera. A small push keeps the additive glow off the ink.
@@ -1042,17 +1143,21 @@ namespace GardenVR.Sundial
         void WriteStateTexture()
         {
             if (_stateTex == null) return;
+            EnsureTiles();
             if (tiles == null || tiles.Length != TileCount)
-                throw new InvalidOperationException("DialView.tiles must hold 21 values");
+                throw new InvalidOperationException("DialView.tiles must hold 63 values");
             var pixels = new Color32[TileCount];
             for (int i = 0; i < TileCount; i++)
             {
-                int state = Mathf.Clamp(tiles[i], 0, 4);
+                int raw = tiles[i];
+                bool hidden = raw < 0;
+                int state = hidden ? 0 : Mathf.Clamp(raw, 0, 4);
                 int arc = i / TilesPerArc;
                 float fill = 1f;
                 if (tileFill != null && i < tileFill.Length) fill = Mathf.Clamp01(tileFill[i]);
                 byte flood = (byte)Mathf.RoundToInt(fill * 255f);
-                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), flood, 255);
+                byte alpha = hidden ? (byte)0 : (byte)255;
+                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), flood, alpha);
             }
             _stateTex.SetPixels32(pixels);
             _stateTex.Apply(false, false);
@@ -1066,8 +1171,6 @@ namespace GardenVR.Sundial
             // Vertex order per tile is 4 top corners, then 4 sides of 4. The A2 measure reads that.
             // The source mesh only has to exist; the bevelled cube stood on edge.
             if (source == null || !source.isReadable) throw new InvalidOperationException("tile mesh is not readable");
-            const float halfL = 0.006f;
-            const float halfW = 0.0045f;
             const float topRaise = 0.002f;
             const float clear = 0.0002f;
             const int vertsPerTile = 20;
@@ -1084,12 +1187,19 @@ namespace GardenVR.Sundial
             for (int i = 0; i < TileCount; i++)
             {
                 int arc = i / TilesPerArc;
-                int slot = i % TilesPerArc;
-                float deg = ArcSlot(arc, slot);
+                int within = i % TilesPerArc;
+                int row = within / DaysPerRow;
+                float radius;
+                float t0;
+                float t1;
+                float halfL;
+                float halfW;
+                RowLayout(row, out radius, out t0, out t1, out halfL, out halfW);
+                float deg = RowSlot(arc, row, within % DaysPerRow);
                 float rad = deg * Mathf.Deg2Rad;
                 float topY = faceY + topRaise;
                 float botY = faceY + clear;
-                Vector3 center = OnFace(deg, faceRadius * TileRadius, topY);
+                Vector3 center = OnFace(deg, faceRadius * radius, topY);
                 var tangent = new Vector3(Mathf.Sin(rad), 0f, -Mathf.Cos(rad));
                 var radial = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
                 Vector3[] top =
@@ -1179,13 +1289,58 @@ namespace GardenVR.Sundial
             return a0 - Mathf.Repeat(a0 - a1, 360f) * 0.5f;
         }
 
-        static float ArcSlot(int arc, int slot)
+        public static int TileIndex(int arc, int row, int day)
+        {
+            if (arc < 0) arc = 0;
+            if (arc > 2) arc = 2;
+            if (row < 0) row = 0;
+            if (row > 2) row = 2;
+            if (day < 0) day = 0;
+            if (day > 6) day = 6;
+            return arc * TilesPerArc + row * DaysPerRow + day;
+        }
+
+        static void RowLayout(int row, out float radius, out float t0, out float t1, out float halfL, out float halfW)
+        {
+            if (row <= 0)
+            {
+                radius = TileRadius;
+                t0 = 0.12f;
+                t1 = 0.88f;
+                halfL = 0.006f;
+                halfW = 0.0045f;
+                return;
+            }
+            if (row == 1)
+            {
+                radius = 0.70f;
+                t0 = 0.20f;
+                t1 = 0.80f;
+                halfL = 0.0046f;
+                halfW = 0.0034f;
+                return;
+            }
+            radius = 0.58f;
+            t0 = 0.28f;
+            t1 = 0.72f;
+            halfL = 0.0036f;
+            halfW = 0.0028f;
+        }
+
+        static float RowSlot(int arc, int row, int day)
         {
             float a0, a1;
             ArcEnds(arc, out a0, out a1);
             float span = Mathf.Repeat(a0 - a1, 360f);
-            float t = 0.12f + 0.76f * (slot / 6f);
+            float t0, t1, radius, halfL, halfW;
+            RowLayout(row, out radius, out t0, out t1, out halfL, out halfW);
+            float t = day >= 6 ? t1 : t0 + (t1 - t0) * (day / 6f);
             return a0 - span * t;
+        }
+
+        static float ArcSlot(int arc, int slot)
+        {
+            return RowSlot(arc, 0, slot);
         }
 
         static void ArcEnds(int arc, out float a0, out float a1)
@@ -1258,17 +1413,33 @@ namespace GardenVR.Sundial
 
         void WriteTileDigits(int start, string digits)
         {
-            if (tiles == null || tiles.Length != TileCount)
-                tiles = new int[TileCount];
+            EnsureTiles();
             if (string.IsNullOrEmpty(digits)) throw new FormatException("DialView tiles are empty");
-            int count = start == 0 && digits.Length == TileCount ? TileCount : TilesPerArc;
+            if (start == 0 && digits.Length == 21)
+            {
+                WriteLegacyRow(digits);
+                return;
+            }
+            int count = start == 0 && digits.Length == TileCount ? TileCount : DaysPerRow;
             if (digits.Length < count) throw new FormatException("DialView tiles need " + count + " digits: " + digits);
             for (int i = 0; i < count; i++)
+                tiles[start + i] = Digit(digits[i]);
+        }
+
+        void WriteLegacyRow(string digits)
+        {
+            for (int i = 0; i < 21; i++)
             {
-                char c = digits[i];
-                if (c < '0' || c > '4') throw new FormatException("DialView tile digit is not 0..4: " + c);
-                tiles[start + i] = c - '0';
+                int arc = i / DaysPerRow;
+                int day = i % DaysPerRow;
+                tiles[TileIndex(arc, 0, day)] = Digit(digits[i]);
             }
+        }
+
+        static int Digit(char c)
+        {
+            if (c < '0' || c > '4') throw new FormatException("DialView tile digit is not 0..4: " + c);
+            return c - '0';
         }
 
         static int ParseStage(string text)
@@ -1292,6 +1463,293 @@ namespace GardenVR.Sundial
             if (!float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 throw new FormatException("DialView state " + key + " is not a number: " + text);
             return value;
+        }
+
+        public static int[] DefaultTiles()
+        {
+            var next = new int[TileCount];
+            for (int i = 0; i < TileCount; i++) next[i] = HiddenTile;
+            int[] row0 = { 1, 1, 3, 1, 2, 1, 1, 1, 2, 3, 1, 1, 3, 4, 3, 1, 1, 2, 1, 3, 4 };
+            for (int i = 0; i < row0.Length; i++)
+            {
+                int arc = i / DaysPerRow;
+                int day = i % DaysPerRow;
+                next[TileIndex(arc, 0, day)] = row0[i];
+            }
+            return next;
+        }
+
+        public void EnsureTiles()
+        {
+            if (tiles != null && tiles.Length == TileCount) return;
+            int[] next = DefaultTiles();
+            if (tiles != null && tiles.Length == 21)
+            {
+                for (int i = 0; i < TileCount; i++) next[i] = HiddenTile;
+                for (int i = 0; i < 21; i++)
+                {
+                    int arc = i / DaysPerRow;
+                    int day = i % DaysPerRow;
+                    next[TileIndex(arc, 0, day)] = tiles[i];
+                }
+            }
+            tiles = next;
+        }
+
+        public void EnsurePlantArrays()
+        {
+            if (plantStage == null || plantStage.Length != 9)
+            {
+                plantStage = new int[9];
+                for (int i = 0; i < plantStage.Length; i++) plantStage[i] = 4;
+            }
+            if (plantOn == null || plantOn.Length != 9)
+            {
+                plantOn = new bool[9];
+                plantOn[0] = true;
+                plantOn[3] = true;
+                plantOn[6] = true;
+            }
+            if (plantDue == null || plantDue.Length != 9) plantDue = new bool[9];
+            if (plantSpecies == null || plantSpecies.Length != 9)
+            {
+                plantSpecies = new int[9];
+                for (int i = 0; i < plantSpecies.Length; i++) plantSpecies[i] = -1;
+            }
+        }
+
+        void ShowAllRows()
+        {
+            EnsurePlantArrays();
+            for (int i = 0; i < plantOn.Length; i++) plantOn[i] = true;
+        }
+
+        void ShowHeroRows()
+        {
+            EnsurePlantArrays();
+            for (int i = 0; i < plantOn.Length; i++) plantOn[i] = i % RowsPerArc == 0;
+        }
+
+        bool ApplyRowKey(string key, string value)
+        {
+            string arc;
+            int row;
+            bool hasRow;
+            if (SplitSlot(key, "tiles.", out arc, out row, out hasRow) && hasRow)
+            {
+                int arcIndex = TryArcIndex(arc);
+                if (arcIndex < 0) return false;
+                WriteTileDigits(TileIndex(arcIndex, row, 0), value);
+                return true;
+            }
+            if (SplitSlot(key, "stage.", out arc, out row, out hasRow) && hasRow)
+            {
+                int arcIndex = TryArcIndex(arc);
+                if (arcIndex < 0) return false;
+                EnsurePlantArrays();
+                plantStage[arcIndex * RowsPerArc + row] = ParseStage(value);
+                return true;
+            }
+            if (SplitSlot(key, "due.", out arc, out row, out hasRow))
+            {
+                int arcIndex = TryArcIndex(arc);
+                if (arcIndex < 0) return false;
+                EnsurePlantArrays();
+                bool on = ParseBool(value);
+                if (hasRow) plantDue[arcIndex * RowsPerArc + row] = on;
+                else
+                {
+                    for (int r = 0; r < RowsPerArc; r++) plantDue[arcIndex * RowsPerArc + r] = on;
+                }
+                TouchDue();
+                return true;
+            }
+            return false;
+        }
+
+        void TouchDue()
+        {
+            bool any = false;
+            int arc = 1;
+            if (plantDue != null)
+            {
+                for (int i = 0; i < plantDue.Length; i++)
+                {
+                    if (!plantDue[i]) continue;
+                    any = true;
+                    arc = i / RowsPerArc;
+                    break;
+                }
+            }
+            waiting = any ? 1f : waiting;
+            if (any && arc >= 0 && arc < ArcIds.Length) waitingTarget = ArcIds[arc];
+        }
+
+        static bool SplitSlot(string key, string prefix, out string arc, out int row, out bool hasRow)
+        {
+            arc = null;
+            row = 0;
+            hasRow = false;
+            if (string.IsNullOrEmpty(key) || !key.StartsWith(prefix, StringComparison.Ordinal)) return false;
+            string rest = key.Substring(prefix.Length);
+            int dot = rest.IndexOf('.');
+            if (dot < 0)
+            {
+                arc = rest;
+                return TryArcIndex(arc) >= 0;
+            }
+            arc = rest.Substring(0, dot);
+            string tail = rest.Substring(dot + 1);
+            if (tail.Length == 1 && (tail[0] == '1' || tail[0] == '2') && TryArcIndex(arc) >= 0)
+            {
+                row = tail[0] - '0';
+                hasRow = true;
+                return true;
+            }
+            return false;
+        }
+
+        bool SlotOn(int slot)
+        {
+            if (stageStrip || !showPlants) return false;
+            int row = slot % RowsPerArc;
+            if (plantOn == null || plantOn.Length != 9) return row == 0;
+            return slot >= 0 && slot < plantOn.Length && plantOn[slot];
+        }
+
+        bool AnyDue()
+        {
+            if (plantDue == null) return false;
+            for (int i = 0; i < plantDue.Length; i++)
+            {
+                if (plantDue[i]) return true;
+            }
+            return false;
+        }
+
+        Transform PlantTransform(int slot)
+        {
+            if (plantSlots != null && slot >= 0 && slot < plantSlots.Length && plantSlots[slot] != null)
+                return plantSlots[slot];
+            int arc = slot / RowsPerArc;
+            int row = slot % RowsPerArc;
+            if (row == 0 && uprightCards != null && arc >= 0 && arc < ArcCount && arc < uprightCards.Length)
+                return uprightCards[arc];
+            return null;
+        }
+
+        Transform HaloPlant()
+        {
+            int slot = haloSlot >= 0 ? haloSlot : _haloArc * RowsPerArc;
+            return PlantTransform(slot);
+        }
+
+        void PlacePlant(int slot, Transform plant)
+        {
+            int arc = slot / RowsPerArc;
+            int row = slot % RowsPerArc;
+            if (arc < 0 || arc >= PlantSpot.Length) return;
+            bool crowded = SlotOn(arc * RowsPerArc + 1) || SlotOn(arc * RowsPerArc + 2);
+            Vector2 spot = PlantSpot[arc];
+            float len = spot.magnitude;
+            Vector2 radial = len > 1e-4f ? spot / len : new Vector2(0f, 1f);
+            Vector2 tangent = new Vector2(radial.y, -radial.x);
+            float pull = 0f;
+            float along = 0f;
+            float scale = 1f;
+            if (crowded)
+            {
+                pull = row == 0 ? 0.04f : 0.06f;
+                if (row == 1) along = 0.34f;
+                if (row == 2) along = -0.34f;
+                scale = row == 0 ? 0.78f : 0.62f;
+            }
+            else if (row > 0)
+            {
+                pull = 0.06f;
+                along = row == 1 ? 0.34f : -0.34f;
+                scale = 0.62f;
+            }
+            Vector2 at = spot - radial * pull + tangent * along;
+            plant.localPosition = new Vector3(at.x * faceRadius, faceY + 0.004f, at.y * faceRadius);
+            Vector2 size = PlantSize[arc] * scale;
+            plant.localScale = new Vector3(size.x, size.y, size.y);
+        }
+
+        Texture2D CardTex(int slot, int stage)
+        {
+            stage = Mathf.Clamp(stage, 0, 4);
+            int species = DefaultSpecies(slot);
+            if (plantSpecies != null && slot >= 0 && slot < plantSpecies.Length && plantSpecies[slot] >= 0)
+                species = plantSpecies[slot];
+            if (speciesCards != null)
+            {
+                int index = species * 5 + stage;
+                if (index >= 0 && index < speciesCards.Length && speciesCards[index] != null)
+                    return speciesCards[index];
+            }
+            int arc = slot / RowsPerArc;
+            int row = slot % RowsPerArc;
+            if (row != 0) return null;
+            Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
+            if (set != null && stage < set.Length) return set[stage];
+            return null;
+        }
+
+        static int DefaultSpecies(int slot)
+        {
+            switch (slot)
+            {
+                case 0: return 0;
+                case 1: return 3;
+                case 2: return 4;
+                case 3: return 1;
+                case 4: return 5;
+                case 5: return 6;
+                case 6: return 2;
+                case 7: return 7;
+                default: return 8;
+            }
+        }
+
+        void ApplyTileColliders()
+        {
+            EnsureTiles();
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform child = transform.GetChild(i);
+                int index;
+                if (!TryTileName(child.name, out index)) continue;
+                var box = child.GetComponent<Collider>();
+                if (box == null) continue;
+                box.enabled = index >= 0 && index < tiles.Length && tiles[index] >= 0;
+            }
+        }
+
+        static bool TryTileName(string name, out int index)
+        {
+            index = -1;
+            if (string.IsNullOrEmpty(name) || !name.StartsWith("tile.", StringComparison.Ordinal)) return false;
+            string rest = name.Substring("tile.".Length);
+            string[] bits = rest.Split('.');
+            if (bits.Length == 2)
+            {
+                int arc = TryArcIndex(bits[0]);
+                int day;
+                if (arc < 0 || !int.TryParse(bits[1], out day) || day < 0 || day > 6) return false;
+                index = TileIndex(arc, 0, day);
+                return true;
+            }
+            if (bits.Length == 3 && bits[1].Length == 2 && bits[1][0] == 'r')
+            {
+                int arc = TryArcIndex(bits[0]);
+                int row = bits[1][1] - '0';
+                int day;
+                if (arc < 0 || (row != 1 && row != 2) || !int.TryParse(bits[2], out day) || day < 0 || day > 6) return false;
+                index = TileIndex(arc, row, day);
+                return true;
+            }
+            return false;
         }
 
         static void DestroyObject(UnityEngine.Object obj)

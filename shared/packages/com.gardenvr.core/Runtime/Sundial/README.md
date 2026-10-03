@@ -32,6 +32,11 @@ Round 1 sized the plant from the last 7 days, so the plant could shrink when a k
 Oldest first, today last. `Before` for a day before `CreatedDay`. A live tend is `Kept`, or `Late` when the row is a backfill. Today with no tend is `Today`. Any earlier open day is `Missed`. `WindowKept` counts `Kept` and `Late` only.
 
 `DueNow` is true only when the clock is inside the habit's arc and today's tile is still `Today`.
+Each live habit has its own `DueNow`. Tending one habit in an arc leaves its siblings due.
+
+## Habits per arc
+
+An arc holds at most `MaxHabitsPerArc` (3) live habits. `Admit` puts the new habit on the lowest free row, 0, 1 or 2, and refuses a fourth (`arc-full`). An archived habit does not hold a row. Habit ids are unique across the dial. The ledger, the seven-day window, backfill and undo stay per habit id, so one row can be late or undone while the others are untouched. A lone habit is row 0. `MaxTiles` is 63: three arcs, three rows, seven days, one combined draw.
 
 `CanBackfillYesterday` is true when yesterday is on or after `CreatedDay` and has no live tend. `Backfill` delegates to the Common ledger: yesterday only, once, late forever, the clock's real timestamp, and only before today's boundary. A yesterday before `CreatedDay` is refused here (`before-created`) and is not written.
 

@@ -3,14 +3,15 @@
 // smoothed normal stored in UV1/UV2 (Nxy, Nz), so hard shading normals can stay on the mesh.
 // _OutlinePx is the width in screen pixels. _BoilPx is the 10 fps jitter in pixels (keep it at or under 1.2).
 // A negative _BoilTime falls back to _T, which is what older materials set.
-// _TileMode draws one combined tile mesh: UV3.x is the tile index, _StateTex is a 21-wide point texture
-// (R = state/4, G = arc/2, B = ink flood 0-1 from the nib at uv.x = 0). _TileMode 0 leaves the ramp path unchanged.
+// _TileMode draws one combined tile mesh: UV3.x is the tile index, _StateTex is a 63-wide point texture
+// (R = state/4, G = arc/2, B = ink flood 0-1 from the nib at uv.x = 0, A = 0 hides the tile).
+// _TileMode 0 leaves the ramp path unchanged. Indices 0-20 still read the same pixels they always did.
 Shader "Fidelity/Toon"
 {
     Properties
     {
         _MainTex ("Painted albedo", 2D) = "white" {}
-        _StateTex ("Tile state (21 wide)", 2D) = "black" {}
+        _StateTex ("Tile state (63 wide)", 2D) = "black" {}
         _Lit ("Lit colour", Color) = (1, 1, 1, 1)
         _Shade ("Shade colour", Color) = (0.78, 0.72, 0.64, 1)
         _Step ("Ramp step (N.L)", Range(-1, 1)) = 0.15
@@ -119,7 +120,7 @@ Shader "Fidelity/Toon"
                 if (tile.y < 0.5)
                     return _Ink.rgb;
                 int id = (int)round(tile.x);
-                id = id < 0 ? 0 : (id > 20 ? 20 : id);
+                id = id < 0 ? 0 : (id > 62 ? 62 : id);
                 half4 st = LOAD_TEXTURE2D(_StateTex, int2(id, 0));
                 int state = (int)round(st.r * 4.0);
                 int arc = (int)round(st.g * 2.0);
@@ -192,6 +193,15 @@ Shader "Fidelity/Toon"
             }
             half4 frag (V i, bool front : SV_IsFrontFace) : SV_Target
             {
+                // A hidden row (no habit) stores alpha 0. The sides would still ink if this only
+                // changed the top colour, so the whole tile drops out of the one draw.
+                if (_TileMode > 0.5)
+                {
+                    int hid = (int)round(i.tile.x);
+                    hid = hid < 0 ? 0 : (hid > 62 ? 62 : hid);
+                    if (LOAD_TEXTURE2D(_StateTex, int2(hid, 0)).a < 0.5)
+                        clip(-1);
+                }
                 half3 alb = _TileMode > 0.5 ? TileAlbedo(i.uv, i.tile) : SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv).rgb;
                 // Screen-pixel ink on the dial face. The painted texture cannot hold 3 px
                 // after the 1024 import, so the ring is drawn here and the texture is paper.

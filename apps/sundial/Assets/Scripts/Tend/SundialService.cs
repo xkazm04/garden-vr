@@ -346,10 +346,37 @@ namespace GardenVR.Sundial
                 PresetKey = preset.Key,
                 Group = preset.Group,
                 Kind = preset.Kind,
+                Species = SundialSpecies.ForPreset(preset.Key),
                 Slot = SundialArcs.Index(arcKey),
+                Row = 0,
                 CreatedDay = Today().Index
             };
             _save.Habits.Add(habit);
+            Persist();
+            Recompute();
+            return habit;
+        }
+
+        /// <summary>
+        /// Plants another preset on an arc that already has one or two habits.
+        /// A full arc, a duplicate id, or a missing arc leaves the save unchanged.
+        /// </summary>
+        public HabitDef TryAdmit(SeedPreset preset)
+        {
+            if (preset == null) throw new ArgumentNullException(nameof(preset));
+            if (Scrubbing || _save == null) return null;
+            if (_save.Habits == null) _save.Habits = new List<HabitDef>();
+            var habit = new HabitDef
+            {
+                Id = string.IsNullOrEmpty(preset.HabitId) ? preset.Key : preset.HabitId,
+                PresetKey = preset.Key,
+                Group = preset.Group,
+                Species = SundialSpecies.ForPreset(preset.Key),
+                Kind = preset.Kind,
+                CreatedDay = Today().Index
+            };
+            string reason = SundialRules.Admit(_save.Habits, habit);
+            if (reason != null) return null;
             Persist();
             Recompute();
             return habit;
@@ -440,16 +467,30 @@ namespace GardenVR.Sundial
             return true;
         }
 
+        /// <summary>The row-0 habit. Rituals and the one-habit dial stay on this plant.</summary>
         public HabitDef HabitForArc(string arcKey)
         {
-            if (_save == null || _save.Habits == null || string.IsNullOrEmpty(arcKey)) return null;
+            return HabitAt(arcKey, 0);
+        }
+
+        /// <summary>The live habit on this row, or null. Row 0 is the original plant.</summary>
+        public HabitDef HabitAt(string arcKey, int row)
+        {
+            if (_save == null || _save.Habits == null || string.IsNullOrEmpty(arcKey) || row < 0) return null;
             for (int i = 0; i < _save.Habits.Count; i++)
             {
                 HabitDef habit = _save.Habits[i];
                 if (habit == null || habit.ArchivedDay.HasValue) continue;
-                if (SundialArcs.Key(habit.Group) == arcKey) return habit;
+                if (SundialArcs.Key(habit.Group) != arcKey) continue;
+                if (SundialRules.RowOf(_save.Habits, habit) == row) return habit;
             }
             return null;
+        }
+
+        public int LiveInArc(string arcKey)
+        {
+            if (_save == null) return 0;
+            return SundialRules.LiveInArc(_save.Habits, arcKey);
         }
 
         public PlantState PlantFor(HabitDef habit)
@@ -535,7 +576,9 @@ namespace GardenVR.Sundial
                 PresetKey = preset,
                 Group = group,
                 Kind = kind,
+                Species = SundialSpecies.ForPreset(preset),
                 Slot = slot,
+                Row = 0,
                 CreatedDay = created
             };
         }
@@ -624,10 +667,43 @@ namespace GardenVR.Sundial
 
         public static bool TryPlant(string id, out string arc)
         {
+            int row;
+            return TryPlant(id, out arc, out row);
+        }
+
+        /// <summary>
+        /// <c>plant.morning</c> is row 0. <c>plant.morning.r1</c> and <c>plant.morning.r2</c> are the inner rows.
+        /// </summary>
+        public static bool TryPlant(string id, out string arc, out int row)
+        {
             arc = null;
+            row = 0;
             if (string.IsNullOrEmpty(id) || !id.StartsWith("plant.", StringComparison.Ordinal)) return false;
-            arc = id.Substring(6);
-            return Index(arc) >= 0;
+            string rest = id.Substring("plant.".Length);
+            int dot = rest.IndexOf('.');
+            string arcPart = dot < 0 ? rest : rest.Substring(0, dot);
+            if (Index(arcPart) < 0) return false;
+            arc = arcPart;
+            if (dot < 0) return true;
+            string tail = rest.Substring(dot + 1);
+            if (tail.Length == 2 && tail[0] == 'r' && (tail[1] == '1' || tail[1] == '2'))
+            {
+                row = tail[1] - '0';
+                return true;
+            }
+            return false;
+        }
+
+        public static string PlantId(string arc, int row)
+        {
+            if (row <= 0) return "plant." + arc;
+            return "plant." + arc + ".r" + row;
+        }
+
+        public static string TileId(string arc, int row, int day)
+        {
+            if (row <= 0) return "tile." + arc + "." + day;
+            return "tile." + arc + ".r" + row + "." + day;
         }
 
         public static bool TryUndo(string id, out string arc)
