@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using GardenVR.Core;
 using GardenVR.Input;
 using UnityEngine;
@@ -209,7 +210,29 @@ namespace GardenVR.Sundial
                 _overlayStyle.wordWrap = true;
                 _overlayStyle.normal.textColor = new Color(0.16f, 0.15f, 0.13f, 1f);
             }
-            GUI.Label(new Rect(16f, 16f, 920f, 320f), _service.StateJson, _overlayStyle);
+            GUI.Label(new Rect(16f, 16f, 920f, 420f), _service.StateJson + "\n" + TileCaption(), _overlayStyle);
+        }
+
+        string TileCaption()
+        {
+            if (_service == null || _service.Save == null || _service.Save.Habits == null) return "";
+            var text = new StringBuilder();
+            for (int i = 0; i < _service.Save.Habits.Count; i++)
+            {
+                HabitDef habit = _service.Save.Habits[i];
+                PlantState plant = _service.PlantFor(habit);
+                if (habit == null || plant == null || plant.Window == null) continue;
+                if (text.Length > 0) text.Append('\n');
+                text.Append(habit.Id);
+                text.Append(": ");
+                int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
+                for (int slot = 0; slot < count; slot++)
+                {
+                    if (slot > 0) text.Append(' ');
+                    text.Append(TileLabels.For(plant.Window[slot]));
+                }
+            }
+            return text.ToString();
         }
 
         void OnIntent(HandIntent intent)
