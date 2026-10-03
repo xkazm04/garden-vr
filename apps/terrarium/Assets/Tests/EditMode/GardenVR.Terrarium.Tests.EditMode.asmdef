@@ -5,6 +5,7 @@
         "GardenVR.Input",
         "GardenVR.Core",
         "GardenVR.Room",
+        "GardenVR.Audio",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
