@@ -51,7 +51,7 @@ namespace GardenVR.Sundial
 
         static readonly string[] HabitKnown =
         {
-            "Id", "PresetKey", "Group", "Species", "Kind", "Slot", "CreatedDay", "ArchivedDay"
+            "Id", "PresetKey", "Group", "Species", "Kind", "Slot", "Row", "CreatedDay", "ArchivedDay"
         };
 
         static readonly string[] TendKnown =
@@ -161,6 +161,7 @@ namespace GardenVR.Sundial
             habit.Species = StringMember(obj, "Species");
             habit.Kind = EnumMember(obj, "Kind", HabitKind.LifeCheckIn);
             habit.Slot = obj.Has("Slot") ? obj.Get("Slot").AsInt() : 0;
+            habit.Row = obj.Has("Row") ? obj.Get("Row").AsInt() : 0;
             habit.CreatedDay = obj.Has("CreatedDay") ? obj.Get("CreatedDay").AsInt() : 0;
             if (obj.Has("ArchivedDay") && !obj.Get("ArchivedDay").IsNull)
                 habit.ArchivedDay = obj.Get("ArchivedDay").AsInt();
@@ -180,6 +181,7 @@ namespace GardenVR.Sundial
             obj.Set("Species", habit.Species == null ? JsonValue.Null() : JsonValue.String(habit.Species));
             obj.Set("Kind", JsonValue.String(habit.Kind.ToString()));
             obj.Set("Slot", JsonValue.Number(habit.Slot));
+            obj.Set("Row", JsonValue.Number(habit.Row));
             obj.Set("CreatedDay", JsonValue.Number(habit.CreatedDay));
             obj.Set("ArchivedDay", habit.ArchivedDay.HasValue ? JsonValue.Number(habit.ArchivedDay.Value) : JsonValue.Null());
             Dictionary<string, JsonValue> extra;

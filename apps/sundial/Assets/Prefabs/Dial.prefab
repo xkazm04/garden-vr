@@ -52,7 +52,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &8091699233751348896
 MonoBehaviour:
@@ -159,6 +159,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &158594144555190634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1171298931474066990}
+  - component: {fileID: 4134565725653894080}
+  - component: {fileID: 4076106783146183591}
+  m_Layer: 0
+  m_Name: tile.midday.r1.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1171298931474066990
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158594144555190634}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.9163627, z: 0, w: 0.40034905}
+  m_LocalPosition: {x: 0.070009634, y: 0.013000017, z: 0.07560353}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4134565725653894080
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158594144555190634}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &4076106783146183591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 158594144555190634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.5
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &202029043514938187
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,6 +408,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &275734511182095544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8307539422952388966}
+  - component: {fileID: 1816482968389939416}
+  - component: {fileID: 1620772316237074997}
+  m_Layer: 0
+  m_Name: tile.morning.r1.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8307539422952388966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275734511182095544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.25037995, z: 0, w: 0.96814764}
+  m_LocalPosition: {x: -0.09012082, y: 0.013000017, z: 0.049954776}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1816482968389939416
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275734511182095544}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &1620772316237074997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 275734511182095544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.5
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &392101216159869786
 GameObject:
   m_ObjectHideFlags: 0
@@ -391,7 +529,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &1650421912263220906
 MonoBehaviour:
@@ -442,6 +580,12 @@ Transform:
   - {fileID: 2453155322664342947}
   - {fileID: 8566232719255273585}
   - {fileID: 6154406331108679490}
+  - {fileID: 7892597605626524868}
+  - {fileID: 230306104106805378}
+  - {fileID: 3098700510445717953}
+  - {fileID: 8013351527726637141}
+  - {fileID: 8121409130884310590}
+  - {fileID: 2282274780749220206}
   - {fileID: 5776370554938017364}
   - {fileID: 7596433896389774282}
   - {fileID: 7827200750528650444}
@@ -483,6 +627,20 @@ Transform:
   - {fileID: 5082910754957655243}
   - {fileID: 2902372718431770870}
   - {fileID: 1769291985303447328}
+  - {fileID: 4731077782004934292}
+  - {fileID: 2544269384385323217}
+  - {fileID: 2692828844521953848}
+  - {fileID: 1145790650116709793}
+  - {fileID: 516279034017907226}
+  - {fileID: 8307539422952388966}
+  - {fileID: 1632540731350238078}
+  - {fileID: 786233931727616528}
+  - {fileID: 9039122168903143267}
+  - {fileID: 6916830513749831744}
+  - {fileID: 8428115436989401376}
+  - {fileID: 3417517616774311470}
+  - {fileID: 791904262715373274}
+  - {fileID: 6761778716325193144}
   - {fileID: 6642223868802883631}
   - {fileID: 5023261232650264162}
   - {fileID: 342750366458225008}
@@ -490,6 +648,20 @@ Transform:
   - {fileID: 8546200818373775703}
   - {fileID: 8165381706659584891}
   - {fileID: 8623090550196942215}
+  - {fileID: 787163309163244494}
+  - {fileID: 1121610249956379912}
+  - {fileID: 5836159106938536650}
+  - {fileID: 1961747478354761243}
+  - {fileID: 2582338238861261883}
+  - {fileID: 1171298931474066990}
+  - {fileID: 2232798460101262869}
+  - {fileID: 7746988730793754460}
+  - {fileID: 5386670937377376289}
+  - {fileID: 818777874741653792}
+  - {fileID: 5112877413016956459}
+  - {fileID: 5397497123132351893}
+  - {fileID: 5724492401149666601}
+  - {fileID: 4337046872258563693}
   - {fileID: 5787207038370988941}
   - {fileID: 3527651359689464475}
   - {fileID: 1700847710161509142}
@@ -497,6 +669,20 @@ Transform:
   - {fileID: 6505256488424303364}
   - {fileID: 4660572508825846091}
   - {fileID: 7178434226394479918}
+  - {fileID: 1436147150534616591}
+  - {fileID: 312943830347107583}
+  - {fileID: 2314509853087554089}
+  - {fileID: 1715227024992576407}
+  - {fileID: 3543556218994529180}
+  - {fileID: 7750391353964667325}
+  - {fileID: 7266228691867588187}
+  - {fileID: 6881636824716619628}
+  - {fileID: 5954675521565549058}
+  - {fileID: 492372187091694307}
+  - {fileID: 7857685523531941528}
+  - {fileID: 4748292046076226328}
+  - {fileID: 3429967818559742831}
+  - {fileID: 2458397252565798542}
   - {fileID: 6396670820821521197}
   - {fileID: 3901466544597376262}
   m_Father: {fileID: 0}
@@ -523,7 +709,13 @@ MonoBehaviour:
   bloomMidday: 2
   bloomWinddown: 2
   stageStrip: 0
-  tiles: 010000000100000003000000010000000200000001000000010000000100000002000000030000000100000001000000030000000400000003000000010000000100000002000000010000000300000004000000i
+  tiles: 01000000010000000300000001000000020000000100000001000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff01000000020000000300000001000000010000000300000004000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff03000000010000000100000002000000010000000300000004000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffi
+  plantStage: 040000000400000004000000040000000400000004000000040000000400000004000000i
+  plantOn: 010000010000010000y
+  plantDue: 000000000000000000y
+  plantSpecies: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffi
+  haloSlot: -1
+  pulseSlot: -1
   tileFill: []
   boil: 1
   time: 1
@@ -545,6 +737,12 @@ MonoBehaviour:
   - {fileID: 2453155322664342947}
   - {fileID: 8566232719255273585}
   - {fileID: 6154406331108679490}
+  - {fileID: 7892597605626524868}
+  - {fileID: 230306104106805378}
+  - {fileID: 3098700510445717953}
+  - {fileID: 8013351527726637141}
+  - {fileID: 8121409130884310590}
+  - {fileID: 2282274780749220206}
   - {fileID: 4781237169525778433}
   boilMats:
   - {fileID: 2100000, guid: e7f26b99203a62141be9001f11eaf51d, type: 2}
@@ -578,6 +776,62 @@ MonoBehaviour:
   - {fileID: 2800000, guid: cc938acb2fed0224190a1a596c9bb047, type: 3}
   - {fileID: 2800000, guid: 5dc7714323f862343ba5d35aed48dd9f, type: 3}
   - {fileID: 2800000, guid: b115376b174108c4c89d3548fae83f3b, type: 3}
+  speciesCards:
+  - {fileID: 2800000, guid: eb37f73fe95cef648b578334a47a7a14, type: 3}
+  - {fileID: 2800000, guid: d642bbad8b515fd43abad07e18b05625, type: 3}
+  - {fileID: 2800000, guid: cb1e72011868b5d42892124bd9fcdffe, type: 3}
+  - {fileID: 2800000, guid: 5a059f578455111489590041e0798d3c, type: 3}
+  - {fileID: 2800000, guid: f7d40bde4d033c24d884bc87c5cb0509, type: 3}
+  - {fileID: 2800000, guid: c53f87b7199f39149bc4549d41407451, type: 3}
+  - {fileID: 2800000, guid: 8c345566353b608438d4cbae22f0f662, type: 3}
+  - {fileID: 2800000, guid: 9ebef98d840f27048bb16b6900eedce0, type: 3}
+  - {fileID: 2800000, guid: 04b852f89e7e9724585a8c27969c18d1, type: 3}
+  - {fileID: 2800000, guid: fdfd7d8f5b951a8448105d1b78b65b54, type: 3}
+  - {fileID: 2800000, guid: d18021489fb87a8488fd9ae68363426f, type: 3}
+  - {fileID: 2800000, guid: fb250c03da85e4a4aaf6c1fc0db406fc, type: 3}
+  - {fileID: 2800000, guid: cc938acb2fed0224190a1a596c9bb047, type: 3}
+  - {fileID: 2800000, guid: 5dc7714323f862343ba5d35aed48dd9f, type: 3}
+  - {fileID: 2800000, guid: b115376b174108c4c89d3548fae83f3b, type: 3}
+  - {fileID: 2800000, guid: e186f274d40595c498871dabb7d5e047, type: 3}
+  - {fileID: 2800000, guid: 391a7d67c9530b7428edc49a374d9249, type: 3}
+  - {fileID: 2800000, guid: 37bd1ea120ea63a41b7bf84a24f11fa8, type: 3}
+  - {fileID: 2800000, guid: c3578564defd69b4b9fb69289113cd03, type: 3}
+  - {fileID: 2800000, guid: dd13055365ac7454e8fc06ef18696bfa, type: 3}
+  - {fileID: 2800000, guid: a821d32fb3b27de40888baadf96d27c5, type: 3}
+  - {fileID: 2800000, guid: 91c80b601efe1044bb1816572fa93632, type: 3}
+  - {fileID: 2800000, guid: b461aba17f7d5a4488640d14eb626970, type: 3}
+  - {fileID: 2800000, guid: fde06d5705908444bbe49b3b50b5f74f, type: 3}
+  - {fileID: 2800000, guid: 93e507adce41d77448f166add0cfc459, type: 3}
+  - {fileID: 2800000, guid: 9d416ad6e0a28234c994b5aaee50fc44, type: 3}
+  - {fileID: 2800000, guid: 1864a6efc8930674db1b18776111cfaf, type: 3}
+  - {fileID: 2800000, guid: bad54977a3ec25f4fa022dcbc1e9f820, type: 3}
+  - {fileID: 2800000, guid: a986a74ae10a4c249a2011633cfab5b3, type: 3}
+  - {fileID: 2800000, guid: 8889caf24b1846b4283470cfec5fcc1e, type: 3}
+  - {fileID: 2800000, guid: 9b057233cf97e754a83a95a2cf26e812, type: 3}
+  - {fileID: 2800000, guid: e2719da09600e2d4c855d098a8308219, type: 3}
+  - {fileID: 2800000, guid: b359d62039413bc40989af4660cfd48d, type: 3}
+  - {fileID: 2800000, guid: a679b22c3c973b647a43d1bf7867a46c, type: 3}
+  - {fileID: 2800000, guid: 48ae2adafbdf6b24aaa9d80d38b4c58c, type: 3}
+  - {fileID: 2800000, guid: cd8f260609fe66046a4b30882e1c0507, type: 3}
+  - {fileID: 2800000, guid: ac8ae8118b87dda4a814a7c1558c2493, type: 3}
+  - {fileID: 2800000, guid: d7fa56dea330937479f810f09e5ee7c0, type: 3}
+  - {fileID: 2800000, guid: 80ba51a773049c546b388cc4d65546b5, type: 3}
+  - {fileID: 2800000, guid: 7a47d9c1ad9c8a04da812e6cb4a20674, type: 3}
+  - {fileID: 2800000, guid: e1b2216bfd2a9104f821d2ee086953fe, type: 3}
+  - {fileID: 2800000, guid: d2746420a600b5749a7a5a69e5cdd2bf, type: 3}
+  - {fileID: 2800000, guid: f74edc21ab1a2a3489d64a0528b609fd, type: 3}
+  - {fileID: 2800000, guid: 378c4908080a4064f92f9a854df48598, type: 3}
+  - {fileID: 2800000, guid: be404b565a4b08a42928ce053ef1a656, type: 3}
+  plantSlots:
+  - {fileID: 2453155322664342947}
+  - {fileID: 7892597605626524868}
+  - {fileID: 230306104106805378}
+  - {fileID: 8566232719255273585}
+  - {fileID: 3098700510445717953}
+  - {fileID: 8013351527726637141}
+  - {fileID: 6154406331108679490}
+  - {fileID: 8121409130884310590}
+  - {fileID: 2282274780749220206}
   haloTextures:
   - {fileID: 2800000, guid: 4940a182bd7c101438a339f55ffec8ff, type: 3}
   - {fileID: 2800000, guid: 92e7f170b3f2349488212521e747c5f6, type: 3}
@@ -634,6 +888,75 @@ MonoBehaviour:
   - {fileID: 8454455727145133718}
   - {fileID: 6957601068598127151}
   tileRenderer: {fileID: 6027309879560464357}
+--- !u!1 &429215872395335635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5386670937377376289}
+  - component: {fileID: 2456424693050218848}
+  - component: {fileID: 2172162401146543188}
+  m_Layer: 0
+  m_Name: tile.midday.r2.1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5386670937377376289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429215872395335635}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.78628844, z: 0, w: 0.61785966}
+  m_LocalPosition: {x: 0.020191338, y: 0.013000017, z: 0.082954034}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2456424693050218848
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429215872395335635}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &2172162401146543188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429215872395335635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &500744464015237068
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,7 +1009,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &8298044922602354310
 MonoBehaviour:
@@ -845,7 +1168,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &7233940694896188310
 MonoBehaviour:
@@ -860,6 +1183,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.winddown.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &585785648382211819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 312943830347107583}
+  - component: {fileID: 8312181364481559751}
+  - component: {fileID: 8683064961502728392}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &312943830347107583
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585785648382211819}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.9865722, z: 0, w: 0.16332594}
+  m_LocalPosition: {x: 0.09754274, y: 0.013000017, z: -0.03320626}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8312181364481559751
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585785648382211819}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &8683064961502728392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585785648382211819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.1
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &611030325245399409
@@ -952,6 +1344,134 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &662898993774200284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7892597605626524868}
+  - component: {fileID: 1147788962489104702}
+  - component: {fileID: 5116074066545848270}
+  - component: {fileID: 296765364577817650}
+  - component: {fileID: 6924381873059915954}
+  m_Layer: 0
+  m_Name: plant.morning.r1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7892597605626524868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662898993774200284}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.048521716, y: 0.016000018, z: 0.038857803}
+  m_LocalScale: {x: 0.03968, y: 0.059520002, z: 0.059520002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1147788962489104702
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662898993774200284}
+  m_Mesh: {fileID: 4300000, guid: f796a85401c1f5a47a209a8fc1e7bef7, type: 2}
+--- !u!23 &5116074066545848270
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662898993774200284}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 1d74453696202614f85d18057265b7c2, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &296765364577817650
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662898993774200284}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1, z: 0.42}
+  m_Center: {x: 0, y: 0.5, z: 0.02}
+--- !u!114 &6924381873059915954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662898993774200284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: plant.morning.r1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &681862963177441031
 GameObject:
   m_ObjectHideFlags: 0
@@ -1004,7 +1524,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &4536186401937576794
 MonoBehaviour:
@@ -1019,6 +1539,213 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.midday.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &696126966303500016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 791904262715373274}
+  - component: {fileID: 8337196521716655152}
+  - component: {fileID: 743693490628621436}
+  m_Layer: 0
+  m_Name: tile.morning.r2.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &791904262715373274
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696126966303500016}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.19138007, z: 0, w: 0.981516}
+  m_LocalPosition: {x: -0.079121985, y: 0.013000017, z: 0.0320745}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8337196521716655152
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696126966303500016}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &743693490628621436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 696126966303500016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.5
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &759417419608545780
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7746988730793754460}
+  - component: {fileID: 6113102618422260838}
+  - component: {fileID: 2542248958694357598}
+  m_Layer: 0
+  m_Name: tile.midday.r2.0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7746988730793754460
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759417419608545780}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.75195485, z: 0, w: 0.6592146}
+  m_LocalPosition: {x: 0.011173343, y: 0.013000017, z: 0.0846417}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6113102618422260838
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759417419608545780}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &2542248958694357598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759417419608545780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &912783793706445781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3543556218994529180}
+  - component: {fileID: 1214630701328201826}
+  - component: {fileID: 2732070487884260336}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3543556218994529180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912783793706445781}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.8925858, z: 0, w: 0.45087755}
+  m_LocalPosition: {x: 0.06114588, y: 0.013000017, z: -0.08293626}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1214630701328201826
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912783793706445781}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &2732070487884260336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912783793706445781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.4
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &1082310150683271271
@@ -1163,7 +1890,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &750497176542677867
 MonoBehaviour:
@@ -1270,6 +1997,282 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1471124335995492597
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4748292046076226328}
+  - component: {fileID: 2295780264182135490}
+  - component: {fileID: 8318189538726000461}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4748292046076226328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471124335995492597}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.90443027, z: 0, w: 0.42662144}
+  m_LocalPosition: {x: 0.054298144, y: 0.013000017, z: -0.065884545}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2295780264182135490
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471124335995492597}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &8318189538726000461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1471124335995492597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &1538705936424455131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436147150534616591}
+  - component: {fileID: 3599054843627040569}
+  - component: {fileID: 3117662751669587192}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1436147150534616591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538705936424455131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.9980267, z: 0, w: 0.0627905}
+  m_LocalPosition: {x: 0.1022275, y: 0.013000017, z: -0.012914337}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3599054843627040569
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538705936424455131}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3117662751669587192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538705936424455131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &1627961112741730902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9039122168903143267}
+  - component: {fileID: 943743947582958977}
+  - component: {fileID: 3806070291289657005}
+  m_Layer: 0
+  m_Name: tile.morning.r2.1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9039122168903143267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627961112741730902}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.13974912, z: 0, w: 0.9901869}
+  m_LocalPosition: {x: -0.08204125, y: 0.013000017, z: -0.02362828}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &943743947582958977
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627961112741730902}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3806070291289657005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627961112741730902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &1763012044475962209
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8428115436989401376}
+  - component: {fileID: 6357222128403792165}
+  - component: {fileID: 4613730346924701223}
+  m_Layer: 0
+  m_Name: tile.morning.r2.3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8428115436989401376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763012044475962209}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.026176995, z: 0, w: 0.99965733}
+  m_LocalPosition: {x: -0.085259, y: 0.013000017, z: 0.0044682426}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6357222128403792165
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763012044475962209}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &4613730346924701223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763012044475962209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &1824897937628324424
 GameObject:
   m_ObjectHideFlags: 0
@@ -1322,7 +2325,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &2164984086493566712
 MonoBehaviour:
@@ -1557,6 +2560,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1851850238130136612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1715227024992576407}
+  - component: {fileID: 4348488294803453881}
+  - component: {fileID: 7182348595636575623}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1715227024992576407
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851850238130136612}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.9335804, z: 0, w: 0.35836798}
+  m_LocalPosition: {x: 0.07657364, y: 0.013000017, z: -0.06894722}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4348488294803453881
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851850238130136612}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &7182348595636575623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851850238130136612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &1974054368582116199
 GameObject:
   m_ObjectHideFlags: 0
@@ -1592,6 +2664,272 @@ Transform:
   - {fileID: 2691066006686445284}
   m_Father: {fileID: 4320516515241757340}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2036764523112082042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 786233931727616528}
+  - component: {fileID: 6834208719537236037}
+  - component: {fileID: 5247150148681045874}
+  m_Layer: 0
+  m_Name: tile.morning.r2.0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &786233931727616528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036764523112082042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.22154856, z: 0, w: 0.97514933}
+  m_LocalPosition: {x: -0.07699485, y: 0.013000017, z: -0.036889758}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6834208719537236037
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036764523112082042}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &5247150148681045874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036764523112082042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &2173427136460747763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7266228691867588187}
+  - component: {fileID: 1259983650979464643}
+  - component: {fileID: 2398469155530092161}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7266228691867588187
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2173427136460747763}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.78369343, z: 0, w: 0.6211478}
+  m_LocalPosition: {x: 0.023529274, y: 0.013000017, z: -0.100317575}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1259983650979464643
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2173427136460747763}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &2398469155530092161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2173427136460747763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.6
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &2206496954480703471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 230306104106805378}
+  - component: {fileID: 1328647692218200423}
+  - component: {fileID: 5503187392117569847}
+  - component: {fileID: 3964130612862738820}
+  - component: {fileID: 3133322885001466377}
+  m_Layer: 0
+  m_Name: plant.morning.r2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &230306104106805378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206496954480703471}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.022730716, y: 0.016000018, z: -0.057858452}
+  m_LocalScale: {x: 0.03968, y: 0.059520002, z: 0.059520002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1328647692218200423
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206496954480703471}
+  m_Mesh: {fileID: 4300000, guid: f796a85401c1f5a47a209a8fc1e7bef7, type: 2}
+--- !u!23 &5503187392117569847
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206496954480703471}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 1d74453696202614f85d18057265b7c2, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3964130612862738820
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206496954480703471}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1, z: 0.42}
+  m_Center: {x: 0, y: 0.5, z: 0.02}
+--- !u!114 &3133322885001466377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2206496954480703471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: plant.morning.r2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &2215424714339394394
 GameObject:
   m_ObjectHideFlags: 0
@@ -1900,6 +3238,213 @@ MonoBehaviour:
   id: plant.midday
   hitCollider: {fileID: 0}
   pokeOnly: 0
+--- !u!1 &2654763117209833290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5397497123132351893}
+  - component: {fileID: 6077441206196805324}
+  - component: {fileID: 4226051674806102743}
+  m_Layer: 0
+  m_Name: tile.midday.r2.4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5397497123132351893
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654763117209833290}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.8752958, z: 0, w: 0.48358786}
+  m_LocalPosition: {x: 0.045444403, y: 0.013000017, z: 0.07227633}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6077441206196805324
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654763117209833290}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &4226051674806102743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2654763117209833290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &2812839961318838198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5112877413016956459}
+  - component: {fileID: 1162394455869020500}
+  - component: {fileID: 3807044331938244897}
+  m_Layer: 0
+  m_Name: tile.midday.r2.3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5112877413016956459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2812839961318838198}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.8480481, z: 0, w: 0.52991927}
+  m_LocalPosition: {x: 0.037426375, y: 0.013000017, z: 0.076735444}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1162394455869020500
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2812839961318838198}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3807044331938244897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2812839961318838198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &2954292818030446045
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3429967818559742831}
+  - component: {fileID: 4531216457826744560}
+  - component: {fileID: 818918024808179333}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3429967818559742831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2954292818030446045}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.8702984, z: 0, w: 0.49252483}
+  m_LocalPosition: {x: 0.04395486, y: 0.013000017, z: -0.07319175}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4531216457826744560
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2954292818030446045}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &818918024808179333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2954292818030446045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.5
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &2970723282125036285
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,6 +3535,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2995976313499555407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1632540731350238078}
+  - component: {fileID: 8222706727812832854}
+  - component: {fileID: 3055828444109351623}
+  m_Layer: 0
+  m_Name: tile.morning.r1.6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1632540731350238078
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995976313499555407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.35836798, z: 0, w: 0.93358046}
+  m_LocalPosition: {x: -0.07657364, y: 0.013000017, z: 0.06894722}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8222706727812832854
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995976313499555407}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3055828444109351623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2995976313499555407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.6
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &3001513548081544133
 GameObject:
   m_ObjectHideFlags: 0
@@ -2042,7 +3656,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &3083441076671722099
 MonoBehaviour:
@@ -2239,6 +3853,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3603898917911173830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1961747478354761243}
+  - component: {fileID: 4359553668001351434}
+  - component: {fileID: 5161650685863620946}
+  m_Layer: 0
+  m_Name: tile.midday.r1.3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1961747478354761243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3603898917911173830}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.8480481, z: 0, w: 0.52991927}
+  m_LocalPosition: {x: 0.045169763, y: 0.013000017, z: 0.092611745}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4359553668001351434
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3603898917911173830}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &5161650685863620946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3603898917911173830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &3746020316166348910
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,6 +4192,213 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3896186938608487591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4337046872258563693}
+  - component: {fileID: 8489149383209524680}
+  - component: {fileID: 5307777458836074372}
+  m_Layer: 0
+  m_Name: tile.midday.r2.6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4337046872258563693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3896186938608487591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.9221335, z: 0, w: 0.38687187}
+  m_LocalPosition: {x: 0.059819575, y: 0.013000017, z: 0.06091535}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8489149383209524680
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3896186938608487591}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &5307777458836074372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3896186938608487591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.6
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &3940426788799416006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5836159106938536650}
+  - component: {fileID: 1905568316085285239}
+  - component: {fileID: 3369179833226875381}
+  m_Layer: 0
+  m_Name: tile.midday.r1.2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5836159106938536650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940426788799416006}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.8069603, z: 0, w: 0.5906057}
+  m_LocalPosition: {x: 0.031156197, y: 0.013000017, z: 0.09821677}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1905568316085285239
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940426788799416006}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3369179833226875381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940426788799416006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &3996458181402775290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6881636824716619628}
+  - component: {fileID: 5702799285463596604}
+  - component: {fileID: 2293866914021519127}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6881636824716619628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996458181402775290}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.9896764, z: 0, w: 0.14331988}
+  m_LocalPosition: {x: 0.081868656, y: 0.013000017, z: -0.02421952}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5702799285463596604
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996458181402775290}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &2293866914021519127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3996458181402775290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &4091488094010147092
 GameObject:
   m_ObjectHideFlags: 0
@@ -2651,7 +4541,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &7430001205892051095
 MonoBehaviour:
@@ -2666,6 +4556,331 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.winddown.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &4281856836906947507
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3098700510445717953}
+  - component: {fileID: 934059291391495388}
+  - component: {fileID: 3133109942275366923}
+  - component: {fileID: 4636376250479586968}
+  - component: {fileID: 7907119772592901902}
+  m_Layer: 0
+  m_Name: plant.midday.r1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3098700510445717953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281856836906947507}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.055090684, y: 0.016000018, z: -0.013355199}
+  m_LocalScale: {x: 0.044639997, y: 0.06944, z: 0.06944}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &934059291391495388
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281856836906947507}
+  m_Mesh: {fileID: 4300000, guid: f796a85401c1f5a47a209a8fc1e7bef7, type: 2}
+--- !u!23 &3133109942275366923
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281856836906947507}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 69352a8aa8b591940928ad585650542d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4636376250479586968
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281856836906947507}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1, z: 0.42}
+  m_Center: {x: 0, y: 0.5, z: 0.02}
+--- !u!114 &7907119772592901902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281856836906947507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: plant.midday.r1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &4310224510911389238
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8121409130884310590}
+  - component: {fileID: 7883314188842656840}
+  - component: {fileID: 7996705814769963686}
+  - component: {fileID: 2475538092897214944}
+  - component: {fileID: 3557367731303437493}
+  m_Layer: 0
+  m_Name: plant.winddown.r1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8121409130884310590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310224510911389238}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0045201234, y: 0.016000018, z: -0.06154697}
+  m_LocalScale: {x: 0.036766, y: 0.057970002, z: 0.057970002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &7883314188842656840
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310224510911389238}
+  m_Mesh: {fileID: 4300000, guid: f796a85401c1f5a47a209a8fc1e7bef7, type: 2}
+--- !u!23 &7996705814769963686
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310224510911389238}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f6c8d2271d6e1234cb4f51527d33aeda, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2475538092897214944
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310224510911389238}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1, z: 0.42}
+  m_Center: {x: 0, y: 0.5, z: 0.02}
+--- !u!114 &3557367731303437493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4310224510911389238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: plant.winddown.r1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &4379636408312223774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2582338238861261883}
+  - component: {fileID: 5313388049995748038}
+  - component: {fileID: 4070472117843628419}
+  m_Layer: 0
+  m_Name: tile.midday.r1.4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2582338238861261883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379636408312223774}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.88458097, z: 0, w: 0.46638665}
+  m_LocalPosition: {x: 0.058214206, y: 0.013000017, z: 0.08501969}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5313388049995748038
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379636408312223774}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &4070472117843628419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4379636408312223774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.4
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &4437817044058092268
@@ -2720,7 +4935,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &7380302522618105555
 MonoBehaviour:
@@ -2735,6 +4950,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.morning.1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &4477802174723547072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2692828844521953848}
+  - component: {fileID: 169586743131374058}
+  - component: {fileID: 6753099211250629536}
+  m_Layer: 0
+  m_Name: tile.morning.r1.2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2692828844521953848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4477802174723547072}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.08715577, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: -0.10147459, y: 0.013000017, z: -0.017892713}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &169586743131374058
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4477802174723547072}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &6753099211250629536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4477802174723547072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.2
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &4607565807620815771
@@ -2789,7 +5073,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &3621091762724007900
 MonoBehaviour:
@@ -2896,6 +5180,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4649088356154302205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1121610249956379912}
+  - component: {fileID: 791785405303703477}
+  - component: {fileID: 358793653815858039}
+  m_Layer: 0
+  m_Name: tile.midday.r1.1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1121610249956379912
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4649088356154302205}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7615383, z: 0, w: 0.64811987}
+  m_LocalPosition: {x: 0.016474163, y: 0.013000017, z: 0.10171452}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &791785405303703477
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4649088356154302205}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &358793653815858039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4649088356154302205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &4738135949746358580
 GameObject:
   m_ObjectHideFlags: 0
@@ -2986,6 +5339,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4816169206658257654
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3417517616774311470}
+  - component: {fileID: 1773448593970487838}
+  - component: {fileID: 6601727239748421425}
+  m_Layer: 0
+  m_Name: tile.morning.r2.4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3417517616774311470
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4816169206658257654}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.10915607, z: 0, w: 0.99402463}
+  m_LocalPosition: {x: -0.08334148, y: 0.013000017, z: 0.018527245}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1773448593970487838
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4816169206658257654}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &6601727239748421425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4816169206658257654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &4918304243982868780
 GameObject:
   m_ObjectHideFlags: 0
@@ -3076,6 +5498,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5015450488094139493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2314509853087554089}
+  - component: {fileID: 4669575427274433644}
+  - component: {fileID: 292444899582920236}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2314509853087554089
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015450488094139493}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.9650165, z: 0, w: 0.26218924}
+  m_LocalPosition: {x: 0.08887341, y: 0.013000017, z: -0.052141722}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4669575427274433644
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015450488094139493}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &292444899582920236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5015450488094139493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &5462630566344945333
 GameObject:
   m_ObjectHideFlags: 0
@@ -3128,7 +5619,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &4183777135372943932
 MonoBehaviour:
@@ -3197,7 +5688,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &4902543026439182218
 MonoBehaviour:
@@ -3356,7 +5847,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &3603657561110144139
 MonoBehaviour:
@@ -3371,6 +5862,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.midday.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &5974691634622622852
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1145790650116709793}
+  - component: {fileID: 1131207698503196630}
+  - component: {fileID: 3958776520706958255}
+  m_Layer: 0
+  m_Name: tile.morning.r1.3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1145790650116709793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974691634622622852}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.026176995, z: 0, w: 0.99965733}
+  m_LocalPosition: {x: -0.102898784, y: 0.013000017, z: 0.0053927065}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1131207698503196630
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974691634622622852}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3958776520706958255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974691634622622852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.3
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &5984299551233216626
@@ -3605,7 +6165,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &3341658818111224891
 MonoBehaviour:
@@ -3620,6 +6180,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.morning.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &6147148864193299256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2232798460101262869}
+  - component: {fileID: 3478827799094049664}
+  - component: {fileID: 7111932203235233213}
+  m_Layer: 0
+  m_Name: tile.midday.r1.6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2232798460101262869
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6147148864193299256}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.94322264, z: 0, w: 0.33216116}
+  m_LocalPosition: {x: 0.08030298, y: 0.013000017, z: 0.064565256}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3478827799094049664
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6147148864193299256}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &7111932203235233213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6147148864193299256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.6
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &6185544391586940081
@@ -3764,7 +6393,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &5953619315169851910
 MonoBehaviour:
@@ -4103,7 +6732,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &4765051175193333054
 MonoBehaviour:
@@ -4210,6 +6839,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6936615082346153408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5954675521565549058}
+  - component: {fileID: 1290360194334503482}
+  - component: {fileID: 6879808007998383601}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5954675521565549058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936615082346153408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.97632116, z: 0, w: 0.21632606}
+  m_LocalPosition: {x: 0.07738533, y: 0.013000017, z: -0.036063455}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1290360194334503482
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936615082346153408}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &6879808007998383601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936615082346153408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &6940027993823501991
 GameObject:
   m_ObjectHideFlags: 0
@@ -4352,7 +7050,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &1936691749075412241
 MonoBehaviour:
@@ -4367,6 +7065,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.morning.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &6971528641504965241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5724492401149666601}
+  - component: {fileID: 5121062765849397074}
+  - component: {fileID: 3604884551762083746}
+  m_Layer: 0
+  m_Name: tile.midday.r2.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5724492401149666601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6971528641504965241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.90001476, z: 0, w: 0.43585947}
+  m_LocalPosition: {x: 0.052937645, y: 0.013000017, z: 0.06698259}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5121062765849397074
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6971528641504965241}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3604884551762083746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6971528641504965241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.5
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &6985991793771664460
@@ -4421,7 +7188,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &7535122167285299228
 MonoBehaviour:
@@ -4436,6 +7203,331 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.morning.2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &7092820122146567902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2282274780749220206}
+  - component: {fileID: 2741532335234554939}
+  - component: {fileID: 5228754492053572676}
+  - component: {fileID: 2156981253346488903}
+  - component: {fileID: 6492528847893698941}
+  m_Layer: 0
+  m_Name: plant.winddown.r2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2282274780749220206
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092820122146567902}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.056980185, y: 0.016000018, z: 0.023700627}
+  m_LocalScale: {x: 0.036766, y: 0.057970002, z: 0.057970002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2741532335234554939
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092820122146567902}
+  m_Mesh: {fileID: 4300000, guid: f796a85401c1f5a47a209a8fc1e7bef7, type: 2}
+--- !u!23 &5228754492053572676
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092820122146567902}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f6c8d2271d6e1234cb4f51527d33aeda, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2156981253346488903
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092820122146567902}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1, z: 0.42}
+  m_Center: {x: 0, y: 0.5, z: 0.02}
+--- !u!114 &6492528847893698941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7092820122146567902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: plant.winddown.r2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &7215948099533619532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 492372187091694307}
+  - component: {fileID: 8760899156992169986}
+  - component: {fileID: 1837254516638659097}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &492372187091694307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215948099533619532}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.95758814, z: 0, w: 0.28814054}
+  m_LocalPosition: {x: 0.07119932, y: 0.013000017, z: -0.04711389}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8760899156992169986
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215948099533619532}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &1837254516638659097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7215948099533619532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &7226378755254694735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8013351527726637141}
+  - component: {fileID: 2888040377034889197}
+  - component: {fileID: 2626562164942063820}
+  - component: {fileID: 9101317609764673854}
+  - component: {fileID: 1236617659912744948}
+  m_Layer: 0
+  m_Name: plant.midday.r2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8013351527726637141
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7226378755254694735}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.019722007, y: 0.016000018, z: 0.05314496}
+  m_LocalScale: {x: 0.044639997, y: 0.06944, z: 0.06944}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2888040377034889197
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7226378755254694735}
+  m_Mesh: {fileID: 4300000, guid: f796a85401c1f5a47a209a8fc1e7bef7, type: 2}
+--- !u!23 &2626562164942063820
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7226378755254694735}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 69352a8aa8b591940928ad585650542d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &9101317609764673854
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7226378755254694735}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1.05, y: 1, z: 0.42}
+  m_Center: {x: 0, y: 0.5, z: 0.02}
+--- !u!114 &1236617659912744948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7226378755254694735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: plant.midday.r2
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &7236555231296043544
@@ -4798,6 +7890,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7622493554040698968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 787163309163244494}
+  - component: {fileID: 4885415052947670274}
+  - component: {fileID: 2724377575147199124}
+  m_Layer: 0
+  m_Name: tile.midday.r1.0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &787163309163244494
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7622493554040698968}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.71202606, z: 0, w: 0.702153}
+  m_LocalPosition: {x: 0.0014386701, y: 0.013000017, z: 0.10302996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4885415052947670274
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7622493554040698968}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &2724377575147199124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7622493554040698968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r1.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &7865005012322587256
 GameObject:
   m_ObjectHideFlags: 0
@@ -4888,6 +8049,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7940755863451925060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2544269384385323217}
+  - component: {fileID: 1310458699225338853}
+  - component: {fileID: 3985002705220094472}
+  m_Layer: 0
+  m_Name: tile.morning.r1.1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2544269384385323217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7940755863451925060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.19936793, z: 0, w: 0.97992474}
+  m_LocalPosition: {x: -0.09484883, y: 0.013000017, z: -0.040260933}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1310458699225338853
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7940755863451925060}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &3985002705220094472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7940755863451925060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.1
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &8012890995593992597
 GameObject:
   m_ObjectHideFlags: 0
@@ -4978,6 +8208,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8036204293723704115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 818777874741653792}
+  - component: {fileID: 5232700227492938833}
+  - component: {fileID: 8030819675508357837}
+  m_Layer: 0
+  m_Name: tile.midday.r2.2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &818777874741653792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8036204293723704115}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.8183504, z: 0, w: 0.5747196}
+  m_LocalPosition: {x: 0.028976167, y: 0.013000017, z: 0.08030842}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5232700227492938833
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8036204293723704115}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &8030819675508357837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8036204293723704115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.midday.r2.2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &8072804288775602261
 GameObject:
   m_ObjectHideFlags: 0
@@ -5248,7 +8547,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &3002199837394432002
 MonoBehaviour:
@@ -5263,6 +8562,144 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
   id: tile.morning.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &8379675103913986335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7857685523531941528}
+  - component: {fileID: 3639832816376503639}
+  - component: {fileID: 6932532395237485283}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7857685523531941528
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8379675103913986335}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.9335804, z: 0, w: 0.35836798}
+  m_LocalPosition: {x: 0.06344673, y: 0.013000017, z: -0.057127696}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3639832816376503639
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8379675103913986335}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &6932532395237485283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8379675103913986335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.3
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &8398518511509805075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6761778716325193144}
+  - component: {fileID: 6632051954077275791}
+  - component: {fileID: 6829550827281317839}
+  m_Layer: 0
+  m_Name: tile.morning.r2.6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6761778716325193144
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398518511509805075}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.27228028, z: 0, w: 0.962218}
+  m_LocalPosition: {x: -0.07271703, y: 0.013000017, z: 0.044735823}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6632051954077275791
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398518511509805075}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &6829550827281317839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398518511509805075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.6
   hitCollider: {fileID: 0}
   pokeOnly: 0
 --- !u!1 &8446054677641898478
@@ -5497,7 +8934,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.014, y: 0.01, z: 0.012}
+  m_Size: {x: 0.013200001, y: 0.01, z: 0.0108}
   m_Center: {x: 0, y: 0.004, z: 0}
 --- !u!114 &3412098339895197742
 MonoBehaviour:
@@ -5604,6 +9041,75 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8815826982212099247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7750391353964667325}
+  - component: {fileID: 4174657987839428068}
+  - component: {fileID: 5451128880413754197}
+  m_Layer: 0
+  m_Name: tile.winddown.r1.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7750391353964667325
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815826982212099247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.84245247, z: 0, w: 0.5387708}
+  m_LocalPosition: {x: 0.043220352, y: 0.013000017, z: -0.09353739}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4174657987839428068
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815826982212099247}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &5451128880413754197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8815826982212099247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r1.5
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
 --- !u!1 &8923945520931100308
 GameObject:
   m_ObjectHideFlags: 0
@@ -5694,3 +9200,279 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8941296592357272411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 516279034017907226}
+  - component: {fileID: 1816846571991358298}
+  - component: {fileID: 1196419168940545726}
+  m_Layer: 0
+  m_Name: tile.morning.r1.4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &516279034017907226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8941296592357272411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.13917312, z: 0, w: 0.9902681}
+  m_LocalPosition: {x: -0.099048406, y: 0.013000017, z: 0.028401675}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1816846571991358298
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8941296592357272411}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &1196419168940545726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8941296592357272411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.4
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &8988611352662394236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4731077782004934292}
+  - component: {fileID: 4231249568857493150}
+  - component: {fileID: 1422899477033398892}
+  m_Layer: 0
+  m_Name: tile.morning.r1.0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4731077782004934292
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8988611352662394236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.3090169, z: 0, w: 0.95105654}
+  m_LocalPosition: {x: -0.08336112, y: 0.013000017, z: -0.060565382}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4231249568857493150
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8988611352662394236}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.010120001, y: 0.01, z: 0.008160001}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &1422899477033398892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8988611352662394236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r1.0
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &9079039518670173965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6916830513749831744}
+  - component: {fileID: 832469291164885451}
+  - component: {fileID: 5883391142160895318}
+  m_Layer: 0
+  m_Name: tile.morning.r2.2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6916830513749831744
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9079039518670173965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.056983154, z: 0, w: 0.9983752}
+  m_LocalPosition: {x: -0.08482156, y: 0.013000017, z: -0.009714177}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &832469291164885451
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9079039518670173965}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &5883391142160895318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9079039518670173965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.morning.r2.2
+  hitCollider: {fileID: 0}
+  pokeOnly: 0
+--- !u!1 &9114662494406447928
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2458397252565798542}
+  - component: {fileID: 4278172252014968703}
+  - component: {fileID: 6107708868714695603}
+  m_Layer: 0
+  m_Name: tile.winddown.r2.6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2458397252565798542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9114662494406447928}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: -0.8313726, z: 0, w: 0.5557154}
+  m_LocalPosition: {x: 0.03264444, y: 0.013000017, z: -0.07888854}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4320516515241757340}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4278172252014968703
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9114662494406447928}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 0.00792, y: 0.01, z: 0.00672}
+  m_Center: {x: 0, y: 0.004, z: 0}
+--- !u!114 &6107708868714695603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9114662494406447928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fb09d7aa8c941f4ad1067829edb40cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GardenVR.Input::GardenVR.Input.IntentTarget
+  id: tile.winddown.r2.6
+  hitCollider: {fileID: 0}
+  pokeOnly: 0

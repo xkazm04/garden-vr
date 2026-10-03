@@ -61,6 +61,35 @@ namespace GardenVR.Sundial
             return list;
         }
 
+        /// <summary>
+        /// The next preset this arc does not already have. Archived habits do not count.
+        /// Null when the arc is full or every preset is taken.
+        /// </summary>
+        public static SeedPreset NextFree(string arc, IReadOnlyList<HabitDef> habits)
+        {
+            if (string.IsNullOrEmpty(arc)) return null;
+            if (habits != null && SundialRules.LiveInArc(habits, arc) >= SundialRules.MaxHabitsPerArc) return null;
+            for (int i = 0; i < All.Length; i++)
+            {
+                SeedPreset preset = All[i];
+                if (preset.Arc != arc || Taken(habits, preset)) continue;
+                return preset;
+            }
+            return null;
+        }
+
+        static bool Taken(IReadOnlyList<HabitDef> habits, SeedPreset preset)
+        {
+            if (habits == null || preset == null) return false;
+            for (int i = 0; i < habits.Count; i++)
+            {
+                HabitDef habit = habits[i];
+                if (habit == null || habit.ArchivedDay.HasValue) continue;
+                if (habit.PresetKey == preset.Key || habit.Id == preset.HabitId) return true;
+            }
+            return false;
+        }
+
         public static string PacketId(string arc) { return "seed." + arc; }
 
         public static string PresetId(SeedPreset preset) { return "seed." + preset.Arc + "." + preset.Key; }
@@ -77,6 +106,39 @@ namespace GardenVR.Sundial
                 Kind = kind,
                 HabitId = key
             };
+        }
+    }
+
+    /// <summary>Ink species for the nine sundial plants. Order is the card row in <c>DialLibrary.SpeciesCards</c>.</summary>
+    public static class SundialSpecies
+    {
+        public static readonly string[] Keys =
+        {
+            "sunrise", "midday", "dusk", "reed", "clover", "vine", "sprig", "bell", "page"
+        };
+
+        public static int Index(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return -1;
+            for (int i = 0; i < Keys.Length; i++)
+            {
+                if (Keys[i] == key) return i;
+            }
+            return -1;
+        }
+
+        public static string ForPreset(string preset)
+        {
+            if (preset == "water") return "sunrise";
+            if (preset == "stretch") return "reed";
+            if (preset == "bed") return "clover";
+            if (preset == "top3") return "midday";
+            if (preset == "walk") return "vine";
+            if (preset == "lunch") return "sprig";
+            if (preset == "breaths") return "dusk";
+            if (preset == "phone") return "bell";
+            if (preset == "read") return "page";
+            return null;
         }
     }
 

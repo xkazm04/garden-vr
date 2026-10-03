@@ -260,7 +260,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             for (int i = 0; i < 7; i++)
             {
                 Assert.AreEqual(expect[i], plant.Window[i], "rules slot " + i);
-                Assert.AreEqual(SundialArcs.TileDigit(expect[i]), controller.View.tiles[7 + i], "dial slot " + i);
+                Assert.AreEqual(SundialArcs.TileDigit(expect[i]), controller.View.tiles[DialView.TileIndex(1, 0, i)], "dial slot " + i);
                 Assert.AreEqual(Label(expect[i]), TileLabels.For(expect[i]));
             }
             Assert.AreEqual(TileState.Kept, plant.Window[0]);
