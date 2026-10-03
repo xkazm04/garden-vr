@@ -76,6 +76,7 @@ namespace GardenVR.Terrarium
         public float recoveredTime = -1f;
         /// <summary>Spore step this frame. Negative keeps the capture resim from <see cref="time"/>.</summary>
         public float sporeStep = -1f;
+        float _corkPuff;
 
         [Header("Wired by Build")]
         public MeshFilter fiddle;
@@ -222,6 +223,13 @@ namespace GardenVR.Terrarium
                 : new List<CompanionGarden.Shot>();
             HookCamera();
             Apply();
+        }
+
+        /// <summary>One cork mist swell. Reduced motion leaves the plume still.</summary>
+        public void PuffCork(float seconds)
+        {
+            if (reducedMotion || seconds <= 0f) return;
+            if (seconds > _corkPuff) _corkPuff = seconds;
         }
 
         /// <summary>The live companions. Capture state replaces this until the next present.</summary>
@@ -841,7 +849,16 @@ namespace GardenVR.Terrarium
             {
                 if (mist[i] == null) continue;
                 mist[i].localPosition = new Vector3(Mathf.Sin(time * 0.35f + i) * 0.004f, PlumeCenterY, 0f);
-                mist[i].localScale = new Vector3(PlumeWidth, PlumeHeight, 1f);
+                float swell = 1f;
+                if (i == 0 && _corkPuff > 0f)
+                    swell = 1f + 0.55f * Mathf.Clamp01(_corkPuff / 0.8f);
+                mist[i].localScale = new Vector3(PlumeWidth * swell, PlumeHeight * swell, 1f);
+            }
+            if (_corkPuff > 0f)
+            {
+                float step = sporeStep > 0f ? sporeStep : 0.016f;
+                _corkPuff -= step;
+                if (_corkPuff < 0f) _corkPuff = 0f;
             }
         }
 

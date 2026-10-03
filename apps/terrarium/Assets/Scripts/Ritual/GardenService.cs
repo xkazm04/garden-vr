@@ -16,11 +16,14 @@ namespace GardenVR.Terrarium
 
         public static string DirectoryOverride;
         public static IClock ClockOverride;
+        /// <summary>Tests set this before the scene loads. A fresh garden otherwise starts with motion on.</summary>
+        public static bool? ReducedMotionOverride;
 
         public static void ResetOverrides()
         {
             DirectoryOverride = null;
             ClockOverride = null;
+            ReducedMotionOverride = null;
         }
 
         public static string DefaultDirectory()
@@ -82,6 +85,7 @@ namespace GardenVR.Terrarium
                 _save = new TerrariumSave();
                 Garden = new Garden();
                 BindHabits();
+                ApplyMotionOverride();
                 return;
             }
             _save = result.Doc;
@@ -91,6 +95,27 @@ namespace GardenVR.Terrarium
             if (_save.FrondDays == null) _save.FrondDays = new int[0];
             Garden = Garden.FromSave(_save);
             BindHabits();
+            ApplyMotionOverride();
+        }
+
+        /// <summary>
+        /// Remembers the tour id. The file is created when the jar arrives, not during the fade.
+        /// A failed or newer-schema load does not touch the file.
+        /// </summary>
+        public void SetFirstRunStep(string step)
+        {
+            if (_save == null || _readOnly || Outcome == LoadOutcome.Failed) return;
+            if (step == _save.FirstRunStep) return;
+            _save.FirstRunStep = step;
+            if (FirstRunSteps.AtLeast(step, FirstRunSteps.Arrive))
+                Persist();
+        }
+
+        void ApplyMotionOverride()
+        {
+            if (!ReducedMotionOverride.HasValue || _save == null) return;
+            if (_save.Settings == null) _save.Settings = new RitualSettings();
+            _save.Settings.ReducedMotion = ReducedMotionOverride.Value;
         }
 
         public Ledger HabitLedger { get { return _habits != null ? _habits.Ledger : null; } }

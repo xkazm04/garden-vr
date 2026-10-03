@@ -1,0 +1,5 @@
+generator: image_edit (Grok Imagine)
+model: grok-imagine
+source: ghost-hand-open.png
+prompt: The same translucent mint glass hand, now in a gentle pinch: thumb and index finger touching, the other fingers softly curled. Keep the pale sea-glass glow, the feathered edges, and the pure black background. No text, no jar, centered cutout.
+process: luminance keyed to alpha, tinted #BFF5DD, capped at 78% opacity so the card stays translucent.

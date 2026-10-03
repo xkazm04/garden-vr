@@ -6,6 +6,8 @@
         "GardenVR.Core",
         "GardenVR.Room",
         "GardenVR.Audio",
+        "GardenVR.Terrarium",
+        "Unity.TextMeshPro",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

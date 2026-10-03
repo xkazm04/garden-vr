@@ -1,0 +1,5 @@
+generator: image_gen (Grok Imagine)
+model: grok-imagine
+source: none
+prompt: A single human hand silhouette, palm open toward the viewer, fingers gently spread, as if about to pinch. The hand is translucent mint glass in a soft glow the color of pale sea-glass, edges feathered like etched light on dark glass. Isolated on a pure black background, no arm past the wrist, no text, no jar, centered cutout.
+process: luminance keyed to alpha, tinted #BFF5DD, capped at 78% opacity so the card stays translucent.
