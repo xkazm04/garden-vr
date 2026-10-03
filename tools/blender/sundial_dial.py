@@ -175,27 +175,31 @@ def soil():
 
 
 def gnomon():
+    # A dip-pen nib. The profile radius is the half-width, about 2.4 mm.
     profile = [
         (0.0, 0.0),
-        (0.0046, 0.004),
-        (0.0060, 0.011),
-        (0.0066, 0.015),
-        (0.0056, 0.019),
-        (0.0050, 0.028),
-        (0.0036, 0.058),
-        (0.0018, 0.086),
-        (0.00025, GNOMON_L),
+        (0.0011, 0.004),
+        (0.0019, 0.016),
+        (0.0024, 0.034),
+        (0.0017, 0.058),
+        (0.0009, 0.082),
+        (0.00028, 0.100),
+        (0.00006, GNOMON_L),
     ]
-    # v marks the gold collar (about 0.22..0.40) for gnomon.png.
-    uv_v = [0.0, 0.08, 0.20, 0.30, 0.42, 0.55, 0.74, 0.90, 1.0]
-    obj = lathe("Gnomon", profile, 24, uv_v, True)
+    # v 0 is the butt in the soil, v 1 is the tip. The slit in gnomon.png sits on the upper half.
+    uv_v = [0.0, 0.06, 0.16, 0.28, 0.42, 0.60, 0.80, 1.0]
+    obj = lathe("Gnomon", profile, 20, uv_v, True)
+    # The ring is in XY before the lean. Flatten Y so the blade reads as a nib.
+    for vert in obj.data.vertices:
+        vert.co.y *= 0.55
     peak = soil_height(0.0, 0.0)
     # Unity's 90 degree X import maps Blender (x, y, z) to (x, -z, y), so +Y is the far side
-    # (image up) and +X is image right. A small +Z is the lift off the soil. Ref-1's nib sits
-    # over the far soil, a little toward the midday flower, not standing up.
-    tip = Vector((0.14, 0.96, 0.18)).normalized()
+    # (image up) and +X is image right. A small +Z is the lift off the soil.
+    # Aimed image-left, along the painted shadow. A nib aimed at the midday flower
+    # disappears into that card and only the dark butt shows.
+    tip = Vector((-0.78, 0.55, 0.10)).normalized()
     obj.rotation_euler = tip.to_track_quat("Z", "Y").to_euler()
-    obj.location = (0.0, 0.0, peak - 0.004)
+    obj.location = (0.0, 0.0, peak + 0.0015)
     apply_transform(obj)
     return obj
 
@@ -395,23 +399,32 @@ def write_procedural(tex_dir):
             paper[i + 3] = 1.0
     save_png("dial_paper", w, h, paper, os.path.join(tex_dir, "dial_paper.png"))
 
-    # Ink body with a gold collar. v 0 is the butt, v 1 is the nib, matching the lathe.
-    gw, gh = 32, 128
+    # Silver nib. v 0 is the butt, v 1 is the tip. A dark slit runs up the blade.
+    gw, gh = 256, 1024
     gnomon = [0.0] * (gw * gh * 4)
     for y in range(gh):
         v = y / (gh - 1)
-        band = 0.20 <= v <= 0.40
         for x in range(gw):
+            u = x / (gw - 1)
+            lite = 0.86 + (noise(x * 0.37, y * 0.11) - 0.5) * 0.03
+            lite += max(0.0, math.cos((u - 0.22) * math.pi * 2.0)) * 0.08
+            lite -= max(0.0, math.cos((u - 0.78) * math.pi * 2.0)) * 0.05
+            lite += max(0.0, v - 0.86) * 0.04
+            slit = abs(u - 0.5) < (0.010 + 0.010 * (1.0 - v)) and v > 0.45
+            collar = 0.06 < v < 0.13
             i = (y * gw + x) * 4
-            if band:
-                gnomon[i] = 0.78
-                gnomon[i + 1] = 0.62
-                gnomon[i + 2] = 0.34
+            if slit:
+                gnomon[i] = 0.16
+                gnomon[i + 1] = 0.15
+                gnomon[i + 2] = 0.14
+            elif collar:
+                gnomon[i] = lite * 0.62
+                gnomon[i + 1] = lite * 0.64
+                gnomon[i + 2] = lite * 0.68
             else:
-                ink = 0.16 + noise(x, y) * 0.04
-                gnomon[i] = ink
-                gnomon[i + 1] = ink * 0.95
-                gnomon[i + 2] = ink * 0.88
+                gnomon[i] = lite * 0.90
+                gnomon[i + 1] = lite * 0.93
+                gnomon[i + 2] = lite * 0.98
             gnomon[i + 3] = 1.0
     save_png("gnomon", gw, gh, gnomon, os.path.join(tex_dir, "gnomon.png"))
 
@@ -475,7 +488,7 @@ def copy_interim(tex_dir):
         "| halo_midday.png | painted by code (IWSDK seat SVG), interim |",
         "| halo_dusk.png | painted by code (IWSDK seat SVG), interim |",
         "| dial_paper.png | painted by code, paper grain for the rim, interim |",
-        "| gnomon.png | painted by code, ink and a gold collar, interim |",
+        "| gnomon.png | painted by code, silver nib with an ink slit, interim |",
         "| gnomon_shadow.png | painted by code, soft wash, interim |",
         "",
     ]
