@@ -41,6 +41,14 @@ namespace GardenVR.Core
 
         public int Flowers => Fronds < FirstFlowerAt ? 0 : 1 + (Fronds - FirstFlowerAt) / FlowerEvery;
 
+        /// <summary>Season week from lifetime fronds. A quiet gap does not move it.</summary>
+        public int SeasonWeek => Season.Week(Fronds);
+        /// <summary>0 through week 1, 1 from week 6 on. Derived, so it is not stored.</summary>
+        public float SeasonWarmth => Season.Warmth(Fronds);
+        public bool SeasonSecondSpecies => Season.SecondSpecies(Fronds);
+        public int SeasonTinyFlowers => Season.TinyFlowers(Fronds);
+        public int SeasonSprigs => Season.Sprigs(Fronds);
+
         public int DaysSinceRitual(int today) => LastRitualDay.HasValue ? Math.Max(0, today - LastRitualDay.Value) : 0;
 
         public float Vitality(int today)
