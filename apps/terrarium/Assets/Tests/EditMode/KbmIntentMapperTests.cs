@@ -235,6 +235,21 @@ namespace GardenVR.Terrarium.Tests
         }
 
         [Test]
+        public void DevCommand_F3OffersSeedPackets()
+        {
+            var mapper = new KbmIntentMapper { DevCommandsEnabled = true };
+            var sink = new Sink(mapper);
+            mapper.Tick(Frame(0.016f, f3: true), Forward);
+            mapper.Tick(Frame(0.016f), Forward);
+            CollectionAssert.AreEqual(new[] { DevCommand.SeedPackets }, sink.Dev);
+
+            mapper.DevCommandsEnabled = false;
+            mapper.Tick(Frame(0.016f, f3: true), Forward);
+            mapper.Tick(Frame(0.016f), Forward);
+            Assert.AreEqual(1, sink.Dev.Count, "F3 stays quiet when dev commands are off");
+        }
+
+        [Test]
         public void HeadDrag_ClampsYawPitchAndRRecentres()
         {
             var mapper = new KbmIntentMapper();
@@ -333,7 +348,7 @@ namespace GardenVR.Terrarium.Tests
 
         static RawKbm Frame(float dt, bool space = false, bool left = false, bool middle = false,
             bool f = false, bool p = false, bool enter = false, bool tab = false, bool shift = false,
-            bool esc = false, bool f1 = false, bool f2 = false, bool bracketLeft = false, bool bracketRight = false)
+            bool esc = false, bool f1 = false, bool f2 = false, bool f3 = false, bool bracketLeft = false, bool bracketRight = false)
         {
             return new RawKbm
             {
@@ -349,6 +364,7 @@ namespace GardenVR.Terrarium.Tests
                 Esc = esc,
                 F1 = f1,
                 F2 = f2,
+                F3 = f3,
                 BracketLeft = bracketLeft,
                 BracketRight = bracketRight
             };

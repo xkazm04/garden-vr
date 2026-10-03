@@ -48,6 +48,8 @@ namespace GardenVR.Terrarium
 
         static readonly Color FernEmission = new Color(0.22f, 0.62f, 0.36f);
         static readonly Color FiddleEmission = new Color(0.55f, 1.12f, 0.40f);
+        static readonly Color MossEmission = new Color(0.16f, 0.48f, 0.26f);
+        static readonly Color MossCardEmission = new Color(0.12f, 0.36f, 0.20f);
         static readonly Color FocusMint = new Color(0.55f, 1.20f, 0.70f, 1f);
         static readonly Color FocusWarm = new Color(0.90f, 0.50f, 0.18f, 1f);
         const float FocusRadius = 0.12f;
@@ -132,6 +134,10 @@ namespace GardenVR.Terrarium
         readonly List<Transform> _dewBeads = new List<Transform>();
         Transform _ripple;
         Material _rippleMat;
+        readonly CompanionGarden _companions = new CompanionGarden();
+        bool _liveCompanions;
+        List<CompanionGarden.Shot> _liveShots = new List<CompanionGarden.Shot>();
+        List<CompanionGarden.Shot> _captureShots = new List<CompanionGarden.Shot>();
 
         public int RecordFrondCount { get; private set; }
         public float ShownLean { get; private set; }
@@ -168,6 +174,9 @@ namespace GardenVR.Terrarium
             if (state == null) return;
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
+            int capCompanions = 0;
+            int capLeaves = 0;
+            bool sawHabits = false;
             foreach (var pair in state)
             {
                 if (pair.Key == "journey")
@@ -194,13 +203,32 @@ namespace GardenVR.Terrarium
                     case "reducedMotion": reducedMotion = value > 0.5f; break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
+                    case "companions":
+                        capCompanions = Mathf.Clamp((int)value, 0, Companions.MaxHabits);
+                        sawHabits = true;
+                        break;
+                    case "leaves":
+                        capLeaves = Mathf.Max(0, (int)value);
+                        sawHabits = true;
+                        break;
                     default:
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
             }
             if (!sawJourney) _hasLook = false;
+            _liveCompanions = false;
+            _captureShots = sawHabits
+                ? CompanionGarden.CaptureShots(capCompanions, capLeaves)
+                : new List<CompanionGarden.Shot>();
             HookCamera();
             Apply();
+        }
+
+        /// <summary>The live companions. Capture state replaces this until the next present.</summary>
+        public void PresentCompanions(IReadOnlyList<CompanionGarden.Shot> shots)
+        {
+            _liveCompanions = true;
+            _liveShots = shots != null ? new List<CompanionGarden.Shot>(shots) : new List<CompanionGarden.Shot>();
         }
 
         /// <summary>Pose the jar from the core garden and an injected clock. The art week pose stays on <c>day</c>.</summary>
@@ -300,7 +328,16 @@ namespace GardenVR.Terrarium
             if (glassMat != null)
             {
                 glassMat.SetFloat("_Fog", fog);
-                glassMat.SetFloat("_Drops", 1.0f);
+                glassMat.SetFloat("_Drops", 1.15f);
+                // Clear pane. Apply owns these so a stale asset cannot put the mint fill back.
+                glassMat.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
+                glassMat.SetColor("_Rim", new Color(0.90f, 1.12f, 1.00f, 0.90f));
+                glassMat.SetFloat("_RimPower", 2.35f);
+                glassMat.SetColor("_Inner", new Color(0.40f, 1.15f, 0.68f, 1f));
+                glassMat.SetVector("_InnerY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                glassMat.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
+                glassMat.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                glassMat.SetColor("_Streak", new Color(0.90f, 1f, 0.96f, 0.46f));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
             }
             float recoveredWave = 0f;
@@ -309,26 +346,42 @@ namespace GardenVR.Terrarium
             float mossGlow = Mathf.Max(answering ? ripple : pulse, recoveredWave * 1.65f);
             if (mossMat != null)
             {
-                mossMat.SetColor("_Emission", new Color(0.035f, 0.090f, 0.048f) * (1f + 0.45f * mossGlow));
-                mossMat.SetColor("_Rim", new Color(0.28f, 0.62f, 0.36f) * (0.85f + 0.35f * mossGlow));
+                mossMat.SetColor("_Emission", MossEmission * (1f + 0.45f * mossGlow));
+                mossMat.SetColor("_Rim", new Color(0.42f, 0.90f, 0.55f) * (0.85f + 0.35f * mossGlow));
+                SetTip(mossMat, 0.018f, 0.048f, 0.18f, 1f);
             }
             if (mossCardMat != null)
-                mossCardMat.SetColor("_Emission", new Color(0.040f, 0.100f, 0.055f) * (1f + 0.40f * mossGlow));
+            {
+                mossCardMat.SetColor("_Emission", MossCardEmission * (1f + 0.40f * mossGlow));
+                SetTip(mossCardMat, 0.020f, 0.052f, 0.22f, 1f);
+            }
             float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
             if (_hasLook && _look.Gap) coil = 0.35f;
             if (coilHaloMat != null)
                 coilHaloMat.SetColor("_Color", new Color(0.50f, 1.05f, 0.58f) * coil);
             if (jarHaloMat != null)
                 jarHaloMat.SetColor("_Color", new Color(0.16f, 0.48f, 0.30f) * (1f + 0.25f * pulse));
-            if (fernMat != null) fernMat.SetColor("_Emission", FernEmission * life);
+            if (fernMat != null)
+            {
+                fernMat.SetColor("_Emission", FernEmission * life);
+                fernMat.SetFloat("_Edge", 0.32f);
+                SetTip(fernMat, 0.030f, 0.110f, 0.38f, 1f);
+            }
             if (newFrondMat != null)
             {
                 float frondGlow = answering ? 0.25f + 0.35f * ripple : pulse * 0.35f;
                 float newest = day >= 7 ? 1.15f : 1f;
                 newFrondMat.SetColor("_Emission", FernEmission * (1f + frondGlow) * life * newest);
+                newFrondMat.SetFloat("_Edge", 0.42f);
+                SetTip(newFrondMat, 0.030f, 0.110f, 0.38f, 1f);
             }
             float fiddleScale = _hasLook && _look.Gap ? 0.28f : (0.9f + 0.25f * life);
-            if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * fiddleScale);
+            if (fiddleMat != null)
+            {
+                fiddleMat.SetColor("_Emission", FiddleEmission * fiddleScale);
+                fiddleMat.SetFloat("_Edge", 0.18f);
+                SetTip(fiddleMat, 0.034f, 0.096f, 0.16f, 1f);
+            }
             if (dew != null && dew.sharedMaterial != null)
             {
                 dew.sharedMaterial.SetColor("_Tint", new Color(0.78f, 1f, 0.92f));
@@ -345,6 +398,7 @@ namespace GardenVR.Terrarium
             ApplyFocusedLight(warm ? FocusWarm : FocusMint);
             ApplyGardenLook();
             DriveRipple();
+            _companions.Show(transform, _liveCompanions ? _liveShots : _captureShots);
         }
 
         /// <summary>
@@ -402,6 +456,17 @@ namespace GardenVR.Terrarium
             if (material == null || !material.HasProperty("_LightPos")) return;
             material.SetVector("_LightPos", new Vector4(pos.x, pos.y, pos.z, FocusRadius));
             material.SetColor("_LightColor", color);
+        }
+
+        /// <summary>
+        /// Emission floor at <paramref name="y0"/> and peak at <paramref name="y1"/>, in metres above this jar.
+        /// Equal floor and peak would leave the shader flat. Callers pass a lower floor so the light sits on the tips.
+        /// </summary>
+        void SetTip(Material material, float y0, float y1, float floor, float peak)
+        {
+            if (material == null || !material.HasProperty("_Tip")) return;
+            float baseY = transform.position.y;
+            material.SetVector("_Tip", new Vector4(baseY + y0, baseY + y1, floor, peak));
         }
 
         /// <summary>

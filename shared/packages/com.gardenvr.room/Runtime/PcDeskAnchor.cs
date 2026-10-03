@@ -72,6 +72,9 @@ namespace GardenVR.Room
         public float Elapsed => _time;
         public bool TraceRunning => _running;
 
+        /// <summary>Local distance from the desk origin to the near edge, toward the user.</summary>
+        public float NearEdge => _nearEdge;
+
         public Pose DeskPose => new Pose(transform.position, transform.rotation);
 
         public Plane DeskPlane => new Plane(transform.up, transform.position);

@@ -24,6 +24,9 @@ Shader "Fidelity/Glow"
         _LightColor ("Focused light colour", Color) = (0, 0, 0, 1)
         _Trans ("Translucency", Range(0, 3)) = 0
         _Soft ("Soft edge dither", Range(0, 0.6)) = 0
+        // floor == peak leaves emission flat. (0, 1, 1, 1) is that default, so older materials do not change.
+        _Tip ("Tip glow (world y0, y1, floor, peak)", Vector) = (0, 1, 1, 1)
+        _Edge ("Shape-edge glow", Range(0, 2)) = 0
     }
     SubShader
     {
@@ -42,7 +45,7 @@ Shader "Fidelity/Glow"
             TEXTURE2D(_TopTex); SAMPLER(sampler_TopTex);
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST; half4 _Tint, _Emission, _Rim; half _RimPower, _GradBottom, _GradTop, _Cutoff, _TopTile, _TopAmount, _Shell, _Tri; float4 _GradY;
-                float4 _LightPos; half4 _LightColor; half _Trans, _Soft;
+                float4 _LightPos; half4 _LightColor; half _Trans, _Soft; float4 _Tip; half _Edge;
             CBUFFER_END
             struct A { float4 pos : POSITION; float3 n : NORMAL; float2 uv : TEXCOORD0; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; float3 wp : TEXCOORD2; UNITY_VERTEX_OUTPUT_STEREO };
@@ -75,6 +78,9 @@ Shader "Fidelity/Glow"
                 half topw = _TopAmount * smoothstep(0.45, 0.75, abs(n.y));
                 half3 top = SAMPLE_TEXTURE2D(_TopTex, sampler_TopTex, i.wp.xz * _TopTile).rgb * _Tint.rgb;
                 alb.rgb = lerp(alb.rgb, top, topw); em = lerp(em, dot(top, half3(0.3, 0.6, 0.1)), topw);
+                // Height window. Equal floor and peak multiply by 1, which is every material that does not opt in.
+                half tipT = saturate((i.wp.y - _Tip.x) / max(1e-4, _Tip.y - _Tip.x));
+                em *= lerp(_Tip.z, _Tip.w, tipT);
                 // A zero _Soft keeps the old hard cutoff. A small dither feathers a card silhouette without a blend pass.
                 if (_Soft > 0.001)
                 {
@@ -102,6 +108,12 @@ Shader "Fidelity/Glow"
                     // Part of the light is the glow itself. A dark albedo used to swallow the crozier point.
                     c += _LightColor.rgb * (half)atten * wrap * (alb.rgb * 0.55h + 0.45h);
                     c += _LightColor.rgb * (half)atten * back * _Trans * lerp(0.35h, 1.0h, blade);
+                }
+                // Alpha contour of a cutout card (frond pinnae). Zero leaves the silhouette alone.
+                if (_Edge > 0.001)
+                {
+                    half outline = saturate(fwidth(alb.a) * 4.5);
+                    c += _Rim.rgb * outline * _Edge * saturate(alb.a * 2.0);
                 }
                 return half4(c, 1);
             }

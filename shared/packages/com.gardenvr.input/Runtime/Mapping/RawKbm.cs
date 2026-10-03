@@ -21,6 +21,7 @@ namespace GardenVR.Input
         public bool R;
         public bool F1;
         public bool F2;
+        public bool F3;
         public bool BracketLeft;
         public bool BracketRight;
         public bool T;

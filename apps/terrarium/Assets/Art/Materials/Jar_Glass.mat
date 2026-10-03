@@ -30,16 +30,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Drops: 1
+    - _Drops: 1.15
     - _Fog: 0
-    - _RimPower: 2.2
+    - _RimPower: 2.35
     m_Colors:
-    - _Inner: {r: 0.28, g: 0.85, b: 0.55, a: 1}
-    - _InnerY: {r: 0.058, g: 0.055, b: 0, a: 0}
-    - _Rim: {r: 0.5, g: 0.92, b: 0.74, a: 0.62}
-    - _Streak: {r: 0.75, g: 1, b: 0.92, a: 0.22}
-    - _Tint: {r: 0.05, g: 0.16, b: 0.12, a: 0.04}
-    - _Volume: {r: 0.32, g: 1.05, b: 0.68, a: 0.34}
-    - _VolumeY: {r: 0.058, g: 0.05, b: 0, a: 0}
+    - _Inner: {r: 0.4, g: 1.15, b: 0.68, a: 1}
+    - _InnerY: {r: 0.038, g: 0.072, b: 0, a: 0}
+    - _Rim: {r: 0.9, g: 1.12, b: 1, a: 0.9}
+    - _Streak: {r: 0.9, g: 1, b: 0.96, a: 0.46}
+    - _Tint: {r: 0.75, g: 0.94, b: 0.84, a: 0.018}
+    - _Volume: {r: 0.3, g: 0.78, b: 0.52, a: 0.1}
+    - _VolumeY: {r: 0.038, g: 0.072, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
