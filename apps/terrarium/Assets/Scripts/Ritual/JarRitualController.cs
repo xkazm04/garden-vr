@@ -86,6 +86,7 @@ namespace GardenVR.Terrarium
         bool _lookArmed;
         bool _corkPinch;
         GladRitual _glad;
+        OneWordRitual _words;
 
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
         static readonly Color DotDim = new Color(0.015f, 0.04f, 0.028f);
@@ -157,6 +158,22 @@ namespace GardenVR.Terrarium
         public bool GladBuilt { get { return _glad != null && _glad.Built; } }
         public string GladLine { get { return _glad != null ? _glad.Line : null; } }
         public float GladDropY(int leaf) { return _glad != null ? _glad.DropLocalY(leaf) : 0f; }
+        public bool WordsBuilt { get { return _words != null && _words.Built; } }
+        public bool WordsOffered { get { return _words != null && _words.Offered; } }
+        public int WordIndex { get { return _words != null ? _words.Index : -1; } }
+        public bool WordSettled { get { return _words != null && _words.Settled; } }
+        public string WordLine { get { return _words != null ? _words.Line : null; } }
+        public string WordStoneLabel(int stone) { return _words != null ? _words.Label(stone) : null; }
+        public float WordStoneY(int stone) { return _words != null ? _words.StoneLocalY(stone) : 0f; }
+        public string LookBackWord
+        {
+            get
+            {
+                if (!_lookPlaying || _lookFrames == null || _lookIndex < 0 || _lookIndex >= _lookFrames.Length) return null;
+                return _lookFrames[_lookIndex].Word;
+            }
+        }
+        public string LookBackEtch { get { return _words != null ? _words.LookLine : null; } }
         public bool HoldingBreath => _holdVisual;
         public float PausedFor => _pausedFor;
         public float AppTime => _appTime;
@@ -378,6 +395,7 @@ namespace GardenVR.Terrarium
             SyncMute();
             LatchGap();
             EnsureGlad();
+            EnsureWords();
         }
 
         void Start()
@@ -402,6 +420,7 @@ namespace GardenVR.Terrarium
             _director = gameObject.AddComponent<FirstRunDirector>();
             _director.Begin(this);
             EnsureGlad();
+            EnsureWords();
             if (_service != null && _service.RitualOpen && !_service.RestoreOffered)
                 OfferRitualBack();
         }
@@ -548,6 +567,7 @@ namespace GardenVR.Terrarium
             TickLook(_latchedPause ? 0f : dt);
             PushGarden();
             TickGlad(dt);
+            TickWords(dt);
             if (_director != null) _director.Tick(dt);
         }
 
@@ -782,6 +802,23 @@ namespace GardenVR.Terrarium
                 }
                 return;
             }
+            if (intent.Kind == HandIntentKind.Pinch && _words != null && _words.Owns(intent.TargetId))
+            {
+                if (WordInputOpen())
+                {
+                    int stone;
+                    if (_words.TryPinch(intent.TargetId, out stone))
+                    {
+                        if (_service != null && _service.TryKeepWord(_words.Session))
+                        {
+                            _words.BeginSink(_service.TodayIndex);
+                            Play("pebble.tap", _words.StoneTransform(stone), 0f);
+                        }
+                        else _words.CancelPick();
+                    }
+                }
+                return;
+            }
             if (intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
                 HandleHabitIntent(intent);
             if (_guide != null && _session != null
@@ -874,6 +911,14 @@ namespace GardenVR.Terrarium
             _glad.Bind(_view);
         }
 
+        void EnsureWords()
+        {
+            if (_words != null || _view == null) return;
+            _words = gameObject.AddComponent<OneWordRitual>();
+            _words.Bind(_view);
+            TickWords(0f);
+        }
+
         void TickGlad(float dt)
         {
             if (_glad == null || _service == null) return;
@@ -905,6 +950,23 @@ namespace GardenVR.Terrarium
             _lastAnswer = answer;
             Log("GladDone");
             PushGarden();
+        }
+
+        void TickWords(float dt)
+        {
+            if (_words == null || _service == null) return;
+            IList<KeptWord> rows = _service.Document != null ? _service.Document.DayWords : null;
+            bool open = WordInputOpen();
+            _words.Sync(rows, _garden, _service.TodayIndex, open);
+            _words.Tick(dt, open, ReducedMotionOn);
+        }
+
+        bool WordInputOpen()
+        {
+            if (!GladInputOpen()) return false;
+            if (_answered && _answerTime >= 0f && _answerTime < 3f) return false;
+            if (_garden == null || _service == null) return false;
+            return _garden.LastRitualDay == _service.TodayIndex;
         }
 
         void PushIdle()
@@ -1139,7 +1201,8 @@ namespace GardenVR.Terrarium
         void BeginLookBack()
         {
             if (_garden == null || _service == null || _view == null) return;
-            LookFrame[] frames = LookBack.Week(_garden, _service.TodayIndex);
+            IList<KeptWord> rows = _service.Document != null ? _service.Document.DayWords : null;
+            LookFrame[] frames = LookBack.Week(_garden, _service.TodayIndex, rows);
             if (frames.Length == 0)
             {
                 _lookArmed = false;
@@ -1185,6 +1248,7 @@ namespace GardenVR.Terrarium
             if (_view == null || _lookFrames == null || _lookIndex < 0 || _lookIndex >= _lookFrames.Length) return;
             LookFrame frame = _lookFrames[_lookIndex];
             _view.PresentLookBack(frame.Lit, !frame.Kept);
+            if (_words != null) _words.ShowLook(frame.Word);
         }
 
         void EndLookBack()
@@ -1193,6 +1257,7 @@ namespace GardenVR.Terrarium
             _lookFrames = null;
             _lookIndex = -1;
             if (_view != null) _view.ClearLookBack();
+            if (_words != null) _words.ClearLook();
         }
 
         void LatchGap()

@@ -272,6 +272,8 @@ namespace GardenVR.Terrarium
                         break;
                     case "looklit":
                         break;
+                    case "words":
+                        break;
                     default:
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
@@ -298,6 +300,17 @@ namespace GardenVR.Terrarium
             Apply();
             if (!string.IsNullOrEmpty(etch))
                 EtchedLettering.Present(transform, etch);
+            int wordPose = 0;
+            if (state.ContainsKey("words"))
+            {
+                float parsedWords;
+                if (!float.TryParse(state["words"], NumberStyles.Float, CultureInfo.InvariantCulture, out parsedWords))
+                    throw new FormatException("JarView state words is not a number: " + state["words"]);
+                wordPose = Mathf.Max(0, (int)parsedWords);
+            }
+            OneWordRitual.ClearCapture(transform);
+            if (wordPose > 0)
+                OneWordRitual.PresentCapture(transform, this, wordPose);
         }
 
         /// <summary>One cork mist swell. Reduced motion leaves the plume still.</summary>
