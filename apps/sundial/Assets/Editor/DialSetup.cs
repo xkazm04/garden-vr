@@ -268,7 +268,8 @@ namespace GardenVR.Sundial.Editor
                 importer.alphaIsTransparency = alpha;
                 importer.mipmapEnabled = true;
                 importer.wrapMode = TextureWrapMode.Clamp;
-                importer.maxTextureSize = name == "dial_face" || name == "soil_bed" || name == "gnomon_shadow" ? 2048 : 1024;
+                // Source art may be 2048. The gate cap (A5) is 1024 on the imported texture.
+                importer.maxTextureSize = 1024;
                 importer.textureCompression = TextureImporterCompression.Uncompressed;
                 importer.npotScale = TextureImporterNPOTScale.None;
                 importer.SaveAndReimport();

@@ -158,7 +158,7 @@ namespace GardenVR.Sundial
             return result;
         }
 
-        /// <summary>Remembers the wizard step and writes the file. A failed load writes nothing.</summary>
+        /// <summary>Remembers the wizard step and writes the file. An unreadable load writes nothing.</summary>
         public void SetFirstRunStep(string step)
         {
             if (_save == null) return;

@@ -1,0 +1,4 @@
+asset: dial_paper.png
+method: painted by code. tools/blender/sundial_dial.py write_procedural save_png dial_paper
+note: Paper grain for the rim. Not copied from the art reference.
+derived_from_art_reference: no

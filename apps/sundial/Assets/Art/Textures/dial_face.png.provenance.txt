@@ -1,4 +1,4 @@
 asset: dial_face.png
-method: apps/sundial/Art/Scripts/dial_face.mjs then compose_paint.py
-note: watercolour arcs, stippled soil, ink rim. Wash and soil grain from generated plates under Assets/Art/Source/paint. Not copied from the art reference.
+method: painted plate fitted by code. apps/sundial/Art/Scripts/fit_notebook.py fit_face reads apps/sundial/Assets/Art/Source/dial_face_nb.png
+note: Prompt apps/sundial/Assets/Art/Source/dial_face_nb.png.prompt.txt. Disc, ticks, and the left-right flip are in fit_notebook.py. This census did not re-run the script. Not copied from the art reference.
 derived_from_art_reference: no

@@ -1,0 +1,4 @@
+asset: halo_dusk_seed.png
+method: painted by code. apps/sundial/Art/Scripts/plants_halo.py halo_for reads plant_dusk_seed.png
+note: The file is an R and G mask of that plant card's silhouette. Not copied from the art reference.
+derived_from_art_reference: no

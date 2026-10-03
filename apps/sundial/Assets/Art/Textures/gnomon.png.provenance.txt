@@ -1,0 +1,4 @@
+asset: gnomon.png
+method: painted by code. apps/sundial/Art/Scripts/dial_face.mjs render writes gnomon.png
+note: Ink shaft, collar, and nib. Not copied from the art reference.
+derived_from_art_reference: no

@@ -1,0 +1,4 @@
+asset: gnomon_shadow.png
+method: painted by code. apps/sundial/Art/Scripts/fit_notebook.py paint_shadow writes this path. apps/sundial/Art/Scripts/compose_paint.py also writes this path.
+note: Soft brown wash, straight alpha. This census did not re-run either script. Not copied from the art reference.
+derived_from_art_reference: no

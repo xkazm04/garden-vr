@@ -210,8 +210,19 @@ namespace GardenVR.Sundial.Tests.PlayMode
             }
 
             Assert.GreaterOrEqual(pinchFrame, 0, "pinch did not fire");
-            Assert.LessOrEqual(Time.frameCount - pinchFrame, 2);
+            int dtFrames = Time.frameCount - pinchFrame;
+            Assert.LessOrEqual(dtFrames, 2);
             Assert.IsTrue(controller.UndoVisible || controller.View.pulse > 0f, "no visual on the pinch frame");
+            Debug.Log("[playback] intent t=0.00 kind=Pinch frame=" + pinchFrame);
+            Debug.Log("[playback] state-changed frame=" + Time.frameCount + " dtFrames=" + dtFrames);
+            string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "orchestration", "runs", "sundial", "T-SUN-019"));
+            string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
+            if (!string.IsNullOrEmpty(env)) dir = env;
+            Directory.CreateDirectory(dir);
+            File.WriteAllText(Path.Combine(dir, "s3-response.txt"),
+                "intent t=0.00 kind=Pinch frame=" + pinchFrame + "\r\n" +
+                "state-changed frame=" + Time.frameCount + " dtFrames=" + dtFrames + "\r\n" +
+                "limit=2\r\n");
         }
     }
 

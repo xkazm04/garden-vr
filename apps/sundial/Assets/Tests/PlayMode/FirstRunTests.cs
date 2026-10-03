@@ -130,7 +130,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             }
 
             Assert.AreEqual(LoadOutcome.Failed, controller.Outcome);
-            Assert.IsFalse(controller.Wizard.Running, "a failed load must not start the wizard");
+            Assert.IsFalse(controller.Wizard.Running, "an unreadable load must not start the wizard");
             Assert.IsTrue(controller.Wizard.RestoreVisible, "corrupt save should show the restore prompt");
             Assert.AreNotEqual(FirstRunSteps.Appear, controller.Service.Save.FirstRunStep);
             Assert.AreEqual(0, controller.Service.Save.Habits.Count);
