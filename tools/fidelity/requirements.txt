@@ -1,0 +1,13 @@
+# Metric packages for the F1 lab. Torch is installed separately from the
+# cu124 index. See README.md. Do not let pip replace that wheel with a CPU build.
+dreamsim==0.2.1
+pyiqa==0.1.16
+lpips==0.1.4
+flip-evaluator==1.7
+scikit-image==0.26.0
+pot==0.9.7.post1
+color-matcher==0.6.0
+choix==0.4.1
+opencv-python==5.0.0.93
+pillow==12.3.0
+transformers==5.18.0

@@ -1,0 +1,72 @@
+{
+  "width": 1824,
+  "height": 1024,
+  "frames": {
+    "JarG1": {
+      "ref1": {
+        "path": "shared/assets/art-reference/A1-03-night-moss-1.png",
+        "fit": "native",
+        "role": "reference 1, gate G1"
+      },
+      "ref2": {
+        "path": "shared/assets/art-reference/A1-03-night-moss-2.png",
+        "fit": "native",
+        "role": "reference 2, ceiling pair"
+      },
+      "current": {
+        "path": "orchestration/runs/terrarium/T-TER-032/jar-g1.png",
+        "fit": "native",
+        "role": "latest locked JarG1 frame in apps/terrarium/Assets/Art/LOCKED.md (T-TER-032 glow frame). State breath=0.5,uncoil=0.3,fog=0.45,time=3."
+      },
+      "level2": {
+        "path": "tools/fidelity/rungs/JarG1-level2-round3-midbreath.png",
+        "fit": "native",
+        "role": "round-3 mid-breath render, rubric level 2"
+      },
+      "floor": {
+        "path": "tools/fidelity/rungs/JarG1-floor-night-lantern.png",
+        "fit": "letterbox",
+        "role": "round-2 Night Lantern C-hero, rubric level 1. Source is 1600x1000 and is not the JarG1 camera, so it is letterboxed. A per-region inversion on this rung is a framing finding."
+      },
+      "rerenders": [
+        "orchestration/runs/sundial/T-SUN-040/rerenders/jar-1.png",
+        "orchestration/runs/sundial/T-SUN-040/rerenders/jar-2.png",
+        "orchestration/runs/sundial/T-SUN-040/rerenders/jar-3.png"
+      ],
+      "rerender_state": "breath=0.5,uncoil=0.3,fog=0.45,time=3 framing JarG1, world camera"
+    },
+    "DialG1": {
+      "ref1": {
+        "path": "shared/assets/art-reference/A2-05-field-notebook-1.png",
+        "fit": "native",
+        "role": "reference 1, gate G1"
+      },
+      "ref2": {
+        "path": "shared/assets/art-reference/A2-05-field-notebook-2.png",
+        "fit": "native",
+        "role": "reference 2, ceiling pair. Palette and layout reference; the dial is held upright, so it is not the DialG1 camera."
+      },
+      "current": {
+        "path": "orchestration/runs/sundial/T-SUN-031/dial-g1-nohalo.png",
+        "fit": "native",
+        "role": "locked DialG1 halo-off frame. State halo=0,waiting=0,gnomonDeg=105,time=1. Wash CIEDE2000 is measured on this frame."
+      },
+      "level2": {
+        "path": "tools/fidelity/rungs/DialG1-level2-round3-idle.png",
+        "fit": "native",
+        "role": "round-3 idle render, rubric level 2"
+      },
+      "floor": {
+        "path": "tools/fidelity/rungs/DialG1-floor-iwsdk.png",
+        "fit": "nearest2x",
+        "role": "round-2 IWSDK still (dial-00), rubric level 1. The file is 912x512, exactly half of DialG1, so it is nearest-neighbour doubled."
+      },
+      "rerenders": [
+        "orchestration/runs/sundial/T-SUN-040/rerenders/dial-1.png",
+        "orchestration/runs/sundial/T-SUN-040/rerenders/dial-2.png",
+        "orchestration/runs/sundial/T-SUN-040/rerenders/dial-3.png"
+      ],
+      "rerender_state": "halo=0,waiting=0,gnomonDeg=105,time=1 framing DialG1 target dial"
+    }
+  }
+}

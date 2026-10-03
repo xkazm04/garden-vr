@@ -1,0 +1,1270 @@
+{
+  "ladderVersion": "f1-1",
+  "frame": "JarG1",
+  "torch": "2.6.0+cu124",
+  "cuda": "NVIDIA GeForce RTX 4090",
+  "metricVersions": {
+    "torch": "2.6.0+cu124",
+    "dreamsim": "0.2.1",
+    "pyiqa": "0.1.16",
+    "flip-evaluator": "1.7",
+    "pot": "0.9.7.post1",
+    "dinov2": "facebook/dinov2-base",
+    "dreamsimType": "dino_vitb16",
+    "dreamsimEnsemble": "ensemble"
+  },
+  "images": {
+    "ref1": {
+      "path": "shared/assets/art-reference/A1-03-night-moss-1.png",
+      "fit": "native",
+      "role": "reference 1, gate G1",
+      "sha256": "cd1edbeb81733fff2fe6c37301b7e9b17ceac328d0aa4940e4f0f29af85098f3"
+    },
+    "ref2": {
+      "path": "shared/assets/art-reference/A1-03-night-moss-2.png",
+      "fit": "native",
+      "role": "reference 2, ceiling pair",
+      "sha256": "6c7ddec465657285a840b089c5be62c5ef2309f2ed8baa53d4005c445182853c"
+    },
+    "current": {
+      "path": "orchestration/runs/terrarium/T-TER-032/jar-g1.png",
+      "fit": "native",
+      "role": "latest locked JarG1 frame in apps/terrarium/Assets/Art/LOCKED.md (T-TER-032 glow frame). State breath=0.5,uncoil=0.3,fog=0.45,time=3.",
+      "sha256": "6a4387b56290eca6be06afaa6bd4ad84d37d8802117eabc85830e2b97ddde05a"
+    },
+    "level2": {
+      "path": "tools/fidelity/rungs/JarG1-level2-round3-midbreath.png",
+      "fit": "native",
+      "role": "round-3 mid-breath render, rubric level 2",
+      "sha256": "4ea4eb73f76a0b48a453aaf083edea168e176df22ee0269a0bf977fb20dd316c"
+    },
+    "floor": {
+      "path": "tools/fidelity/rungs/JarG1-floor-night-lantern.png",
+      "fit": "letterbox",
+      "role": "round-2 Night Lantern C-hero, rubric level 1. Source is 1600x1000 and is not the JarG1 camera, so it is letterboxed. A per-region inversion on this rung is a framing finding.",
+      "sha256": "60a046986ad83807aa648554a9c1ffcd6197a9ee60b41f4261c75c54d2de499c"
+    }
+  },
+  "rerenders": [
+    {
+      "path": "orchestration/runs/sundial/T-SUN-040/rerenders/jar-1.png",
+      "sha256": "bf3da5b22dcaa8a1ac23eb032a51815e3ce6f7609e6103e6206fd52613be9bf4",
+      "fit": "native"
+    },
+    {
+      "path": "orchestration/runs/sundial/T-SUN-040/rerenders/jar-2.png",
+      "sha256": "6a4387b56290eca6be06afaa6bd4ad84d37d8802117eabc85830e2b97ddde05a",
+      "fit": "native"
+    },
+    {
+      "path": "orchestration/runs/sundial/T-SUN-040/rerenders/jar-3.png",
+      "sha256": "6a4387b56290eca6be06afaa6bd4ad84d37d8802117eabc85830e2b97ddde05a",
+      "fit": "native"
+    }
+  ],
+  "rerenderState": "breath=0.5,uncoil=0.3,fog=0.45,time=3 framing JarG1, world camera",
+  "regionFile": {
+    "path": "tools/fidelity/regions/JarG1.json",
+    "sha256": "33bd96a7183967f11ca1e266c9e90cc26f26490d685b26d3dd0b2d3c969e344b"
+  },
+  "regionPixels": {
+    "cork": 48471,
+    "glass": 57531,
+    "mist": 51491,
+    "fronds": 92631,
+    "moss": 76201,
+    "ring": 59361,
+    "soil": 1403,
+    "wall": 1813,
+    "frame": 1867776
+  },
+  "rows": [
+    {
+      "region": "cork",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.434882,
+      "level2": 0.565301,
+      "current": 0.723879,
+      "floor": 0.71441,
+      "noise": 0.00996,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.014229,
+      "position": -0.033872,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": true,
+      "reason": "within_noise",
+      "finding": "current is inside the noise band of the floor"
+    },
+    {
+      "region": "cork",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.555969,
+      "level2": 0.745967,
+      "current": 0.811203,
+      "floor": 0.795082,
+      "noise": 0.0529,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.075572,
+      "position": -0.067422,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": true,
+      "reason": "within_noise",
+      "finding": "current is inside the noise band of the floor"
+    },
+    {
+      "region": "cork",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 12.590889,
+      "level2": 10.916381,
+      "current": 20.37813,
+      "floor": 11.490566,
+      "noise": 0.484291,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.691845,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 11.4906 is closer than ceiling 12.5909; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "cork",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 15.716113,
+      "level2": 7.603252,
+      "current": 44.525069,
+      "floor": 14.092726,
+      "noise": 0.489543,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.699348,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 14.0927 is closer than ceiling 15.7161; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "cork",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.34128,
+      "level2": 0.383284,
+      "current": 0.418474,
+      "floor": 0.502192,
+      "noise": 0.035702,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.051002,
+      "position": 0.52027,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "glass",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.430179,
+      "level2": 0.553159,
+      "current": 0.752429,
+      "floor": 0.760121,
+      "noise": 0.005566,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.007951,
+      "position": 0.023313,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "glass",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.748293,
+      "level2": 0.815739,
+      "current": 0.849694,
+      "floor": 0.81346,
+      "noise": 0.010115,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.01445,
+      "position": -0.556007,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is farther than the floor (out of order)"
+    },
+    {
+      "region": "glass",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 10.531753,
+      "level2": 17.391484,
+      "current": 15.132289,
+      "floor": 17.234447,
+      "noise": 0.371248,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.530354,
+      "position": 0.313629,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "glass",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 4.093623,
+      "level2": 27.162239,
+      "current": 30.950375,
+      "floor": 18.596736,
+      "noise": 0.797035,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 1.138621,
+      "position": -0.851792,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is farther than the floor (out of order)"
+    },
+    {
+      "region": "glass",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.345064,
+      "level2": 0.41103,
+      "current": 0.42063,
+      "floor": 0.599982,
+      "noise": 0.023029,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.032899,
+      "position": 0.703567,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "mist",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.777435,
+      "level2": 0.472725,
+      "current": 0.696954,
+      "floor": 0.741824,
+      "noise": 0.004685,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.006692,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 0.7418 is closer than ceiling 0.7774; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "mist",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.861613,
+      "level2": 0.697241,
+      "current": 0.753543,
+      "floor": 0.886231,
+      "noise": 0.021746,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.031066,
+      "position": 5.389942,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "mist",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 7.037492,
+      "level2": 5.94789,
+      "current": 6.652968,
+      "floor": 6.256842,
+      "noise": 0.166159,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.23737,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 6.2568 is closer than ceiling 7.0375; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "mist",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 5.071738,
+      "level2": 2.822674,
+      "current": 6.810327,
+      "floor": 2.476586,
+      "noise": 0.462493,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.660705,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 2.4766 is closer than ceiling 5.0717; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "mist",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.440066,
+      "level2": 0.330121,
+      "current": 0.373657,
+      "floor": 0.424377,
+      "noise": 0.010332,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.01476,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 0.4244 is closer than ceiling 0.4401; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "fronds",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.301043,
+      "level2": 0.300272,
+      "current": 0.316712,
+      "floor": 0.779232,
+      "noise": 0.004539,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.006485,
+      "position": 0.967234,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "fronds",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.345587,
+      "level2": 0.60875,
+      "current": 0.314209,
+      "floor": 0.931222,
+      "noise": 0.002168,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.003097,
+      "position": 1.053579,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "fronds",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 11.199845,
+      "level2": 10.216265,
+      "current": 12.736955,
+      "floor": 13.370353,
+      "noise": 0.23158,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.330829,
+      "position": 0.29182,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "fronds",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 10.135641,
+      "level2": 10.879886,
+      "current": 20.781292,
+      "floor": 14.275457,
+      "noise": 0.13083,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.1869,
+      "position": -1.571527,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is farther than the floor (out of order)"
+    },
+    {
+      "region": "fronds",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.271428,
+      "level2": 0.311307,
+      "current": 0.316508,
+      "floor": 0.433916,
+      "noise": 0.028822,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.041174,
+      "position": 0.722565,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "moss",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.313598,
+      "level2": 0.25164,
+      "current": 0.409925,
+      "floor": 0.761654,
+      "noise": 0.004845,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.006921,
+      "position": 0.78501,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "moss",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.493692,
+      "level2": 0.860814,
+      "current": 0.680339,
+      "floor": 0.924368,
+      "noise": 0.025975,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.037107,
+      "position": 0.566618,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "moss",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 24.141564,
+      "level2": 6.63501,
+      "current": 4.689794,
+      "floor": 14.734938,
+      "noise": 0.230605,
+      "noiseRerenderP90": 0.031227,
+      "noiseJpeg": 0.312707,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 14.7349 is closer than ceiling 24.1416; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "moss",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 28.82285,
+      "level2": 6.210267,
+      "current": 4.584289,
+      "floor": 21.865219,
+      "noise": 0.0,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.0,
+      "position": null,
+      "valid": false,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "inverted",
+      "finding": "floor 21.8652 is closer than ceiling 28.8228; metric invalid for this region. floor fit is letterbox, so a region mask may not register"
+    },
+    {
+      "region": "moss",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.334232,
+      "level2": 0.305411,
+      "current": 0.328291,
+      "floor": 0.460239,
+      "noise": 0.023349,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.033356,
+      "position": 1.047149,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": true,
+      "reason": "within_noise",
+      "finding": "current is inside the noise band of the ceiling"
+    },
+    {
+      "region": "ring",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.213444,
+      "level2": 0.293965,
+      "current": 0.263234,
+      "floor": 0.648997,
+      "noise": 0.009003,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.012862,
+      "position": 0.885684,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "ring",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.216968,
+      "level2": 0.502417,
+      "current": 0.3888,
+      "floor": 0.936357,
+      "noise": 0.006485,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.009265,
+      "position": 0.761142,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "ring",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 11.568448,
+      "level2": 5.791635,
+      "current": 6.207913,
+      "floor": 24.500967,
+      "noise": 0.149795,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.213993,
+      "position": 1.4145,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "ring",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 13.05735,
+      "level2": 3.527464,
+      "current": 4.043323,
+      "floor": 34.761716,
+      "noise": 0.297398,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.424854,
+      "position": 1.415309,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "ring",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.291608,
+      "level2": 0.290797,
+      "current": 0.264513,
+      "floor": 0.431838,
+      "noise": 0.027588,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.039411,
+      "position": 1.193214,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": true,
+      "reason": "within_noise",
+      "finding": "current is inside the noise band of the ceiling"
+    },
+    {
+      "region": "soil",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.313321,
+      "level2": 0.284564,
+      "current": 0.427999,
+      "floor": 0.683656,
+      "noise": 0.020639,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.029485,
+      "position": 0.69034,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "soil",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.252309,
+      "level2": 0.324494,
+      "current": 0.44986,
+      "floor": 0.763152,
+      "noise": 0.027451,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.039216,
+      "position": 0.613284,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "soil",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 10.168396,
+      "level2": 3.126953,
+      "current": 5.18706,
+      "floor": 30.497444,
+      "noise": 0.80151,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 1.145015,
+      "position": 1.245035,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "soil",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 11.979379,
+      "level2": 1.718388,
+      "current": 4.052722,
+      "floor": 37.878718,
+      "noise": 1.221389,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 1.744842,
+      "position": 1.306056,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "soil",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.324932,
+      "level2": 0.318538,
+      "current": 0.289497,
+      "floor": 0.434425,
+      "noise": 0.090177,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.128825,
+      "position": 1.323629,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": true,
+      "reason": "within_noise",
+      "finding": "current is inside the noise band of the ceiling"
+    },
+    {
+      "region": "wall",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.176485,
+      "level2": 0.019756,
+      "current": 0.0,
+      "floor": 0.295237,
+      "noise": 0.009867,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.014095,
+      "position": 2.486165,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "wall",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.222578,
+      "level2": 0.006101,
+      "current": 0.0,
+      "floor": 0.413485,
+      "noise": 0.008324,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.011891,
+      "position": 2.165898,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "wall",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 2.761865,
+      "level2": 0.085899,
+      "current": 0.0,
+      "floor": 6.536949,
+      "noise": 0.2256,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.322285,
+      "position": 1.731603,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "wall",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 3.801287,
+      "level2": 0.0,
+      "current": 0.0,
+      "floor": 6.518883,
+      "noise": 0.667564,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.953663,
+      "position": 2.398768,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "wall",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.256138,
+      "level2": 0.011181,
+      "current": 0.0,
+      "floor": 0.26565,
+      "noise": 0.034259,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.048941,
+      "position": 27.928544,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "frame",
+      "metric": "dreamsim",
+      "family": "look",
+      "ceiling": 0.138903,
+      "level2": 0.133834,
+      "current": 0.243449,
+      "floor": 0.498636,
+      "noise": 0.001697,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.002425,
+      "position": 0.709378,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "frame",
+      "metric": "dinov2",
+      "family": "look",
+      "ceiling": 0.077973,
+      "level2": 0.225806,
+      "current": 0.230546,
+      "floor": 0.556674,
+      "noise": 0.002645,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.003778,
+      "position": 0.681277,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "frame",
+      "metric": "dreamsim_ensemble",
+      "family": "look",
+      "ceiling": 0.111929,
+      "level2": 0.116455,
+      "current": 0.199549,
+      "floor": 0.402621,
+      "noise": null,
+      "noiseRerenderP90": null,
+      "noiseJpeg": null,
+      "position": 0.698583,
+      "valid": true,
+      "ordered": true,
+      "withinNoise": false,
+      "reason": "ok",
+      "finding": null
+    },
+    {
+      "region": "frame",
+      "metric": "lab_emd",
+      "family": "palette",
+      "ceiling": 2.791741,
+      "level2": 1.786218,
+      "current": 2.379733,
+      "floor": 8.633493,
+      "noise": 0.275147,
+      "noiseRerenderP90": 0.081037,
+      "noiseJpeg": 0.349655,
+      "position": 1.070528,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "frame",
+      "metric": "ciede2000",
+      "family": "palette",
+      "ceiling": 3.655112,
+      "level2": 0.796592,
+      "current": 2.865558,
+      "floor": 7.622638,
+      "noise": 0.0,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.0,
+      "position": 1.199004,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    },
+    {
+      "region": "frame",
+      "metric": "dists",
+      "family": "structure",
+      "ceiling": 0.142108,
+      "level2": 0.134993,
+      "current": 0.117442,
+      "floor": 0.434888,
+      "noise": 0.009464,
+      "noiseRerenderP90": 0.0,
+      "noiseJpeg": 0.013519,
+      "position": 1.084248,
+      "valid": true,
+      "ordered": false,
+      "withinNoise": false,
+      "reason": "out_of_order",
+      "finding": "current is closer than the ceiling (out of order)"
+    }
+  ],
+  "families": {
+    "look": {
+      "rows": 19,
+      "valid": 18,
+      "ordered": 11,
+      "withinNoise": 2,
+      "outOfOrder": 5,
+      "inverted": 1,
+      "degenerate": 0,
+      "missing": 0,
+      "strict": false
+    },
+    "palette": {
+      "rows": 18,
+      "valid": 12,
+      "ordered": 2,
+      "withinNoise": 0,
+      "outOfOrder": 10,
+      "inverted": 6,
+      "degenerate": 0,
+      "missing": 0,
+      "strict": false
+    },
+    "structure": {
+      "rows": 9,
+      "valid": 8,
+      "ordered": 3,
+      "withinNoise": 3,
+      "outOfOrder": 2,
+      "inverted": 1,
+      "degenerate": 0,
+      "missing": 0,
+      "strict": false
+    }
+  },
+  "alignedNoise": {
+    "flip": {
+      "frame": {
+        "rerenderP90": 1e-06,
+        "jpeg": 0.0837,
+        "band": 0.05859
+      },
+      "cork": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.186222,
+        "band": 0.130356
+      },
+      "glass": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.186545,
+        "band": 0.130581
+      },
+      "fronds": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.221819,
+        "band": 0.155273
+      },
+      "moss": {
+        "rerenderP90": 4e-06,
+        "jpeg": 0.260373,
+        "band": 0.182263
+      },
+      "mist": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.043458,
+        "band": 0.030421
+      },
+      "ring": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.178857,
+        "band": 0.1252
+      }
+    },
+    "ms_ssim": {
+      "frame": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.073544,
+        "band": 0.051481
+      },
+      "cork": {
+        "rerenderP90": null,
+        "jpeg": null,
+        "band": null
+      },
+      "glass": {
+        "rerenderP90": null,
+        "jpeg": null,
+        "band": null
+      },
+      "fronds": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.278907,
+        "band": 0.195235
+      },
+      "moss": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.27295,
+        "band": 0.191065
+      },
+      "mist": {
+        "rerenderP90": null,
+        "jpeg": null,
+        "band": null
+      },
+      "ring": {
+        "rerenderP90": null,
+        "jpeg": null,
+        "band": null
+      }
+    },
+    "lpips": {
+      "frame": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.054228,
+        "band": 0.03796
+      },
+      "cork": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.091014,
+        "band": 0.06371
+      },
+      "glass": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.095403,
+        "band": 0.066782
+      },
+      "fronds": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.091224,
+        "band": 0.063857
+      },
+      "moss": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.079332,
+        "band": 0.055533
+      },
+      "mist": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.022119,
+        "band": 0.015483
+      },
+      "ring": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.041792,
+        "band": 0.029255
+      }
+    },
+    "dists": {
+      "frame": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.013519,
+        "band": 0.009464
+      },
+      "cork": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.051002,
+        "band": 0.035702
+      },
+      "glass": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.032899,
+        "band": 0.023029
+      },
+      "fronds": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.041174,
+        "band": 0.028822
+      },
+      "moss": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.033356,
+        "band": 0.023349
+      },
+      "mist": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.01476,
+        "band": 0.010332
+      },
+      "ring": {
+        "rerenderP90": 0.0,
+        "jpeg": 0.039411,
+        "band": 0.027588
+      }
+    },
+    "note": "No ceiling, current, or floor. These metrics are only compared between two registered renders, or between a reference and its JPEG q75 + 2 px shift."
+  },
+  "absolute": {
+    "hex": {
+      "ref1": {
+        "cork": 10.656,
+        "glass": 0.951,
+        "fronds": 1.011,
+        "moss": 0.671,
+        "ring": 33.802,
+        "soil": 0.606,
+        "wall": 0.206
+      },
+      "ref2": {
+        "cork": 25.075,
+        "glass": 12.683,
+        "fronds": 11.431,
+        "moss": 33.341,
+        "ring": 49.649,
+        "soil": 11.46,
+        "wall": 3.765
+      },
+      "current": {
+        "cork": 46.557,
+        "glass": 11.876,
+        "fronds": 7.251,
+        "moss": 7.771,
+        "ring": 30.617,
+        "soil": 3.64,
+        "wall": 0.206
+      },
+      "level2": {
+        "cork": 4.577,
+        "glass": 18.037,
+        "fronds": 11.994,
+        "moss": 10.238,
+        "ring": 31.329,
+        "soil": 1.829,
+        "wall": 0.208
+      },
+      "floor": {
+        "cork": 24.163,
+        "glass": 14.946,
+        "fronds": 21.581,
+        "moss": 27.212,
+        "ring": 71.931,
+        "soil": 37.964,
+        "wall": 5.831
+      }
+    },
+    "glow": {
+      "ref1": {
+        "units": "relative luminance, IEC sRGB to CIE Y, 0 to 1",
+        "floor": {
+          "crozierPeak": 0.7,
+          "glassMean": 0.145,
+          "ringPeak": 0.6
+        },
+        "ceiling": {
+          "crozierPeak": 1.0,
+          "glassMean": 0.28,
+          "ringPeak": 1.0
+        },
+        "measured": {
+          "crozierPeak": 0.9878,
+          "glassMean": 0.1834,
+          "ringPeak": 1.0
+        },
+        "inside": {
+          "crozierPeak": true,
+          "glassMean": true,
+          "ringPeak": true
+        },
+        "pass": true
+      },
+      "ref2": {
+        "units": "relative luminance, IEC sRGB to CIE Y, 0 to 1",
+        "floor": {
+          "crozierPeak": 0.7,
+          "glassMean": 0.145,
+          "ringPeak": 0.6
+        },
+        "ceiling": {
+          "crozierPeak": 1.0,
+          "glassMean": 0.28,
+          "ringPeak": 1.0
+        },
+        "measured": {
+          "crozierPeak": 0.92,
+          "glassMean": 0.134,
+          "ringPeak": 0.9833
+        },
+        "inside": {
+          "crozierPeak": true,
+          "glassMean": false,
+          "ringPeak": true
+        },
+        "pass": false
+      },
+      "current": {
+        "units": "relative luminance, IEC sRGB to CIE Y, 0 to 1",
+        "floor": {
+          "crozierPeak": 0.7,
+          "glassMean": 0.145,
+          "ringPeak": 0.6
+        },
+        "ceiling": {
+          "crozierPeak": 1.0,
+          "glassMean": 0.28,
+          "ringPeak": 1.0
+        },
+        "measured": {
+          "crozierPeak": 0.9743,
+          "glassMean": 0.1804,
+          "ringPeak": 0.8385
+        },
+        "inside": {
+          "crozierPeak": true,
+          "glassMean": true,
+          "ringPeak": true
+        },
+        "pass": true
+      },
+      "level2": {
+        "units": "relative luminance, IEC sRGB to CIE Y, 0 to 1",
+        "floor": {
+          "crozierPeak": 0.7,
+          "glassMean": 0.145,
+          "ringPeak": 0.6
+        },
+        "ceiling": {
+          "crozierPeak": 1.0,
+          "glassMean": 0.28,
+          "ringPeak": 1.0
+        },
+        "measured": {
+          "crozierPeak": 0.8176,
+          "glassMean": 0.3497,
+          "ringPeak": 0.9407
+        },
+        "inside": {
+          "crozierPeak": true,
+          "glassMean": false,
+          "ringPeak": true
+        },
+        "pass": false
+      },
+      "floor": {
+        "units": "relative luminance, IEC sRGB to CIE Y, 0 to 1",
+        "floor": {
+          "crozierPeak": 0.7,
+          "glassMean": 0.145,
+          "ringPeak": 0.6
+        },
+        "ceiling": {
+          "crozierPeak": 1.0,
+          "glassMean": 0.28,
+          "ringPeak": 1.0
+        },
+        "measured": {
+          "crozierPeak": 0.9077,
+          "glassMean": 0.0778,
+          "ringPeak": 0.6051
+        },
+        "inside": {
+          "crozierPeak": true,
+          "glassMean": false,
+          "ringPeak": true
+        },
+        "pass": false
+      }
+    },
+    "wash": null
+  },
+  "note": "Look and palette do not need a shared camera. DISTS is the structure distance on the masked crop. FLIP, MS-SSIM, and LPIPS are render-versus-render only."
+}

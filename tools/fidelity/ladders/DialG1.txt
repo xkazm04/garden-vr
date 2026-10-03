@@ -1,0 +1,146 @@
+frame DialG1  ladder f1-1  cuda NVIDIA GeForce RTX 4090
+region             metric                ceiling     level2    current      floor      noise   position  note
+paper              dreamsim               0.2685     0.2560     0.3654     0.2300     0.0024    INVALID  floor 0.2300 is closer than ceiling 0.2685; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+paper              dinov2                 0.3656     0.2805     0.3822     0.3301     0.0063    INVALID  floor 0.3302 is closer than ceiling 0.3656; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+paper              lab_emd                5.8010     6.6486     7.1612     3.1603     0.2257    INVALID  floor 3.1603 is closer than ceiling 5.8010; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+paper              ciede2000              7.4321     7.0906     5.6209     2.5283     0.4696    INVALID  floor 2.5283 is closer than ceiling 7.4321; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+paper              dists                  0.2149     0.2388     0.2699     0.2945     0.0117     0.3090  
+ink                dreamsim               0.2570     0.2107     0.2237     0.1017     0.0067    INVALID  floor 0.1017 is closer than ceiling 0.2570; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+ink                dinov2                 0.1928     0.4225     0.3379     0.1898     0.0188    INVALID  floor 0.1898 is closer than ceiling 0.1928; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+ink                lab_emd               10.0108     9.0232    11.1873     2.8915     0.3168    INVALID  floor 2.8915 is closer than ceiling 10.0108; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+ink                ciede2000             16.2973     9.8578     8.5347     2.1291     1.1400    INVALID  floor 2.1291 is closer than ceiling 16.2973; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+ink                dists                  0.2629     0.2515     0.2907     0.1929     0.0358    INVALID  floor 0.1929 is closer than ceiling 0.2629; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.morning      dreamsim               0.3288     0.3330     0.4238     0.3713     0.0056    -1.2355  current is farther than the floor (out of order)
+plant.morning      dinov2                 0.2890     0.3371     0.6099     0.5080     0.0118    -0.4649  current is farther than the floor (out of order)
+plant.morning      lab_emd                6.6159    13.9674    13.4102     8.7010     0.1900    -2.2584  current is farther than the floor (out of order)
+plant.morning      ciede2000              6.1385    12.6719     8.2486     6.8008     0.0000    -2.1860  current is farther than the floor (out of order)
+plant.morning      dists                  0.3079     0.2936     0.3724     0.3546     0.0241    -0.3803  current is inside the noise band of the floor
+plant.midday       dreamsim               0.3746     0.2343     0.4783     0.3382     0.0081    INVALID  floor 0.3382 is closer than ceiling 0.3746; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.midday       dinov2                 0.4440     0.2963     0.5204     0.3623     0.0232    INVALID  floor 0.3623 is closer than ceiling 0.4440; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.midday       lab_emd               15.6931     6.0339     9.4755     3.4450     0.1806    INVALID  floor 3.4450 is closer than ceiling 15.6931; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.midday       ciede2000             20.4961    11.7738    10.7772     8.6773     0.2702    INVALID  floor 8.6773 is closer than ceiling 20.4961; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.midday       dists                  0.3230     0.2238     0.2522     0.2961     0.0137    INVALID  floor 0.2961 is closer than ceiling 0.3230; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.dusk         dreamsim               0.5357     0.3347     0.5080     0.4320     0.0089    INVALID  floor 0.4320 is closer than ceiling 0.5357; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.dusk         dinov2                 0.3460     0.5087     0.7010     0.6150     0.0093    -0.3196  current is farther than the floor (out of order)
+plant.dusk         lab_emd               10.8259    10.9386    13.9457     8.7957     0.2032    INVALID  floor 8.7957 is closer than ceiling 10.8259; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.dusk         ciede2000             15.8102    17.0092    15.0057    14.1936     0.1995    INVALID  floor 14.1936 is closer than ceiling 15.8102; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plant.dusk         dists                  0.3308     0.2915     0.3358     0.3637     0.0267     0.8496  
+halo               dreamsim               0.2312     0.1349     0.1901     0.1823     0.0048    INVALID  floor 0.1823 is closer than ceiling 0.2312; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+halo               dinov2                 0.0119     0.0226     0.0058     0.0242     0.0000     1.4921  current is closer than the ceiling (out of order)
+halo               lab_emd               10.0719     8.3629     8.0243     6.2190     0.1837    INVALID  floor 6.2190 is closer than ceiling 10.0719; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+halo               ciede2000             17.4261    14.4040    11.5798    13.3162     0.3543    INVALID  floor 13.3162 is closer than ceiling 17.4261; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+halo               dists                  0.2292     0.1992     0.1844     0.2161     0.0223    INVALID  floor 0.2161 is closer than ceiling 0.2292; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.morning       dreamsim               0.5710     0.5974     0.6814     0.5592     0.0097    INVALID  floor 0.5592 is closer than ceiling 0.5710; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.morning       dinov2                 0.7084     0.7295     0.7642     0.7721     0.0240     0.1242  
+wash.morning       lab_emd               14.2448    19.7674    21.8315    13.9563     0.3024    INVALID  floor 13.9563 is closer than ceiling 14.2448; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.morning       ciede2000             23.0303    25.1110    26.4560    20.6537     0.5609    INVALID  floor 20.6537 is closer than ceiling 23.0303; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.morning       dists                  0.3674     0.3959     0.4299     0.3754     0.0229    -6.7931  current is farther than the floor (out of order)
+wash.midday        dreamsim               0.5486     0.6886     0.6309     0.2586     0.0142    INVALID  floor 0.2586 is closer than ceiling 0.5486; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.midday        dinov2                 0.7023     0.5965     0.5339     0.4901     0.0501    INVALID  floor 0.4901 is closer than ceiling 0.7023; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.midday        lab_emd               19.2370    13.3398    17.1566     2.7583     1.6082    INVALID  floor 2.7583 is closer than ceiling 19.2370; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.midday        ciede2000             25.6527    10.8636    15.7763     0.2098     2.5464    INVALID  floor 0.2098 is closer than ceiling 25.6527; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.midday        dists                  0.3777     0.3707     0.4025     0.2014     0.0396    INVALID  floor 0.2014 is closer than ceiling 0.3777; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.dusk          dreamsim               0.4559     0.6041     0.6006     0.4626     0.0076   -20.4978  current is farther than the floor (out of order)
+wash.dusk          dinov2                 0.4982     0.5222     0.5661     0.5277     0.0218    -1.3046  current is farther than the floor (out of order)
+wash.dusk          lab_emd               14.2251    12.9750    14.9614     9.0506     0.3314    INVALID  floor 9.0506 is closer than ceiling 14.2251; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+wash.dusk          ciede2000             19.7770    12.0657    18.9229    20.2347     0.4843     2.8666  current is closer than the ceiling (out of order)
+wash.dusk          dists                  0.2856     0.3540     0.3874     0.3566     0.0248    -0.4338  current is farther than the floor (out of order)
+soil               dreamsim               0.5583     0.5585     0.6442     0.4985     0.0088    INVALID  floor 0.4985 is closer than ceiling 0.5583; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+soil               dinov2                 0.5702     0.6613     0.6484     0.5158     0.0158    INVALID  floor 0.5158 is closer than ceiling 0.5702; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+soil               lab_emd               11.5477    19.5738    17.8065    16.6880     0.1721    -0.2176  current is farther than the floor (out of order)
+soil               ciede2000             12.2007    31.3762    25.6766    32.8926     0.2406     0.3487  
+soil               dists                  0.3043     0.3808     0.3355     0.3853     0.0194     0.6156  
+dial               dreamsim               0.2744     0.2467     0.3518     0.2249     0.0026    INVALID  floor 0.2249 is closer than ceiling 0.2744; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+dial               dinov2                 0.3824     0.3051     0.3905     0.3786     0.0060    INVALID  floor 0.3786 is closer than ceiling 0.3824; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+dial               lab_emd                5.5393     6.5629     7.4389     2.9803     0.2100    INVALID  floor 2.9803 is closer than ceiling 5.5393; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+dial               ciede2000              6.6211     7.0771     6.6288     3.5695     0.4873    INVALID  floor 3.5695 is closer than ceiling 6.6211; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+dial               dists                  0.2149     0.2366     0.2722     0.2928     0.0113     0.2654  
+washes             dreamsim               0.4265     0.5015     0.5104     0.3748     0.0059    INVALID  floor 0.3748 is closer than ceiling 0.4265; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+washes             dinov2                 0.7327     0.6935     0.7081     0.4965     0.0435    INVALID  floor 0.4965 is closer than ceiling 0.7327; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+washes             lab_emd               13.7546    14.8972    14.6097     9.6678     0.3000    INVALID  floor 9.6678 is closer than ceiling 13.7546; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+washes             ciede2000             20.8694    19.5972    17.2331    12.7506     0.4771    INVALID  floor 12.7506 is closer than ceiling 20.8694; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+washes             dists                  0.2765     0.3384     0.3627     0.3356     0.0195    -0.4580  current is farther than the floor (out of order)
+plants             dreamsim               0.3515     0.2818     0.4269     0.3031     0.0032    INVALID  floor 0.3031 is closer than ceiling 0.3515; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plants             dinov2                 0.2830     0.2744     0.6198     0.4545     0.0113    -0.9631  current is farther than the floor (out of order)
+plants             lab_emd                9.9666    10.0307    10.5268     6.6847     0.3743    INVALID  floor 6.6847 is closer than ceiling 9.9666; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plants             ciede2000             12.8631    17.6187    14.2255    10.5379     0.0000    INVALID  floor 10.5379 is closer than ceiling 12.8631; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+plants             dists                  0.2547     0.2207     0.2580     0.2950     0.0141     0.9173  
+frame              dreamsim               0.2479     0.2208     0.2690     0.1985     0.0018    INVALID  floor 0.1985 is closer than ceiling 0.2479; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+frame              dinov2                 0.5466     0.2671     0.3970     0.2416     0.0071    INVALID  floor 0.2416 is closer than ceiling 0.5466; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+frame              dreamsim_ensemble      0.2649     0.2336     0.2441     0.2270          -    INVALID  floor 0.2270 is closer than ceiling 0.2649; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+frame              lab_emd                4.1923     2.4405     3.6690     1.4429     0.1534    INVALID  floor 1.4429 is closer than ceiling 4.1923; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+frame              ciede2000              6.5609     1.9312     2.3001     2.1765     0.0000    INVALID  floor 2.1765 is closer than ceiling 6.5609; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+frame              dists                  0.1939     0.1249     0.1430     0.2272     0.0082     2.5265  current is closer than the ceiling (out of order)
+
+families (strict means every valid row is ceiling < current < floor, and none are inverted)
+  look       valid 8 ordered 1 within-noise 0 out-of-order 7 inverted 21 strict no
+  palette    valid 5 ordered 1 within-noise 0 out-of-order 4 inverted 23 strict no
+  structure  valid 10 ordered 5 within-noise 1 out-of-order 4 inverted 4 strict no
+
+findings 64
+  paper dreamsim: floor 0.2300 is closer than ceiling 0.2685; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  paper dinov2: floor 0.3302 is closer than ceiling 0.3656; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  paper lab_emd: floor 3.1603 is closer than ceiling 5.8010; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  paper ciede2000: floor 2.5283 is closer than ceiling 7.4321; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  ink dreamsim: floor 0.1017 is closer than ceiling 0.2570; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  ink dinov2: floor 0.1898 is closer than ceiling 0.1928; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  ink lab_emd: floor 2.8915 is closer than ceiling 10.0108; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  ink ciede2000: floor 2.1291 is closer than ceiling 16.2973; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  ink dists: floor 0.1929 is closer than ceiling 0.2629; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.morning dreamsim: current is farther than the floor (out of order)
+  plant.morning dinov2: current is farther than the floor (out of order)
+  plant.morning lab_emd: current is farther than the floor (out of order)
+  plant.morning ciede2000: current is farther than the floor (out of order)
+  plant.morning dists: current is inside the noise band of the floor
+  plant.midday dreamsim: floor 0.3382 is closer than ceiling 0.3746; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.midday dinov2: floor 0.3623 is closer than ceiling 0.4440; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.midday lab_emd: floor 3.4450 is closer than ceiling 15.6931; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.midday ciede2000: floor 8.6773 is closer than ceiling 20.4961; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.midday dists: floor 0.2961 is closer than ceiling 0.3230; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.dusk dreamsim: floor 0.4320 is closer than ceiling 0.5357; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.dusk dinov2: current is farther than the floor (out of order)
+  plant.dusk lab_emd: floor 8.7957 is closer than ceiling 10.8259; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plant.dusk ciede2000: floor 14.1936 is closer than ceiling 15.8102; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  halo dreamsim: floor 0.1823 is closer than ceiling 0.2312; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  halo dinov2: current is closer than the ceiling (out of order)
+  halo lab_emd: floor 6.2190 is closer than ceiling 10.0719; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  halo ciede2000: floor 13.3162 is closer than ceiling 17.4261; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  halo dists: floor 0.2161 is closer than ceiling 0.2292; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.morning dreamsim: floor 0.5592 is closer than ceiling 0.5710; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.morning lab_emd: floor 13.9563 is closer than ceiling 14.2448; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.morning ciede2000: floor 20.6537 is closer than ceiling 23.0303; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.morning dists: current is farther than the floor (out of order)
+  wash.midday dreamsim: floor 0.2586 is closer than ceiling 0.5486; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.midday dinov2: floor 0.4901 is closer than ceiling 0.7023; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.midday lab_emd: floor 2.7583 is closer than ceiling 19.2370; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.midday ciede2000: floor 0.2098 is closer than ceiling 25.6527; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.midday dists: floor 0.2014 is closer than ceiling 0.3777; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.dusk dreamsim: current is farther than the floor (out of order)
+  wash.dusk dinov2: current is farther than the floor (out of order)
+  wash.dusk lab_emd: floor 9.0506 is closer than ceiling 14.2251; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  wash.dusk ciede2000: current is closer than the ceiling (out of order)
+  wash.dusk dists: current is farther than the floor (out of order)
+  soil dreamsim: floor 0.4985 is closer than ceiling 0.5583; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  soil dinov2: floor 0.5158 is closer than ceiling 0.5702; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  soil lab_emd: current is farther than the floor (out of order)
+  dial dreamsim: floor 0.2249 is closer than ceiling 0.2744; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  dial dinov2: floor 0.3786 is closer than ceiling 0.3824; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  dial lab_emd: floor 2.9803 is closer than ceiling 5.5393; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  dial ciede2000: floor 3.5695 is closer than ceiling 6.6211; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  washes dreamsim: floor 0.3748 is closer than ceiling 0.4265; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  washes dinov2: floor 0.4965 is closer than ceiling 0.7327; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  washes lab_emd: floor 9.6678 is closer than ceiling 13.7546; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  washes ciede2000: floor 12.7506 is closer than ceiling 20.8694; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  washes dists: current is farther than the floor (out of order)
+  plants dreamsim: floor 0.3031 is closer than ceiling 0.3515; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plants dinov2: current is farther than the floor (out of order)
+  plants lab_emd: floor 6.6847 is closer than ceiling 9.9666; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  plants ciede2000: floor 10.5379 is closer than ceiling 12.8631; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  frame dreamsim: floor 0.1985 is closer than ceiling 0.2479; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  frame dinov2: floor 0.2416 is closer than ceiling 0.5466; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  frame dreamsim_ensemble: floor 0.2270 is closer than ceiling 0.2649; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  frame lab_emd: floor 1.4429 is closer than ceiling 4.1923; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  frame ciede2000: floor 2.1765 is closer than ceiling 6.5609; metric invalid for this region. floor fit is nearest2x, so a region mask may not register ceiling pair is a different composition
+  frame dists: current is closer than the ceiling (out of order)
+
+FLIP, MS-SSIM, and LPIPS have no reference ladder. Their re-render and JPEG numbers are under alignedNoise.
