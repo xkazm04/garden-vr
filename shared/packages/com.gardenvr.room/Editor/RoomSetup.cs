@@ -54,14 +54,14 @@ namespace GardenVR.Room.Editor
                     eyeGo.AddComponent<UniversalAdditionalCameraData>();
 
                 // World-anchored. The G1 photos are only true at their own camera, so the seated view
-                // uses a card sized to the 90 deg capture and a wider plate with no hands.
+                // uses its own plate, sized to the 60 deg lens, with no hands.
                 var anchorGo = new GameObject("RoomPlateAnchor");
                 anchorGo.transform.SetParent(root.transform, false);
 
                 var plateGo = new GameObject("PcRoomPlate");
                 plateGo.transform.SetParent(anchorGo.transform, false);
                 plateGo.AddComponent<MeshFilter>().sharedMesh = traceMesh;
-                SeatedRig.PlaceSeatedCard(plateGo.transform);
+                SeatedRig.PlaceLensCard(plateGo.transform);
                 var plateRenderer = plateGo.AddComponent<MeshRenderer>();
                 plateRenderer.sharedMaterial = plateMaterial;
                 plateRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

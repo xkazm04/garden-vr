@@ -108,12 +108,19 @@ namespace GardenVR.Room
             if (_time + 0.0001f < _traceDelay + duration) return;
             _placed = true;
             _running = false;
+            ApplyTrace();
             Placed?.Invoke();
         }
 
         public void BindTrace(Transform trace)
         {
             _trace = trace;
+        }
+
+        void OnEnable()
+        {
+            // Edit-mode captures never enter play, so the saved trace quad would sit on the desk as a line.
+            if (!Application.isPlaying) ApplyTrace();
         }
 
         void Start()
@@ -137,7 +144,9 @@ namespace GardenVR.Room
         void ApplyTrace()
         {
             if (_trace == null) return;
-            float width = _traceWidth * Mathf.Clamp01(Trace01);
+            // The mint line is only the intro drawing across the near edge. Before it starts, and after Placed, it is hidden.
+            bool drawing = _running && !_placed && Trace01 > 0f;
+            float width = drawing ? _traceWidth * Mathf.Clamp01(Trace01) : 0f;
             float drawn = Mathf.Max(width, 0.0001f);
             _trace.localScale = new Vector3(drawn, _traceThickness, 1f);
             // The quad is centred. Hold the left end still so the line grows along the edge.
