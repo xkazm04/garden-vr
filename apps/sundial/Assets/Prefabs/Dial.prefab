@@ -510,7 +510,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 95d788708bf9bb045af59f48d7e61c22, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GardenVR.Sundial.DialView
+  m_EditorClassIdentifier: GardenVR.Sundial::GardenVR.Sundial.DialView
   halo: 1
   haloTarget: midday
   gnomonDeg: 105
@@ -524,6 +524,11 @@ MonoBehaviour:
   tiles: 010000000100000003000000010000000200000001000000010000000100000002000000030000000100000001000000030000000400000003000000010000000100000002000000010000000300000004000000i
   boil: 1
   time: 1
+  waiting: 0
+  waitingTarget: midday
+  pulse: 0
+  pulseArc: 1
+  reducedMotion: 0
   faceY: 0.012000017
   faceRadius: 0.1472
   haloRenderer: {fileID: 8498696889539771156}
@@ -1825,7 +1830,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.023552, y: 0.016000018, z: 0.026496002}
-  m_LocalScale: {x: 0.080639996, y: 0.12544, z: 0.118719995}
+  m_LocalScale: {x: 0.07344, y: 0.11424, z: 0.118719995}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4320516515241757340}

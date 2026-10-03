@@ -18,9 +18,11 @@ Shader "Fidelity/Toon"
         _Spec ("Toon highlight colour", Color) = (0, 0, 0, 0)
         _SpecStep ("Highlight step", Range(0.5, 1)) = 0.93
         _Ink ("Ink colour", Color) = (0.165, 0.149, 0.133, 1)
-        _WashMorning ("Morning tile wash", Color) = (0.886, 0.722, 0.400, 1)
-        _WashMidday ("Midday tile wash", Color) = (0.890, 0.612, 0.510, 1)
-        _WashDusk ("Dusk tile wash", Color) = (0.655, 0.604, 0.839, 1)
+        _WashMorning ("Morning tile wash", Color) = (0.965, 0.871, 0.718, 1)
+        _WashMidday ("Midday tile wash", Color) = (0.957, 0.714, 0.631, 1)
+        _WashDusk ("Dusk tile wash", Color) = (0.792, 0.690, 0.773, 1)
+        _TileTex ("Painted tile atlas (4 columns)", 2D) = "white" {}
+        _TilePaint ("Use painted tiles", Float) = 0
         _Outline ("Outline width (m, used when _OutlinePx is 0)", Float) = 0.0009
         _OutlinePx ("Outline width (pixels)", Float) = 0
         _Boil ("Outline boil (fraction of the metre width)", Range(0, 1)) = 0
@@ -39,10 +41,12 @@ Shader "Fidelity/Toon"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
         TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
         TEXTURE2D(_StateTex); SAMPLER(sampler_StateTex);
+        TEXTURE2D(_TileTex); SAMPLER(sampler_TileTex);
         CBUFFER_START(UnityPerMaterial)
             float4 _MainTex_ST;
+            float4 _TileTex_ST;
             half4 _Lit, _Shade, _Spec, _Ink, _WashMorning, _WashMidday, _WashDusk;
-            half _Step, _Feather, _SpecStep, _Outline, _OutlinePx, _Boil, _BoilPx, _BoilTime, _T, _Grain, _ShadowStrength, _TileMode;
+            half _Step, _Feather, _SpecStep, _Outline, _OutlinePx, _Boil, _BoilPx, _BoilTime, _T, _Grain, _ShadowStrength, _TileMode, _TilePaint;
         CBUFFER_END
         float h31(float3 p) { p = frac(p * 0.1031); p += dot(p, p.zyx + 31.32); return frac((p.x + p.y) * p.z); }
         float BoilClock()
@@ -115,8 +119,8 @@ Shader "Fidelity/Toon"
                 int state = (int)round(st.r * 4.0);
                 int arc = (int)round(st.g * 2.0);
                 half3 wash = arc <= 0 ? _WashMorning.rgb : (arc == 1 ? _WashMidday.rgb : _WashDusk.rgb);
-                half3 paper = half3(0.953, 0.933, 0.886);
-                half3 pale = half3(0.937, 0.910, 0.855);
+                half3 paper = half3(0.965, 0.949, 0.914);
+                half3 pale = half3(0.953, 0.933, 0.886);
                 half3 pencil = half3(0.541, 0.506, 0.471);
                 half3 ink = _Ink.rgb;
                 float edge = smoothstep(0.10, 0.16, min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y)));
@@ -125,8 +129,8 @@ Shader "Fidelity/Toon"
                 else if (state == 2)
                 {
                     float hatch = step(0.55, frac((uv.x + uv.y) * 7.0));
-                    col = lerp(paper, pencil, hatch * 0.7);
-                    col = lerp(col, wash, 0.45);
+                    col = lerp(paper, pencil, hatch * 0.55);
+                    col = lerp(col, wash, 0.55);
                 }
                 else if (state == 3)
                 {
@@ -137,21 +141,30 @@ Shader "Fidelity/Toon"
                     float dash = step(0.5, frac((uv.x + uv.y) * 5.0));
                     col = lerp(ink, paper, lerp(dash, 1.0, edge));
                 }
-                // Hand-painted tile: wet edge, granulation, a wobbly ink outline. Not a flat square.
+                // Painted atlas: morning, midday, dusk, cream. _TilePaint 0 keeps the flat wash.
+                if (_TilePaint > 0.5)
+                {
+                    int paintCol = (state == 1 || state == 2) ? arc : 3;
+                    float2 tuv = float2((saturate(uv.x) + (float)paintCol) * 0.25, saturate(uv.y));
+                    half3 paint = SAMPLE_TEXTURE2D(_TileTex, sampler_TileTex, tuv).rgb;
+                    col = lerp(col, paint, 0.9);
+                }
+                // Light granulation and a thin ink edge. The wet pool stays pale so a tile cannot go muddy.
                 float2 q = uv - 0.5;
                 float wob = (h31(float3(uv.y * 13.0, tile + 1.7, uv.x * 9.0)) - 0.5) * 0.055;
                 float box = max(abs(q.x) + wob, abs(q.y) - wob * 0.6);
-                float rim = smoothstep(0.43, 0.49, box);
+                float rim = smoothstep(0.44, 0.50, box);
                 float grain = h31(float3(floor(uv * 22.0), tile * 1.3));
                 if (state == 1)
                 {
-                    half3 wet = arc <= 0 ? half3(0.851, 0.463, 0.165) : (arc == 1 ? half3(0.788, 0.282, 0.247) : half3(0.435, 0.333, 0.678));
-                    col = lerp(col, wet, smoothstep(0.16, 0.40, box) * 0.72);
-                    col *= lerp(0.86, 1.08, grain);
+                    half3 wet = arc <= 0 ? half3(0.93, 0.72, 0.42) : (arc == 1 ? half3(0.90, 0.48, 0.40) : half3(0.62, 0.50, 0.78));
+                    col = lerp(col, wet, smoothstep(0.22, 0.42, box) * 0.28);
+                    col *= lerp(0.96, 1.05, grain);
                 }
                 else if (state == 2)
-                    col *= lerp(0.9, 1.05, grain);
-                col = lerp(col, ink, rim * 0.82);
+                    col *= lerp(0.95, 1.04, grain);
+                // Painted tiles already carry an ink outline. A heavy second rim doubles it.
+                col = lerp(col, ink, rim * (_TilePaint > 0.5 ? 0.28 : 0.7));
                 return col;
             }
             half4 frag (V i, bool front : SV_IsFrontFace) : SV_Target
@@ -163,6 +176,11 @@ Shader "Fidelity/Toon"
                 half sh = lerp(1, L.shadowAttenuation, _ShadowStrength);
                 half lit = smoothstep(_Step - _Feather, _Step + _Feather, ndl) * smoothstep(0.35, 0.65, sh);
                 half3 ramp = lerp(_Shade.rgb, _Lit.rgb, lit);
+                // Only near-white paper is held up. A floor that starts at mid grey flattens
+                // soil stipple and the darker grains in a wash. Ink still takes the shade step.
+                half luma = dot(alb, half3(0.2126, 0.7152, 0.0722));
+                half keep = smoothstep(0.70, 0.88, luma);
+                ramp = lerp(ramp, max(ramp, half3(0.94, 0.91, 0.86)), keep);
                 float3 v = normalize(GetWorldSpaceViewDir(i.wp));
                 float3 h = normalize(L.direction + v);
                 half spec = smoothstep(_SpecStep - 0.01, _SpecStep + 0.01, dot(n, h)) * lit;

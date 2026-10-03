@@ -31,24 +31,29 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _TileTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Boil: 0
     - _BoilPx: 1
     - _BoilTime: 2.9
     - _Feather: 0.04
-    - _Grain: 0.07
+    - _Grain: 0.04
     - _Outline: 0.001
-    - _OutlinePx: 3
+    - _OutlinePx: 1.6
     - _ShadowStrength: 0
     - _SpecStep: 0.93
-    - _Step: 0.12
+    - _Step: 0.02
     - _T: 2.9
     - _TileMode: 0
+    - _TilePaint: 0
     m_Colors:
     - _Ink: {r: 0.165, g: 0.149, b: 0.133, a: 1}
-    - _Lit: {r: 1, g: 1, b: 1, a: 1}
-    - _Shade: {r: 0.78, g: 0.72, b: 0.64, a: 1}
+    - _Lit: {r: 1.02, g: 0.99, b: 0.96, a: 1}
+    - _Shade: {r: 0.94, g: 0.9, b: 0.84, a: 1}
     - _Spec: {r: 0, g: 0, b: 0, a: 0}
     - _WashDusk: {r: 0.655, g: 0.6039999, b: 0.839, a: 1}
     - _WashMidday: {r: 0.89, g: 0.6119999, b: 0.50999993, a: 1}
