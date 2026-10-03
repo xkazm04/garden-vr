@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: Flat orthographic strip on a pure black background: twelve small rounded-rectangle watercolor paper tiles in one neat horizontal row, evenly spaced, no perspective, no table. Each tile has a thin wobbly dark ink outline and a light granulated watercolor fill. Tiles 1 to 3 pale sunrise gold, tiles 4 to 6 pale midday coral, tiles 7 to 9 pale dusk lilac, tiles 10 to 12 blank cream paper. High-key, airy, not muddy, not brown, not dark. No text, no numbers, no icons, no letters. Even flat lighting.
