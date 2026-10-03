@@ -63,6 +63,11 @@ namespace GardenVR.Sundial
         };
         public bool boil = true;
         public float time = 1f;
+        [Range(0f, 1f)] public float waiting;
+        public string waitingTarget = "midday";
+        [Range(0f, 1f)] public float pulse;
+        public int pulseArc = 1;
+        public bool reducedMotion;
 
         [Header("Wired by Build")]
         public float faceY = 0.012f;
@@ -132,6 +137,7 @@ namespace GardenVR.Sundial
             ApplyPlant(1, stageMidday, bloomMidday);
             ApplyPlant(2, stageWinddown, bloomWinddown);
             ApplyStrip();
+            ApplyPulse();
 
             float breathe = 0.85f + 0.15f * Mathf.Sin(time * 4f);
             float amount = Mathf.Clamp01(halo) * breathe;
@@ -348,6 +354,15 @@ namespace GardenVR.Sundial
             }
         }
 
+        void Awake()
+        {
+            // AfterSceneLoad runs once for the boot scene. A later load of Main, including PlayMode
+            // reloads, still needs the controller, and it must be awake before the first render.
+            if (!Application.isPlaying) return;
+            if (GetComponent<SundialController>() == null)
+                gameObject.AddComponent<SundialController>();
+        }
+
         void OnEnable()
         {
             HookCamera();
@@ -394,6 +409,11 @@ namespace GardenVR.Sundial
                 case "tiles.winddown": WriteTileDigits(14, value); break;
                 case "tiles": WriteTileDigits(0, value); break;
                 case "stages": stageStrip = string.Equals(value, "strip", StringComparison.OrdinalIgnoreCase); break;
+                case "waiting": waiting = Mathf.Clamp01(ParseFloat(key, value)); break;
+                case "waitingTarget": waitingTarget = string.IsNullOrEmpty(value) ? "midday" : value; break;
+                case "pulse": pulse = Mathf.Clamp01(ParseFloat(key, value)); break;
+                case "pulseArc": pulseArc = Mathf.Clamp(Mathf.RoundToInt(ParseFloat(key, value)), 0, 2); break;
+                case "reducedMotion": reducedMotion = ParseBool(value); break;
                 default:
                     throw new FormatException("DialView has no state field '" + key + "'");
             }
@@ -406,11 +426,12 @@ namespace GardenVR.Sundial
             int card = Mathf.Clamp(stage, 0, 4);
             Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
             Renderer renderer = plant.GetComponent<Renderer>();
+            Color tint = PlantTint(arc);
             if (renderer != null)
             {
                 renderer.enabled = !stageStrip;
                 if (set != null && card < set.Length && set[card] != null)
-                    SetMain(renderer, set[card]);
+                    SetMain(renderer, set[card], tint);
             }
             Vector2 size = PlantSize[arc];
             // The drawing already grows on the shared canvas. The quad stays one size.
@@ -484,11 +505,56 @@ namespace GardenVR.Sundial
             stripRenderers = list.ToArray();
         }
 
+        void ApplyPulse()
+        {
+            if (pulse <= 0.0001f || stageStrip || uprightCards == null) return;
+            int arc = pulseArc;
+            if (arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
+            if (reducedMotion) return;
+            float scale = 1f + 0.3f * Mathf.Sin(Mathf.Clamp01(pulse) * Mathf.PI);
+            Transform plant = uprightCards[arc];
+            plant.localScale = plant.localScale * scale;
+            if (bloomRenderers != null && arc < bloomRenderers.Length && bloomRenderers[arc] != null)
+                bloomRenderers[arc].transform.localScale = plant.localScale;
+        }
+
+        Color PlantTint(int arc)
+        {
+            Color tint = Color.white;
+            int waitArc = TryArcIndex(waitingTarget);
+            if (waiting > 0.01f && waitArc == arc)
+            {
+                // 2.6 s opacity breath. Reduced motion holds a steady warm step.
+                float wave = reducedMotion ? 1f : 0.5f + 0.5f * Mathf.Sin(time * (Mathf.PI * 2f / 2.6f));
+                float boost = 1f + 0.32f * wave * Mathf.Clamp01(waiting);
+                tint = new Color(1.06f, 1.0f, 0.88f) * boost;
+            }
+            if (reducedMotion && pulseArc == arc && pulse > 0.02f && pulse < 0.999f)
+                tint = new Color(1.25f, 1.12f, 0.85f);
+            return tint;
+        }
+
+        static int TryArcIndex(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return -1;
+            string n = name.Trim().ToLowerInvariant();
+            if (n == "morning" || n == "sunrise") return 0;
+            if (n == "midday") return 1;
+            if (n == "winddown" || n == "dusk") return 2;
+            return -1;
+        }
+
         static void SetMain(Renderer renderer, Texture2D texture)
+        {
+            SetMain(renderer, texture, Color.white);
+        }
+
+        static void SetMain(Renderer renderer, Texture2D texture, Color tint)
         {
             var block = new MaterialPropertyBlock();
             renderer.GetPropertyBlock(block);
             block.SetTexture("_MainTex", texture);
+            block.SetColor("_Color", tint);
             renderer.SetPropertyBlock(block);
         }
 

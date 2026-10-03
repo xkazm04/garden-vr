@@ -39,7 +39,7 @@ Owner: terrarium (`docs/PLAN.md`). Sundial consumes the same assembly.
 | Right-drag | Yaw +/- 40 deg, pitch +/- 25 deg, 0.15 deg per pixel. Mouse up looks up. No translation |
 | R | Recentre the head offset and raise `Recentred` |
 | Esc, or `OnApplicationFocus(false)` | `SystemPause`. Not an intent |
-| F1, F2, `[`, `]` | `DevCommand`: `StateOverlay`, `AutoPace`, `PreviousDay`, `NextDay`. Raised only when `Debug.isDebugBuild` or `Application.isEditor` (tests inject the flag on the mapper) |
+| F1, F2, `[`, `]`, `T` | `DevCommand`: `StateOverlay`, `AutoPace`, `PreviousDay`, `NextDay`, `ClockFast` (T toggles the clock at sixty times). Raised only when `Debug.isDebugBuild` or `Application.isEditor` (tests inject the flag on the mapper). `ClockFast` is additive: older readers of the first four values are unchanged |
 
 `BindingHint` on PC: PinchHold `"Space or mouse"`, Pinch `"click"`, Poke `"F"`, PalmOpen `"hold P"`.
 
