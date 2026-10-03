@@ -29,9 +29,15 @@ namespace GardenVR.Sundial.Editor
         public const float DialG1Fov = 30f;
         public static readonly Vector2 DialG1LensShift = new Vector2(3.6f, 0.5f);
 
-        // Rig eye (0, 1.05, 0) and its look, written in DialRoot local space (tilt included).
+        // Rig eye (0, 1.05, 0) written in DialRoot local space. The look is the dial face,
+        // not the terrarium desk point 0.15 m in front of it (that gaze saw the disc edge-on).
         public static readonly Vector3 DialSeatedEye = new Vector3(0f, 0.407796f, -0.475608f);
-        public static readonly Vector3 DialSeatedLook = new Vector3(0f, 0.031187f, -0.146722f);
+        public static readonly Vector3 DialSeatedLook = new Vector3(0f, 0.012f, 0f);
+
+        /// <summary>Kitchen photo vertical angle in the seated view. Wider than DialG1's 30 deg, narrower than the 130 deg sphere that cropped the inpaint.</summary>
+        public const float SeatedPlateVerticalDegrees = 64f;
+        public const float SeatedPlateDistance = 2.2f;
+        public const string SeatedPlateMeshPath = "Assets/Art/Models/SeatedPlate.asset";
 
         // Round-3 sun: rays travel toward image-right and down, so the source is the upper-left window.
         static readonly Vector3 WindowLightDirection = new Vector3(0.45f, -0.62f, -0.64f);
@@ -139,6 +145,8 @@ namespace GardenVR.Sundial.Editor
             RenderSettings.ambientLight = new Color(0.5f, 0.5f, 0.5f);
             RenderSettings.sun = light;
 
+            AimSeatedAtDial(dial);
+            FitSeatedPlate();
             ConfirmFraming(rig, dial);
 
             UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene, ScenePath);
@@ -224,6 +232,71 @@ namespace GardenVR.Sundial.Editor
             material.SetFloat("_Exposure", PcRoomPlate.DefaultExposure);
             EditorUtility.SetDirty(material);
             return material;
+        }
+
+        /// <summary>
+        /// Point the seated eye at the dial face and size the kitchen plate so the photo is a room, not a magnified crop.
+        /// Does not rebuild the dial. Batch: -executeMethod GardenVR.Sundial.Editor.SceneSetup.FixSeatedView
+        /// </summary>
+        public static void FixSeatedView()
+        {
+            var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
+                ScenePath, UnityEditor.SceneManagement.EditorSceneManager.OpenSceneMode.Single);
+            GameObject dial = GameObject.Find("DialRoot");
+            if (dial == null) throw new System.InvalidOperationException("DialRoot missing");
+            AimSeatedAtDial(dial);
+            FitSeatedPlate();
+            GameObject trace = GameObject.Find("DeskTrace");
+            if (trace != null)
+                trace.transform.localScale = new Vector3(0.0001f, trace.transform.localScale.y, 1f);
+            UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+            Debug.Log("[SceneSetup] seated view aimed at the dial");
+        }
+
+        /// <summary>Head pivot looks down at the dial face. Eye local pose stays at the pivot origin.</summary>
+        public static void AimSeatedAtDial(GameObject dial)
+        {
+            GameObject pivot = GameObject.Find("HeadPivot");
+            GameObject eye = GameObject.Find("EyeCamera");
+            if (pivot == null || eye == null) throw new System.InvalidOperationException("seated eye missing");
+            Vector3 target = dial.transform.TransformPoint(DialSeatedLook);
+            Vector3 dir = target - eye.transform.position;
+            if (dir.sqrMagnitude < 1e-8f) throw new System.InvalidOperationException("seated look is zero");
+            Quaternion eyeLocal = eye.transform.localRotation;
+            pivot.transform.rotation = Quaternion.LookRotation(dir.normalized, Vector3.up) * Quaternion.Inverse(eyeLocal);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(pivot.transform);
+            float down = Mathf.Atan2(-dir.y, new Vector2(dir.x, dir.z).magnitude) * Mathf.Rad2Deg;
+            Debug.Log("[SceneSetup] seated look-down " + down.ToString("0.00") + " deg distance " + dir.magnitude.ToString("0.000") + " m");
+        }
+
+        /// <summary>
+        /// Replace the 130 deg spherical plate with a quad that subtends <see cref="SeatedPlateVerticalDegrees"/>.
+        /// The shared curve stays on the prefab for the terrarium. This is the sundial scene instance only.
+        /// </summary>
+        public static void FitSeatedPlate()
+        {
+            GameObject plate = GameObject.Find("PcRoomPlate");
+            if (plate == null) throw new System.InvalidOperationException("PcRoomPlate missing");
+            Mesh quad = AssetDatabase.LoadAssetAtPath<Mesh>(SeatedPlateMeshPath);
+            if (quad == null)
+            {
+                EnsureAssetFolder("Assets/Art");
+                EnsureAssetFolder("Assets/Art/Models");
+                quad = RoomPlateMesh.TraceQuad();
+                quad.name = "SeatedPlate";
+                AssetDatabase.CreateAsset(quad, SeatedPlateMeshPath);
+            }
+            MeshFilter filter = plate.GetComponent<MeshFilter>();
+            if (filter == null) throw new System.InvalidOperationException("PcRoomPlate has no mesh");
+            filter.sharedMesh = quad;
+            float height = 2f * SeatedPlateDistance * Mathf.Tan(SeatedPlateVerticalDegrees * 0.5f * Mathf.Deg2Rad);
+            float width = height * (1824f / 1024f);
+            plate.transform.localPosition = new Vector3(0f, 0f, SeatedPlateDistance);
+            plate.transform.localRotation = Quaternion.identity;
+            plate.transform.localScale = new Vector3(width, height, 1f);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(filter);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(plate.transform);
+            Debug.Log("[SceneSetup] seated plate " + SeatedPlateVerticalDegrees.ToString("0") + " deg vertical, " + width.ToString("0.00") + " x " + height.ToString("0.00") + " m at " + SeatedPlateDistance.ToString("0.00") + " m");
         }
 
         static void DestroyLights()

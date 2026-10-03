@@ -143,9 +143,10 @@ namespace GardenVR.Sundial
 
             if (shadow != null)
             {
-                float deg = 180f - gnomonDeg;
-                float rad = deg * Mathf.Deg2Rad;
-                var dir = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
+                // 0 is image-right, 90 is image-far. The painted wash falls toward the near rim
+                // (ref-1 at about 13:00), so +Z in the shadow mesh points at (cos, -sin).
+                float rad = gnomonDeg * Mathf.Deg2Rad;
+                var dir = new Vector3(Mathf.Cos(rad), 0f, -Mathf.Sin(rad));
                 if (dir.sqrMagnitude < 1e-8f) dir = Vector3.forward;
                 shadow.localRotation = Quaternion.LookRotation(dir, Vector3.up);
                 // Clear the soil mound (peak is about 8 mm above the paper) or the wash is buried.

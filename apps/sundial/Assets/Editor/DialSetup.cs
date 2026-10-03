@@ -58,6 +58,7 @@ namespace GardenVR.Sundial.Editor
                 LogMesh(tileMesh, "Tile");
                 BuildPrefab(modelPrefab, tileMesh, library);
                 PlaceUnderDialRoot();
+                SceneSetup.FixSeatedView();
                 AssetDatabase.SaveAssets();
                 Debug.Log("[DialSetup] done prefab=" + PrefabPath + " scene=" + SceneSetup.ScenePath);
             }
@@ -133,7 +134,7 @@ namespace GardenVR.Sundial.Editor
                 importer.alphaIsTransparency = alpha;
                 importer.mipmapEnabled = true;
                 importer.wrapMode = TextureWrapMode.Clamp;
-                importer.maxTextureSize = 1024;
+                importer.maxTextureSize = name == "dial_face" || name == "gnomon_shadow" ? 2048 : 1024;
                 importer.textureCompression = TextureImporterCompression.Uncompressed;
                 importer.npotScale = TextureImporterNPOTScale.None;
                 importer.SaveAndReimport();
@@ -270,7 +271,8 @@ namespace GardenVR.Sundial.Editor
             library.Shadow = Mat("Dial_GnomonShadow", "Fidelity/Card", m =>
             {
                 m.SetTexture("_MainTex", Tex("gnomon_shadow"));
-                m.SetColor("_Color", new Color(0.22f, 0.16f, 0.12f, 0.80f));
+                // Colour and falloff live in the SVG. A dark multiply here hid the wash on the soil.
+                m.SetColor("_Color", Color.white);
                 m.SetColor("_Color2", Color.black);
                 m.SetFloat("_Src", (float)BlendMode.SrcAlpha);
                 m.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
@@ -392,14 +394,14 @@ namespace GardenVR.Sundial.Editor
         {
             return SaveMesh(ShadowPath, "DialShadow", mesh =>
             {
-                const float half = 0.045f;
-                const float length = 0.125f;
+                // Wedge: narrow at the gnomon, wide and soft at the far end of the wash.
+                // Local +Z is the shadow direction. UV v grows away from the nib.
                 mesh.vertices = new[]
                 {
-                    new Vector3(-half, 0f, 0f), new Vector3(half, 0f, 0f),
-                    new Vector3(half, 0f, length), new Vector3(-half, 0f, length)
+                    new Vector3(-0.016f, 0f, 0.012f), new Vector3(0.016f, 0f, 0.012f),
+                    new Vector3(0.078f, 0f, 0.168f), new Vector3(-0.078f, 0f, 0.168f)
                 };
-                mesh.uv = new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
+                mesh.uv = new[] { new Vector2(0.38f, 0f), new Vector2(0.62f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
                 mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };
                 mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
                 mesh.RecalculateNormals();

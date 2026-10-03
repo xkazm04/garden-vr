@@ -14,7 +14,7 @@
     {
       "name": "DialSeated",
       "eye": [0, 0.407796, -0.475608],
-      "lookAt": [0, 0.031187, -0.146722],
+      "lookAt": [0, 0.012, 0],
       "fov": 90,
       "lensShift": [0, 0],
       "plate": null,
