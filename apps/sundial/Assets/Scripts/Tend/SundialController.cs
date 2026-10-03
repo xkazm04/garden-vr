@@ -59,6 +59,7 @@ namespace GardenVR.Sundial
         bool _sweeping;
         bool _sweepBegun;
         float _swept;
+        readonly int[] _stageFloor = { -1, -1, -1 };
 
         GameObject _undo;
         readonly GameObject[] _asks = new GameObject[3];
@@ -446,6 +447,9 @@ namespace GardenVR.Sundial
                     int arc = SundialArcs.Index(SundialArcs.Key(habit.Group));
                     if (arc < 0) continue;
                     int stage = (int)plant.Stage;
+                    // A miss never shrinks the drawing. The card stays on the fullest stage this session has shown.
+                    if (_stageFloor[arc] < 0 || stage > _stageFloor[arc]) _stageFloor[arc] = stage;
+                    else stage = _stageFloor[arc];
                     float bloom = plant.Bloom == Bloom.Open ? 2f : plant.Bloom == Bloom.Bud ? 1f : 0f;
                     if (arc == 0) { _view.stageMorning = stage; _view.bloomMorning = bloom; }
                     else if (arc == 1) { _view.stageMidday = stage; _view.bloomMidday = bloom; }

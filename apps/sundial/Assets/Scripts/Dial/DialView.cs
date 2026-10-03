@@ -35,6 +35,7 @@ namespace GardenVR.Sundial
         public const int TileCount = 21;
         public const float OutlinePixels = 3f;
         public const float BoilPixels = 1f;
+        public const float BloomCloseSeconds = 1.2f;
 
         // SVG dial face, degrees. 0 is +X (image right), 90 is +Z (image top, far side).
         public const float MorningArc0 = 242f;
@@ -95,6 +96,11 @@ namespace GardenVR.Sundial
         Texture2D _stateTex;
         bool _hooked;
         const float TileRadius = 0.82f;
+        readonly float[] _bloomVisual = { -1f, -1f, -1f };
+        readonly float[] _bloomClose = { -1f, -1f, -1f };
+        readonly float[] _bloomFold = { 1f, 1f, 1f };
+        float _bloomClock = -1f;
+        float _bloomDt;
 
         static readonly string[] ArcIds = { "morning", "midday", "winddown" };
         // Card spots read off the owner's frame, in units of the face radius. x is right, z is away.
@@ -123,8 +129,38 @@ namespace GardenVR.Sundial
             Apply();
         }
 
+        public bool IsBloomClosing(int arc)
+        {
+            return arc >= 0 && arc < 3 && _bloomClose[arc] >= 0f;
+        }
+
+        public float BloomFoldAmount(int arc)
+        {
+            if (arc < 0 || arc >= 3) return 1f;
+            return _bloomFold[arc];
+        }
+
+        /// <summary>-1 none, 0 bud, 1 open. During a close this stays on the open card until the fold finishes.</summary>
+        public int ShownBloomCard(int arc)
+        {
+            if (arc < 0 || arc >= 3) return -1;
+            float bloom = _bloomVisual[arc];
+            if (bloom < 0.5f) return -1;
+            if (bloom < 1.5f) return 0;
+            return 1;
+        }
+
         public void Apply()
         {
+            _bloomDt = 0f;
+            if (_bloomClock >= 0f)
+            {
+                _bloomDt = time - _bloomClock;
+                if (_bloomDt < 0f) _bloomDt = 0f;
+                if (_bloomDt > 0.1f) _bloomDt = 0.1f;
+            }
+            _bloomClock = time;
+
             EnsureStateTexture();
             WriteStateTexture();
             if (tileRenderer != null && _stateTex != null)
@@ -142,6 +178,7 @@ namespace GardenVR.Sundial
             ApplyPlant(2, stageWinddown, bloomWinddown);
             ApplyStrip();
             ApplyPulse();
+            ApplyBloomFold();
 
             // Gentle. A faster sine read as a flicker on the gold line.
             float breathe = reducedMotion ? 1f : 0.86f + 0.14f * Mathf.Sin(time * 2.2f);
@@ -465,6 +502,7 @@ namespace GardenVR.Sundial
             if (uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
             Transform plant = uprightCards[arc];
             int card = Mathf.Clamp(stage, 0, 4);
+            bloom = PresentBloom(arc, bloom);
             Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
             Renderer renderer = plant.GetComponent<Renderer>();
             Color tint = PlantTint(arc);
@@ -487,6 +525,78 @@ namespace GardenVR.Sundial
             bloomTransform.localPosition = plant.localPosition + new Vector3(0f, 0.0015f, 0f);
             bloomTransform.localScale = plant.localScale;
             if (show) SetMain(bloomRenderer, bloomTextures[tex]);
+        }
+
+        /// <summary>
+        /// An open flower that falls back to a bud folds shut over <see cref="BloomCloseSeconds"/>.
+        /// Reduced motion swaps. The returned value is what the card should draw this frame.
+        /// </summary>
+        float PresentBloom(int arc, float target)
+        {
+            // Edit-mode captures set the flower once. Only play mode folds it shut.
+            if (!Application.isPlaying)
+            {
+                _bloomVisual[arc] = target;
+                _bloomClose[arc] = -1f;
+                _bloomFold[arc] = 1f;
+                return target;
+            }
+            if (_bloomVisual[arc] < 0f) _bloomVisual[arc] = target;
+            bool open = _bloomVisual[arc] >= 1.5f && _bloomClose[arc] < 0f;
+            bool bud = target >= 0.5f && target < 1.5f;
+            if (open && bud)
+            {
+                if (reducedMotion)
+                {
+                    _bloomVisual[arc] = target;
+                    _bloomFold[arc] = 1f;
+                }
+                else
+                {
+                    _bloomClose[arc] = 0f;
+                }
+            }
+
+            if (_bloomClose[arc] >= 0f)
+            {
+                if (!bud || reducedMotion)
+                {
+                    _bloomClose[arc] = -1f;
+                    _bloomVisual[arc] = target;
+                    _bloomFold[arc] = 1f;
+                    return target;
+                }
+                _bloomClose[arc] += _bloomDt;
+                float u = Mathf.Clamp01(_bloomClose[arc] / BloomCloseSeconds);
+                _bloomFold[arc] = Mathf.Lerp(1f, 0.38f, u);
+                if (u >= 1f)
+                {
+                    _bloomClose[arc] = -1f;
+                    _bloomVisual[arc] = target;
+                    _bloomFold[arc] = 1f;
+                    return target;
+                }
+                return 2f;
+            }
+
+            _bloomVisual[arc] = target;
+            _bloomFold[arc] = 1f;
+            return target;
+        }
+
+        void ApplyBloomFold()
+        {
+            if (bloomRenderers == null) return;
+            for (int arc = 0; arc < bloomRenderers.Length && arc < 3; arc++)
+            {
+                Renderer bloomRenderer = bloomRenderers[arc];
+                if (bloomRenderer == null) continue;
+                float fold = _bloomFold[arc];
+                if (fold >= 0.999f) continue;
+                Transform bloomTransform = bloomRenderer.transform;
+                Vector3 scale = bloomTransform.localScale;
+                bloomTransform.localScale = new Vector3(scale.x * fold, scale.y * fold, scale.z);
+            }
         }
 
         void ApplyStrip()
