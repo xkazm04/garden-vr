@@ -40,7 +40,7 @@ Material:
     - _Cutoff: 0
     - _GradBottom: 0.75
     - _GradTop: 1.12
-    - _RimPower: 1.35
+    - _RimPower: 1.15
     - _Shell: 0
     - _Soft: 0
     - _TopAmount: 0
@@ -48,11 +48,11 @@ Material:
     - _Trans: 0.45
     - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0.0805, g: 0.18399999, b: 0.069, a: 1.15}
-    - _GradY: {r: 0.05, g: 0.11, b: 0, a: 0}
-    - _LightColor: {r: 0.34, g: 0.68, b: 0.42, a: 1}
-    - _LightPos: {r: 0.0006574071, g: 0.08041298, b: 0.003608954, a: 0.092}
-    - _Rim: {r: 0.78, g: 0.98, b: 0.68, a: 1}
+    - _Emission: {r: 0.6325, g: 1.288, b: 0.46, a: 1.15}
+    - _GradY: {r: 0.032, g: 0.1, b: 0, a: 0}
+    - _LightColor: {r: 0.55, g: 1.2, b: 0.7, a: 1}
+    - _LightPos: {r: 0.0006574071, g: 0.06841296, b: 0.0036089527, a: 0.12}
+    - _Rim: {r: 0.82, g: 1, b: 0.62, a: 1}
     - _Tint: {r: 0.55, g: 0.84, b: 0.32, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -29,6 +29,7 @@ namespace GardenVR.Core
         public const float VitalityFloor = 0.6f;
         public const int FirstFlowerAt = 6;   // one miss in a week still flowers on day 7
         public const int FlowerEvery = 6;
+        public const int FrondsBeforeInnerLayer = 12;
         readonly List<int> _frondDays = new List<int>();
         public IReadOnlyList<int> FrondDays => _frondDays;
         public int Fronds => _frondDays.Count;

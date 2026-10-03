@@ -29,6 +29,7 @@ namespace GardenVR.Terrarium.Tests
             Scene scene = SceneManager.GetSceneByName("Main");
             if (scene.IsValid() && scene.isLoaded)
                 yield return SceneManager.UnloadSceneAsync(scene);
+            RitualHarness.ReleaseOverrides();
         }
 
         [UnityTest]

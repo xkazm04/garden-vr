@@ -48,11 +48,11 @@ Material:
     - _Trans: 0.25
     - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0.016, g: 0.045, b: 0.024, a: 1}
-    - _GradY: {r: 0.03, g: 0.046, b: 0, a: 0}
-    - _LightColor: {r: 0.34, g: 0.68, b: 0.42, a: 1}
-    - _LightPos: {r: 0.0006574071, g: 0.08041298, b: 0.003608954, a: 0.092}
-    - _Rim: {r: 0.18, g: 0.42, b: 0.24, a: 1}
+    - _Emission: {r: 0.04, g: 0.1, b: 0.055, a: 1}
+    - _GradY: {r: 0.018, g: 0.032, b: 0, a: 0}
+    - _LightColor: {r: 0.55, g: 1.2, b: 0.7, a: 1}
+    - _LightPos: {r: 0.0006574071, g: 0.06841296, b: 0.0036089527, a: 0.12}
+    - _Rim: {r: 0.3, g: 0.66, b: 0.38, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

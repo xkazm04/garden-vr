@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -29,6 +30,7 @@ namespace GardenVR.Terrarium.Tests
             Scene scene = SceneManager.GetSceneByName("Main");
             if (scene.IsValid() && scene.isLoaded)
                 yield return SceneManager.UnloadSceneAsync(scene);
+            RitualHarness.ReleaseOverrides();
         }
 
         [UnityTest]
@@ -319,6 +321,16 @@ namespace GardenVR.Terrarium.Tests
     {
         public static IEnumerator OpenMain()
         {
+            // A fresh garden per test. A second OpenMain in the same test keeps the same clock and file.
+            if (string.IsNullOrEmpty(GardenService.DirectoryOverride))
+            {
+                string dir = Path.Combine(Path.GetTempPath(), "gvr-ter-" + Guid.NewGuid().ToString("N"));
+                Directory.CreateDirectory(dir);
+                GardenService.DirectoryOverride = dir;
+            }
+            if (GardenService.ClockOverride == null)
+                GardenService.ClockOverride = new FixedClock(new DateTimeOffset(2026, 10, 3, 21, 0, 0, TimeSpan.Zero), TimeZoneInfo.Utc);
+
             Scene existing = SceneManager.GetSceneByName("Main");
             if (existing.IsValid() && existing.isLoaded)
                 yield return SceneManager.UnloadSceneAsync(existing);
@@ -326,6 +338,25 @@ namespace GardenVR.Terrarium.Tests
             Scene scene = SceneManager.GetSceneByName("Main");
             Assert.IsTrue(scene.IsValid() && scene.isLoaded, "Main did not load");
             SceneManager.SetActiveScene(scene);
+        }
+
+        /// <summary>Drops the injected clock and deletes the temp save. Safe to call twice.</summary>
+        public static void ReleaseOverrides()
+        {
+            string dir = GardenService.DirectoryOverride;
+            GardenService.ResetOverrides();
+            if (string.IsNullOrEmpty(dir)) return;
+            if (dir.IndexOf("gvr-ter-", StringComparison.OrdinalIgnoreCase) < 0) return;
+            try
+            {
+                if (Directory.Exists(dir)) Directory.Delete(dir, true);
+            }
+            catch (IOException)
+            {
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
         }
 
         public static JarRitualController Controller()
@@ -349,6 +380,11 @@ namespace GardenVR.Terrarium.Tests
         public static ScriptedIntentSource Play(JarRitualController controller, string jsonl)
         {
             DisableKeyboard();
+            ScriptedIntentSource[] old = UnityEngine.Object.FindObjectsByType<ScriptedIntentSource>(FindObjectsInactive.Include);
+            for (int i = 0; i < old.Length; i++)
+            {
+                if (old[i] != null) UnityEngine.Object.DestroyImmediate(old[i].gameObject);
+            }
             var go = new GameObject("ScriptedIntent");
             SceneManager.MoveGameObjectToScene(go, controller.gameObject.scene);
             var source = go.AddComponent<ScriptedIntentSource>();
@@ -413,6 +449,24 @@ namespace GardenVR.Terrarium.Tests
             Line(sb, 9f, "Lost", 2f);
             Release(sb, 12f);
             Line(sb, 12f, "Look", 3f);
+            return sb.ToString();
+        }
+
+        /// <summary>Six holds just past the minimum inhale and exhale. About 17 seconds of app time.</summary>
+        public static string SixShort()
+        {
+            var sb = new StringBuilder();
+            float t = 0f;
+            const float hold = 1.5f;
+            const float gap = 1.3f;
+            for (int i = 0; i < 6; i++)
+            {
+                Hold(sb, t, hold);
+                t += hold;
+                Release(sb, t);
+                t += gap;
+            }
+            Line(sb, t - gap, "Look", 2f);
             return sb.ToString();
         }
 

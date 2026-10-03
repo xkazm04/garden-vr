@@ -140,8 +140,27 @@ def roughen_cork_lip(amplitude=0.0009):
 
 
 roughen_cork_lip()
-# soil: wide at the glass base, narrow under the moss so the mound overhangs the band
-lathe("Soil", [(0.0, 0.004), (0.0405, 0.004), (0.0420, 0.010), (0.0400, 0.020), (0.0340, 0.028), (0.0, 0.032)], 96, uv_v=[0, 0, 0.25, 0.55, 0.85, 1.0])
+# Soil is a thin bed, about 17% of the 0.140 m jar, flush with the glass floor.
+# A tall taper read as a lava-rock mound. The top is nearly flat; the moss carpet covers it.
+lathe("Soil", [
+    (0.0, 0.002), (0.036, 0.002), (0.0430, 0.006), (0.0452, 0.014),
+    (0.0446, 0.021), (0.034, 0.023), (0.0, 0.024),
+], 96, uv_v=[0, 0, 0.15, 0.45, 0.75, 0.92, 1.0])
+
+
+def roughen_soil(amplitude=0.0004):
+    """A few tenths of a millimetre on the bed, so the lip is not a lathe circle."""
+    mesh = bpy.data.objects["Soil"].data
+    for vert in mesh.vertices:
+        if vert.co.z < 0.016:
+            continue
+        sample = noise.noise(Vector((vert.co.x, vert.co.y, 1.7)) * 160.0)
+        vert.co.z += sample * amplitude
+    mesh.update()
+    print("[hero] soil roughened", "{:.4f}".format(amplitude))
+
+
+roughen_soil()
 # Moss is clump cushions plus the tuft skirt (terrarium_moss.py), not a lathe dome.
 moss_names = terrarium_moss.build()
 
@@ -154,7 +173,7 @@ def fiddle_points(uncoil, n=90):
     for i in range(stem_n):
         t = i / (stem_n - 1)
         x = 0.004 + 0.006 * math.sin(t * 1.4) - 0.004 * t * t
-        z = 0.040 + 0.040 * t + 0.016 * uncoil * t
+        z = 0.030 + 0.040 * t + 0.016 * uncoil * t
         pts.append(Vector((x, 0.006 - 0.003 * t, z)))
     top = pts[-1]
     # the coil: starts heading up and curls back over toward -x, winding into a shrinking spiral; uncoil opens it
