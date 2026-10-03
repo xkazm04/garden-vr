@@ -1,0 +1,7 @@
+name: sprig-moon
+tool: image_edit
+aspect_ratio: 1:1
+date: 2026-10-03
+derived_from_art_reference: sprig-glow.raw.jpg
+prompt: The same sprig, same stem and leaf shapes. Recolor only the glowing tips to moon-white (#DDF3FF). The stem stays deep warm ink. Isolated on a pure black background, no pot, no jar, no text, no watermark. Soft bloom only on the tips, never neon, never pure white.
+note: Paper keyed to alpha. Kept PNG is sprig_moon.png. Raw edit is sprig-moon.raw.jpg.

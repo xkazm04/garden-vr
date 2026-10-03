@@ -19,6 +19,8 @@ namespace GardenVR.Input
         /// <summary>] next day.</summary>
         NextDay,
         /// <summary>T, run the clock at sixty times. A second press returns to real time.</summary>
-        ClockFast
+        ClockFast,
+        /// <summary>F3, offer the six life-habit seed packets.</summary>
+        SeedPackets
     }
 }

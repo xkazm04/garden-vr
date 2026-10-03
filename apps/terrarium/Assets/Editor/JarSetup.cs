@@ -147,16 +147,16 @@ namespace GardenVR.Terrarium.Editor
             library.Glass = Mat("Jar_Glass", "Fidelity/JarGlass", m =>
             {
                 m.SetTexture("_Cond", Tex("condensation"));
-                m.SetColor("_Tint", new Color(0.05f, 0.16f, 0.12f, 0.04f));
-                m.SetColor("_Rim", new Color(0.50f, 0.92f, 0.74f, 0.62f));
-                m.SetFloat("_RimPower", 2.2f);
-                m.SetColor("_Inner", new Color(0.28f, 0.85f, 0.55f));
-                m.SetVector("_InnerY", new Vector4(0.058f, 0.055f, 0f, 0f));
-                // Soft mint through the cavity. Same glass pass, so it does not add a transparent layer.
-                m.SetColor("_Volume", new Color(0.32f, 1.05f, 0.68f, 0.34f));
-                m.SetVector("_VolumeY", new Vector4(0.058f, 0.050f, 0f, 0f));
-                m.SetFloat("_Drops", 1.0f);
-                m.SetColor("_Streak", new Color(0.75f, 1f, 0.92f, 0.22f));
+                // Low base alpha. The rim is the bright edge. The volume alpha is a wall tint, not a fill.
+                m.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
+                m.SetColor("_Rim", new Color(0.90f, 1.12f, 1.00f, 0.90f));
+                m.SetFloat("_RimPower", 2.35f);
+                m.SetColor("_Inner", new Color(0.40f, 1.15f, 0.68f, 1f));
+                m.SetVector("_InnerY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                m.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
+                m.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                m.SetFloat("_Drops", 1.15f);
+                m.SetColor("_Streak", new Color(0.90f, 1f, 0.96f, 0.46f));
                 m.SetShaderPassEnabled("SRPDefaultUnlit", false);
             });
             library.Moss = Mat("Jar_Moss", "Fidelity/Glow", m =>
@@ -165,8 +165,9 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_MainTex", Tex("moss_macro"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_macro"));
-                m.SetColor("_Emission", new Color(0.035f, 0.090f, 0.048f));
-                m.SetColor("_Rim", new Color(0.28f, 0.62f, 0.36f));
+                // Tips carry this. Apply multiplies it down toward the soil with _Tip.
+                m.SetColor("_Emission", new Color(0.16f, 0.48f, 0.26f));
+                m.SetColor("_Rim", new Color(0.42f, 0.90f, 0.55f));
                 m.SetFloat("_RimPower", 3.2f);
                 m.SetFloat("_GradBottom", 0.58f);
                 m.SetFloat("_GradTop", 1.02f);
@@ -184,8 +185,8 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_MainTex", Tex("moss_card"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_card"));
-                m.SetColor("_Emission", new Color(0.040f, 0.100f, 0.055f));
-                m.SetColor("_Rim", new Color(0.30f, 0.66f, 0.38f));
+                m.SetColor("_Emission", new Color(0.12f, 0.36f, 0.20f));
+                m.SetColor("_Rim", new Color(0.40f, 0.88f, 0.52f));
                 m.SetFloat("_RimPower", 2.2f);
                 m.SetFloat("_Cutoff", 0.04f);
                 m.SetFloat("_Soft", 0.30f);
@@ -239,8 +240,9 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_EmissionTex", Tex("fern_emission"));
                 // Veins carry the backlight. The rim is the bright edge the reference shows.
                 m.SetColor("_Emission", new Color(0.22f, 0.62f, 0.36f) * emissionScale);
-                m.SetColor("_Rim", new Color(0.62f, 1.00f, 0.74f));
+                m.SetColor("_Rim", new Color(0.75f, 1.08f, 0.84f));
                 m.SetFloat("_RimPower", 1.7f);
+                m.SetFloat("_Edge", 0.32f);
                 m.SetFloat("_Cutoff", 0.16f);
                 m.SetFloat("_Soft", 0.20f);
                 m.SetFloat("_Trans", 1.65f);
@@ -261,6 +263,7 @@ namespace GardenVR.Terrarium.Editor
                 m.SetColor("_Emission", new Color(0.55f, 1.12f, 0.40f));
                 m.SetColor("_Rim", new Color(0.82f, 1.00f, 0.62f));
                 m.SetFloat("_RimPower", 1.15f);
+                m.SetFloat("_Edge", 0.18f);
                 m.SetFloat("_Trans", 0.45f);
                 m.SetFloat("_GradBottom", 0.75f);
                 m.SetFloat("_GradTop", 1.12f);

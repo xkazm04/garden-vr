@@ -112,6 +112,7 @@ namespace GardenVR.Input
             if (!DevCommandsEnabled) return;
             if (Pressed(raw.F1, _prev.F1)) DevCommandRaised?.Invoke(DevCommand.StateOverlay);
             if (Pressed(raw.F2, _prev.F2)) DevCommandRaised?.Invoke(DevCommand.AutoPace);
+            if (Pressed(raw.F3, _prev.F3)) DevCommandRaised?.Invoke(DevCommand.SeedPackets);
             if (Pressed(raw.BracketLeft, _prev.BracketLeft)) DevCommandRaised?.Invoke(DevCommand.PreviousDay);
             if (Pressed(raw.BracketRight, _prev.BracketRight)) DevCommandRaised?.Invoke(DevCommand.NextDay);
             if (Pressed(raw.T, _prev.T)) DevCommandRaised?.Invoke(DevCommand.ClockFast);

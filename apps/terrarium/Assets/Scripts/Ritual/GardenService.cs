@@ -32,8 +32,10 @@ namespace GardenVR.Terrarium
         readonly SaveStore<TerrariumSave> _store;
         readonly string _directory;
         int _devDays;
+        double _habitSeconds;
         bool _readOnly;
         TerrariumSave _save;
+        CompanionHabits _habits;
 
         public LoadOutcome Outcome { get; private set; }
         public bool ReadOnly { get { return _readOnly; } }
@@ -79,6 +81,7 @@ namespace GardenVR.Terrarium
             {
                 _save = new TerrariumSave();
                 Garden = new Garden();
+                BindHabits();
                 return;
             }
             _save = result.Doc;
@@ -87,6 +90,82 @@ namespace GardenVR.Terrarium
             if (_save.Tends == null) _save.Tends = new List<TendEvent>();
             if (_save.FrondDays == null) _save.FrondDays = new int[0];
             Garden = Garden.FromSave(_save);
+            BindHabits();
+        }
+
+        public Ledger HabitLedger { get { return _habits != null ? _habits.Ledger : null; } }
+        public bool PacketsOffered { get { return _habits != null && _habits.PacketsOffered; } }
+        public string PendingHabitId { get { return _habits != null ? _habits.PendingId : null; } }
+        public int LastPluckSemitones { get { return _habits != null ? _habits.LastSemitones : 0; } }
+
+        public List<HabitDef> ActiveHabits()
+        {
+            return _habits != null ? _habits.Active() : new List<HabitDef>();
+        }
+
+        public int ShownLeaves(string habitId)
+        {
+            return _habits != null ? _habits.ShownLeaves(habitId) : 0;
+        }
+
+        public float HabitVitality(string habitId)
+        {
+            if (_habits == null) return 1f;
+            return _habits.ShownVitality(habitId, new GardenDay(TodayIndex));
+        }
+
+        public bool YesterdayVisible(string habitId)
+        {
+            if (_habits == null) return false;
+            return _habits.YesterdayVisible(habitId, new GardenDay(TodayIndex), BoundaryClock());
+        }
+
+        /// <summary>First offer returns true so the caller can play seed.appear. The choice is not saved.</summary>
+        public bool OfferSeedPackets()
+        {
+            if (_habits == null || _readOnly || RestoreOffered) return false;
+            return _habits.Offer();
+        }
+
+        public bool TryPlantHabit(string preset)
+        {
+            if (_habits == null || _readOnly || RestoreOffered) return false;
+            if (!_habits.TryPlant(preset, TodayIndex)) return false;
+            Persist();
+            return true;
+        }
+
+        public bool TryArmHabit(string habitId, bool yesterday, TendSource source, out int semitones)
+        {
+            semitones = 0;
+            if (_habits == null || _readOnly || RestoreOffered) return false;
+            var today = new GardenDay(TodayIndex);
+            var day = yesterday ? new GardenDay(today.Index - 1) : today;
+            if (!_habits.TryArm(habitId, day, today, yesterday, source, HabitClock(), BoundaryClock())) return false;
+            semitones = _habits.LastSemitones;
+            return true;
+        }
+
+        public bool TryUndoHabit()
+        {
+            if (_habits == null || _readOnly || RestoreOffered) return false;
+            return _habits.TryUndo();
+        }
+
+        /// <summary>Advances a frozen test clock. A running clock already moves, so it is not stepped twice.</summary>
+        public void StepHabits(float dt)
+        {
+            if (_habits == null || _readOnly || RestoreOffered) return;
+            if (dt < 0f) dt = 0f;
+            if (dt > 0.1f) dt = 0.1f;
+            if (_clock is FixedClock) _habitSeconds += dt;
+            if (_habits.Tick(HabitClock())) Persist();
+        }
+
+        public void FlushHabits()
+        {
+            if (_habits == null || _readOnly || Outcome == LoadOutcome.Failed) return;
+            if (_habits.Flush()) Persist();
         }
 
         public GrowthAnswer CompleteRitual()
@@ -160,6 +239,26 @@ namespace GardenVR.Terrarium
             Outcome = LoadOutcome.Loaded;
             _readOnly = false;
             BackupAvailable = true;
+            _habitSeconds = 0;
+            BindHabits();
+        }
+
+        void BindHabits()
+        {
+            if (_save.Habits == null) _save.Habits = new List<HabitDef>();
+            if (_save.Tends == null) _save.Tends = new List<TendEvent>();
+            _habits = new CompanionHabits(_save);
+        }
+
+        IClock HabitClock()
+        {
+            DateTimeOffset now = _clock is FixedClock ? Now.AddSeconds(_habitSeconds) : Now;
+            return new FixedClock(now, _clock.Zone ?? TimeZoneInfo.Utc);
+        }
+
+        IClock BoundaryClock()
+        {
+            return new FixedClock(Now, _clock.Zone ?? TimeZoneInfo.Utc);
         }
 
         string FirstBackup()
