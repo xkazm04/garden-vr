@@ -27,7 +27,7 @@ namespace GardenVR.Sundial
         public const string BreathPromptId = "prompt.breaths";
         public const string ContinuePromptId = "prompt.continue";
         public const string CueChime = "dusk.chime";
-        public const string OfferLine = "Try three breaths?";
+        public const string OfferLine = SeedCatalog.BreathOffer;
         public const string ContinueLine = "Continue?";
         const float EngageStrength = 0.85f;
         const float SparkleSeconds = 3.2f;
@@ -326,6 +326,7 @@ namespace GardenVR.Sundial
 
         bool CueDue()
         {
+            if (FirstRunWizard.SuppressBreathOffer) return false;
             if (KeptToday()) return false;
             HabitDef habit = WindHabit();
             if (habit == null || _sundial == null || _sundial.Service == null) return false;
