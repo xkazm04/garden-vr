@@ -25,20 +25,25 @@ Material:
     m_TexEnvs:
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: c3829039b6aeb734698fe7888a9edc1f, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Scale: {x: 0.12451172, y: 0.12451172}
+        m_Offset: {x: 0.00024414062, y: 0.50024414}
     m_Ints: []
     m_Floats:
     - _Boil: 0
     - _BoilFps: 10
+    - _BoilPx: 0
+    - _BoilTime: -1
+    - _Coverage: 0
     - _Dst: 10
     - _Fill: 1
+    - _Mask: 0
     - _Ring: 0
     - _Src: 5
     - _T: 0
     - _ZTest: 4
+    - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.72, g: 0.86, b: 0.84, a: 0.8}
+    - _Color: {r: 0.78, g: 0.9, b: 0.86, a: 0.88}
     - _Color2: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

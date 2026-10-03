@@ -15,9 +15,10 @@ namespace GardenVR.Terrarium
     /// </summary>
     public sealed class JarLibrary
     {
-        public Material Glass, Moss, MossCard, Soil, Cork, Fern, FernNew, Fiddle, Seedling, Dew;
+        public Material Glass, Moss, MossCard, Soil, Cork, Fern, FernNew, Fiddle, Seedling, Dew, Flower;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         public Mesh Quad;
+        public Mesh FlowerMesh;
     }
 
     /// <summary>
@@ -30,11 +31,12 @@ namespace GardenVR.Terrarium
     public sealed class JarView : MonoBehaviour, ICaptureState
     {
         // Round-3 full spill is 0.42 x 0.30 and the full jar halo is 0.24 x 0.26.
-        // Lean keeps a small pool (the style still wants a desk light) and the halo size the cost pass measured.
-        public const float LeanSpillWidth = 0.21f;
-        public const float LeanSpillHeight = 0.15f;
-        public const float LeanHaloWidth = 0.15f;
-        public const float LeanHaloHeight = 0.17f;
+        // T-TER-006 lean was 0.21 x 0.15 and 0.15 x 0.17. Those quads still blanketed the jar,
+        // so the fill pass pulls them in again. The glass shader keeps the inner scatter.
+        public const float LeanSpillWidth = 0.08f;
+        public const float LeanSpillHeight = 0.045f;
+        public const float LeanHaloWidth = 0.036f;
+        public const float LeanHaloHeight = 0.026f;
 
         static readonly Color FernEmission = new Color(0.35f, 1.0f, 0.62f);
         static readonly Color FiddleEmission = new Color(0.30f, 0.65f, 0.22f);
@@ -48,6 +50,10 @@ namespace GardenVR.Terrarium
         public float time = 3f;
         /// <summary>Picks which authored frond atlas column each placed frond uses.</summary>
         public int shapeSeed = 4;
+        /// <summary>How many first-flower blooms to show. Positions come from <see cref="FlowerPosition"/>.</summary>
+        public int flowers;
+        /// <summary>Half the spores, and no curl. The style bible's reduced-motion row.</summary>
+        public bool reducedMotion;
         public BreathPhase phase = BreathPhase.Waiting;
         /// <summary>Seconds since the answer began. Negative means the answer is not playing.</summary>
         public float answerTime = -1f;
@@ -68,6 +74,10 @@ namespace GardenVR.Terrarium
         public Material newFrondMat;
         public Material fernMat;
         public Material fiddleMat;
+        public Material mistMat;
+        public Material sporeMat;
+        public Mesh flowerMesh;
+        public Material flowerMat;
         public Transform[] mist;
         public Transform[] billboards;
         public ParticleSystem spores;
@@ -85,6 +95,14 @@ namespace GardenVR.Terrarium
         Vector3 _dewTipLocal;
         Vector3 _dewBaseLocal;
         bool _sporesLive;
+        int _builtFlowers = -1;
+        readonly List<GameObject> _flowerRoots = new List<GameObject>();
+        Transform[] _baseBills;
+        Material _flowerHalo;
+        const int MistGrid = 8;
+        const float MistLoopSeconds = 8f;
+        // #F2D27A, the style-bible spore gold. The card multiplies it, so the material stays this hue.
+        static readonly Color SporeGold = new Color(0.9490196f, 0.8235294f, 0.4784314f, 1f);
 
         static readonly Color RingMint = new Color(0.75f, 1.35f, 1.05f);
         static readonly Color RingAnswer = new Color(1.3f, 1.8f, 1.4f);
@@ -107,6 +125,8 @@ namespace GardenVR.Terrarium
                         if (value >= 1f && answerTime < 0f) answerTime = 2.2f;
                         break;
                     case "shapeSeed": shapeSeed = (int)value; break;
+                    case "flowers": flowers = Mathf.Max(0, (int)value); break;
+                    case "reducedMotion": reducedMotion = value > 0.5f; break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
                     default:
@@ -164,17 +184,10 @@ namespace GardenVR.Terrarium
             }
             if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * life);
 
-            if (mist != null)
-            {
-                for (int i = 0; i < mist.Length; i++)
-                {
-                    if (mist[i] == null) continue;
-                    float ph = Mathf.Repeat(time * 0.08f + i / (float)mist.Length, 1f);
-                    mist[i].localPosition = new Vector3(Mathf.Sin(i * 2.1f + time * 0.3f) * 0.006f, 0.165f + ph * 0.10f, 0f);
-                    mist[i].localScale = new Vector3(0.022f + ph * 0.05f, 0.06f + ph * 0.07f, 1f);
-                }
-            }
+            DriveMist();
+            DriveSporeLook();
             DriveSpores();
+            ApplyFlowers();
         }
 
         /// <summary>
@@ -189,6 +202,8 @@ namespace GardenVR.Terrarium
 
             for (int i = transform.childCount - 1; i >= 0; i--)
                 DestroyObject(transform.GetChild(i).gameObject);
+            _flowerRoots.Clear();
+            _builtFlowers = -1;
 
             model.transform.SetParent(transform, false);
             model.transform.localPosition = Vector3.zero;
@@ -203,6 +218,10 @@ namespace GardenVR.Terrarium
             ringMat = library.Ring;
             coilHaloMat = library.CoilHalo;
             jarHaloMat = library.JarHalo;
+            mistMat = library.Mist;
+            sporeMat = library.Spore;
+            flowerMesh = library.FlowerMesh;
+            flowerMat = library.Flower;
 
             Transform mt = model.transform;
             SetMat(Require(mt, "Jar"), library.Glass);
@@ -298,18 +317,16 @@ namespace GardenVR.Terrarium
             var bills = new List<Transform>();
             Card("BreathRing", library.Ring, new Vector3(0f, 0.0006f, 0f), new Vector2(0.152f, 0.152f), flat);
             Card("DeskSpill", library.Spill, new Vector3(0f, 0.0004f, 0.01f), new Vector2(LeanSpillWidth, LeanSpillHeight), flat);
-            bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.07f, 0f), new Vector2(LeanHaloWidth, LeanHaloHeight), Quaternion.identity).transform);
-            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.012f, 0.086f, -0.01f), new Vector2(0.05f, 0.05f), Quaternion.identity).transform);
+            bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.038f, 0f), new Vector2(LeanHaloWidth, LeanHaloHeight), Quaternion.identity).transform);
+            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.012f, 0.078f, -0.008f), new Vector2(0.02f, 0.02f), Quaternion.identity).transform);
 
-            var mistList = new List<Transform>();
-            for (int i = 0; i < 5; i++)
-            {
-                var c = Card("Mist" + i, library.Mist, new Vector3(0f, 0.16f + i * 0.03f, 0f), new Vector2(0.05f, 0.09f), Quaternion.identity);
-                mistList.Add(c.transform);
-                bills.Add(c.transform);
-            }
-            mist = mistList.ToArray();
-            billboards = bills.ToArray();
+            // One flipbook card, only as wide as the curls. Empty card corners still count as a layer.
+            // Bottom of the card sits inside the cork. The cork hides it, so the curls leave the lip.
+            var plume = Card("Mist0", library.Mist, new Vector3(0f, 0.178f, 0f), new Vector2(0.046f, 0.108f), Quaternion.identity);
+            mist = new[] { plume.transform };
+            bills.Add(plume.transform);
+            _baseBills = bills.ToArray();
+            billboards = _baseBills;
             spores = BuildSpores(library.Spore);
 
             AddCollider(Require(mt, "Jar").gameObject);
@@ -500,6 +517,121 @@ namespace GardenVR.Terrarium
             _dewPathReady = true;
         }
 
+        /// <summary>Golden-angle seats on the moss. The same index always lands in the same place.</summary>
+        public static float FlowerYaw(int index)
+        {
+            return index * 137.50776f + 22f;
+        }
+
+        public static Vector3 FlowerPosition(int index)
+        {
+            float yaw = FlowerYaw(index) * Mathf.Deg2Rad;
+            float radius = 0.012f + (index % 3) * 0.005f;
+            return new Vector3(Mathf.Cos(yaw) * radius, 0.050f, Mathf.Sin(yaw) * radius);
+        }
+
+        void DriveMist()
+        {
+            if (mistMat != null)
+            {
+                int frames = MistGrid * MistGrid;
+                int frame = Mathf.FloorToInt(Mathf.Repeat(time / MistLoopSeconds, 1f) * frames);
+                if (frame >= frames) frame = frames - 1;
+                int col = frame % MistGrid;
+                int row = frame / MistGrid;
+                float cell = 1f / MistGrid;
+                // Half a texel, so the bilinear filter stays inside its own frame.
+                float inset = 0.5f / 2048f;
+                float scale = cell - inset * 2f;
+                mistMat.SetTextureScale("_MainTex", new Vector2(scale, scale));
+                mistMat.SetTextureOffset("_MainTex", new Vector2(col * cell + inset, row * cell + inset));
+            }
+            if (mist == null) return;
+            for (int i = 0; i < mist.Length; i++)
+            {
+                if (mist[i] == null) continue;
+                mist[i].localPosition = new Vector3(Mathf.Sin(time * 0.35f + i) * 0.004f, 0.178f, 0f);
+            }
+        }
+
+        void DriveSporeLook()
+        {
+            if (sporeMat != null)
+            {
+                // One second of brighter gold while the answer plays, then back.
+                float boost = 0f;
+                if (answerTime >= 0f && answerTime <= 1f)
+                    boost = Mathf.Sin(Mathf.Clamp01(answerTime) * Mathf.PI);
+                sporeMat.SetColor("_Color", SporeGold * (1.35f + 0.85f * boost));
+            }
+            if (spores == null) return;
+            var emission = spores.emission;
+            emission.rateOverTime = reducedMotion ? 2f : 4f;
+            var noise = spores.noise;
+            noise.enabled = !reducedMotion;
+            var main = spores.main;
+            main.maxParticles = reducedMotion ? 20 : 40;
+        }
+
+        void ApplyFlowers()
+        {
+            if (flowerMesh == null || flowerMat == null) return;
+            if (_builtFlowers == flowers) return;
+            for (int i = _flowerRoots.Count - 1; i >= 0; i--)
+                DestroyObject(_flowerRoots[i]);
+            _flowerRoots.Clear();
+            int count = Mathf.Max(0, flowers);
+            for (int k = 0; k < count; k++)
+            {
+                var go = new GameObject("Flower" + k);
+                go.transform.SetParent(transform, false);
+                go.transform.localPosition = FlowerPosition(k);
+                go.transform.localRotation = Quaternion.Euler(-6f, -FlowerYaw(k), 0f);
+                go.AddComponent<MeshFilter>().sharedMesh = flowerMesh;
+                var renderer = go.AddComponent<MeshRenderer>();
+                renderer.sharedMaterial = flowerMat;
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+                Material haloMat = FlowerHaloMaterial();
+                if (haloMat != null && _quad != null)
+                {
+                    var halo = Card("FlowerHalo" + k, haloMat, Vector3.zero, new Vector2(0.028f, 0.028f), Quaternion.identity);
+                    halo.transform.SetParent(go.transform, false);
+                    halo.transform.localPosition = new Vector3(0f, 0.016f, 0f);
+                    halo.transform.localRotation = Quaternion.identity;
+                    halo.transform.localScale = new Vector3(0.028f, 0.028f, 1f);
+                }
+                _flowerRoots.Add(go);
+            }
+            _builtFlowers = count;
+            var bills = new List<Transform>();
+            if (_baseBills != null)
+            {
+                for (int i = 0; i < _baseBills.Length; i++)
+                    if (_baseBills[i] != null) bills.Add(_baseBills[i]);
+            }
+            for (int i = 0; i < _flowerRoots.Count; i++)
+            {
+                Transform root = _flowerRoots[i] != null ? _flowerRoots[i].transform : null;
+                if (root == null) continue;
+                for (int c = 0; c < root.childCount; c++)
+                {
+                    Transform child = root.GetChild(c);
+                    if (child.name.StartsWith("FlowerHalo", System.StringComparison.Ordinal)) bills.Add(child);
+                }
+            }
+            billboards = bills.ToArray();
+        }
+
+        Material FlowerHaloMaterial()
+        {
+            if (_flowerHalo != null) return _flowerHalo;
+            if (jarHaloMat == null) return null;
+            _flowerHalo = new Material(jarHaloMat) { name = "FlowerHalo" };
+            _flowerHalo.SetColor("_Color", SporeGold * 0.45f);
+            return _flowerHalo;
+        }
+
         void DriveSpores()
         {
             if (spores == null) return;
@@ -538,7 +670,7 @@ namespace GardenVR.Terrarium
             if (_sporeVelocityAligned || spores == null) return;
             var velocity = spores.velocityOverLifetime;
             velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
-            velocity.y = new ParticleSystem.MinMaxCurve(0.002f, 0.006f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0.01f, 0.03f);
             velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
             _sporeVelocityAligned = true;
         }
@@ -553,20 +685,21 @@ namespace GardenVR.Terrarium
             main.loop = true;
             main.playOnAwake = false;
             main.duration = 10f;
-            main.startLifetime = 9f;
-            main.startSpeed = 0.004f;
-            main.startSize = new ParticleSystem.MinMaxCurve(0.0012f, 0.0026f);
-            main.startColor = new ParticleSystem.MinMaxGradient(new Color(1.0f, 0.78f, 0.30f), new Color(0.85f, 1.0f, 0.45f));
-            main.maxParticles = 90;
+            main.startLifetime = 8f;
+            // Sphere emission is radial. Keep that tiny, and let the Y velocity be the 1-3 cm/s rise.
+            main.startSpeed = 0.002f;
+            main.startSize = new ParticleSystem.MinMaxCurve(0.0011f, 0.0022f);
+            main.startColor = Color.white;
+            main.maxParticles = 40;
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
             main.useUnscaledTime = false;
             var emission = ps.emission;
-            emission.rateOverTime = 9f;
+            emission.rateOverTime = 4f;
             var shape = ps.shape;
             shape.shapeType = ParticleSystemShapeType.Sphere;
-            shape.radius = 0.11f;
-            shape.radiusThickness = 0.35f;
-            shape.position = new Vector3(0f, 0.08f, 0f);
+            shape.radius = 0.038f;
+            shape.radiusThickness = 0.55f;
+            shape.position = new Vector3(0f, 0.062f, 0f);
             var noise = ps.noise;
             noise.enabled = true;
             noise.strength = 0.004f;
@@ -574,7 +707,7 @@ namespace GardenVR.Terrarium
             var velocity = ps.velocityOverLifetime;
             velocity.enabled = true;
             velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
-            velocity.y = new ParticleSystem.MinMaxCurve(0.002f, 0.006f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0.01f, 0.03f);
             velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
             var color = ps.colorOverLifetime;
             color.enabled = true;

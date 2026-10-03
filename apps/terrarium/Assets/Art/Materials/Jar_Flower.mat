@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Jar_Cork
+  m_Name: Jar_Flower
   m_Shader: {fileID: 4800000, guid: 88fd645f85b6421448a0135ed11607d4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,31 +24,31 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _EmissionTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8d1a5f7b2671a394688c1a9b33d35a51, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 567f5073019f8c84893a62c6b11f9e98, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8d1a5f7b2671a394688c1a9b33d35a51, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TopTex:
-        m_Texture: {fileID: 2800000, guid: 82e9137161ef2144fb709af569b705b8, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _Cutoff: 0
-    - _GradBottom: 1.12
-    - _GradTop: 0.84
-    - _RimPower: 4
+    - _GradBottom: 0.9
+    - _GradTop: 1.2
+    - _RimPower: 2.1
     - _Shell: 0
-    - _TopAmount: 1
-    - _TopTile: 14
-    - _Tri: 16
+    - _TopAmount: 0
+    - _TopTile: 10
+    - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0, g: 0, b: 0, a: 1}
-    - _GradY: {r: 0.118, g: 0.14, b: 0, a: 0}
-    - _Rim: {r: 0, g: 0, b: 0, a: 1}
-    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Emission: {r: 1.05, g: 0.68, b: 0.24, a: 1}
+    - _GradY: {r: 0.04, g: 0.08, b: 0, a: 0}
+    - _Rim: {r: 1, g: 0.78, b: 0.36, a: 1}
+    - _Tint: {r: 1.05, g: 0.86, b: 0.52, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
