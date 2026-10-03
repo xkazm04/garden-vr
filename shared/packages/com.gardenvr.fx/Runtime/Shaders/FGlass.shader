@@ -2,7 +2,8 @@
 // (UniversalForward, Cull Back), so the jar reads as a thick shell without sorting two objects.
 // Output is premultiplied (Blend One OneMinusSrcAlpha): the pane stays clear, the rim and the beads stay bright,
 // and a soft inner light can add without replacing the plants. The mint tint sits on the silhouette, not across
-// the cavity. The light is full beside the moss and falls off with height. Breath fog is a separate thin layer:
+// the cavity. The light is full beside the moss and falls off with height. The lower
+// third does not add wall opacity, so it stays as clear as the shoulder. Breath fog is a separate thin layer:
 // it is zero when _Fog is zero, and its coverage never exceeds 0.30. Condensation beads stay in the upper third.
 // No refraction: a grab pass is the one thing Quest cannot afford here.
 // _InnerY is (full-until height, fade length), in metres above the mesh origin. Older gaussian centre/width
@@ -52,13 +53,13 @@ Shader "Fidelity/Glass"
             // Fog keeps the original sample, so the breath haze still clears bottom-up.
             float2 fogUv = float2(ang * 1.15, i.op.y * 16.0);
             half3 fogCond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, fogUv).rgb;
-            // The bead plate is dense in its lower half. Upper glass reads only the sparse top,
-            // in a short band under the cork, so the droplets stay a few beads and not a field.
-            float band = saturate((i.op.y - 0.092) / 0.026);
+            // The bead plate is dense in its lower half. The shoulder and the short neck
+            // read only the sparse top, so the droplets stay a few beads and not a field.
+            float band = saturate((i.op.y - 0.078) / 0.034);
             float2 beadUv = float2(ang * 0.22 + 0.37, lerp(0.82, 0.97, band));
             half3 cond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, beadUv).rgb;
             half upper = smoothstep(0.035, 0.10, i.op.y);
-            half beads = smoothstep(0.094, 0.104, i.op.y) * (1.0 - smoothstep(0.116, 0.124, i.op.y));
+            half beads = smoothstep(0.082, 0.094, i.op.y) * (1.0 - smoothstep(0.114, 0.123, i.op.y));
             half bead = smoothstep(0.72, 0.94, cond.r);
             // The plate is still a field of cores. Keep about a third so the band stays a few beads.
             float keep = frac(sin(dot(floor(beadUv * float2(14.0, 28.0)), float2(127.1, 311.7))) * 43758.5453);
@@ -69,19 +70,20 @@ Shader "Fidelity/Glass"
             half fogA = saturate(_Fog) * fogMask * 0.30;
             // Full beside the moss, then gone as the glass rises. Nothing in the soil line.
             half column = (1.0 - smoothstep(_InnerY.x, _InnerY.x + max(_InnerY.y, 1e-4), i.op.y)) * smoothstep(0.008, 0.022, i.op.y);
-            // Silhouette carries a faint mint tint. The middle of the pane is the window.
+            // The middle of the pane is the window. Wall opacity is not added on the lower third.
             half wall = smoothstep(0.014, 0.046, abs(i.op.x));
             half cavity = 1.0 - wall;
             float vs = mul(UNITY_MATRIX_V, float4(i.wp, 1)).x - mul(UNITY_MATRIX_V, float4(TransformObjectToWorld(float3(0, 0, 0)) + float3(0, i.op.y, 0), 1)).x;
             half streak = (smoothstep(0.006, 0.0, abs(vs + 0.030)) + 0.6 * smoothstep(0.003, 0.0, abs(vs + 0.022))) * smoothstep(0.02, 0.05, i.op.y) * smoothstep(0.125, 0.10, i.op.y);
             half rimA = rim * _Rim.a;
             half dropA = drops * 0.42;
-            half wallA = wall * column * 0.10;
+            // No extra opacity on the lower wall. The old 0.10 made the heel milky.
+            half wallA = 0.0;
             half baseA = _Tint.a;
             half streakA = streak * _Streak.a * (1.0 - backWall * 0.7);
             half a = saturate(baseA + rimA + dropA + fogA + wallA + streakA);
             // Air light is added, not used as coverage, and it thins toward the glass and with height.
-            half3 light = _Inner.rgb * column * lerp(0.35, 1.0, cavity) * 0.22;
+            half3 light = _Inner.rgb * column * lerp(0.08, 1.0, cavity) * 0.18;
             half3 fogRgb = lerp(_Inner.rgb, half3(0.82, 0.94, 0.90), 0.55);
             half3 c =
                 _Tint.rgb * baseA

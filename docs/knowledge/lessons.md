@@ -40,3 +40,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   read), yet Gemini still scored 2/5, citing "billboards" and photoreal glass the engine target never had. Rule: calibrate
   the judge before using it as a gate - score reference A against reference B (same style, different image) and read
   every frame's score against that ceiling. Target: llm-observability / judge-calibration-and-drift.
+- 2026-10-03 - **Unlocked art iterations oscillate.** Over seven Terrarium art passes, each task fixed its named target
+  and silently regressed a neighbour (glow lost in T-TER-017, glass fogged in T-TER-018, cleared in T-TER-019, fogged and
+  neon again in T-TER-020). Rule: once a look is accepted, lock it (values + the approving frame in a LOCKED file) and
+  make every later art task run a per-region regression diff against the approved frame. Target: game-production / art
+  pipeline; software-engineering / quality-gates (golden-image regression).
