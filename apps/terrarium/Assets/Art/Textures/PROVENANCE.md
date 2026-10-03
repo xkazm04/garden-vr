@@ -8,6 +8,8 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the names in t
 |---|---|---|---|
 | condensation.png | generated | T-TER-007 macro beads `condensation_beads.png`. `compose_jar_detail.py` packs R as the droplet mask (denser in the lower half of the jar), B as haze, and G as a highlight. G is a normal estimate: Sobel of luminance height, not a measured normal. | bound on the glass, haze only |
 | droplet_normal.png | painted-by-code | T-TER-033 `droplet_normal.py`. Sphere-cap beads. RGB is a tangent normal, A is a hard cut. Not sampled from the reference frames. | bound on the glass as `_Bead` |
+| s1_drops.png | painted-by-code | T-TER-040 `s1_structured_glass.py`. Sphere caps, larger toward the top. RG is a tangent normal, B is height (the fog wipe), A is the bead mask. Not sampled from the reference frames. | bound on the glass as `_DropN`. Sampled only by variant `s1` |
+| s1_studio.png | painted-by-code | T-TER-040 `s1_structured_glass.py`. Six 128 px faces in one strip (+X -X +Y -Y +Z -Z): two cool vertical softboxes, a warm upper blob, a mint foot. Not sampled from the reference frames. | bound on the glass as `_Studio`. Sampled only by variant `s1` |
 | cork.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
 | cork_side.png | generated | T-TER-007 macro `cork_macro.png`. `compose_jar_detail.py` makes it tileable and grades the mean to a light warm tan. Wrap-around edge diff is in `orchestration/runs/terrarium/T-TER-007/edge-diff.txt`. | bound on the cork side |
 | cork_top.png | generated | T-TER-007 top-down edit `cork_top_macro.png`. Same tile and grade as the side. | bound as the cork cap |

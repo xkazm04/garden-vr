@@ -6,11 +6,15 @@
 // line, a dark edge-on band, a second inner line, and a screen-space bend of the opaque
 // copy. The bend is inward and strongest at the edge. No ray trace.
 // Beads are an alpha-cut normal map in the upper third. _Fog lifts the clear line.
+// _S1_ON is the T-TER-040 spike. It is compiled only when the pass defines that keyword
+// (Fidelity/JarGlass). It does not sample the opaque copy. Fidelity/Glass leaves it off.
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
 
 TEXTURE2D(_Cond); SAMPLER(sampler_Cond);
 TEXTURE2D(_Bead); SAMPLER(sampler_Bead);
+TEXTURE2D(_Studio); SAMPLER(sampler_Studio);
+TEXTURE2D(_DropN); SAMPLER(sampler_DropN);
 CBUFFER_START(UnityPerMaterial)
     half4 _Tint, _Rim, _Inner, _Streak, _Volume;
     half _RimPower, _Fog, _Drops, _Refract;
@@ -202,10 +206,124 @@ half4 GlassThick(V i, half backWall)
     return half4(c, a);
 }
 
+// Six faces in a horizontal strip: +X, -X, +Y, -Y, +Z, -Z. One sample. No resolve.
+half3 SampleStudio(float3 dir)
+{
+    float3 a = abs(dir);
+    float face;
+    float2 uv;
+    if (a.x >= a.y && a.x >= a.z)
+    {
+        if (dir.x >= 0.0) { face = 0.0; uv = float2(-dir.z, dir.y) / max(a.x, 1e-4); }
+        else { face = 1.0; uv = float2(dir.z, dir.y) / max(a.x, 1e-4); }
+    }
+    else if (a.y >= a.z)
+    {
+        if (dir.y >= 0.0) { face = 2.0; uv = float2(dir.x, -dir.z) / max(a.y, 1e-4); }
+        else { face = 3.0; uv = float2(dir.x, dir.z) / max(a.y, 1e-4); }
+    }
+    else
+    {
+        if (dir.z >= 0.0) { face = 4.0; uv = float2(dir.x, dir.y) / max(a.z, 1e-4); }
+        else { face = 5.0; uv = float2(-dir.x, dir.y) / max(a.z, 1e-4); }
+    }
+    uv = uv * 0.5 + 0.5;
+    uv = clamp(uv, 1.0 / 256.0, 1.0 - 1.0 / 256.0);
+    return SAMPLE_TEXTURE2D(_Studio, sampler_Studio, float2((face + uv.x) * (1.0 / 6.0), uv.y)).rgb;
+}
+
+#if defined(_S1_ON)
+// Structured clear glass. No veil, no air light, no opaque-copy sample.
+// Schlick covers the pane. NdotV draws the thickness bands. The foot is a light pipe.
+// Droplets are a normal atlas; fog wipes clear under each drop.
+half4 GlassStructured(V i, half backWall)
+{
+    float3 n = normalize(i.wn);
+    float3 v = normalize(GetWorldSpaceViewDir(i.wp));
+    half ndv = saturate(abs(dot(n, v)));
+    float3 dx = ddx(n);
+    float3 dy = ddy(n);
+    half rough = saturate((dot(dx, dx) + dot(dy, dy)) * 24.0);
+    half expo = lerp(5.0, 2.4, rough);
+    half F = 0.04 + 0.96 * pow(saturate(1.0 - ndv), expo);
+    half3 cap = half3(0.804, 1.0, 0.903);
+
+    half outer = 1.0 - smoothstep(0.0, 0.040, ndv);
+    half dark = smoothstep(0.025, 0.070, ndv) * (1.0 - smoothstep(0.15, 0.26, ndv));
+    half innerLine = smoothstep(0.18, 0.25, ndv) * (1.0 - smoothstep(0.32, 0.42, ndv));
+
+    float3 r = reflect(-v, n);
+    half3 env = min(SampleStudio(r), cap);
+    half3 refl = env * F;
+
+    float y = i.op.y;
+    float rad = length(i.op.xz);
+    // The glow sits on the outer heel, not across the whole base.
+    half foot = (1.0 - smoothstep(0.001, 0.011, y)) * smoothstep(0.034, 0.045, rad);
+    half footEdge = foot * lerp(0.65, 1.0, saturate(1.0 - ndv));
+    half3 footCol = min(_Inner.rgb, cap);
+
+    half lip = smoothstep(0.1185, 0.1212, y) * (1.0 - smoothstep(0.1246, 0.1262, y));
+    half lipLine = lip * smoothstep(0.20, 0.65, 1.0 - ndv);
+
+    float ang = atan2(i.op.x, -i.op.z);
+    float2 dropUv = float2(ang * 4.5 / 6.2831853 + 0.5, saturate((y - 0.072) / 0.050));
+    half4 drop = SAMPLE_TEXTURE2D(_DropN, sampler_DropN, dropUv);
+    half presence = smoothstep(0.08, 0.40, saturate(_Fog));
+    half window = smoothstep(0.076, 0.090, y) * (1.0 - smoothstep(0.118, 0.124, y));
+    half bead = smoothstep(0.50, 0.90, drop.a);
+    half dropMask = bead * window * presence * saturate(_Drops);
+    half wipe = saturate(drop.b);
+    half shoulder = smoothstep(0.074, 0.092, y) * (1.0 - smoothstep(0.116, 0.123, y));
+    // The JarG1 glass-mean window is this shoulder. The plate behind it is about 0.03.
+    half mistA = shoulder * presence * (1.0 - wipe) * 0.20;
+
+    float3 up = float3(0, 1, 0);
+    float3 tangent = cross(up, n);
+    if (dot(tangent, tangent) < 1e-6) tangent = float3(1, 0, 0);
+    tangent = normalize(tangent);
+    float3 bitangent = normalize(cross(n, tangent));
+    if (dot(bitangent, up) < 0) bitangent = -bitangent;
+    float2 nxy = drop.rg * 2.0 - 1.0;
+    float3 nPert = normalize(n + tangent * nxy.x * 1.35 + bitangent * nxy.y * 1.35);
+    half rimD = saturate((length(nxy) - 0.12) * 1.7);
+    half3 specC = min(half3(0.80, 0.98, 0.94), cap);
+    float3 lamp = normalize(float3(-0.42, 0.64, -0.64));
+    half phong = pow(saturate(dot(nPert, normalize(v + lamp))), lerp(52.0, 18.0, rough));
+    half3 dropEnv = min(SampleStudio(reflect(-v, nPert)), cap);
+    half3 dropRgb = lerp(dropEnv, specC, 0.40) * (0.30 + phong);
+    dropRgb = lerp(dropRgb, half3(0.012, 0.032, 0.038), rimD) * dropMask;
+
+    half3 lineCol = min(half3(0.78, 0.96, 0.92), cap);
+    half3 bandCol = half3(0.035, 0.085, 0.095);
+    half3 mistCol = min(half3(0.58, 0.84, 0.72), cap);
+    // A few thousandths, so soil through the clear pane is not darker than the reference p5.
+    // This is not the old air-light veil.
+    half3 body = half3(0.0025, 0.0055, 0.0035);
+
+    half a = saturate(F * 0.80 + outer * 0.50 + innerLine * 0.35 + dark * 0.70 + mistA + lipLine * 0.45 + dropMask * 0.55 + footEdge * 0.25);
+    half3 c =
+        refl
+        + lineCol * (outer * 0.92 + innerLine * 0.50 + lipLine * 0.75)
+        + bandCol * dark
+        + mistCol * mistA
+        + footCol * footEdge * 0.85
+        + dropRgb
+        + body;
+    c = min(c, cap);
+    if (backWall > 0.5) { c *= 0.40; a *= 0.40; }
+    return half4(c, a);
+}
+#endif
+
 half4 GlassShade(V i, half backWall)
 {
+#if defined(_S1_ON)
+    return GlassStructured(i, backWall);
+#else
     if (_Refract <= 0.5)
         return GlassLegacy(i, backWall);
     return GlassThick(i, backWall);
+#endif
 }
 #endif
