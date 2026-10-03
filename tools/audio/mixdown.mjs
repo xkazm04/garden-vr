@@ -3,6 +3,9 @@
 //
 //   node tools/audio/mixdown.mjs --log cues.jsonl --manifest apps/terrarium/Assets/Audio/cues.json --out mix.wav [--duration s]
 //
+// Optional manifest.masterGainDb (number, dB) is a program trim on the summed mix.
+// It is not added again to each logged gainDb. Missing or 0 leaves the sum unchanged.
+//
 // Each played line is delayed with adelay, gained with volume, and summed with amix.
 // A 3D cue whose file is mono is duplicated to stereo. Looping cues (room, bed) hold until the mix ends.
 import { spawnSync } from 'node:child_process';
@@ -49,6 +52,8 @@ const opt = args(process.argv.slice(2));
 if (!opt.log || !opt.manifest || !opt.out) die('usage: mixdown.mjs --log <cues.jsonl> --manifest <cues.json> --out <mix.wav> [--duration s]');
 
 const manifest = JSON.parse(fs.readFileSync(opt.manifest, 'utf8'));
+const masterDb = Number(manifest.masterGainDb);
+const master = Number.isFinite(masterDb) ? masterDb : 0;
 const byId = new Map();
 for (const cue of manifest.cues || []) byId.set(cue.id, cue);
 const audioRoot = path.dirname(path.resolve(opt.manifest));
@@ -113,8 +118,9 @@ probed.forEach((ev, i) => {
   chains.push(`[${i}:a]${parts.join(',')}[a${i}]`);
   labels.push(`[a${i}]`);
 });
-chains.push(`${labels.join('')}amix=inputs=${probed.length}:duration=longest:dropout_transition=0:normalize=0,atrim=0:${duration.toFixed(3)}[mix]`);
+const masterFilter = master !== 0 ? `,volume=${master}dB` : '';
+chains.push(`${labels.join('')}amix=inputs=${probed.length}:duration=longest:dropout_transition=0:normalize=0${masterFilter},atrim=0:${duration.toFixed(3)}[mix]`);
 
 ffArgs.push('-filter_complex', chains.join(';'), '-map', '[mix]', '-c:a', 'pcm_s16le', '-ar', '48000', '-ac', '2', outFile);
 run('ffmpeg', ffArgs);
-console.log(JSON.stringify({ ok: true, events: probed.length, out: outFile, seconds: Number(duration.toFixed(3)) }));
+console.log(JSON.stringify({ ok: true, events: probed.length, out: outFile, seconds: Number(duration.toFixed(3)), masterGainDb: master }));
