@@ -83,6 +83,8 @@ namespace GardenVR.Terrarium
         public int flowers;
         /// <summary>Garden day. Seven shows the week: seven fronds, the newest brightest, one quieter, the first flower.</summary>
         public int day;
+        /// <summary>Lifetime fronds. Season light and details come only from <see cref="Season"/>. 0 to 6 is week 1, the locked mint.</summary>
+        public int lifetimeFronds;
         /// <summary>Half the spores, and no curl. The style bible's reduced-motion row.</summary>
         public bool reducedMotion;
         public BreathPhase phase = BreathPhase.Waiting;
@@ -154,6 +156,7 @@ namespace GardenVR.Terrarium
         Transform _ripple;
         Material _rippleMat;
         readonly CompanionGarden _companions = new CompanionGarden();
+        readonly SeasonDetails _season = new SeasonDetails();
         bool _liveCompanions;
         List<CompanionGarden.Shot> _liveShots = new List<CompanionGarden.Shot>();
         List<CompanionGarden.Shot> _captureShots = new List<CompanionGarden.Shot>();
@@ -191,6 +194,27 @@ namespace GardenVR.Terrarium
         static readonly Color RingGold = new Color(0.92f, 0.70f, 0.32f);
         static readonly Color SpillMint = new Color(0.12f, 0.30f, 0.18f, 1f);
 
+        // Week 6 endpoints. Week 1 returns the locked colours above, unchanged.
+        static readonly Color MossEmissionWarm = new Color(0.34f, 0.40f, 0.10f);
+        static readonly Color MossRimWarm = new Color(0.36f, 0.40f, 0.12f);
+        static readonly Color MossCardEmissionWarm = new Color(0.26f, 0.30f, 0.08f);
+        static readonly Color MossCardRimWarm = new Color(0.32f, 0.34f, 0.12f);
+        static readonly Color FernEmissionWarm = new Color(0.36f, 0.50f, 0.18f);
+        static readonly Color FernRimWarm = new Color(0.48f, 0.46f, 0.24f);
+        static readonly Color FiddleEmissionWarm = new Color(0.58f, 0.82f, 0.34f);
+        static readonly Color FiddleRimWarm = new Color(0.62f, 0.58f, 0.28f);
+        static readonly Color FocusGold = new Color(0.46f, 0.40f, 0.16f, 1f);
+        static readonly Color GlassRimWarm = new Color(0.52f, 0.56f, 0.42f, 0.26f);
+        static readonly Color GlassInnerWarm = new Color(0.42f, 0.40f, 0.14f, 1f);
+        static readonly Color GlassVolumeCool = new Color(0.30f, 0.78f, 0.52f, 0.10f);
+        static readonly Color GlassVolumeWarm = new Color(0.50f, 0.68f, 0.30f, 0.10f);
+        static readonly Color GlassStreakCool = new Color(0.50f, 0.66f, 0.74f, 0.12f);
+        static readonly Color GlassStreakWarm = new Color(0.64f, 0.62f, 0.42f, 0.12f);
+        static readonly Color DewEmissionWarm = new Color(0.86f, 0.88f, 0.52f);
+        static readonly Color CoilGlowWarm = new Color(0.64f, 0.66f, 0.28f);
+        static readonly Color JarGlowWarm = new Color(0.30f, 0.24f, 0.10f);
+        static readonly Color SpillWarm = new Color(0.34f, 0.26f, 0.10f, 1f);
+
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
             if (state == null) return;
@@ -200,6 +224,8 @@ namespace GardenVR.Terrarium
             int capLeaves = 0;
             bool sawHabits = false;
             string etch = null;
+            bool sawLifetime = false;
+            int lifetimeOverride = 0;
             foreach (var pair in state)
             {
                 if (pair.Key == "journey")
@@ -228,6 +254,10 @@ namespace GardenVR.Terrarium
                     case "shapeSeed": shapeSeed = (int)value; break;
                     case "flowers": flowers = Mathf.Max(0, (int)value); break;
                     case "day": day = Mathf.Max(0, (int)value); break;
+                    case "lifetime":
+                        lifetimeOverride = Mathf.Max(0, (int)value);
+                        sawLifetime = true;
+                        break;
                     case "reducedMotion": reducedMotion = value > 0.5f; break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
@@ -246,6 +276,7 @@ namespace GardenVR.Terrarium
                 }
             }
             if (!sawJourney) _hasLook = false;
+            if (sawLifetime) lifetimeFronds = lifetimeOverride;
             int lookLit = -1;
             bool sawLook = false;
             if (state.ContainsKey("looklit"))
@@ -319,6 +350,7 @@ namespace GardenVR.Terrarium
             _hasLook = true;
             vitality = life;
             flowers = garden.Flowers;
+            lifetimeFronds = count;
             RecordFrondCount = count;
             ShownLean = LeanDegrees(life);
             ShownDew = garden.DewToday;
@@ -373,6 +405,14 @@ namespace GardenVR.Terrarium
             return Mathf.Sin(index * 2.399963f) * 26f;
         }
 
+        /// <summary>Week 1 returns <paramref name="cool"/> exactly. Later weeks move toward <paramref name="warm"/>.</summary>
+        public static Color SeasonColor(Color cool, Color warm, float warmth)
+        {
+            if (warmth <= 0f) return cool;
+            if (warmth >= 1f) return warm;
+            return Color.Lerp(cool, warm, warmth);
+        }
+
         public void Apply()
         {
             ResolveFrondSlots();
@@ -394,6 +434,7 @@ namespace GardenVR.Terrarium
                 gold = Mathf.Clamp01((answerTime - 0.45f) / 0.6f);
             }
             float life = Mathf.Clamp(vitality, 0.6f, 1f);
+            float seasonWarmth = Season.Warmth(Mathf.Max(0, lifetimeFronds));
             if (ringMat != null)
             {
                 ringMat.SetFloat("_Fill", answering || answer > 0f ? 1f : breath);
@@ -407,16 +448,16 @@ namespace GardenVR.Terrarium
                 glassMat.SetFloat("_Drops", 1.15f);
                 // Clear pane. Apply owns these so a stale asset cannot put the mint fill back.
                 glassMat.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
-                glassMat.SetColor("_Rim", GlassRim);
+                glassMat.SetColor("_Rim", SeasonColor(GlassRim, GlassRimWarm, seasonWarmth));
                 glassMat.SetFloat("_RimPower", GlassRimPower);
-                glassMat.SetColor("_Inner", GlassInner);
+                glassMat.SetColor("_Inner", SeasonColor(GlassInner, GlassInnerWarm, seasonWarmth));
                 // Locked in Assets/Art/LOCKED.md from T-TER-019. Full beside the moss, gone by the shoulder.
                 // Full beside the moss, gone before the shoulder, so the upper pane is not a glowing edge.
                 glassMat.SetVector("_InnerY", new Vector4(0.030f, 0.040f, 0f, 0f));
-                glassMat.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
+                glassMat.SetColor("_Volume", SeasonColor(GlassVolumeCool, GlassVolumeWarm, seasonWarmth));
                 glassMat.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
                 // A near-white streak at 0.46 was a hard column in the pane. Keep the stroke, under the cap.
-                glassMat.SetColor("_Streak", new Color(0.50f, 0.66f, 0.74f, 0.12f));
+                glassMat.SetColor("_Streak", SeasonColor(GlassStreakCool, GlassStreakWarm, seasonWarmth));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
             }
             float recoveredWave = 0f;
@@ -425,27 +466,27 @@ namespace GardenVR.Terrarium
             float mossGlow = Mathf.Max(answering ? ripple : pulse, recoveredWave * 1.65f);
             if (mossMat != null)
             {
-                mossMat.SetColor("_Emission", MossEmission * (1f + 0.45f * mossGlow));
-                mossMat.SetColor("_Rim", MossRim * (0.85f + 0.35f * mossGlow));
+                mossMat.SetColor("_Emission", SeasonColor(MossEmission, MossEmissionWarm, seasonWarmth) * (1f + 0.45f * mossGlow));
+                mossMat.SetColor("_Rim", SeasonColor(MossRim, MossRimWarm, seasonWarmth) * (0.85f + 0.35f * mossGlow));
                 SetTip(mossMat, 0.018f, 0.048f, 0.18f, 1f);
             }
             if (mossCardMat != null)
             {
-                mossCardMat.SetColor("_Emission", MossCardEmission * (1f + 0.40f * mossGlow));
-                mossCardMat.SetColor("_Rim", MossCardRim);
+                mossCardMat.SetColor("_Emission", SeasonColor(MossCardEmission, MossCardEmissionWarm, seasonWarmth) * (1f + 0.40f * mossGlow));
+                mossCardMat.SetColor("_Rim", SeasonColor(MossCardRim, MossCardRimWarm, seasonWarmth));
                 SetTip(mossCardMat, 0.020f, 0.052f, 0.22f, 1f);
             }
             float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
             if (_hasLook && _look.Gap) coil = 0.35f;
             if (_lookLit >= 0) coil = 0.35f;
             if (coilHaloMat != null)
-                coilHaloMat.SetColor("_Color", CoilGlow * coil);
+                coilHaloMat.SetColor("_Color", SeasonColor(CoilGlow, CoilGlowWarm, seasonWarmth) * coil);
             if (jarHaloMat != null)
-                jarHaloMat.SetColor("_Color", JarGlow * (1f + 0.25f * pulse));
+                jarHaloMat.SetColor("_Color", SeasonColor(JarGlow, JarGlowWarm, seasonWarmth) * (1f + 0.25f * pulse));
             if (fernMat != null)
             {
-                fernMat.SetColor("_Emission", FernEmission * life);
-                fernMat.SetColor("_Rim", FernRim);
+                fernMat.SetColor("_Emission", SeasonColor(FernEmission, FernEmissionWarm, seasonWarmth) * life);
+                fernMat.SetColor("_Rim", SeasonColor(FernRim, FernRimWarm, seasonWarmth));
                 fernMat.SetFloat("_Edge", 0.16f);
                 fernMat.SetFloat("_Trans", 0.75f);
                 SetTip(fernMat, 0.030f, 0.110f, 0.30f, 1f);
@@ -454,8 +495,8 @@ namespace GardenVR.Terrarium
             {
                 float frondGlow = answering ? 0.25f + 0.35f * ripple : pulse * 0.35f;
                 float newest = day >= 7 ? 1.15f : 1f;
-                newFrondMat.SetColor("_Emission", FernEmission * (1f + frondGlow) * life * newest);
-                newFrondMat.SetColor("_Rim", FernRim);
+                newFrondMat.SetColor("_Emission", SeasonColor(FernEmission, FernEmissionWarm, seasonWarmth) * (1f + frondGlow) * life * newest);
+                newFrondMat.SetColor("_Rim", SeasonColor(FernRim, FernRimWarm, seasonWarmth));
                 newFrondMat.SetFloat("_Edge", 0.22f);
                 newFrondMat.SetFloat("_Trans", 0.75f);
                 SetTip(newFrondMat, 0.030f, 0.110f, 0.30f, 1f);
@@ -463,15 +504,15 @@ namespace GardenVR.Terrarium
             float fiddleScale = _hasLook && _look.Gap ? 0.28f : (0.9f + 0.25f * life);
             if (fiddleMat != null)
             {
-                fiddleMat.SetColor("_Emission", FiddleEmission * fiddleScale);
-                fiddleMat.SetColor("_Rim", FiddleRim);
+                fiddleMat.SetColor("_Emission", SeasonColor(FiddleEmission, FiddleEmissionWarm, seasonWarmth) * fiddleScale);
+                fiddleMat.SetColor("_Rim", SeasonColor(FiddleRim, FiddleRimWarm, seasonWarmth));
                 fiddleMat.SetFloat("_Edge", 0.10f);
                 SetTip(fiddleMat, 0.034f, 0.096f, 0.10f, 1f);
             }
             if (dew != null && dew.sharedMaterial != null)
             {
                 dew.sharedMaterial.SetColor("_Tint", new Color(0.78f, 1f, 0.92f));
-                dew.sharedMaterial.SetColor("_Emission", DewEmission);
+                dew.sharedMaterial.SetColor("_Emission", SeasonColor(DewEmission, DewEmissionWarm, seasonWarmth));
             }
 
             ApplyLeanCards();
@@ -481,10 +522,12 @@ namespace GardenVR.Terrarium
             DriveSpores();
             ApplyFlowers();
             bool warm = day >= 7 || (_hasLook && flowers > 0);
-            ApplyFocusedLight(warm ? FocusWarm : FocusMint);
+            ApplyFocusedLight(warm ? FocusWarm : SeasonColor(FocusMint, FocusGold, seasonWarmth));
             ApplyGardenLook();
             DriveRipple();
             _companions.Show(transform, _liveCompanions ? _liveShots : _captureShots);
+            _season.Show(transform, lifetimeFronds, seasonWarmth, flowerMesh, flowerMat, _quad, jarHaloMat);
+            AppendSeasonBillboards();
         }
 
         /// <summary>
@@ -948,7 +991,7 @@ namespace GardenVR.Terrarium
                 _spillCard.localScale = new Vector3(LeanSpillWidth, LeanSpillHeight, 1f);
                 var renderer = _spillCard.GetComponent<Renderer>();
                 if (renderer != null && renderer.sharedMaterial != null)
-                    renderer.sharedMaterial.SetColor("_Color", SpillMint);
+                    renderer.sharedMaterial.SetColor("_Color", SeasonColor(SpillMint, SpillWarm, Season.Warmth(Mathf.Max(0, lifetimeFronds))));
             }
             if (_haloCard != null)
                 _haloCard.localScale = new Vector3(LeanHaloWidth, LeanHaloHeight, 1f);
@@ -1082,7 +1125,7 @@ namespace GardenVR.Terrarium
             if (_quietFern == null && fernMat != null)
                 _quietFern = new Material(fernMat) { name = "Jar_FernQuiet" };
             if (_quietFern != null)
-                _quietFern.SetColor("_Emission", FernEmission * 0.55f * life);
+                _quietFern.SetColor("_Emission", SeasonColor(FernEmission, FernEmissionWarm, Season.Warmth(Mathf.Max(0, lifetimeFronds))) * 0.55f * life);
                 SetLight(_quietFern, FocusPoint(), day >= 7 ? FocusWarm : FocusMint);
             return _quietFern;
         }
@@ -1440,7 +1483,7 @@ namespace GardenVR.Terrarium
                 else glow = 0.34f;
             }
             Material material = index < _recordMats.Count ? _recordMats[index] : null;
-            if (material != null) material.SetColor("_Emission", FernEmission * glow);
+            if (material != null) material.SetColor("_Emission", SeasonColor(FernEmission, FernEmissionWarm, Season.Warmth(Mathf.Max(0, lifetimeFronds))) * glow);
             Renderer renderer = slot.GetComponent<Renderer>();
             if (renderer != null) renderer.enabled = true;
         }
@@ -1600,6 +1643,21 @@ namespace GardenVR.Terrarium
         {
             for (int i = 0; i < _recordMats.Count; i++) DestroyObject(_recordMats[i]);
             DestroyObject(_rippleMat);
+        }
+
+        void AppendSeasonBillboards()
+        {
+            IReadOnlyList<Transform> extra = _season.Halos;
+            if (extra == null || extra.Count == 0) return;
+            var list = new List<Transform>();
+            if (billboards != null)
+            {
+                for (int i = 0; i < billboards.Length; i++)
+                    if (billboards[i] != null) list.Add(billboards[i]);
+            }
+            for (int i = 0; i < extra.Count; i++)
+                if (extra[i] != null) list.Add(extra[i]);
+            billboards = list.ToArray();
         }
 
         static void DestroyObject(UnityEngine.Object obj)
