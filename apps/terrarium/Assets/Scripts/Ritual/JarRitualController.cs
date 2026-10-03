@@ -76,6 +76,9 @@ namespace GardenVR.Terrarium
         FirstRunDirector _director;
         SettingsPebbles _pebbles;
         bool _loggedInteractive;
+        bool _holdAck;
+        bool _shareLatched;
+        int _latchBreaths;
         LookFrame[] _lookFrames;
         int _lookIndex;
         float _lookClock;
@@ -86,7 +89,10 @@ namespace GardenVR.Terrarium
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
         static readonly Color DotDim = new Color(0.015f, 0.04f, 0.028f);
         static readonly Color PaceMint = new Color(0.55f, 1.05f, 0.78f);
+        static readonly Color AckMint = new Color(0.78f, 1.2f, 0.55f);
         static readonly Color Etch = new Color(0.749f, 0.961f, 0.867f);
+        const float ReducedMinInhale = 1.2f;
+        const float AnswerEndTime = 2.6f;
 
         public BreathSession Session => _session;
         public Garden Garden => _garden;
@@ -120,6 +126,13 @@ namespace GardenVR.Terrarium
         }
         public bool AwaitingContinue => _awaitContinue;
         public SettingsPebbles Pebbles => _pebbles;
+        public bool HoldAcknowledged => _holdAck;
+        public Color PaceTint => _paceMat != null ? _paceMat.GetColor("_Color") : Color.clear;
+        public static Color HoldAckTint => AckMint;
+
+        /// <summary>Tests point the ritual log at a file they can read. Empty uses the persistent path.</summary>
+        public static string LogPathOverride;
+
         public bool LookBackPlaying => _lookPlaying;
         public int LookBackIndex => _lookPlaying ? _lookIndex : -1;
         public int LookBackLit
@@ -234,7 +247,10 @@ namespace GardenVR.Terrarium
             return true;
         }
 
-        public static string LogPath => Path.Combine(Application.persistentDataPath, "logs", "ritual.jsonl");
+        public static string LogPath =>
+            string.IsNullOrEmpty(LogPathOverride)
+                ? Path.Combine(Application.persistentDataPath, "logs", "ritual.jsonl")
+                : LogPathOverride;
 
         public TerrariumState Snapshot()
         {
@@ -495,7 +511,7 @@ namespace GardenVR.Terrarium
             if (_answered)
             {
                 _answerTime += dt * motion;
-                _view.answerTime = _answerTime;
+                _view.answerTime = ReducedMotionOn ? Mathf.Max(_answerTime, AnswerEndTime) : _answerTime;
                 _view.answer = 1f;
                 TickAnswerCues();
             }
@@ -505,8 +521,9 @@ namespace GardenVR.Terrarium
                 _view.answer = 0f;
             }
 
-            _view.uncoil = _session.Uncoil;
-            _view.fog = _session.Fog;
+            LatchReducedShare();
+            _view.uncoil = ShownUncoil();
+            _view.fog = ShownFog();
             _view.phase = _session.Phase;
             _view.time = _ambience;
             _view.sporeStep = dt * motion;
@@ -571,6 +588,15 @@ namespace GardenVR.Terrarium
 
         void AdvancePace(float dt)
         {
+            if (ReducedMotionOn)
+            {
+                if (_paceMat == null || _session == null) return;
+                float target = Mathf.Max(1, _session.TargetBreaths);
+                float stepped = _session.Phase == BreathPhase.Complete ? 1f : _session.Breaths / target;
+                _paceMat.SetFloat("_Fill", stepped);
+                _paceMat.SetColor("_Color", _holdAck ? AckMint : PaceMint);
+                return;
+            }
             if (_session.Phase == BreathPhase.Inhaling && _pace < 0f)
                 _pace = 0f;
             if (_pace < 0f || _paceMat == null) return;
@@ -585,7 +611,7 @@ namespace GardenVR.Terrarium
             else
                 shown = 0f;
             _paceMat.SetFloat("_Fill", shown);
-            _paceMat.SetColor("_Color", PaceMint);
+            _paceMat.SetColor("_Color", _holdAck ? AckMint : PaceMint);
         }
 
         void NoteInhaleStart()
@@ -639,6 +665,7 @@ namespace GardenVR.Terrarium
 
         void OnIntent(HandIntent intent)
         {
+            NoteVisibleResponse(intent);
             if (intent.Kind == HandIntentKind.PinchHold)
             {
                 _corkPinch = intent.TargetId == CorkId;
@@ -807,6 +834,12 @@ namespace GardenVR.Terrarium
             if (_view == null || _service == null || _garden == null) return;
             bool animating = _answered && _lastAnswer.NewFrond && _answerTime >= 0f && _answerTime < 2.6f;
             bool recovered = _answered && _lastAnswer.Recovered && _answerTime >= 0f && _answerTime <= 2.5f;
+            if (ReducedMotionOn && _answered)
+            {
+                animating = false;
+                recovered = false;
+                _view.answerTime = Mathf.Max(_view.answerTime, AnswerEndTime);
+            }
             _view.recoveredTime = recovered ? _answerTime : -1f;
             if (CoilWaitingFiddle()) _view.uncoil = 0f;
             _view.PresentGarden(_garden, _service.TodayIndex, animating, recovered);
@@ -1455,6 +1488,73 @@ namespace GardenVR.Terrarium
                 if (all[i].name == name) return all[i];
             }
             return null;
+        }
+
+        bool ReducedMotionOn =>
+            _service != null && _service.Settings != null && _service.Settings.ReducedMotion;
+
+        /// <summary>
+        /// The earned uncoil, with no ease. A hold that has passed the fidget window shows this
+        /// breath's full share at once. Breath counting stays on the session clock.
+        /// </summary>
+        float ShownUncoil()
+        {
+            if (_session == null) return 0f;
+            if (!ReducedMotionOn) return _session.Uncoil;
+            int target = Math.Max(1, _session.TargetBreaths);
+            float share = 1f / target;
+            float earned = _session.Breaths * share;
+            if (_session.Phase == BreathPhase.Complete) return 1f;
+            if (_shareLatched) earned += share;
+            if (earned > 1f) earned = 1f;
+            return earned;
+        }
+
+        /// <summary>Full fog or none. The glass does not sweep while the core fog decays.</summary>
+        float ShownFog()
+        {
+            if (_session == null) return 0f;
+            if (!ReducedMotionOn) return _session.Fog;
+            return _session.Fog > 0.001f ? 1f : 0f;
+        }
+
+        void LatchReducedShare()
+        {
+            if (_session == null) return;
+            if (_session.Breaths != _latchBreaths)
+            {
+                _latchBreaths = _session.Breaths;
+                _shareLatched = false;
+            }
+            if (!ReducedMotionOn)
+            {
+                _shareLatched = false;
+                return;
+            }
+            if (_session.Phase == BreathPhase.Waiting || _session.Phase == BreathPhase.Complete)
+                _shareLatched = false;
+            else if (_session.Phase == BreathPhase.Inhaling && _session.PhaseTime + 0.0001f >= ReducedMinInhale)
+                _shareLatched = true;
+        }
+
+        /// <summary>
+        /// The first PinchHold on the jar paints the pace ring the same call, which is the same
+        /// frame the intent was raised. Later holds in that pinch do not log again.
+        /// </summary>
+        void NoteVisibleResponse(HandIntent intent)
+        {
+            if (intent.Kind == HandIntentKind.Release)
+            {
+                _holdAck = false;
+                return;
+            }
+            if (intent.Kind != HandIntentKind.PinchHold) return;
+            if (intent.TargetId == CorkId) return;
+            if (_holdAck) return;
+            _holdAck = true;
+            Log("intent");
+            if (_paceMat != null) _paceMat.SetColor("_Color", AckMint);
+            Log("state-changed");
         }
 
         void Log(string ev)

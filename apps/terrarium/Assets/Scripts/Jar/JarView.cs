@@ -41,6 +41,9 @@ namespace GardenVR.Terrarium
         public const float MossBedY = 0.031f;
         public const float LeanHaloWidth = 0.050f;
         public const float LeanHaloHeight = 0.036f;
+        // The crozier card sits on the jar halo and the glass. 3.8 cm stacked a third layer
+        // across the G1 jar (mean 1.528). 2.5 cm stays just outside the 1.6 cm coil.
+        public const float CoilHaloSize = 0.025f;
         // One plume card. Wide at the cork, tucked into it, thinning as it rises.
         public const float PlumeWidth = 0.100f;
         public const float PlumeHeight = 0.132f;
@@ -487,7 +490,7 @@ namespace GardenVR.Terrarium
             if (coilCard != null)
             {
                 coilCard.position = pos;
-                coilCard.localScale = new Vector3(0.038f, 0.038f, 1f);
+                coilCard.localScale = new Vector3(CoilHaloSize, CoilHaloSize, 1f);
             }
         }
 
@@ -661,7 +664,7 @@ namespace GardenVR.Terrarium
             Card("BreathRing", library.Ring, new Vector3(0f, 0.0006f, 0f), new Vector2(0.152f, 0.152f), flat);
             Card("DeskSpill", library.Spill, new Vector3(0f, 0.0004f, 0.01f), new Vector2(LeanSpillWidth, LeanSpillHeight), flat);
             bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.050f, 0f), new Vector2(LeanHaloWidth, LeanHaloHeight), Quaternion.identity).transform);
-            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.006f, 0.072f, 0.002f), new Vector2(0.038f, 0.038f), Quaternion.identity).transform);
+            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.006f, 0.072f, 0.002f), new Vector2(CoilHaloSize, CoilHaloSize), Quaternion.identity).transform);
 
             // One flipbook card. The bottom sits inside the cork, so the plume leaves the lip.
             // Empty corners still count as a layer, so the card is only as wide as the soft base.
@@ -881,10 +884,11 @@ namespace GardenVR.Terrarium
 
         void DriveMist()
         {
+            float clock = reducedMotion ? 0f : time;
             if (mistMat != null)
             {
                 int frames = MistGrid * MistGrid;
-                int frame = Mathf.FloorToInt(Mathf.Repeat(time / MistLoopSeconds, 1f) * frames);
+                int frame = Mathf.FloorToInt(Mathf.Repeat(clock / MistLoopSeconds, 1f) * frames);
                 if (frame >= frames) frame = frames - 1;
                 int col = frame % MistGrid;
                 int row = frame / MistGrid;
@@ -900,7 +904,7 @@ namespace GardenVR.Terrarium
             for (int i = 0; i < mist.Length; i++)
             {
                 if (mist[i] == null) continue;
-                mist[i].localPosition = new Vector3(Mathf.Sin(time * 0.35f + i) * 0.004f, PlumeCenterY, 0f);
+                mist[i].localPosition = new Vector3(Mathf.Sin(clock * 0.35f + i) * 0.004f, PlumeCenterY, 0f);
                 float swell = 1f;
                 if (i == 0 && _corkPuff > 0f)
                     swell = 1f + 0.55f * Mathf.Clamp01(_corkPuff / 0.8f);
