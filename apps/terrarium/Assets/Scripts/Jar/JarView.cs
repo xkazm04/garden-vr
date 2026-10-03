@@ -342,11 +342,10 @@ namespace GardenVR.Terrarium
                 glassMat.SetColor("_Rim", new Color(0.90f, 1.12f, 1.00f, 0.90f));
                 glassMat.SetFloat("_RimPower", 2.35f);
                 glassMat.SetColor("_Inner", new Color(0.40f, 1.15f, 0.68f, 1f));
-                // Full beside the moss, gone before the shoulder. Volume alpha 0: the lower third
-                // is the same clear pane as the neck. The air light stays additive.
-                glassMat.SetVector("_InnerY", new Vector4(0.030f, 0.048f, 0f, 0f));
-                glassMat.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0f));
-                glassMat.SetVector("_VolumeY", new Vector4(0.020f, 0.030f, 0f, 0f));
+                // Locked in Assets/Art/LOCKED.md from T-TER-019. Full beside the moss, gone by the shoulder.
+                glassMat.SetVector("_InnerY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                glassMat.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
+                glassMat.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
                 glassMat.SetColor("_Streak", new Color(0.90f, 1f, 0.96f, 0.46f));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
             }

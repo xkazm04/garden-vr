@@ -71,7 +71,8 @@ namespace GardenVR.Terrarium.Tests
         {
             CueManifest manifest = CueManifest.Parse(File.ReadAllText(Path.Combine(Application.dataPath, "Audio", "cues.json")));
             var found = new HashSet<string>();
-            var regex = new Regex("Play\\(\\s*\"([^\"]+)\"", RegexOptions.Compiled);
+            // PlayCue is the ritual entry. Play is the controller entry. Both take a manifest id.
+            var regex = new Regex("Play(?:Cue)?\\(\\s*\"([^\"]+)\"", RegexOptions.Compiled);
             string[] files = Directory.GetFiles(Path.Combine(Application.dataPath, "Scripts"), "*.cs", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
