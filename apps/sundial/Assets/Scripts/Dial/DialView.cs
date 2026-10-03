@@ -37,12 +37,12 @@ namespace GardenVR.Sundial
         public const float BoilPixels = 1f;
 
         // SVG dial face, degrees. 0 is +X (image right), 90 is +Z (image top, far side).
-        public const float MorningArc0 = 212f;
+        public const float MorningArc0 = 242f;
         public const float MorningArc1 = 112f;
         public const float MiddayArc0 = 106f;
         public const float MiddayArc1 = 22f;
         public const float WindDownArc0 = 16f;
-        public const float WindDownArc1 = -76f;
+        public const float WindDownArc1 = -100f;
 
         [Header("State")]
         [Range(0f, 1f)] public float halo = 1f;
@@ -85,21 +85,22 @@ namespace GardenVR.Sundial
 
         Texture2D _stateTex;
         bool _hooked;
-        const float TileRadius = 0.74f;
+        const float TileRadius = 0.82f;
 
         static readonly string[] ArcIds = { "morning", "midday", "winddown" };
         // Card spots read off the owner's frame, in units of the face radius. x is right, z is away.
+        // In units of the face radius. Bases sit in the soil, foliage reaches the wash.
         static readonly Vector2[] PlantSpot =
         {
-            new Vector2(-0.55f, -0.20f),
-            new Vector2(0.40f, -0.04f),
-            new Vector2(0.60f, -0.40f)
+            new Vector2(-0.30f, -0.08f),
+            new Vector2(0.16f, 0.18f),
+            new Vector2(0.26f, -0.16f)
         };
         static readonly Vector2[] PlantSize =
         {
-            new Vector2(0.045f, 0.057f),
-            new Vector2(0.044f, 0.066f),
-            new Vector2(0.036f, 0.045f)
+            new Vector2(0.064f, 0.096f),
+            new Vector2(0.072f, 0.112f),
+            new Vector2(0.052f, 0.082f)
         };
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
@@ -150,9 +151,10 @@ namespace GardenVR.Sundial
             Material haloMat = haloRenderer != null ? haloRenderer.sharedMaterial : null;
             if (haloMat != null)
             {
-                // Gold is baked into the halo texture. This multiply is only the breathe.
-                haloMat.SetColor("_Color", Color.white * amount);
-                haloMat.SetColor("_Color2", Color.white * amount);
+                // Gold is baked into the halo texture. The warm multiply is the breathe.
+                var glow = new Color(1.12f, 0.96f, 0.72f) * amount;
+                haloMat.SetColor("_Color", glow);
+                haloMat.SetColor("_Color2", glow);
             }
 
             if (shadow != null)
@@ -497,7 +499,9 @@ namespace GardenVR.Sundial
             Transform haloTransform = haloRenderer.transform;
             haloTransform.localPosition = plant.localPosition;
             haloTransform.localRotation = plant.localRotation;
-            haloTransform.localScale = plant.localScale;
+            Vector3 plantScale = plant.localScale;
+            // The halo texture is the plant silhouette. A large scale lifts the stroke off the ink.
+            haloTransform.localScale = new Vector3(plantScale.x * 1.12f, plantScale.y * 1.12f, plantScale.z * 1.06f);
         }
 
         void EnsureStateTexture()
@@ -529,58 +533,60 @@ namespace GardenVR.Sundial
 
         Mesh CombineTiles(Mesh source)
         {
-            Vector3[] srcV = source.vertices;
-            Vector3[] srcN = source.normals;
-            Vector2[] srcUv = source.uv;
-            var srcNxy = new List<Vector2>();
-            var srcNz = new List<Vector2>();
-            source.GetUVs(1, srcNxy);
-            source.GetUVs(2, srcNz);
-            Color[] srcC = source.colors;
-            int[] srcT = source.triangles;
-            int vertCount = srcV.Length;
-            bool hasNxy = srcNxy.Count == vertCount;
-            bool hasNz = srcNz.Count == vertCount;
-            bool hasColor = srcC != null && srcC.Length == vertCount;
-            if (!hasNxy)
-                Debug.LogWarning("[DialView] tile has no Nxy uv; the ink hull will use the shading normal");
-
-            var verts = new List<Vector3>(vertCount * TileCount);
-            var normals = new List<Vector3>(vertCount * TileCount);
-            var uv = new List<Vector2>(vertCount * TileCount);
-            var nxy = new List<Vector2>(vertCount * TileCount);
-            var nz = new List<Vector2>(vertCount * TileCount);
-            var tileUv = new List<Vector2>(vertCount * TileCount);
-            var colors = new List<Color>(vertCount * TileCount);
-            var tris = new List<int>(srcT.Length * TileCount);
+            // Flat cards on the rim. The bevelled cube read as a row of blocks standing
+            // on edge, so each tile is a horizontal quad. The source mesh only has to exist.
+            if (source == null || !source.isReadable) throw new InvalidOperationException("tile mesh is not readable");
+            const float halfL = 0.006f;
+            const float halfW = 0.0045f;
+            var verts = new List<Vector3>(TileCount * 4);
+            var normals = new List<Vector3>(TileCount * 4);
+            var uv = new List<Vector2>(TileCount * 4);
+            var nxy = new List<Vector2>(TileCount * 4);
+            var nz = new List<Vector2>(TileCount * 4);
+            var tileUv = new List<Vector2>(TileCount * 4);
+            var colors = new List<Color>(TileCount * 4);
+            var tris = new List<int>(TileCount * 6);
+            var upNxy = new Vector2(0.5f, 1f);
+            var upNz = new Vector2(0.5f, 0f);
+            var upCol = new Color(0.5f, 1f, 0.5f, 1f);
 
             for (int i = 0; i < TileCount; i++)
             {
                 int arc = i / TilesPerArc;
                 int slot = i % TilesPerArc;
                 float deg = ArcSlot(arc, slot);
-                Vector3 pos = OnFace(deg, faceRadius * TileRadius, faceY);
-                Quaternion rot = TileRotation(deg);
+                float rad = deg * Mathf.Deg2Rad;
+                Vector3 center = OnFace(deg, faceRadius * TileRadius, faceY + 0.002f);
+                var tangent = new Vector3(Mathf.Sin(rad), 0f, -Mathf.Cos(rad));
+                var radial = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
                 int bas = verts.Count;
-                for (int v = 0; v < vertCount; v++)
+                Vector3[] corner =
                 {
-                    verts.Add(pos + rot * srcV[v]);
-                    Vector3 shading = srcN != null && srcN.Length == vertCount ? srcN[v] : Vector3.up;
-                    normals.Add(rot * shading);
-                    uv.Add(srcUv != null && srcUv.Length == vertCount ? srcUv[v] : new Vector2(0.5f, 0.5f));
-                    Vector3 smooth = shading;
-                    if (hasNxy && hasNz)
-                        smooth = new Vector3(srcNxy[v].x, srcNxy[v].y, srcNz[v].x) * 2f - Vector3.one;
-                    else if (hasColor)
-                        smooth = new Vector3(srcC[v].r, srcC[v].g, srcC[v].b) * 2f - Vector3.one;
-                    if (smooth.sqrMagnitude > 1e-8f) smooth.Normalize();
-                    smooth = rot * smooth;
-                    nxy.Add(new Vector2(smooth.x * 0.5f + 0.5f, smooth.y * 0.5f + 0.5f));
-                    nz.Add(new Vector2(smooth.z * 0.5f + 0.5f, 0f));
+                    center - tangent * halfL - radial * halfW,
+                    center + tangent * halfL - radial * halfW,
+                    center + tangent * halfL + radial * halfW,
+                    center - tangent * halfL + radial * halfW
+                };
+                Vector2[] cornerUv =
+                {
+                    new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f)
+                };
+                for (int v = 0; v < 4; v++)
+                {
+                    verts.Add(corner[v]);
+                    normals.Add(Vector3.up);
+                    uv.Add(cornerUv[v]);
+                    nxy.Add(upNxy);
+                    nz.Add(upNz);
                     tileUv.Add(new Vector2(i, arc));
-                    colors.Add(new Color(smooth.x * 0.5f + 0.5f, smooth.y * 0.5f + 0.5f, smooth.z * 0.5f + 0.5f, 1f));
+                    colors.Add(upCol);
                 }
-                for (int t = 0; t < srcT.Length; t++) tris.Add(srcT[t] + bas);
+                tris.Add(bas + 0);
+                tris.Add(bas + 2);
+                tris.Add(bas + 1);
+                tris.Add(bas + 0);
+                tris.Add(bas + 3);
+                tris.Add(bas + 2);
             }
 
             var mesh = new Mesh { name = "TilesPlaced" };

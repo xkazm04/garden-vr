@@ -201,6 +201,8 @@ Shader "Fidelity/Toon"
                 float3 wn = normalize(TransformObjectToWorldNormal(nObj));
                 float frame = BoilClock();
                 float j = h31(floor(wp * 220.0) + frame) * 2.0 - 1.0;
+                // Held thick-and-thin along the stroke. The boil jitter sits on top of it.
+                float wobble = lerp(0.86, 1.14, h31(floor(wp * 48.0)));
                 float4 clip;
                 if (_OutlinePx > 0.001)
                 {
@@ -210,13 +212,13 @@ Shader "Fidelity/Toon"
                     float2 dir = (clip1.xy / max(clip1.w, 1e-5)) - (clip0.xy / max(clip0.w, 1e-5));
                     float len = length(dir);
                     dir = len > 1e-5 ? dir / len : float2(0, 1);
-                    float px = max(_OutlinePx + j * _BoilPx, 0);
+                    float px = max(_OutlinePx * wobble + j * _BoilPx, 0);
                     clip = clip0;
                     clip.xy += dir * px * (2.0 / _ScreenParams.y) * clip.w;
                 }
                 else
                 {
-                    float w = _Outline * (1 + _Boil * j);
+                    float w = _Outline * wobble * (1 + _Boil * j);
                     clip = TransformWorldToHClip(wp + wn * w);
                 }
                 o.pos = clip;

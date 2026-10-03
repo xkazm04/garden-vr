@@ -35,7 +35,7 @@ Material:
     m_Floats:
     - _Boil: 0
     - _BoilPx: 1
-    - _BoilTime: 1
+    - _BoilTime: 2.9
     - _Feather: 0.04
     - _Grain: 0.07
     - _Outline: 0.001
@@ -43,7 +43,7 @@ Material:
     - _ShadowStrength: 0
     - _SpecStep: 0.93
     - _Step: 0.12
-    - _T: 1
+    - _T: 2.9
     - _TileMode: 0
     m_Colors:
     - _Ink: {r: 0.165, g: 0.149, b: 0.133, a: 1}

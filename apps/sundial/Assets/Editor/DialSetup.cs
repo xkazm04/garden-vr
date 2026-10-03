@@ -196,6 +196,8 @@ namespace GardenVR.Sundial.Editor
 
         static string RunDir()
         {
+            string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
+            if (!string.IsNullOrEmpty(env)) return env;
             return Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "orchestration", "runs", "sundial", "T-SUN-005"));
         }
 
@@ -318,15 +320,20 @@ namespace GardenVR.Sundial.Editor
             };
 
             // The painted face already has its ink ring. Keep it one pass (_Outline 0 disables the hull count).
-            library.Face = Toon("Dial_Face", Tex("dial_face"), false, 0f, -0.99f, 0.04f, new Color(1.05f, 1.08f, 1.18f), new Color(1.05f, 1.08f, 1.18f));
+            // The face is one flat normal, so the wash stays in the lit step. The rim, soil mound
+            // and gnomon carry the second step. A cool multiply was greying the watercolour.
+            library.Face = Toon("Dial_Face", Tex("dial_face"), false, 0f, -0.2f, 0.03f, new Color(1.02f, 0.98f, 0.93f), new Color(0.90f, 0.80f, 0.70f));
             library.Rim = Toon("Dial_Rim", Tex("dial_paper"), true, 3.0f, 0.12f, 0.07f, Color.white, new Color(0.78f, 0.72f, 0.64f));
-            library.Soil = Toon("Dial_Soil", Tex("dial_face"), true, 2.8f, 0.05f, 0.05f, Color.white, new Color(0.78f, 0.72f, 0.64f));
-            library.Gnomon = Toon("Dial_Gnomon", Tex("gnomon"), true, 2.6f, 0.18f, 0.03f, Color.white, new Color(0.55f, 0.48f, 0.40f));
+            library.Soil = Toon("Dial_Soil", Tex("dial_face"), false, 0f, 0.08f, 0.04f, Color.white, new Color(0.84f, 0.76f, 0.66f));
+            // Shade stays near the style 0.78 so the ink body does not crush to a black spike.
+            // The gold collar is in the albedo. A dark shade multiply hid it.
+            library.Gnomon = Toon("Dial_Gnomon", Tex("gnomon"), true, 2.2f, 0.02f, 0.04f, new Color(1.04f, 0.98f, 0.90f), new Color(0.82f, 0.74f, 0.64f));
             library.Gnomon.SetColor("_Spec", new Color(0.35f, 0.28f, 0.12f, 1f));
             library.Gnomon.SetFloat("_SpecStep", 0.9f);
-            library.Tiles = Toon("Dial_Tile", Texture2D.whiteTexture, true, 2.2f, 0.2f, 0.04f, Color.white, new Color(0.78f, 0.72f, 0.64f));
+            // Painted by the tile shader. A hull on a paper-thin card just blooms a dark blob.
+            library.Tiles = Toon("Dial_Tile", Texture2D.whiteTexture, false, 0f, 0.15f, 0.03f, Color.white, new Color(0.86f, 0.80f, 0.72f));
             library.Tiles.SetFloat("_TileMode", 1f);
-            library.Tiles.SetFloat("_BoilPx", 0.8f);
+            library.Tiles.SetFloat("_BoilPx", 0f);
 
             library.Morning = Plant("Dial_PlantMorning", library.MorningCards[4]);
             library.Midday = Plant("Dial_PlantMidday", library.MiddayCards[4]);
@@ -348,6 +355,7 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Coverage", 0f);
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
+                m.SetFloat("_Sparkle", 1f);
                 m.renderQueue = 3008;
             });
             library.Catcher = Mat("Dial_Catcher", "Fidelity/ShadowCatcher", m =>
@@ -520,8 +528,8 @@ namespace GardenVR.Sundial.Editor
                 // Local +Z is the shadow direction. UV v grows away from the nib.
                 mesh.vertices = new[]
                 {
-                    new Vector3(-0.02f, 0.002f, 0.01f), new Vector3(0.02f, 0.002f, 0.01f),
-                    new Vector3(0.11f, 0.002f, 0.20f), new Vector3(-0.11f, 0.002f, 0.20f)
+                    new Vector3(-0.014f, 0.002f, 0.012f), new Vector3(0.014f, 0.002f, 0.012f),
+                    new Vector3(0.09f, 0.002f, 0.16f), new Vector3(-0.09f, 0.002f, 0.16f)
                 };
                 mesh.uv = new[] { new Vector2(0.38f, 0f), new Vector2(0.62f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
                 mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };
