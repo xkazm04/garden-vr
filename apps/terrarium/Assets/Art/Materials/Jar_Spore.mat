@@ -33,12 +33,15 @@ Material:
     - _BoilFps: 10
     - _BoilPx: 0
     - _BoilTime: -1
+    - _CardLight: 0
     - _Coverage: 0
     - _Dst: 1
     - _Falloff: 0
     - _Fill: 1
+    - _Fit: 1
     - _Mask: 0
     - _Ring: 0
+    - _Silhouette: 0
     - _Sparkle: 0
     - _Src: 1
     - _T: 0

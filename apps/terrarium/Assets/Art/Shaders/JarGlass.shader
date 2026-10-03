@@ -1,9 +1,11 @@
 // Night jar glass, with a soft interior volume on the same pass as the shell.
-// Fidelity/Glass stays the shared shader. This copy adds _Volume, which is off when its alpha is 0.
-// The volume is what makes the jar the light in the room: a mint fill through the cavity, not a second card
-// (a full-jar card would push the transparent-layer budget over 1.5).
-// Fresnel rim, condensation, breath fog, and the two window streaks match Fidelity/Glass.
-// No refraction: a grab pass is the one thing Quest cannot afford here.
+// Fidelity/Glass is the shared shader. This copy adds _Volume, which is off when its alpha is 0.
+// Output is premultiplied (Blend One OneMinusSrcAlpha). The pane stays clear so the moss and the fern
+// read through it. _Volume is a faint mint tint on the silhouette only, and it falls off with height.
+// The air light comes from _Inner: brightest beside the moss and the crozier, gone by the shoulder,
+// thinner toward the glass. It is added, not used as coverage, so it does not become a mint block.
+// Breath fog is a separate term. It is zero when _Fog is zero, and its coverage never exceeds 0.30.
+// Condensation beads stay in the upper third. No refraction: a grab pass is the one thing Quest cannot afford here.
 Shader "Fidelity/JarGlass"
 {
     Properties
@@ -12,10 +14,10 @@ Shader "Fidelity/JarGlass"
         _Tint ("Body tint (A = base opacity)", Color) = (0.3, 0.8, 0.65, 0.06)
         _Rim ("Rim colour (A = opacity)", Color) = (0.6, 1, 0.85, 0.7)
         _RimPower ("Rim power", Range(0.5, 8)) = 2.6
-        _Inner ("Inner scatter (HDR)", Color) = (0.2, 0.9, 0.6, 1)
-        _InnerY ("Scatter falloff y (centre, width)", Vector) = (0.04, 0.06, 0, 0)
-        _Volume ("Interior volume (HDR, A = opacity)", Color) = (0, 0, 0, 0)
-        _VolumeY ("Volume y (centre, width)", Vector) = (0.055, 0.05, 0, 0)
+        _Inner ("Inner light (HDR)", Color) = (0.2, 0.9, 0.6, 1)
+        _InnerY ("Inner light (full until y, fade length)", Vector) = (0.04, 0.07, 0, 0)
+        _Volume ("Wall tint (HDR, A = opacity)", Color) = (0, 0, 0, 0)
+        _VolumeY ("Wall tint (full until y, fade length)", Vector) = (0.04, 0.07, 0, 0)
         _Fog ("Breath fog", Range(0,1)) = 0.3
         _Drops ("Droplet strength", Range(0,2)) = 1
         _Streak ("Streak", Color) = (0.8, 1, 0.95, 0.35)
@@ -55,21 +57,34 @@ Shader "Fidelity/JarGlass"
             half bead = smoothstep(0.72, 0.94, cond.r);
             float keep = frac(sin(dot(floor(beadUv * float2(14.0, 28.0)), float2(127.1, 311.7))) * 43758.5453);
             half drops = bead * beads * _Drops * step(0.66, keep);
-            half fog = saturate(_Fog * (0.5 + 0.7 * fogCond.b) * (0.08 + 0.92 * upper));
-            half inner = exp(-pow((i.op.y - _InnerY.x) / max(_InnerY.y, 1e-4), 2));
-            // Wide mint through the cavity. Alpha 0 leaves this at zero. Stronger in the middle of the glass,
-            // softer toward the left and right edges, so it reads as air and not a green poster.
-            half body = exp(-pow((i.op.y - _VolumeY.x) / max(_VolumeY.y, 1e-4), 2.0));
-            half cavity = smoothstep(0.016, 0.030, i.op.y) * (1.0 - smoothstep(0.102, 0.122, i.op.y));
-            half across = lerp(0.42h, 1.0h, 1.0h - smoothstep(0.010, 0.044, abs(i.op.x)));
-            half fill = body * cavity * across;
+            // _Fog is the only driver. Zero stays clear. Coverage tops out at 0.30.
+            half fogMask = saturate((0.40 + 0.60 * fogCond.b) * (0.10 + 0.90 * upper));
+            half fogA = saturate(_Fog) * fogMask * 0.30;
+            // Air light: full through the moss and the crozier, then gone toward the shoulder.
+            half air = (1.0 - smoothstep(_InnerY.x, _InnerY.x + max(_InnerY.y, 1e-4), i.op.y)) * smoothstep(0.008, 0.022, i.op.y);
+            half wallH = (1.0 - smoothstep(_VolumeY.x, _VolumeY.x + max(_VolumeY.y, 1e-4), i.op.y)) * smoothstep(0.008, 0.022, i.op.y);
+            // Silhouette only. The centre of the pane is left open for the plants.
+            half wall = smoothstep(0.014, 0.046, abs(i.op.x));
+            half cavity = 1.0 - wall;
             float vs = mul(UNITY_MATRIX_V, float4(i.wp, 1)).x - mul(UNITY_MATRIX_V, float4(TransformObjectToWorld(float3(0, 0, 0)) + float3(0, i.op.y, 0), 1)).x;
             half streak = (smoothstep(0.006, 0.0, abs(vs + 0.030)) + 0.6 * smoothstep(0.003, 0.0, abs(vs + 0.022))) * smoothstep(0.02, 0.05, i.op.y) * smoothstep(0.125, 0.10, i.op.y);
-            half3 c = _Tint.rgb + _Inner.rgb * inner * (0.35 + rim) + _Rim.rgb * rim;
-            c += _Volume.rgb * fill;
-            c += drops * (half3(0.42, 0.72, 0.58) + cond.g * 0.20) + fog * _Inner.rgb * 0.5 + _Streak.rgb * streak * (1 - backWall * 0.7);
-            half a = saturate(_Tint.a + rim * _Rim.a + inner * 0.10 + fill * _Volume.a + drops * 0.34 + fog * 0.35 + streak * _Streak.a);
-            a *= backWall > 0.5 ? 0.55 : 1;
+            half rimA = rim * _Rim.a;
+            half dropA = drops * 0.42;
+            half wallA = wall * wallH * _Volume.a;
+            half baseA = _Tint.a;
+            half streakA = streak * _Streak.a * (1.0 - backWall * 0.7);
+            half a = saturate(baseA + rimA + dropA + fogA + wallA + streakA);
+            half3 light = _Inner.rgb * air * lerp(0.35, 1.0, cavity) * 0.22;
+            half3 fogRgb = lerp(_Inner.rgb, half3(0.82, 0.94, 0.90), 0.55);
+            half3 c =
+                _Tint.rgb * baseA
+                + _Rim.rgb * rimA
+                + _Volume.rgb * wallA
+                + (half3(0.62, 0.92, 0.78) + cond.g * 0.25) * dropA
+                + fogRgb * fogA
+                + _Streak.rgb * streakA
+                + light;
+            if (backWall > 0.5) { c *= 0.55; a *= 0.55; }
             return half4(c, a);
         }
         ENDHLSL
@@ -77,7 +92,7 @@ Shader "Fidelity/JarGlass"
         {
             Name "Back"
             Tags { "LightMode"="SRPDefaultUnlit" }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
             ZWrite Off Cull Front
             HLSLPROGRAM
             #pragma vertex vert
@@ -90,7 +105,7 @@ Shader "Fidelity/JarGlass"
         {
             Name "Front"
             Tags { "LightMode"="UniversalForward" }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
             ZWrite Off Cull Back
             HLSLPROGRAM
             #pragma vertex vert

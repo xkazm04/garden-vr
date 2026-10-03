@@ -1,7 +1,12 @@
 // Night jar glass. Two passes in one material: the back wall first (SRPDefaultUnlit, Cull Front), then the front wall
 // (UniversalForward, Cull Back), so the jar reads as a thick shell without sorting two objects.
-// Fresnel rim, an inner mint scatter that brightens toward the moss, painted condensation droplets (cylindrical UV),
-// breath fog, and two window streaks. No refraction: a grab pass is the one thing Quest cannot afford here.
+// Output is premultiplied (Blend One OneMinusSrcAlpha): the pane stays clear, the rim and the beads stay bright,
+// and a soft inner light can add without replacing the plants. The mint tint sits on the silhouette, not across
+// the cavity. The light is full beside the moss and falls off with height. Breath fog is a separate thin layer:
+// it is zero when _Fog is zero, and its coverage never exceeds 0.30. Condensation beads stay in the upper third.
+// No refraction: a grab pass is the one thing Quest cannot afford here.
+// _InnerY is (full-until height, fade length), in metres above the mesh origin. Older gaussian centre/width
+// values still land the light on the lower glass.
 Shader "Fidelity/Glass"
 {
     Properties
@@ -11,7 +16,7 @@ Shader "Fidelity/Glass"
         _Rim ("Rim colour (A = opacity)", Color) = (0.6, 1, 0.85, 0.7)
         _RimPower ("Rim power", Range(0.5, 8)) = 2.6
         _Inner ("Inner scatter (HDR)", Color) = (0.2, 0.9, 0.6, 1)
-        _InnerY ("Scatter falloff y (centre, width)", Vector) = (0.04, 0.06, 0, 0)
+        _InnerY ("Inner light (full until y, fade length)", Vector) = (0.04, 0.06, 0, 0)
         _Fog ("Breath fog", Range(0,1)) = 0.3
         _Drops ("Droplet strength", Range(0,2)) = 1
         _Streak ("Streak", Color) = (0.8, 1, 0.95, 0.35)
@@ -58,14 +63,35 @@ Shader "Fidelity/Glass"
             // The plate is still a field of cores. Keep about a third so the band stays a few beads.
             float keep = frac(sin(dot(floor(beadUv * float2(14.0, 28.0)), float2(127.1, 311.7))) * 43758.5453);
             half drops = bead * beads * _Drops * step(0.66, keep);
-            half fog = saturate(_Fog * (0.5 + 0.7 * fogCond.b) * (0.08 + 0.92 * upper));
-            half inner = exp(-pow((i.op.y - _InnerY.x) / _InnerY.y, 2));   // glow is strongest beside the moss
+            // _Fog is the only driver. Zero stays clear. Coverage tops out at 0.30, and the haze
+            // texture keeps it a partial layer, stronger toward the shoulder.
+            half fogMask = saturate((0.40 + 0.60 * fogCond.b) * (0.10 + 0.90 * upper));
+            half fogA = saturate(_Fog) * fogMask * 0.30;
+            // Full beside the moss, then gone as the glass rises. Nothing in the soil line.
+            half column = (1.0 - smoothstep(_InnerY.x, _InnerY.x + max(_InnerY.y, 1e-4), i.op.y)) * smoothstep(0.008, 0.022, i.op.y);
+            // Silhouette carries a faint mint tint. The middle of the pane is the window.
+            half wall = smoothstep(0.014, 0.046, abs(i.op.x));
+            half cavity = 1.0 - wall;
             float vs = mul(UNITY_MATRIX_V, float4(i.wp, 1)).x - mul(UNITY_MATRIX_V, float4(TransformObjectToWorld(float3(0, 0, 0)) + float3(0, i.op.y, 0), 1)).x;
             half streak = (smoothstep(0.006, 0.0, abs(vs + 0.030)) + 0.6 * smoothstep(0.003, 0.0, abs(vs + 0.022))) * smoothstep(0.02, 0.05, i.op.y) * smoothstep(0.125, 0.10, i.op.y);
-            half3 c = _Tint.rgb + _Inner.rgb * inner * (0.35 + rim) + _Rim.rgb * rim;
-            c += drops * (half3(0.42, 0.72, 0.58) + cond.g * 0.20) + fog * _Inner.rgb * 0.5 + _Streak.rgb * streak * (1 - backWall * 0.7);
-            half a = saturate(_Tint.a + rim * _Rim.a + inner * 0.10 + drops * 0.34 + fog * 0.35 + streak * _Streak.a);
-            a *= backWall > 0.5 ? 0.55 : 1;
+            half rimA = rim * _Rim.a;
+            half dropA = drops * 0.42;
+            half wallA = wall * column * 0.10;
+            half baseA = _Tint.a;
+            half streakA = streak * _Streak.a * (1.0 - backWall * 0.7);
+            half a = saturate(baseA + rimA + dropA + fogA + wallA + streakA);
+            // Air light is added, not used as coverage, and it thins toward the glass and with height.
+            half3 light = _Inner.rgb * column * lerp(0.35, 1.0, cavity) * 0.22;
+            half3 fogRgb = lerp(_Inner.rgb, half3(0.82, 0.94, 0.90), 0.55);
+            half3 c =
+                _Tint.rgb * baseA
+                + _Rim.rgb * rimA
+                + _Inner.rgb * wallA
+                + (half3(0.62, 0.92, 0.78) + cond.g * 0.25) * dropA
+                + fogRgb * fogA
+                + _Streak.rgb * streakA
+                + light;
+            if (backWall > 0.5) { c *= 0.55; a *= 0.55; }
             return half4(c, a);
         }
         ENDHLSL
@@ -73,7 +99,7 @@ Shader "Fidelity/Glass"
         {
             Name "Back"
             Tags { "LightMode"="SRPDefaultUnlit" }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
             ZWrite Off Cull Front
             HLSLPROGRAM
             #pragma vertex vert
@@ -86,7 +112,7 @@ Shader "Fidelity/Glass"
         {
             Name "Front"
             Tags { "LightMode"="UniversalForward" }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
             ZWrite Off Cull Back
             HLSLPROGRAM
             #pragma vertex vert

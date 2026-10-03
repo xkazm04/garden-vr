@@ -38,6 +38,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Cutoff: 0
+    - _Edge: 0.18
     - _GradBottom: 0.75
     - _GradTop: 1.12
     - _RimPower: 1.15
@@ -54,5 +55,6 @@ Material:
     - _LightPos: {r: 0.0006574071, g: 0.06841296, b: 0.0036089527, a: 0.12}
     - _Rim: {r: 0.82, g: 1, b: 0.62, a: 1}
     - _Tint: {r: 0.55, g: 0.84, b: 0.32, a: 1}
+    - _Tip: {r: 0.034, g: 0.096, b: 0.16, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
