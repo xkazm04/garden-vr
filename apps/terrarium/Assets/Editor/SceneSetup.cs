@@ -19,6 +19,17 @@ namespace GardenVR.Terrarium.Editor
         public const string PlateMaterialPath = "Assets/Art/Plates/PcRoomPlate.mat";
         public const string ProvenancePath = "Assets/Art/Plates/PROVENANCE.md";
 
+        /// <summary>Degrees the seated eye looks above the desk so the jar sits in the lower middle of the 60 deg lens.</summary>
+        public const float SeatedLookAboveDesk = 16f;
+
+        /// <summary>
+        /// Scene seated pose. <see cref="PcDeskAnchor.TerrariumDistance"/> stays 0.40 m.
+        /// A 14 cm jar at that reach is about a quarter of a 60 deg frame. 0.27 m ahead
+        /// and 0.20 m below the eye (desk height 0.85 m) brings it to about a third.
+        /// </summary>
+        public const float SeatedDeskDistance = 0.27f;
+        public const float SeatedDeskHeight = 0.85f;
+
         public static void Run()
         {
             CopyPlate();
@@ -41,7 +52,7 @@ namespace GardenVR.Terrarium.Editor
                 "| File | Note |\n" +
                 "|---|---|\n" +
                 "| plate-jar.png | G1 plate, inpainted from the owner's reference frame, development only, never shipped |\n" +
-                "| plate-jar-seated.png | seated view of the same night desk, no hands, development only, never shipped |\n";
+                "| plate-jar-seated.png | nearer seated view of the same night desk, empty room, development only, never shipped |\n";
             File.WriteAllText(Path.Combine(Application.dataPath, "Art", "Plates", "PROVENANCE.md"), provenance);
 
             ConfigurePlate(PlatePath);
@@ -95,7 +106,10 @@ namespace GardenVR.Terrarium.Editor
             var rig = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
             if (rig == null) throw new System.InvalidOperationException("could not instance " + RoomSetup.PrefabPath);
             rig.name = "SeatedRig";
-            rig.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+            // Desk local then lands on the world origin, where the jar stays.
+            rig.transform.SetPositionAndRotation(
+                new Vector3(0f, -SeatedDeskHeight, -SeatedDeskDistance),
+                Quaternion.identity);
 
             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(SeatedPlatePath);
             if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + SeatedPlatePath);
@@ -114,11 +128,22 @@ namespace GardenVR.Terrarium.Editor
             var desk = rig.GetComponentInChildren<PcDeskAnchor>(true);
             if (desk == null) throw new System.InvalidOperationException("PcDeskAnchor missing on the seated rig");
             var deskData = new SerializedObject(desk);
-            deskData.FindProperty("_height").floatValue = PcDeskAnchor.DefaultHeight;
-            deskData.FindProperty("_distance").floatValue = PcDeskAnchor.TerrariumDistance;
+            deskData.FindProperty("_height").floatValue = SeatedDeskHeight;
+            deskData.FindProperty("_distance").floatValue = SeatedDeskDistance;
             deskData.FindProperty("_lateral").floatValue = 0f;
             deskData.ApplyModifiedPropertiesWithoutUndo();
             desk.ApplyPose();
+
+            var seated = rig.GetComponent<SeatedRig>();
+            if (seated == null) throw new System.InvalidOperationException("SeatedRig missing on the prefab");
+            seated.LookAboveDesk = SeatedLookAboveDesk;
+            SeatedRig.PlaceLensCard(plate.transform);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(seated);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(plate.transform);
+            Transform pivot = rig.transform.Find("HeadPivot");
+            if (pivot != null) PrefabUtility.RecordPrefabInstancePropertyModifications(pivot);
+            if (seated.PlateAnchor != null)
+                PrefabUtility.RecordPrefabInstancePropertyModifications(seated.PlateAnchor);
 
             if (Object.FindAnyObjectByType<Light>() == null)
             {

@@ -112,6 +112,28 @@ namespace GardenVR.Terrarium.Tests
         }
 
         [Test]
+        public void DeskTrace_StaysHiddenUntilTheLineIsDrawing()
+        {
+            var go = new GameObject("desk");
+            _owned.Add(go);
+            var desk = go.AddComponent<PcDeskAnchor>();
+            var trace = new GameObject("trace");
+            _owned.Add(trace);
+            trace.transform.SetParent(go.transform, false);
+            trace.transform.localScale = new Vector3(0.48f, 0.006f, 1f);
+            desk.BindTrace(trace.transform);
+
+            desk.Begin();
+            Assert.Less(trace.transform.localScale.x, 0.01f, "hidden before the line starts");
+
+            desk.Tick(desk.TraceDelay + 0.5f * desk.TraceDuration);
+            Assert.Greater(trace.transform.localScale.x, 0.1f, "visible while drawing");
+
+            desk.Tick(desk.TraceDuration);
+            Assert.Less(trace.transform.localScale.x, 0.01f, "hidden after Placed");
+        }
+
+        [Test]
         public void PlateFade_ReachesFullExposureAtFadeSeconds()
         {
             Shader shader = Shader.Find("Fidelity/Plate");
@@ -168,6 +190,43 @@ namespace GardenVR.Terrarium.Tests
             Assert.Less(Vector3.Angle(forward, toDesk), 0.2f);
             Assert.Less(Quaternion.Angle(anchorGo.transform.localRotation, Quaternion.Euler(expect, 0f, 0f)), 0.05f);
             Assert.AreEqual(SeatedRig.DefaultEyeHeight, anchorGo.transform.localPosition.y, 0.0001f);
+        }
+
+        [Test]
+        public void RestPitch_CanSitTheHeroLowerInTheFrame()
+        {
+            SeatedRig rig = MakeRig(out _, out Transform pivot);
+            var deskGo = new GameObject("desk");
+            _owned.Add(deskGo);
+            deskGo.transform.SetParent(rig.transform, false);
+            var desk = deskGo.AddComponent<PcDeskAnchor>();
+            desk.Height = PcDeskAnchor.DefaultHeight;
+            desk.Distance = PcDeskAnchor.TerrariumDistance;
+
+            rig.LookAboveDesk = 16f;
+            float aim = Mathf.Atan2(PcDeskAnchor.BelowEye, PcDeskAnchor.TerrariumDistance) * Mathf.Rad2Deg;
+            Assert.AreEqual(aim - 16f, rig.RestPitchDegrees, 0.05f);
+            rig.ApplyPose();
+
+            Vector3 forward = pivot.rotation * Vector3.forward;
+            Vector3 toDesk = desk.transform.position - pivot.position;
+            Assert.AreEqual(16f, Vector3.Angle(forward, toDesk), 0.2f);
+        }
+
+        [Test]
+        public void LensCard_FillsTheSeatedLens()
+        {
+            Vector2 size = SeatedRig.SeatedCardSize(
+                SeatedRig.PlateDistance, SeatedRig.DefaultFieldOfView, SeatedRig.SeatedCaptureAspect);
+            var card = new GameObject("lens");
+            _owned.Add(card);
+            SeatedRig.PlaceLensCard(card.transform);
+            Assert.AreEqual(SeatedRig.PlateDistance, card.transform.localPosition.z, 0.0001f);
+            Assert.AreEqual(size.x * SeatedRig.SeatedCardMargin, card.transform.localScale.x, 0.0001f);
+            Assert.AreEqual(size.y * SeatedRig.SeatedCardMargin, card.transform.localScale.y, 0.0001f);
+            float half = Mathf.Atan((card.transform.localScale.y * 0.5f) / SeatedRig.PlateDistance) * Mathf.Rad2Deg;
+            Assert.Greater(half, SeatedRig.DefaultFieldOfView * 0.5f);
+            Assert.Less(half, SeatedRig.DefaultFieldOfView * 0.5f * SeatedRig.SeatedCardMargin + 0.05f);
         }
 
         [Test]

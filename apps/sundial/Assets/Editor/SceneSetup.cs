@@ -9,13 +9,14 @@ using UnityEngine.Rendering;
 namespace GardenVR.Sundial.Editor
 {
     /// <summary>
-    /// Idempotent Main scene: seated rig, kitchen plate, desk 0.55 m ahead, empty dial anchor.
+    /// Idempotent Main scene: seated rig, kitchen plate, dial close on a high desk, empty dial anchor.
     /// Batch: -executeMethod GardenVR.Sundial.Editor.SceneSetup.Run
     /// </summary>
     public static class SceneSetup
     {
         public const string ScenePath = "Assets/Scenes/Main.unity";
         public const string PlatePath = "Assets/Art/Plates/plate-dial.png";
+        public const string SeatedPlatePath = "Assets/Art/Plates/plate-dial-seated.png";
         public const string PlateMaterialPath = "Assets/Art/Plates/PcRoomPlate.mat";
         public const string ProvenancePath = "Assets/Art/Plates/PROVENANCE.md";
         public const string DialId = "dial";
@@ -29,13 +30,21 @@ namespace GardenVR.Sundial.Editor
         public const float DialG1Fov = 30f;
         public static readonly Vector2 DialG1LensShift = new Vector2(3.6f, 0.5f);
 
-        // Rig eye (0, 1.05, 0) written in DialRoot local space. The look is the dial face,
-        // not the terrarium desk point 0.15 m in front of it (that gaze saw the disc edge-on).
-        public static readonly Vector3 DialSeatedEye = new Vector3(0f, 0.407796f, -0.475608f);
-        public static readonly Vector3 DialSeatedLook = new Vector3(0f, 0.012f, 0f);
+        // Rig eye (0, 1.05, 0) written in DialRoot local space. The look is the dial origin,
+        // which is the desk point the rest pose aims at.
+        public static readonly Vector3 DialSeatedEye = new Vector3(0f, 0.20077918f, -0.22313162f);
+        public static readonly Vector3 DialSeatedLook = new Vector3(0f, 0f, 0f);
 
-        /// <summary>Kitchen photo vertical angle in the seated view. Wider than DialG1's 30 deg, narrower than the 130 deg sphere that cropped the inpaint.</summary>
-        public const float SeatedPlateVerticalDegrees = 90f;
+        /// <summary>
+        /// Scene seated pose. <see cref="PcDeskAnchor.SundialDistance"/> stays 0.55 m.
+        /// A 30 cm dial at that reach fills about a quarter of a 60 deg frame. 0.26 m ahead
+        /// and 0.15 m below the eye (desk height 0.90 m) fills about half the frame width.
+        /// </summary>
+        public const float SeatedDeskDistance = 0.26f;
+        public const float SeatedDeskHeight = 0.90f;
+
+        /// <summary>Seated lens. The card is this angle times <see cref="SeatedRig.SeatedCardMargin"/>.</summary>
+        public const float SeatedPlateVerticalDegrees = SeatedRig.DefaultFieldOfView;
         public const float SeatedPlateDistance = 2.2f;
         public const string SeatedPlateMeshPath = "Assets/Art/Models/SeatedPlate.asset";
 
@@ -54,30 +63,41 @@ namespace GardenVR.Sundial.Editor
         {
             EnsureAssetFolder("Assets/Art");
             EnsureAssetFolder("Assets/Art/Plates");
-            string source = Path.GetFullPath(Path.Combine(
-                Application.dataPath, "..", "..", "..", "shared", "assets", "room-plates", "plate-dial.png"));
-            if (!File.Exists(source)) throw new System.InvalidOperationException("plate not found: " + source);
-            string destination = Path.GetFullPath(Path.Combine(Application.dataPath, "Art", "Plates", "plate-dial.png"));
-            File.Copy(source, destination, true);
+            CopySharedPlate("plate-dial.png", PlatePath);
+            CopySharedPlate("plate-dial-seated.png", SeatedPlatePath);
 
             const string provenance =
                 "# Plates\n\n" +
                 "Development stand-ins for passthrough. Never shipped.\n\n" +
                 "| File | Note |\n" +
                 "|---|---|\n" +
-                "| plate-dial.png | kitchen plate, inpainted from the owner's reference frame, development only, never shipped |\n";
+                "| plate-dial.png | G1 kitchen plate, inpainted from the owner's reference frame, development only, never shipped |\n" +
+                "| plate-dial-seated.png | nearer seated view of the same kitchen table, empty room, development only, never shipped |\n";
             File.WriteAllText(Path.Combine(Application.dataPath, "Art", "Plates", "PROVENANCE.md"), provenance);
 
-            AssetDatabase.ImportAsset(PlatePath, ImportAssetOptions.ForceUpdate);
-            var importer = AssetImporter.GetAtPath(PlatePath) as TextureImporter;
-            if (importer != null)
-            {
-                importer.sRGBTexture = true;
-                importer.mipmapEnabled = true;
-                importer.textureCompression = TextureImporterCompression.Uncompressed;
-                importer.wrapMode = TextureWrapMode.Clamp;
-                importer.SaveAndReimport();
-            }
+            ConfigurePlate(PlatePath);
+            ConfigurePlate(SeatedPlatePath);
+        }
+
+        static void CopySharedPlate(string fileName, string assetPath)
+        {
+            string source = Path.GetFullPath(Path.Combine(
+                Application.dataPath, "..", "..", "..", "shared", "assets", "room-plates", fileName));
+            if (!File.Exists(source)) throw new System.InvalidOperationException("plate not found: " + source);
+            string destination = Path.GetFullPath(Path.Combine(Application.dataPath, "Art", "Plates", fileName));
+            File.Copy(source, destination, true);
+            AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+        }
+
+        static void ConfigurePlate(string assetPath)
+        {
+            var importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (importer == null) return;
+            importer.sRGBTexture = true;
+            importer.mipmapEnabled = true;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.SaveAndReimport();
         }
 
         static void BuildScene()
@@ -107,8 +127,8 @@ namespace GardenVR.Sundial.Editor
             if (rig.GetComponent<KeyboardMouseIntentSource>() == null)
                 throw new System.InvalidOperationException("KeyboardMouseIntentSource missing on the seated rig");
 
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(PlatePath);
-            if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + PlatePath);
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(SeatedPlatePath);
+            if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + SeatedPlatePath);
             var plate = rig.GetComponentInChildren<PcRoomPlate>(true);
             if (plate == null) throw new System.InvalidOperationException("PcRoomPlate missing on the seated rig");
             var renderer = plate.GetComponent<Renderer>();
@@ -124,8 +144,8 @@ namespace GardenVR.Sundial.Editor
             var desk = rig.GetComponentInChildren<PcDeskAnchor>(true);
             if (desk == null) throw new System.InvalidOperationException("PcDeskAnchor missing on the seated rig");
             var deskData = new SerializedObject(desk);
-            deskData.FindProperty("_height").floatValue = PcDeskAnchor.DefaultHeight;
-            deskData.FindProperty("_distance").floatValue = PcDeskAnchor.SundialDistance;
+            deskData.FindProperty("_height").floatValue = SeatedDeskHeight;
+            deskData.FindProperty("_distance").floatValue = SeatedDeskDistance;
             deskData.FindProperty("_lateral").floatValue = 0f;
             deskData.ApplyModifiedPropertiesWithoutUndo();
             desk.ApplyPose();
@@ -194,7 +214,8 @@ namespace GardenVR.Sundial.Editor
             Debug.Log(
                 "[SceneSetup] DialG1 root pixel (" + rootPixel.x.ToString("0.0") + ", " + rootPixel.y.ToString("0.0") +
                 ") face pixel (" + facePixel.x.ToString("0.0") + ", " + facePixel.y.ToString("0.0") +
-                ") target (785, 615) desk=" + PcDeskAnchor.SundialDistance.ToString("0.00") +
+                ") target (785, 615) desk=" + SeatedDeskDistance.ToString("0.00") +
+                " height=" + SeatedDeskHeight.ToString("0.00") +
                 " tilt=" + DialTiltDegrees.ToString("0") +
                 " light=" + WindowLightDirection.normalized.ToString("0.00"));
         }
@@ -270,8 +291,8 @@ namespace GardenVR.Sundial.Editor
         }
 
         /// <summary>
-        /// Replace the 130 deg spherical plate with a quad that subtends <see cref="SeatedPlateVerticalDegrees"/>.
-        /// The shared curve stays on the prefab for the terrarium. This is the sundial scene instance only.
+        /// Size the sundial scene card to the 60 deg lens at <see cref="SeatedPlateDistance"/>.
+        /// The shared prefab card stays at 4 m. This is the sundial scene instance only.
         /// </summary>
         public static void FitSeatedPlate()
         {
@@ -289,14 +310,14 @@ namespace GardenVR.Sundial.Editor
             MeshFilter filter = plate.GetComponent<MeshFilter>();
             if (filter == null) throw new System.InvalidOperationException("PcRoomPlate has no mesh");
             filter.sharedMesh = quad;
-            float height = 2f * SeatedPlateDistance * Mathf.Tan(SeatedPlateVerticalDegrees * 0.5f * Mathf.Deg2Rad);
-            float width = height * (1824f / 1024f);
+            Vector2 size = SeatedRig.SeatedCardSize(SeatedPlateDistance, SeatedPlateVerticalDegrees, SeatedRig.SeatedCaptureAspect);
+            size *= SeatedRig.SeatedCardMargin;
             plate.transform.localPosition = new Vector3(0f, 0f, SeatedPlateDistance);
             plate.transform.localRotation = Quaternion.identity;
-            plate.transform.localScale = new Vector3(width, height, 1f);
+            plate.transform.localScale = new Vector3(size.x, size.y, 1f);
             PrefabUtility.RecordPrefabInstancePropertyModifications(filter);
             PrefabUtility.RecordPrefabInstancePropertyModifications(plate.transform);
-            Debug.Log("[SceneSetup] seated plate " + SeatedPlateVerticalDegrees.ToString("0") + " deg vertical, " + width.ToString("0.00") + " x " + height.ToString("0.00") + " m at " + SeatedPlateDistance.ToString("0.00") + " m");
+            Debug.Log("[SceneSetup] seated plate " + SeatedPlateVerticalDegrees.ToString("0") + " deg vertical, " + size.x.ToString("0.00") + " x " + size.y.ToString("0.00") + " m at " + SeatedPlateDistance.ToString("0.00") + " m");
         }
 
         static void DestroyLights()
