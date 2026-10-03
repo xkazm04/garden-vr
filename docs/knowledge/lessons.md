@@ -24,3 +24,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   compile succeeds"). The fix that holds is in the runner: a clean exit without the required artefact resumes the same
   session (`grok -r <sessionId> -p "continue..."`, verified to keep context) up to twice. Target: agent-operations /
   unattended-build-loop.
+- 2026-10-03 - **Letting one agent touch the other app's scene files produced the first real merge conflict** (T-TER-014
+  edited `apps/sundial/Assets/Editor/SceneSetup.cs` while Sundial's T-SUN-006 fixed the same lines). The loop's
+  pre-task merge aborted cleanly and the host resolved it on main (the owner app's version was the superset). Rule:
+  a cross-app change in a task's `touches` should be a request to the owning agent, or serialised behind that agent's
+  current task. Target: agent-operations / fleet orchestration (shared-file ownership).
