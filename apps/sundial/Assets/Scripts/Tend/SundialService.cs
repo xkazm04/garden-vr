@@ -119,6 +119,25 @@ namespace GardenVR.Sundial
             Recompute();
         }
 
+        /// <summary>
+        /// Keeps an in-app ritual at once. There is no undo window: the ledger row is written now.
+        /// </summary>
+        public TendResult TendRitual(string habitId)
+        {
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            TendResult result = _ledger.Tend(habitId, Today(), TendSource.Ritual, _clock);
+            if (result.Ok && !result.AlreadyKept) Persist();
+            Recompute();
+            return result;
+        }
+
+        public void SetReducedMotion(bool on)
+        {
+            if (_save == null) return;
+            if (_save.Settings == null) _save.Settings = new SundialSettings();
+            _save.Settings.ReducedMotion = on;
+        }
+
         public void Arm(string habitId)
         {
             if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");

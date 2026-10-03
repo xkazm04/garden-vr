@@ -1,0 +1,7 @@
+name: sparkle_ring_3
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-03
+derived_from_art_reference: no
+prompt: Centered on a pure white background with a wide empty white margin, a hand-drawn sparkle ring in a third twinkle. A few stars brighter and two new short ink strokes on the same loose circle, empty white centre. Warm near-black ink with lilac and pale gold specks, confident contours of varying weight. No plant, no text, no shadow.
+note: Paper keyed to alpha. Kept PNG is the keyed drawing. Raw generation is sparkle_ring_3.raw.jpg.
