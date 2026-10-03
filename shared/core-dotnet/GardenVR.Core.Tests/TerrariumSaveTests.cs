@@ -94,6 +94,8 @@ public class TerrariumSaveTests
         Assert.DoesNotContain("NightBed", json);
         Assert.DoesNotContain("ReducedMotion", json);
         Assert.DoesNotContain("HoldMode", json);
+        Assert.DoesNotContain("Mute", json);
+        Assert.DoesNotContain("RitualOpen", json);
         Assert.DoesNotContain("Settings", json);
 
         var changed = new TerrariumSave();
@@ -102,6 +104,29 @@ public class TerrariumSaveTests
         Assert.Contains("\"ExhaleSec\":7", withOne);
         Assert.DoesNotContain("Breaths", withOne);
         Assert.DoesNotContain("HoldMode", withOne);
+        Assert.DoesNotContain("Mute", withOne);
+    }
+
+    [Fact]
+    public void Mute_and_an_open_ritual_round_trip_only_when_set()
+    {
+        var save = new TerrariumSave();
+        save.Settings.Mute = true;
+        save.RitualOpen = true;
+        string json = save.ToJson();
+        Assert.Contains("\"Mute\":true", json);
+        Assert.Contains("\"RitualOpen\":true", json);
+        TerrariumSave again = TerrariumSave.FromJson(json);
+        Assert.True(again.Settings.Mute);
+        Assert.True(again.RitualOpen);
+        Assert.False(again.Settings.VoiceGuide);
+        Assert.Equal(json, again.ToJson());
+
+        again.Settings.Mute = false;
+        again.RitualOpen = false;
+        string cleared = again.ToJson();
+        Assert.DoesNotContain("Mute", cleared);
+        Assert.DoesNotContain("RitualOpen", cleared);
     }
 
     [Fact]

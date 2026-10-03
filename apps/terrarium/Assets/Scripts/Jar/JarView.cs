@@ -132,6 +132,8 @@ namespace GardenVR.Terrarium
         GardenLook _look;
         readonly List<Transform> _recordFronds = new List<Transform>();
         readonly List<Material> _recordMats = new List<Material>();
+        int _lookLit = -1;
+        bool _lookHeld;
         readonly List<Transform> _dewBeads = new List<Transform>();
         Transform _ripple;
         Material _rippleMat;
@@ -145,6 +147,9 @@ namespace GardenVR.Terrarium
         public int ShownDew { get; private set; }
         public bool FiddleQuiet { get; private set; }
         public bool FiddleWaiting { get; private set; }
+        /// <summary>Fronds lit in the look-back, birth order. Negative means the replay is off.</summary>
+        public int LookLit { get { return _lookLit; } }
+        public bool LookHeld { get { return _lookHeld; } }
 
         struct GardenLook
         {
@@ -178,12 +183,18 @@ namespace GardenVR.Terrarium
             int capCompanions = 0;
             int capLeaves = 0;
             bool sawHabits = false;
+            string etch = null;
             foreach (var pair in state)
             {
                 if (pair.Key == "journey")
                 {
                     ApplyJourney(pair.Value);
                     sawJourney = true;
+                    continue;
+                }
+                if (pair.Key == "etch")
+                {
+                    etch = pair.Value;
                     continue;
                 }
                 float value = Parse(pair.Key, pair.Value);
@@ -212,17 +223,33 @@ namespace GardenVR.Terrarium
                         capLeaves = Mathf.Max(0, (int)value);
                         sawHabits = true;
                         break;
+                    case "looklit":
+                        break;
                     default:
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
             }
             if (!sawJourney) _hasLook = false;
+            int lookLit = -1;
+            bool sawLook = false;
+            if (state.ContainsKey("looklit"))
+            {
+                float parsed;
+                if (!float.TryParse(state["looklit"], NumberStyles.Float, CultureInfo.InvariantCulture, out parsed))
+                    throw new FormatException("JarView state looklit is not a number: " + state["looklit"]);
+                lookLit = Mathf.Max(0, (int)parsed);
+                sawLook = true;
+            }
+            if (sawLook) PresentLookBack(lookLit, true);
+            else ClearLookBack();
             _liveCompanions = false;
             _captureShots = sawHabits
                 ? CompanionGarden.CaptureShots(capCompanions, capLeaves)
                 : new List<CompanionGarden.Shot>();
             HookCamera();
             Apply();
+            if (!string.IsNullOrEmpty(etch))
+                EtchedLettering.Present(transform, etch);
         }
 
         /// <summary>One cork mist swell. Reduced motion leaves the plume still.</summary>
@@ -281,6 +308,31 @@ namespace GardenVR.Terrarium
             ShownDew = garden.DewToday;
             FiddleQuiet = _look.Gap;
             FiddleWaiting = _look.Waiting;
+        }
+
+        /// <summary>Light the first <paramref name="lit"/> fronds. A held frame keeps that count.</summary>
+        public void PresentLookBack(int lit, bool held)
+        {
+            _lookLit = lit < 0 ? -1 : lit;
+            _lookHeld = _lookLit >= 0 && held;
+        }
+
+        public void ClearLookBack()
+        {
+            _lookLit = -1;
+            _lookHeld = false;
+        }
+
+        /// <summary>Green channel of one record frond. 0 when that frond is not built.</summary>
+        public float FrondGlow(int index)
+        {
+            if (index < 0 || index >= _recordMats.Count || _recordMats[index] == null) return 0f;
+            return _recordMats[index].GetColor("_Emission").g;
+        }
+
+        public float FiddleGlow
+        {
+            get { return fiddleMat != null ? fiddleMat.GetColor("_Emission").g : 0f; }
         }
 
         /// <summary>0 at full vitality, 6 degrees at the floor. Never past 6.</summary>
@@ -366,6 +418,7 @@ namespace GardenVR.Terrarium
             }
             float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
             if (_hasLook && _look.Gap) coil = 0.35f;
+            if (_lookLit >= 0) coil = 0.35f;
             if (coilHaloMat != null)
                 coilHaloMat.SetColor("_Color", new Color(0.50f, 1.05f, 0.58f) * coil);
             if (jarHaloMat != null)
@@ -1355,6 +1408,12 @@ namespace GardenVR.Terrarium
             }
             float glow = _look.Vitality;
             if (index == placed - 1 && _look.Vitality > 0.99f) glow *= 1.12f;
+            if (_lookLit >= 0)
+            {
+                // Birth order. The newest lit frond is the brightest. The ones still waiting stay green and quiet.
+                if (index < _lookLit) glow = index == _lookLit - 1 ? 1.18f : 0.92f;
+                else glow = 0.34f;
+            }
             Material material = index < _recordMats.Count ? _recordMats[index] : null;
             if (material != null) material.SetColor("_Emission", FernEmission * glow);
             Renderer renderer = slot.GetComponent<Renderer>();

@@ -37,7 +37,6 @@ namespace GardenVR.Terrarium
         static readonly Color Mint = new Color(0x8F / 255f, 0xF0 / 255f, 0xC8 / 255f, 1f);
         static readonly Color Moon = new Color(0xDD / 255f, 0xF3 / 255f, 0xFF / 255f, 1f);
         static readonly Color Gold = new Color(0xF2 / 255f, 0xD2 / 255f, 0x7A / 255f, 1f);
-        static readonly Color Etch = new Color(0xBF / 255f, 0xF5 / 255f, 0xDD / 255f, 1f);
 
         static Mesh _leaf;
         static Mesh _card;
@@ -121,27 +120,9 @@ namespace GardenVR.Terrarium
         static void BuildEtch(Transform root, Shot shot, int slot, int count)
         {
             float x = count <= 1 ? 0f : (slot - (count - 1) * 0.5f) * 0.09f;
-            var go = new GameObject("Etch-" + shot.Preset);
-            go.transform.SetParent(root, false);
-            go.transform.localPosition = new Vector3(x, 0.032f, -0.118f);
-            // TextMesh reads correctly from the -Z camera with no yaw. Y 180 shows the back.
-            go.transform.localRotation = Quaternion.identity;
-            var text = go.AddComponent<TextMesh>();
-            text.text = Companions.Label(shot.Preset);
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 48;
-            text.characterSize = 0.00105f;
-            text.color = Etch;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) text.font = font;
-            var renderer = text.GetComponent<MeshRenderer>();
-            if (renderer != null)
-            {
-                renderer.shadowCastingMode = ShadowCastingMode.Off;
-                renderer.receiveShadows = false;
-            }
+            // The etched face reads from the -Z camera with no yaw.
+            EtchedLettering.Place(root, "Etch-" + shot.Preset, Companions.Label(shot.Preset),
+                new Vector3(x, 0.032f, -0.118f), Quaternion.identity, 0.05f, 0.008f);
         }
 
         static Mesh Combine(Mesh body, Vector3 right, Vector3 up, Vector3 normal, int leaves)

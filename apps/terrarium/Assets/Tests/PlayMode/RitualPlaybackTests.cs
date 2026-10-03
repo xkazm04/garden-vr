@@ -304,7 +304,7 @@ namespace GardenVR.Terrarium.Tests
                     sawPrompt = true;
                     IntentTarget prompt;
                     Assert.IsTrue(IntentTargetRegistry.TryGet(JarRitualController.ContinuePromptId, out prompt));
-                    Assert.AreEqual("Continue breathing?", prompt.GetComponent<TextMesh>().text);
+                    Assert.AreEqual("Continue breathing?", EtchedLettering.Read(prompt.gameObject));
                 }
                 if (sawPrompt && controller.AwaitingContinue && app > 69f && app < 73f)
                 {

@@ -185,9 +185,7 @@ namespace GardenVR.Terrarium.Tests
             Assert.IsTrue(controller.RestorePromptVisible);
             GameObject prompt = GameObject.Find("RestorePrompt");
             Assert.IsNotNull(prompt);
-            TextMesh text = prompt.GetComponent<TextMesh>();
-            Assert.IsNotNull(text);
-            Assert.AreEqual("restore the last copy?", text.text);
+            Assert.AreEqual("restore the last copy?", EtchedLettering.Read(prompt));
             IntentTarget target = prompt.GetComponent<IntentTarget>();
             Assert.IsNotNull(target);
             Assert.AreEqual(JarRitualController.RestorePromptId, target.Id);

@@ -25,6 +25,7 @@ namespace GardenVR.Terrarium
         public const float PausedMotion = 0.2f;
         public const string ContinuePromptId = "prompt.continue";
         public const string RestorePromptId = "prompt.restore";
+        public const string CorkId = "jar.cork";
         const float EngageStrength = 0.85f;
 
         [SerializeField] JarView _view;
@@ -73,7 +74,14 @@ namespace GardenVR.Terrarium
         bool _cuedMoss;
         bool _cuedDew;
         FirstRunDirector _director;
+        SettingsPebbles _pebbles;
         bool _loggedInteractive;
+        LookFrame[] _lookFrames;
+        int _lookIndex;
+        float _lookClock;
+        bool _lookPlaying;
+        bool _lookArmed;
+        bool _corkPinch;
 
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
         static readonly Color DotDim = new Color(0.015f, 0.04f, 0.028f);
@@ -107,11 +115,29 @@ namespace GardenVR.Terrarium
             get
             {
                 if (_voiceShell == null) return null;
-                TextMesh mesh = _voiceShell.GetComponentInChildren<TextMesh>(true);
-                return mesh != null ? mesh.text : null;
+                return EtchedLettering.Read(_voiceShell);
             }
         }
         public bool AwaitingContinue => _awaitContinue;
+        public SettingsPebbles Pebbles => _pebbles;
+        public bool LookBackPlaying => _lookPlaying;
+        public int LookBackIndex => _lookPlaying ? _lookIndex : -1;
+        public int LookBackLit
+        {
+            get
+            {
+                if (!_lookPlaying || _lookFrames == null || _lookIndex < 0 || _lookIndex >= _lookFrames.Length) return -1;
+                return _lookFrames[_lookIndex].Lit;
+            }
+        }
+        public bool LookBackHeld
+        {
+            get
+            {
+                if (!_lookPlaying || _lookFrames == null || _lookIndex < 0 || _lookIndex >= _lookFrames.Length) return false;
+                return !_lookFrames[_lookIndex].Kept;
+            }
+        }
         public bool HoldingBreath => _holdVisual;
         public float PausedFor => _pausedFor;
         public float AppTime => _appTime;
@@ -130,6 +156,27 @@ namespace GardenVR.Terrarium
         {
             int count;
             return id != null && _cues.TryGetValue(id, out count) ? count : 0;
+        }
+
+        public int CueTotal
+        {
+            get
+            {
+                int total = 0;
+                foreach (var pair in _cues) total += pair.Value;
+                return total;
+            }
+        }
+
+        public bool CueNamed(string fragment)
+        {
+            if (string.IsNullOrEmpty(fragment)) return false;
+            foreach (var pair in _cues)
+            {
+                if (pair.Value <= 0 || pair.Key == null) continue;
+                if (pair.Key.IndexOf(fragment, System.StringComparison.OrdinalIgnoreCase) >= 0) return true;
+            }
+            return false;
         }
 
         public bool YesterdayVisible(string preset)
@@ -241,13 +288,23 @@ namespace GardenVR.Terrarium
             Unsubscribe();
             _source = source;
             _keyboard = source as KeyboardMouseIntentSource;
-            // A swapped provider starts clean. Playback tests replace the keyboard after the scene has started.
-            _latchedPause = false;
-            _needFreshPinch = false;
-            _sawOpen = false;
-            _awaitContinue = false;
-            _pausedFor = 0f;
-            if (_prompt != null) _prompt.SetActive(false);
+            // A swapped provider starts clean, except a ritual that was already offered back.
+            // That offer has to survive the playback source the resume test attaches.
+            if (!_awaitContinue)
+            {
+                _latchedPause = false;
+                _needFreshPinch = false;
+                _sawOpen = false;
+                _pausedFor = 0f;
+                if (_prompt != null) _prompt.SetActive(false);
+            }
+            else
+            {
+                _latchedPause = true;
+                _needFreshPinch = true;
+                _sawOpen = false;
+                if (_prompt != null) _prompt.SetActive(true);
+            }
             if (isActiveAndEnabled) Subscribe();
         }
 
@@ -296,6 +353,7 @@ namespace GardenVR.Terrarium
                 if (plate != null) plate.FadeSeconds = 0f;
             }
             EnsureAudio();
+            SyncMute();
             LatchGap();
         }
 
@@ -305,6 +363,7 @@ namespace GardenVR.Terrarium
             if (_source == null) SetSource(FindDefaultSource());
             ApplyHoldMode();
             BuildChrome();
+            BuildSettings();
             FirstRunStarted = _service != null && _service.Outcome == LoadOutcome.Fresh;
             if (_service != null && _service.RestoreOffered)
             {
@@ -319,6 +378,8 @@ namespace GardenVR.Terrarium
             Log("SessionStart");
             _director = gameObject.AddComponent<FirstRunDirector>();
             _director.Begin(this);
+            if (_service != null && _service.RitualOpen && !_service.RestoreOffered)
+                OfferRitualBack();
         }
 
         void OnEnable()
@@ -373,15 +434,17 @@ namespace GardenVR.Terrarium
             RefreshHabits();
 
             bool pinching = LivePinch();
+            if (_corkPinch && (_source == null || !_source.IsPinching))
+                _corkPinch = false;
             if (_guide != null)
             {
-                _guide.ObservePinching(pinching);
+                _guide.ObservePinching(pinching && !CorkOwnsPinch());
                 _guide.Tick(dt);
             }
             TickVoiceOffer();
             if (_needFreshPinch && !pinching)
                 _sawOpen = true;
-            if (_needFreshPinch && _sawOpen && !_awaitContinue && pinching)
+            if (_needFreshPinch && _sawOpen && !_awaitContinue && pinching && !CorkOwnsPinch())
             {
                 _needFreshPinch = false;
                 _latchedPause = false;
@@ -390,19 +453,23 @@ namespace GardenVR.Terrarium
                 Log("Resumed");
             }
 
-            bool freeze = _latchedPause || _needFreshPinch;
-            if (!freeze)
+            bool inputFreeze = _latchedPause || _needFreshPinch;
+            // The look-back holds the breath session so a cork pinch cannot start a ritual.
+            // It is not a pause: the jar does not ask to continue, and the replay keeps its own clock.
+            bool breathFreeze = inputFreeze || _lookPlaying;
+            if (!breathFreeze)
             {
                 if (_autoPace && !_awaitContinue) _autoClock += dt;
                 var sample = ReadSample();
                 if (_awaitContinue) sample = new PinchSample(sample.Strength, false);
+                else if (CorkOwnsPinch()) sample = new PinchSample(0f, sample.Tracked);
                 _session.Update(dt, sample);
                 TryComplete();
                 FlushSessionEvents();
             }
 
             bool trackingHold = _session.Phase == BreathPhase.Paused;
-            _holdVisual = freeze || _awaitContinue || trackingHold;
+            _holdVisual = inputFreeze || _awaitContinue || trackingHold;
             if (_holdVisual && !_wasHolding)
                 _frozenBreath = _view.breath;
             _wasHolding = _holdVisual;
@@ -453,6 +520,7 @@ namespace GardenVR.Terrarium
                 AdvancePace(dt);
             }
             PaintDots(_session.Breaths);
+            TickLook(_latchedPause ? 0f : dt);
             PushGarden();
             if (_director != null) _director.Tick(dt);
         }
@@ -473,9 +541,10 @@ namespace GardenVR.Terrarium
         {
             if (_autoPace && !_awaitContinue)
             {
-                float period = PaceInhaleSeconds + PaceExhaleSeconds;
+                float inhaleSec = PaceIn();
+                float period = inhaleSec + PaceOut();
                 float local = period <= 0f ? 0f : _autoClock % period;
-                bool inhale = local < PaceInhaleSeconds;
+                bool inhale = local < inhaleSec;
                 return new PinchSample(inhale ? 0.95f : 0.05f, true);
             }
             float strength = _source != null ? _source.PinchStrength : 0f;
@@ -507,10 +576,12 @@ namespace GardenVR.Terrarium
             if (_pace < 0f || _paceMat == null) return;
             _pace += dt;
             float shown;
-            if (_pace <= PaceInhaleSeconds)
-                shown = _pace / PaceInhaleSeconds;
-            else if (_pace <= PaceInhaleSeconds + PaceExhaleSeconds)
-                shown = 1f - (_pace - PaceInhaleSeconds) / PaceExhaleSeconds;
+            float inhaleSec = PaceIn();
+            float paceSpan = inhaleSec + PaceOut();
+            if (_pace <= inhaleSec)
+                shown = inhaleSec <= 0f ? 0f : _pace / inhaleSec;
+            else if (_pace <= paceSpan)
+                shown = 1f - (_pace - inhaleSec) / Mathf.Max(0.0001f, PaceOut());
             else
                 shown = 0f;
             _paceMat.SetFloat("_Fill", shown);
@@ -533,6 +604,7 @@ namespace GardenVR.Terrarium
             if (_service == null || _service.RestoreOffered) return;
             _answered = true;
             _lastAnswer = _service.CompleteRitual();
+            _service.NoteRitualClosed();
             _hasAnswer = true;
             _garden = _service.Garden;
             _answerTime = 0f;
@@ -549,7 +621,11 @@ namespace GardenVR.Terrarium
             while (_loggedEvents < _session.Events.Count)
             {
                 BreathEvent ev = _session.Events[_loggedEvents++];
-                if (ev.Kind == BreathEventKind.InhaleStarted) NoteInhaleStart();
+                if (ev.Kind == BreathEventKind.InhaleStarted)
+                {
+                    NoteInhaleStart();
+                    if (_service != null && !_answered) _service.NoteRitualOpen();
+                }
                 if (ev.Kind == BreathEventKind.ExhaleStarted) Play("fog.hiss", JarAnchor(), 0f);
                 if (ev.Kind == BreathEventKind.BreathCounted)
                 {
@@ -563,6 +639,16 @@ namespace GardenVR.Terrarium
 
         void OnIntent(HandIntent intent)
         {
+            if (intent.Kind == HandIntentKind.PinchHold)
+            {
+                _corkPinch = intent.TargetId == CorkId;
+                if (_corkPinch) NoteCork(intent.Held);
+            }
+            else if (intent.Kind == HandIntentKind.Release)
+            {
+                _corkPinch = false;
+                _lookArmed = false;
+            }
             if (_director != null) _director.OnIntent(intent);
             if (intent.Kind == HandIntentKind.PalmOpen)
             {
@@ -612,9 +698,10 @@ namespace GardenVR.Terrarium
                 return;
             }
             if ((intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
-                && intent.TargetId == "pebble.settings")
+                && intent.TargetId != null
+                && (intent.TargetId == SettingsPebbles.LeadId || intent.TargetId.StartsWith("pebble.set.", StringComparison.Ordinal)))
             {
-                Play("pebble.tap", _view != null ? FindNamed(_view.transform, "Pebbles") : null, 0f);
+                if (_pebbles != null) _pebbles.OnIntent(intent);
                 return;
             }
             if ((intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
@@ -636,6 +723,16 @@ namespace GardenVR.Terrarium
 
         void OnSystemPause()
         {
+            // Batch PlayMode has no user focus. The keyboard stand-in reports that on the way in
+            // and would freeze every scripted ritual. A pause from the provider actually driving the jar still commits.
+            if (Application.isBatchMode && _keyboard != null && ReferenceEquals(_source, _keyboard))
+                return;
+            NotifyFocusLost();
+        }
+
+        /// <summary>The same path as a real focus loss. PlayMode calls it directly because batch mode ignores the callback.</summary>
+        public void NotifyFocusLost()
+        {
             if (_service != null)
             {
                 _service.FlushHabits();
@@ -643,8 +740,6 @@ namespace GardenVR.Terrarium
             }
             RefreshHabits();
             PushGarden();
-            // Batch PlayMode runs have no user focus. A startup focus-loss must not freeze the scripted ritual.
-            if (Application.isBatchMode) return;
             LatchPause();
         }
 
@@ -676,9 +771,10 @@ namespace GardenVR.Terrarium
         {
             if (_autoPace && !_awaitContinue)
             {
-                float period = PaceInhaleSeconds + PaceExhaleSeconds;
+                float inhaleSec = PaceIn();
+                float period = inhaleSec + PaceOut();
                 float local = period <= 0f ? 0f : _autoClock % period;
-                return local < PaceInhaleSeconds;
+                return local < inhaleSec;
             }
             return _source != null && _source.IsPinching;
         }
@@ -889,6 +985,92 @@ namespace GardenVR.Terrarium
             Play(VoiceGuide.BedId, null, 0f);
         }
 
+        void SyncMute()
+        {
+            EnsureAudio();
+            if (_audio == null || _service == null || _service.Settings == null) return;
+            bool mute = _service.Settings.Mute;
+            if (_audio.Mute != mute) _audio.Mute = mute;
+        }
+
+        bool CorkOwnsPinch()
+        {
+            if (!_corkPinch || _source == null || !_source.IsPinching) return false;
+            if (_lookPlaying) return true;
+            if (_session == null) return false;
+            return _session.Phase == BreathPhase.Waiting || _session.Phase == BreathPhase.Complete;
+        }
+
+        void NoteCork(float held)
+        {
+            if (_lookArmed || _lookPlaying) return;
+            if (_awaitContinue || _latchedPause) return;
+            if (_session == null) return;
+            if (_session.Phase != BreathPhase.Waiting && _session.Phase != BreathPhase.Complete) return;
+            if (held + 0.0001f < LookBack.HoldSeconds) return;
+            _lookArmed = true;
+            BeginLookBack();
+        }
+
+        void BeginLookBack()
+        {
+            if (_garden == null || _service == null || _view == null) return;
+            LookFrame[] frames = LookBack.Week(_garden, _service.TodayIndex);
+            if (frames.Length == 0)
+            {
+                _lookArmed = false;
+                return;
+            }
+            _lookFrames = frames;
+            _lookIndex = 0;
+            _lookClock = 0f;
+            _lookPlaying = true;
+            if (_service.Settings != null && _service.Settings.ReducedMotion)
+                _lookIndex = frames.Length - 1;
+            ShowLookFrame();
+            Play("lookback.shimmer", CorkAnchor(), 0f);
+        }
+
+        void TickLook(float dt)
+        {
+            if (!_lookPlaying || _lookFrames == null || _lookFrames.Length == 0) return;
+            if (_service != null && _service.Settings != null && _service.Settings.ReducedMotion)
+            {
+                _lookIndex = _lookFrames.Length - 1;
+                ShowLookFrame();
+                _lookClock += dt;
+                if (_lookClock >= 1.2f) EndLookBack();
+                return;
+            }
+            ShowLookFrame();
+            if (dt < 0f) dt = 0f;
+            _lookClock += dt;
+            if (_lookClock < LookBack.FrameSeconds) return;
+            _lookClock -= LookBack.FrameSeconds;
+            if (_lookIndex + 1 >= _lookFrames.Length)
+            {
+                EndLookBack();
+                return;
+            }
+            _lookIndex++;
+            ShowLookFrame();
+        }
+
+        void ShowLookFrame()
+        {
+            if (_view == null || _lookFrames == null || _lookIndex < 0 || _lookIndex >= _lookFrames.Length) return;
+            LookFrame frame = _lookFrames[_lookIndex];
+            _view.PresentLookBack(frame.Lit, !frame.Kept);
+        }
+
+        void EndLookBack()
+        {
+            _lookPlaying = false;
+            _lookFrames = null;
+            _lookIndex = -1;
+            if (_view != null) _view.ClearLookBack();
+        }
+
         void LatchGap()
         {
             _gapReturn = _garden != null && _service != null && _garden.DaysSinceRitual(_service.TodayIndex) > 1;
@@ -919,18 +1101,15 @@ namespace GardenVR.Terrarium
         {
             if (_voiceCaption == null) return;
             bool on = !string.IsNullOrEmpty(text);
-            var mesh = _voiceCaption.GetComponent<TextMesh>();
-            if (mesh != null && on) mesh.text = text;
+            if (on) EtchedLettering.SetText(_voiceCaption, text, 0.16f, 0.009f);
             if (_voiceCaption.activeSelf != on) _voiceCaption.SetActive(on);
         }
 
         void RefreshVoiceShell()
         {
             if (_voiceShell == null) return;
-            TextMesh mesh = _voiceShell.GetComponentInChildren<TextMesh>(true);
-            if (mesh == null) return;
             bool on = _service != null && _service.Settings != null && _service.Settings.VoiceGuide;
-            mesh.text = on ? "Voice guide on." : "A voice can follow your breath.";
+            EtchedLettering.SetText(_voiceShell, on ? "Voice guide on." : "A voice can follow your breath.", 0.15f, 0.008f);
             if (_shellMat != null) _shellMat.SetColor("_Emission", on ? DotLit : PaceMint);
         }
 
@@ -1006,6 +1185,46 @@ namespace GardenVR.Terrarium
             BuildRestorePrompt();
             BuildVoiceShell();
             BuildVoiceCaption();
+        }
+
+        void BuildSettings()
+        {
+            var go = new GameObject("SettingsPebbles");
+            go.transform.SetParent(transform, false);
+            _pebbles = go.AddComponent<SettingsPebbles>();
+            _pebbles.Bind(this);
+            _pebbles.Build();
+        }
+
+        /// <summary>The pebbles wrote the save. Apply what can change without restarting a breath.</summary>
+        public void NoteSettingsChanged()
+        {
+            ApplyHoldMode();
+            if (_view != null && _service != null && _service.Settings != null)
+                _view.reducedMotion = _service.Settings.ReducedMotion;
+            SyncMute();
+            SyncGuideFlag();
+            SyncBed();
+            if (_service == null || _session == null) return;
+            if (_session.Phase == BreathPhase.Waiting && _session.Breaths == 0 && !_answered)
+            {
+                _config = ConfigFrom(_service.Settings);
+                _session = new BreathSession(_config);
+            }
+        }
+
+        float PaceIn()
+        {
+            if (_service != null && _service.Settings != null && _service.Settings.InhaleSec >= 1.2d)
+                return (float)_service.Settings.InhaleSec;
+            return PaceInhaleSeconds;
+        }
+
+        float PaceOut()
+        {
+            if (_service != null && _service.Settings != null && _service.Settings.ExhaleSec >= 1.2d)
+                return (float)_service.Settings.ExhaleSec;
+            return PaceExhaleSeconds;
         }
 
         static BreathConfig ConfigFrom(RitualSettings settings)
@@ -1121,23 +1340,8 @@ namespace GardenVR.Terrarium
             _prompt = new GameObject("ContinuePrompt");
             _prompt.transform.SetParent(transform, false);
             _prompt.transform.localPosition = new Vector3(0f, 0.105f, -0.09f);
-            _prompt.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            var text = _prompt.AddComponent<TextMesh>();
-            text.text = "Continue breathing?";
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 48;
-            text.characterSize = 0.0024f;
-            text.color = Etch;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) text.font = font;
-            var meshRenderer = text.GetComponent<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                meshRenderer.receiveShadows = false;
-            }
+            _prompt.transform.localRotation = Quaternion.identity;
+            EtchedLettering.Place(_prompt.transform, "Words", "Continue breathing?", Vector3.zero, Quaternion.identity, 0.16f, 0.012f);
             var box = _prompt.AddComponent<BoxCollider>();
             box.size = new Vector3(0.18f, 0.045f, 0.02f);
             _prompt.SetActive(true);
@@ -1151,23 +1355,8 @@ namespace GardenVR.Terrarium
             _restore = new GameObject("RestorePrompt");
             _restore.transform.SetParent(transform, false);
             _restore.transform.localPosition = new Vector3(0f, 0.082f, -0.09f);
-            _restore.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            var text = _restore.AddComponent<TextMesh>();
-            text.text = "restore the last copy?";
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 48;
-            text.characterSize = 0.0022f;
-            text.color = Etch;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) text.font = font;
-            var meshRenderer = text.GetComponent<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                meshRenderer.receiveShadows = false;
-            }
+            _restore.transform.localRotation = Quaternion.identity;
+            EtchedLettering.Place(_restore.transform, "Words", "restore the last copy?", Vector3.zero, Quaternion.identity, 0.18f, 0.011f);
             var box = _restore.AddComponent<BoxCollider>();
             box.size = new Vector3(0.2f, 0.04f, 0.02f);
             _restore.SetActive(true);
@@ -1181,7 +1370,7 @@ namespace GardenVR.Terrarium
             _voiceShell = new GameObject("VoiceShell");
             _voiceShell.transform.SetParent(transform, false);
             _voiceShell.transform.localPosition = new Vector3(0.12f, 0.03f, -0.04f);
-            _voiceShell.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            _voiceShell.transform.localRotation = Quaternion.identity;
 
             var bead = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             bead.name = "ShellBead";
@@ -1203,10 +1392,8 @@ namespace GardenVR.Terrarium
                 beadRenderer.receiveShadows = false;
             }
 
-            var label = new GameObject("ShellLabel");
-            label.transform.SetParent(_voiceShell.transform, false);
-            label.transform.localPosition = new Vector3(0f, -0.01f, 0f);
-            StyleLabel(label.AddComponent<TextMesh>(), "A voice can follow your breath.", 0.0016f);
+            EtchedLettering.Place(_voiceShell.transform, "ShellLabel", "A voice can follow your breath.",
+                new Vector3(0f, -0.012f, 0f), Quaternion.identity, 0.15f, 0.008f);
 
             var box = _voiceShell.AddComponent<BoxCollider>();
             box.size = new Vector3(0.16f, 0.06f, 0.02f);
@@ -1222,28 +1409,9 @@ namespace GardenVR.Terrarium
             _voiceCaption = new GameObject("VoiceCaption");
             _voiceCaption.transform.SetParent(transform, false);
             _voiceCaption.transform.localPosition = new Vector3(0f, 0.055f, -0.08f);
-            _voiceCaption.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            StyleLabel(_voiceCaption.AddComponent<TextMesh>(), "", 0.002f);
+            _voiceCaption.transform.localRotation = Quaternion.identity;
+            EtchedLettering.Place(_voiceCaption.transform, "Words", "", Vector3.zero, Quaternion.identity, 0.16f, 0.009f);
             _voiceCaption.SetActive(false);
-        }
-
-        static void StyleLabel(TextMesh text, string value, float characterSize)
-        {
-            text.text = value;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 48;
-            text.characterSize = characterSize;
-            text.color = Etch;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) text.font = font;
-            MeshRenderer meshRenderer = text.GetComponent<MeshRenderer>();
-            if (meshRenderer != null)
-            {
-                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                meshRenderer.receiveShadows = false;
-            }
         }
 
         void Subscribe()

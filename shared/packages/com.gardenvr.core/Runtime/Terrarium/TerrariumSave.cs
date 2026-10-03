@@ -21,6 +21,7 @@ namespace GardenVR.Core
         public bool VoiceGuide;
         public bool NightBed;
         public bool ReducedMotion;
+        public bool Mute;
         public string HoldMode = DefaultHoldMode;
     }
 
@@ -40,6 +41,8 @@ namespace GardenVR.Core
         public List<TendEvent> Tends = new List<TendEvent>();
         public RitualSettings Settings = new RitualSettings();
         public string FirstRunStep;
+        /// <summary>A ritual was started and not finished. The next launch offers it back. It does not start itself.</summary>
+        public bool RitualOpen;
         public Dictionary<string, JsonValue> Extra;
         public Dictionary<string, JsonValue> SettingsExtra;
         public Dictionary<string, Dictionary<string, JsonValue>> HabitExtra;
@@ -88,6 +91,7 @@ namespace GardenVR.Core
             }
             if (obj.Has("FirstRunStep") && !obj.Get("FirstRunStep").IsNull)
                 save.FirstRunStep = obj.Get("FirstRunStep").AsString();
+            if (obj.Has("RitualOpen")) save.RitualOpen = obj.Get("RitualOpen").AsBool();
             return save;
         }
 
@@ -119,6 +123,7 @@ namespace GardenVR.Core
             JsonObject settings = WriteSettings(save.Settings ?? new RitualSettings(), save.SettingsExtra);
             if (settings.Count > 0) obj.Set("Settings", settings);
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
+            if (save.RitualOpen) obj.Set("RitualOpen", JsonValue.Bool(true));
             obj.Restore(save.Extra);
             return obj;
         }
@@ -126,12 +131,12 @@ namespace GardenVR.Core
         static readonly string[] RootKnown =
         {
             "SchemaVersion", "FrondDays", "DewToday", "LastRitualDay", "Returns", "RitualsCompleted",
-            "Habits", "Tends", "Settings", "FirstRunStep"
+            "Habits", "Tends", "Settings", "FirstRunStep", "RitualOpen"
         };
 
         static readonly string[] SettingKnown =
         {
-            "Breaths", "InhaleSec", "ExhaleSec", "AutoPace", "VoiceGuide", "NightBed", "ReducedMotion", "HoldMode"
+            "Breaths", "InhaleSec", "ExhaleSec", "AutoPace", "VoiceGuide", "NightBed", "ReducedMotion", "Mute", "HoldMode"
         };
 
         static readonly string[] HabitKnown =
@@ -160,6 +165,7 @@ namespace GardenVR.Core
             if (obj.Has("VoiceGuide")) settings.VoiceGuide = obj.Get("VoiceGuide").AsBool();
             if (obj.Has("NightBed")) settings.NightBed = obj.Get("NightBed").AsBool();
             if (obj.Has("ReducedMotion")) settings.ReducedMotion = obj.Get("ReducedMotion").AsBool();
+            if (obj.Has("Mute")) settings.Mute = obj.Get("Mute").AsBool();
             if (obj.Has("HoldMode") && !obj.Get("HoldMode").IsNull)
                 settings.HoldMode = obj.Get("HoldMode").AsString();
             return settings;
@@ -178,6 +184,7 @@ namespace GardenVR.Core
             if (settings.VoiceGuide) obj.Set("VoiceGuide", JsonValue.Bool(true));
             if (settings.NightBed) obj.Set("NightBed", JsonValue.Bool(true));
             if (settings.ReducedMotion) obj.Set("ReducedMotion", JsonValue.Bool(true));
+            if (settings.Mute) obj.Set("Mute", JsonValue.Bool(true));
             if (!string.IsNullOrEmpty(settings.HoldMode) && settings.HoldMode != RitualSettings.DefaultHoldMode)
                 obj.Set("HoldMode", JsonValue.String(settings.HoldMode));
             obj.Restore(extra);
