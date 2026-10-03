@@ -14,12 +14,12 @@ namespace GardenVR.Sundial
     /// </summary>
     public sealed class DialLibrary
     {
-        public Material Face, Rim, Soil, Gnomon, Tiles, Catcher, Shadow, Halo;
+        public Material Face, Rim, Soil, Gnomon, Tiles, Catcher, Shadow, Halo, Pool, Contact;
         public Material Morning, Midday, WindDown, Bloom;
         public Texture2D[] MorningCards, MiddayCards, WindDownCards;
         public Texture2D[] BloomCards;
         public Texture2D[] Halos;
-        public Mesh Card, ShadowMesh, CatcherQuad;
+        public Mesh Card, Cross, ShadowMesh, CatcherQuad, PoolMesh;
     }
 
     /// <summary>
@@ -35,6 +35,7 @@ namespace GardenVR.Sundial
         public const int TileCount = 21;
         public const float OutlinePixels = 3f;
         public const float BoilPixels = 1f;
+        public const float BloomCloseSeconds = 1.2f;
 
         // SVG dial face, degrees. 0 is +X (image right), 90 is +Z (image top, far side).
         public const float MorningArc0 = 242f;
@@ -61,6 +62,8 @@ namespace GardenVR.Sundial
             1, 2, 3, 1, 1, 3, 4,
             3, 1, 1, 2, 1, 3, 4
         };
+        /// <summary>Ink flood per tile, 0 at the nib to 1 full. Null means every tile is already full.</summary>
+        public float[] tileFill;
         public bool boil = true;
         public float time = 1f;
         [Range(0f, 1f)] public float waiting;
@@ -73,6 +76,8 @@ namespace GardenVR.Sundial
         public float faceY = 0.012f;
         public float faceRadius = 0.1472f;
         public Renderer haloRenderer;
+        public Renderer poolRenderer;
+        public Renderer contactRenderer;
         public Transform shadow;
         public Transform[] uprightCards;
         public Material[] boilMats;
@@ -91,6 +96,11 @@ namespace GardenVR.Sundial
         Texture2D _stateTex;
         bool _hooked;
         const float TileRadius = 0.82f;
+        readonly float[] _bloomVisual = { -1f, -1f, -1f };
+        readonly float[] _bloomClose = { -1f, -1f, -1f };
+        readonly float[] _bloomFold = { 1f, 1f, 1f };
+        float _bloomClock = -1f;
+        float _bloomDt;
 
         static readonly string[] ArcIds = { "morning", "midday", "winddown" };
         // Card spots read off the owner's frame, in units of the face radius. x is right, z is away.
@@ -119,8 +129,38 @@ namespace GardenVR.Sundial
             Apply();
         }
 
+        public bool IsBloomClosing(int arc)
+        {
+            return arc >= 0 && arc < 3 && _bloomClose[arc] >= 0f;
+        }
+
+        public float BloomFoldAmount(int arc)
+        {
+            if (arc < 0 || arc >= 3) return 1f;
+            return _bloomFold[arc];
+        }
+
+        /// <summary>-1 none, 0 bud, 1 open. During a close this stays on the open card until the fold finishes.</summary>
+        public int ShownBloomCard(int arc)
+        {
+            if (arc < 0 || arc >= 3) return -1;
+            float bloom = _bloomVisual[arc];
+            if (bloom < 0.5f) return -1;
+            if (bloom < 1.5f) return 0;
+            return 1;
+        }
+
         public void Apply()
         {
+            _bloomDt = 0f;
+            if (_bloomClock >= 0f)
+            {
+                _bloomDt = time - _bloomClock;
+                if (_bloomDt < 0f) _bloomDt = 0f;
+                if (_bloomDt > 0.1f) _bloomDt = 0.1f;
+            }
+            _bloomClock = time;
+
             EnsureStateTexture();
             WriteStateTexture();
             if (tileRenderer != null && _stateTex != null)
@@ -138,32 +178,50 @@ namespace GardenVR.Sundial
             ApplyPlant(2, stageWinddown, bloomWinddown);
             ApplyStrip();
             ApplyPulse();
+            ApplyBloomFold();
 
-            float breathe = 0.85f + 0.15f * Mathf.Sin(time * 4f);
+            // Gentle. A faster sine read as a flicker on the gold line.
+            float breathe = reducedMotion ? 1f : 0.86f + 0.14f * Mathf.Sin(time * 2.2f);
             float amount = Mathf.Clamp01(halo) * breathe;
             int haloStage = haloArc == 0 ? stageMorning : haloArc == 1 ? stageMidday : stageWinddown;
-            int haloIndex = haloArc * 5 + Mathf.Clamp(haloStage, 0, 4);
+            Texture2D[] haloSet = haloArc == 0 ? morningCards : haloArc == 1 ? middayCards : windDownCards;
+            int stageCard = Mathf.Clamp(haloStage, 0, 4);
             if (haloRenderer != null)
             {
                 haloRenderer.enabled = !stageStrip && amount > 0.01f;
-                if (haloTextures != null && haloIndex >= 0 && haloIndex < haloTextures.Length && haloTextures[haloIndex] != null)
+                if (haloSet != null && stageCard < haloSet.Length && haloSet[stageCard] != null)
                 {
                     var block = new MaterialPropertyBlock();
                     haloRenderer.GetPropertyBlock(block);
-                    block.SetTexture("_MainTex", haloTextures[haloIndex]);
+                    block.SetTexture("_MainTex", haloSet[stageCard]);
                     haloRenderer.SetPropertyBlock(block);
                 }
             }
             Material haloMat = haloRenderer != null ? haloRenderer.sharedMaterial : null;
             if (haloMat != null)
             {
-                // Additive card. Texture R is the inked rim, G is the soft pool.
-                // Pale gold. A hotter pool plus FCard's sparkle bloom read as a flame.
-                var line = new Color(1.12f, 0.92f, 0.46f) * amount;
-                var pool = new Color(1.02f, 0.78f, 0.36f) * (amount * 0.20f);
+                // Warm gold line and a softer gold skirt. Yellow, not the orange flame.
+                var line = new Color(1.45f, 1.12f, 0.46f) * amount;
+                var bloom = new Color(1.05f, 0.82f, 0.32f) * amount;
                 haloMat.SetColor("_Color", line);
-                haloMat.SetColor("_Color2", pool);
+                haloMat.SetColor("_Color2", bloom);
+                float widen = reducedMotion ? 1f : 0.92f + 0.08f * Mathf.Sin(time * 2.2f + 0.6f);
+                if (haloMat.HasProperty("_Silhouette")) haloMat.SetFloat("_Silhouette", 6.0f * widen);
+                if (haloMat.HasProperty("_Fit")) haloMat.SetFloat("_Fit", 1.18f);
             }
+            if (poolRenderer != null)
+            {
+                poolRenderer.enabled = !stageStrip && amount > 0.01f;
+                Material poolMat = poolRenderer.sharedMaterial;
+                if (poolMat != null)
+                {
+                    float poolPulse = reducedMotion ? 1f : 0.88f + 0.12f * Mathf.Sin(time * 2.2f);
+                    poolMat.SetColor("_Color", new Color(1.25f, 0.96f, 0.42f) * (amount * poolPulse));
+                    poolMat.SetColor("_Color2", Color.black);
+                }
+            }
+            if (contactRenderer != null)
+                contactRenderer.enabled = !stageStrip;
 
             if (shadow != null)
             {
@@ -201,7 +259,8 @@ namespace GardenVR.Sundial
         {
             if (model == null) throw new InvalidOperationException("dial model is missing");
             if (tileMesh == null || !tileMesh.isReadable) throw new InvalidOperationException("tile mesh is not readable");
-            if (library == null || library.Card == null) throw new InvalidOperationException("dial library is missing a card mesh");
+            if (library == null || library.Card == null || library.Cross == null)
+                throw new InvalidOperationException("dial library is missing a card mesh");
 
             for (int i = transform.childCount - 1; i >= 0; i--)
                 DestroyObject(transform.GetChild(i).gameObject);
@@ -237,11 +296,11 @@ namespace GardenVR.Sundial
             {
                 Vector2 spot = PlantSpot[arc];
                 Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.004f, spot.y * faceRadius);
-                var card = Card(transform, ArcIds[arc], plantMats[arc], pos, PlantSize[arc], library.Card);
+                var card = Card(transform, ArcIds[arc], plantMats[arc], pos, PlantSize[arc], library.Cross);
                 card.name = "plant." + ArcIds[arc];
                 var box = card.AddComponent<BoxCollider>();
-                box.center = new Vector3(0f, 0.5f, 0f);
-                box.size = new Vector3(1f, 1f, 0.08f);
+                box.center = new Vector3(0f, 0.5f, 0.02f);
+                box.size = new Vector3(1.05f, 1f, 0.42f);
                 var target = card.AddComponent<IntentTarget>();
                 target.Id = "plant." + ArcIds[arc];
                 cards.Add(card.transform);
@@ -252,7 +311,7 @@ namespace GardenVR.Sundial
             {
                 Vector2 spot = PlantSpot[arc];
                 Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.0055f, spot.y * faceRadius);
-                var bloomGo = Card(transform, "bloom." + ArcIds[arc], library.Bloom, pos, PlantSize[arc], library.Card);
+                var bloomGo = Card(transform, "bloom." + ArcIds[arc], library.Bloom, pos, PlantSize[arc], library.Cross);
                 var bloomRenderer = bloomGo.GetComponent<Renderer>();
                 bloomRenderer.enabled = false;
                 blooms[arc] = bloomRenderer;
@@ -263,6 +322,19 @@ namespace GardenVR.Sundial
             haloRenderer = haloGo.GetComponent<Renderer>();
             cards.Add(haloGo.transform);
             uprightCards = cards.ToArray();
+
+            var poolGo = Card(transform, "HaloPool", library.Pool, Vector3.zero, Vector2.one, library.PoolMesh);
+            poolGo.transform.localRotation = Quaternion.identity;
+            poolRenderer = poolGo.GetComponent<Renderer>();
+
+            var contactGo = new GameObject("PlantContacts");
+            contactGo.transform.SetParent(transform, false);
+            contactGo.AddComponent<MeshFilter>().sharedMesh = BuildContactMesh();
+            contactRenderer = contactGo.AddComponent<MeshRenderer>();
+            contactRenderer.sharedMaterial = library.Contact;
+            contactRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            contactRenderer.receiveShadows = false;
+
             BuildStrip(library);
 
             Mesh placed = CombineTiles(tileMesh);
@@ -316,6 +388,8 @@ namespace GardenVR.Sundial
         }
 
         public Mesh BuiltTileMesh => tileRenderer != null ? tileRenderer.GetComponent<MeshFilter>().sharedMesh : null;
+
+        public Mesh BuiltContactMesh => contactRenderer != null ? contactRenderer.GetComponent<MeshFilter>().sharedMesh : null;
 
         public void Face(Camera cam)
         {
@@ -428,6 +502,7 @@ namespace GardenVR.Sundial
             if (uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
             Transform plant = uprightCards[arc];
             int card = Mathf.Clamp(stage, 0, 4);
+            bloom = PresentBloom(arc, bloom);
             Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
             Renderer renderer = plant.GetComponent<Renderer>();
             Color tint = PlantTint(arc);
@@ -450,6 +525,78 @@ namespace GardenVR.Sundial
             bloomTransform.localPosition = plant.localPosition + new Vector3(0f, 0.0015f, 0f);
             bloomTransform.localScale = plant.localScale;
             if (show) SetMain(bloomRenderer, bloomTextures[tex]);
+        }
+
+        /// <summary>
+        /// An open flower that falls back to a bud folds shut over <see cref="BloomCloseSeconds"/>.
+        /// Reduced motion swaps. The returned value is what the card should draw this frame.
+        /// </summary>
+        float PresentBloom(int arc, float target)
+        {
+            // Edit-mode captures set the flower once. Only play mode folds it shut.
+            if (!Application.isPlaying)
+            {
+                _bloomVisual[arc] = target;
+                _bloomClose[arc] = -1f;
+                _bloomFold[arc] = 1f;
+                return target;
+            }
+            if (_bloomVisual[arc] < 0f) _bloomVisual[arc] = target;
+            bool open = _bloomVisual[arc] >= 1.5f && _bloomClose[arc] < 0f;
+            bool bud = target >= 0.5f && target < 1.5f;
+            if (open && bud)
+            {
+                if (reducedMotion)
+                {
+                    _bloomVisual[arc] = target;
+                    _bloomFold[arc] = 1f;
+                }
+                else
+                {
+                    _bloomClose[arc] = 0f;
+                }
+            }
+
+            if (_bloomClose[arc] >= 0f)
+            {
+                if (!bud || reducedMotion)
+                {
+                    _bloomClose[arc] = -1f;
+                    _bloomVisual[arc] = target;
+                    _bloomFold[arc] = 1f;
+                    return target;
+                }
+                _bloomClose[arc] += _bloomDt;
+                float u = Mathf.Clamp01(_bloomClose[arc] / BloomCloseSeconds);
+                _bloomFold[arc] = Mathf.Lerp(1f, 0.38f, u);
+                if (u >= 1f)
+                {
+                    _bloomClose[arc] = -1f;
+                    _bloomVisual[arc] = target;
+                    _bloomFold[arc] = 1f;
+                    return target;
+                }
+                return 2f;
+            }
+
+            _bloomVisual[arc] = target;
+            _bloomFold[arc] = 1f;
+            return target;
+        }
+
+        void ApplyBloomFold()
+        {
+            if (bloomRenderers == null) return;
+            for (int arc = 0; arc < bloomRenderers.Length && arc < 3; arc++)
+            {
+                Renderer bloomRenderer = bloomRenderers[arc];
+                if (bloomRenderer == null) continue;
+                float fold = _bloomFold[arc];
+                if (fold >= 0.999f) continue;
+                Transform bloomTransform = bloomRenderer.transform;
+                Vector3 scale = bloomTransform.localScale;
+                bloomTransform.localScale = new Vector3(scale.x * fold, scale.y * fold, scale.z);
+            }
         }
 
         void ApplyStrip()
@@ -567,13 +714,61 @@ namespace GardenVR.Sundial
             if (haloRenderer == null || uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
             Transform plant = uprightCards[arc];
             Transform haloTransform = haloRenderer.transform;
-            haloTransform.localPosition = plant.localPosition;
             haloTransform.localRotation = plant.localRotation;
+            // The card's +Z faces the camera. A small push keeps the additive glow off the ink.
+            Vector3 face = haloTransform.localRotation * Vector3.forward;
+            haloTransform.localPosition = plant.localPosition + face * 0.0025f + Vector3.up * 0.001f;
             Vector3 plantScale = plant.localScale;
-            // Same pivot as the plant (the base of the card). A larger scale grows upward
-            // and lifts the glow off the flowers.
-            const float haloScale = 1.02f;
-            haloTransform.localScale = new Vector3(plantScale.x * haloScale, plantScale.y * haloScale, plantScale.z * 1.06f);
+            // Same pivot as the plant (the base of the card). _Fit insets the texture so this
+            // larger card is margin for the dilated glow, not a bigger drawing.
+            const float haloScale = 1.18f;
+            haloTransform.localScale = new Vector3(plantScale.x * haloScale, plantScale.y * haloScale, plantScale.z * haloScale);
+            if (poolRenderer == null) return;
+            Transform pool = poolRenderer.transform;
+            pool.localRotation = Quaternion.identity;
+            pool.localPosition = new Vector3(plant.localPosition.x, faceY + 0.009f, plant.localPosition.z);
+            float pulse = reducedMotion ? 1f : 0.94f + 0.06f * Mathf.Sin(time * 2.2f);
+            float w = Mathf.Max(0.10f, plantScale.x * 2.8f) * pulse;
+            pool.localScale = new Vector3(w, 1f, w * 0.78f);
+        }
+
+        Mesh BuildContactMesh()
+        {
+            var verts = new List<Vector3>(12);
+            var uv = new List<Vector2>(12);
+            var colors = new List<Color>(12);
+            var tris = new List<int>(18);
+            for (int arc = 0; arc < 3; arc++)
+            {
+                Vector2 spot = PlantSpot[arc];
+                Vector3 center = new Vector3(spot.x * faceRadius, faceY + 0.008f, spot.y * faceRadius);
+                float rx = PlantSize[arc].x * 1.15f;
+                float rz = PlantSize[arc].x * 0.72f;
+                int b = verts.Count;
+                verts.Add(center + new Vector3(-rx, 0f, -rz));
+                verts.Add(center + new Vector3(rx, 0f, -rz));
+                verts.Add(center + new Vector3(rx, 0f, rz));
+                verts.Add(center + new Vector3(-rx, 0f, rz));
+                uv.Add(new Vector2(0f, 0f));
+                uv.Add(new Vector2(1f, 0f));
+                uv.Add(new Vector2(1f, 1f));
+                uv.Add(new Vector2(0f, 1f));
+                for (int v = 0; v < 4; v++) colors.Add(Color.white);
+                tris.Add(b);
+                tris.Add(b + 2);
+                tris.Add(b + 1);
+                tris.Add(b);
+                tris.Add(b + 3);
+                tris.Add(b + 2);
+            }
+            var mesh = new Mesh { name = "PlantContacts" };
+            mesh.SetVertices(verts);
+            mesh.SetUVs(0, uv);
+            mesh.SetColors(colors);
+            mesh.SetTriangles(tris, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         void EnsureStateTexture()
@@ -597,7 +792,10 @@ namespace GardenVR.Sundial
             {
                 int state = Mathf.Clamp(tiles[i], 0, 4);
                 int arc = i / TilesPerArc;
-                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), 0, 255);
+                float fill = 1f;
+                if (tileFill != null && i < tileFill.Length) fill = Mathf.Clamp01(tileFill[i]);
+                byte flood = (byte)Mathf.RoundToInt(fill * 255f);
+                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), flood, 255);
             }
             _stateTex.SetPixels32(pixels);
             _stateTex.Apply(false, false);

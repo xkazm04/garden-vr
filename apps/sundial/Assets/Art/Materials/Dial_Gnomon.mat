@@ -41,20 +41,20 @@ Material:
     - _BoilPx: 1
     - _BoilTime: 2.9
     - _Feather: 0.04
-    - _Grain: 0.04
+    - _Grain: 0.02
     - _Outline: 0.001
-    - _OutlinePx: 2.2
+    - _OutlinePx: 1.15
     - _ShadowStrength: 0
-    - _SpecStep: 0.9
-    - _Step: 0.02
+    - _SpecStep: 0.84
+    - _Step: 0.18
     - _T: 2.9
     - _TileMode: 0
     - _TilePaint: 0
     m_Colors:
     - _Ink: {r: 0.165, g: 0.149, b: 0.133, a: 1}
-    - _Lit: {r: 1.04, g: 0.98, b: 0.9, a: 1}
-    - _Shade: {r: 0.86, g: 0.78, b: 0.68, a: 1}
-    - _Spec: {r: 0.35, g: 0.28, b: 0.12, a: 1}
+    - _Lit: {r: 1.02, g: 1.03, b: 1.06, a: 1}
+    - _Shade: {r: 0.78, g: 0.8, b: 0.84, a: 1}
+    - _Spec: {r: 0.55, g: 0.57, b: 0.6, a: 1}
     - _WashDusk: {r: 0.655, g: 0.6039999, b: 0.839, a: 1}
     - _WashMidday: {r: 0.89, g: 0.6119999, b: 0.50999993, a: 1}
     - _WashMorning: {r: 0.886, g: 0.722, b: 0.39999998, a: 1}

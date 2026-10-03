@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using GardenVR.Core;
 using GardenVR.Input;
 using UnityEngine;
@@ -24,6 +26,12 @@ namespace GardenVR.Sundial
         public const string CueTock = "tend.tock";
         public const string CueInk = "tile.ink";
         public const string CueUndo = "tend.undo";
+        public const string CueHatch = "tile.hatch";
+        public const string PromptYesId = "prompt.backfill.yes";
+        public const string PromptNoId = "prompt.backfill.no";
+        public const string PromptQuestion = "Did it happen?";
+        public const string PromptYesLine = "Yes, it happened";
+        public const string PromptNoLine = "Not this time";
 
         public static string SaveDirectoryOverride;
         public static IClock ClockOverride;
@@ -51,14 +59,21 @@ namespace GardenVR.Sundial
         bool _sweeping;
         bool _sweepBegun;
         float _swept;
+        readonly int[] _stageFloor = { -1, -1, -1 };
 
         GameObject _undo;
-        GameObject _fill;
+        readonly GameObject[] _asks = new GameObject[3];
+        GameObject _prompt;
+        string _promptArc;
         Material _inkMat;
-        Texture2D _white;
         Texture2D _ring;
+        Texture2D _cream;
         Mesh _quad;
+        Mesh _chipQuad;
         GUIStyle _overlayStyle;
+
+        static readonly Color Ink = new Color(0.165f, 0.149f, 0.133f, 1f);
+        static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.96f);
 
         public SundialService Service { get { return _service; } }
         public IHandIntentSource Source { get { return _source; } }
@@ -68,6 +83,14 @@ namespace GardenVR.Sundial
         public DialView View { get { return _view; } }
         public LoadOutcome Outcome { get { return _service == null ? LoadOutcome.Failed : _service.Outcome; } }
         public bool UndoVisible { get { return _undo != null && _undo.activeSelf; } }
+        public bool PromptVisible { get { return _prompt != null && _prompt.activeSelf; } }
+        public string PromptArc { get { return PromptVisible ? _promptArc : null; } }
+
+        public bool AskVisible(string arc)
+        {
+            int index = SundialArcs.Index(arc);
+            return index >= 0 && _asks[index] != null && _asks[index].activeSelf;
+        }
         public bool LookHaloOn { get { return _view != null && _view.halo > 0.5f; } }
         public bool FastClock { get { return _service != null && _service.FastClock; } }
         public bool OverlayVisible { get; private set; }
@@ -164,9 +187,10 @@ namespace GardenVR.Sundial
         {
             CommitEarly();
             if (_inkMat != null) Destroy(_inkMat);
-            if (_white != null) Destroy(_white);
             if (_ring != null) Destroy(_ring);
+            if (_cream != null) Destroy(_cream);
             if (_quad != null) Destroy(_quad);
+            if (_chipQuad != null) Destroy(_chipQuad);
         }
 
         void Update()
@@ -187,6 +211,7 @@ namespace GardenVR.Sundial
             UpdatePulse(dt);
             UpdateFill(dt);
             PushView();
+            RefreshAsks();
             UpdateSweep(dt);
             _view.time += dt;
             _view.Apply();
@@ -200,6 +225,7 @@ namespace GardenVR.Sundial
                 _dwellTime = 0f;
             }
             _lookedThisFrame = false;
+            PlaceRecordMarks();
         }
 
         void OnGUI()
@@ -212,13 +238,36 @@ namespace GardenVR.Sundial
                 _overlayStyle.wordWrap = true;
                 _overlayStyle.normal.textColor = new Color(0.16f, 0.15f, 0.13f, 1f);
             }
-            GUI.Label(new Rect(16f, 16f, 920f, 320f), _service.StateJson, _overlayStyle);
+            GUI.Label(new Rect(16f, 16f, 920f, 420f), _service.StateJson + "\n" + TileCaption(), _overlayStyle);
+        }
+
+        string TileCaption()
+        {
+            if (_service == null || _service.Save == null || _service.Save.Habits == null) return "";
+            var text = new StringBuilder();
+            for (int i = 0; i < _service.Save.Habits.Count; i++)
+            {
+                HabitDef habit = _service.Save.Habits[i];
+                PlantState plant = _service.PlantFor(habit);
+                if (habit == null || plant == null || plant.Window == null) continue;
+                if (text.Length > 0) text.Append('\n');
+                text.Append(habit.Id);
+                text.Append(": ");
+                int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
+                for (int slot = 0; slot < count; slot++)
+                {
+                    if (slot > 0) text.Append(' ');
+                    text.Append(TileLabels.For(plant.Window[slot]));
+                }
+            }
+            return text.ToString();
         }
 
         void OnIntent(HandIntent intent)
         {
             if (intent.Kind == HandIntentKind.Look) OnLook(intent.TargetId);
             else if (intent.Kind == HandIntentKind.Pinch) OnPinch(intent.TargetId);
+            else if (intent.Kind == HandIntentKind.Poke) OnPoke(intent.TargetId);
             else if (intent.Kind == HandIntentKind.PalmOpen) CommitEarly();
         }
 
@@ -247,8 +296,14 @@ namespace GardenVR.Sundial
             _view.haloTarget = arc;
         }
 
+        void OnPoke(string id)
+        {
+            TryBackfillGesture(id);
+        }
+
         void OnPinch(string id)
         {
+            if (TryBackfillGesture(id)) return;
             string undoArc;
             if (SundialArcs.TryUndo(id, out undoArc))
             {
@@ -279,8 +334,6 @@ namespace GardenVR.Sundial
             _fillDone = _service.ReducedMotion;
             _filling = !_service.ReducedMotion;
             ShowUndo(arc);
-            if (_service.ReducedMotion) HideFill();
-            else ShowFill(arc, 0f);
         }
 
         void TryUndo(string arc)
@@ -306,7 +359,6 @@ namespace GardenVR.Sundial
             _pulsing = false;
             if (_view != null) _view.pulse = 0f;
             HideUndo();
-            HideFill();
         }
 
         void UpdatePulse(float dt)
@@ -327,13 +379,10 @@ namespace GardenVR.Sundial
         {
             if (!_filling) return;
             _fillT += dt;
-            float u = Mathf.Clamp01(_fillT / TileFillSeconds);
-            PlaceFill(u);
-            if (u >= 1f)
+            if (_fillT >= TileFillSeconds)
             {
                 _filling = false;
                 _fillDone = true;
-                HideFill();
             }
         }
 
@@ -379,7 +428,13 @@ namespace GardenVR.Sundial
             if (state == null) return;
             if (_view.tiles == null || _view.tiles.Length != DialView.TileCount)
                 _view.tiles = new int[DialView.TileCount];
-            for (int i = 0; i < _view.tiles.Length; i++) _view.tiles[i] = 0;
+            if (_view.tileFill == null || _view.tileFill.Length != DialView.TileCount)
+                _view.tileFill = new float[DialView.TileCount];
+            for (int i = 0; i < _view.tiles.Length; i++)
+            {
+                _view.tiles[i] = 0;
+                _view.tileFill[i] = 1f;
+            }
 
             int due = -1;
             if (_service.Save != null && _service.Save.Habits != null)
@@ -392,6 +447,9 @@ namespace GardenVR.Sundial
                     int arc = SundialArcs.Index(SundialArcs.Key(habit.Group));
                     if (arc < 0) continue;
                     int stage = (int)plant.Stage;
+                    // A miss never shrinks the drawing. The card stays on the fullest stage this session has shown.
+                    if (_stageFloor[arc] < 0 || stage > _stageFloor[arc]) _stageFloor[arc] = stage;
+                    else stage = _stageFloor[arc];
                     float bloom = plant.Bloom == Bloom.Open ? 2f : plant.Bloom == Bloom.Bud ? 1f : 0f;
                     if (arc == 0) { _view.stageMorning = stage; _view.bloomMorning = bloom; }
                     else if (arc == 1) { _view.stageMidday = stage; _view.bloomMidday = bloom; }
@@ -399,8 +457,13 @@ namespace GardenVR.Sundial
                     int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
                     for (int slot = 0; slot < count; slot++)
                         _view.tiles[arc * 7 + slot] = SundialArcs.TileDigit(plant.Window[slot]);
-                    if (_fillDone && _pendingArc != null && SundialArcs.Index(_pendingArc) == arc)
-                        _view.tiles[arc * 7 + 6] = SundialArcs.TileDigit(TileState.Kept);
+                    if (_pendingArc != null && SundialArcs.Index(_pendingArc) == arc && (_filling || _fillDone))
+                    {
+                        int today = arc * 7 + 6;
+                        _view.tiles[today] = SundialArcs.TileDigit(TileState.Kept);
+                        float flood = _service.ReducedMotion ? 1f : Mathf.Clamp01(_fillT / TileFillSeconds);
+                        _view.tileFill[today] = _fillDone ? 1f : flood;
+                    }
                     if (plant.DueNow) due = arc;
                 }
             }
@@ -434,28 +497,6 @@ namespace GardenVR.Sundial
             }
         }
 
-        void ShowFill(string arc, float amount)
-        {
-            HideFill();
-            Transform tile = FindNamed("tile." + arc + ".6");
-            _fill = MakeMark("ink." + arc, _white, Wash(arc), 0.001f);
-            if (tile != null)
-            {
-                _fill.transform.SetParent(tile, false);
-                _fill.transform.localRotation = Quaternion.identity;
-            }
-            PlaceFill(amount);
-        }
-
-        void PlaceFill(float amount)
-        {
-            if (_fill == null) return;
-            const float full = 0.012f;
-            float width = Mathf.Max(0.0004f, full * Mathf.Clamp01(amount));
-            _fill.transform.localPosition = new Vector3((-full + width) * 0.5f, 0.004f, 0f);
-            _fill.transform.localScale = new Vector3(width, 1f, 0.009f);
-        }
-
         GameObject MakeMark(string name, Texture2D texture, Color color, float size)
         {
             EnsureInk();
@@ -486,19 +527,8 @@ namespace GardenVR.Sundial
             _inkMat.SetFloat("_Ring", 0f);
             _inkMat.SetFloat("_Coverage", 0f);
             _inkMat.SetFloat("_Mask", 0f);
-            _white = Solid(Color.white);
             _ring = Ring();
             _quad = FlatQuad();
-        }
-
-        static Texture2D Solid(Color color)
-        {
-            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            var pixels = new Color[4];
-            for (int i = 0; i < pixels.Length; i++) pixels[i] = color;
-            tex.SetPixels(pixels);
-            tex.Apply(false, false);
-            return tex;
         }
 
         static Texture2D Ring()
@@ -542,13 +572,6 @@ namespace GardenVR.Sundial
             return mesh;
         }
 
-        static Color Wash(string arc)
-        {
-            if (arc == "morning") return new Color(0.886f, 0.722f, 0.400f, 1f);
-            if (arc == "winddown") return new Color(0.655f, 0.604f, 0.839f, 1f);
-            return new Color(0.890f, 0.612f, 0.510f, 1f);
-        }
-
         void HideUndo()
         {
             if (_undo == null) return;
@@ -557,12 +580,210 @@ namespace GardenVR.Sundial
             _undo = null;
         }
 
-        void HideFill()
+        bool TryBackfillGesture(string id)
         {
-            if (_fill == null) return;
-            _fill.SetActive(false);
-            Destroy(_fill);
-            _fill = null;
+            if (id == PromptYesId && PromptVisible)
+            {
+                ConfirmBackfill();
+                return true;
+            }
+            if (id == PromptNoId && PromptVisible)
+            {
+                ClosePrompt();
+                return true;
+            }
+            string arc;
+            if (!TryAsk(id, out arc)) return false;
+            OpenPrompt(arc);
+            return true;
+        }
+
+        static bool TryAsk(string id, out string arc)
+        {
+            arc = null;
+            const string marker = ".yesterday.ask";
+            if (string.IsNullOrEmpty(id) || !id.StartsWith("tile.", StringComparison.Ordinal) || !id.EndsWith(marker, StringComparison.Ordinal))
+                return false;
+            string middle = id.Substring("tile.".Length, id.Length - "tile.".Length - marker.Length);
+            if (middle.EndsWith(".", StringComparison.Ordinal))
+                middle = middle.Substring(0, middle.Length - 1);
+            if (SundialArcs.Index(middle) < 0) return false;
+            arc = middle;
+            return true;
+        }
+
+        void OpenPrompt(string arc)
+        {
+            if (_service == null || string.IsNullOrEmpty(arc)) return;
+            if (!_service.BackfillOffered(_service.HabitForArc(arc))) return;
+            EnsurePrompt();
+            _promptArc = arc;
+            if (_prompt != null) _prompt.SetActive(true);
+        }
+
+        void ClosePrompt()
+        {
+            _promptArc = null;
+            if (_prompt != null) _prompt.SetActive(false);
+        }
+
+        void ConfirmBackfill()
+        {
+            HabitDef habit = _service == null || string.IsNullOrEmpty(_promptArc) ? null : _service.HabitForArc(_promptArc);
+            TendResult result = habit == null ? null : _service.BackfillYesterday(habit);
+            ClosePrompt();
+            if (result != null && result.Ok) PlayCue(CueHatch);
+        }
+
+        void RefreshAsks()
+        {
+            if (_service == null) return;
+            for (int arc = 0; arc < 3; arc++)
+            {
+                string key = SundialArcs.FromIndex(arc);
+                bool show = _service.BackfillOffered(_service.HabitForArc(key));
+                if (show && _asks[arc] == null) _asks[arc] = MakeAsk(key);
+                if (_asks[arc] == null) continue;
+                if (_asks[arc].activeSelf != show) _asks[arc].SetActive(show);
+            }
+            if (PromptVisible && !_service.BackfillOffered(_service.HabitForArc(_promptArc)))
+                ClosePrompt();
+        }
+
+        void PlaceRecordMarks()
+        {
+            if (!Application.isPlaying) return;
+            Camera cam = Camera.main;
+            for (int arc = 0; arc < 3; arc++)
+            {
+                GameObject ask = _asks[arc];
+                if (ask == null || !ask.activeSelf) continue;
+                Transform tile = FindNamed("tile." + SundialArcs.FromIndex(arc) + ".5");
+                Vector3 pos = tile != null ? tile.position + Vector3.up * 0.008f : transform.position;
+                FaceCamera(ask.transform, pos, cam);
+            }
+            if (_prompt == null || !_prompt.activeSelf || string.IsNullOrEmpty(_promptArc)) return;
+            Transform yesterday = FindNamed("tile." + _promptArc + ".5");
+            Vector3 at = yesterday != null ? yesterday.position + Vector3.up * 0.034f : transform.position + Vector3.up * 0.05f;
+            FaceCamera(_prompt.transform, at, cam);
+        }
+
+        static void FaceCamera(Transform mark, Vector3 worldPos, Camera cam)
+        {
+            mark.position = worldPos;
+            if (cam == null) return;
+            Vector3 away = worldPos - cam.transform.position;
+            if (away.sqrMagnitude < 1e-8f) return;
+            mark.rotation = Quaternion.LookRotation(away, Vector3.up);
+        }
+
+        GameObject MakeAsk(string arc)
+        {
+            var go = new GameObject("tile." + arc + ".yesterday.ask");
+            go.transform.SetParent(transform, false);
+            TextMesh mesh = AddInkLine(go, "?", 64, 0.0034f);
+            mesh.anchor = TextAnchor.MiddleCenter;
+            var box = go.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.018f, 0.018f, 0.008f);
+            var target = go.AddComponent<IntentTarget>();
+            target.Id = go.name;
+            return go;
+        }
+
+        void EnsurePrompt()
+        {
+            if (_prompt != null) return;
+            EnsureInk();
+            _prompt = new GameObject("BackfillPrompt");
+            _prompt.transform.SetParent(transform, false);
+
+            var paper = new GameObject("chip");
+            paper.transform.SetParent(_prompt.transform, false);
+            paper.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            paper.transform.localPosition = new Vector3(0f, 0f, 0.002f);
+            paper.transform.localScale = new Vector3(0.098f, 0.062f, 1f);
+            if (_chipQuad == null) _chipQuad = VerticalQuad();
+            paper.AddComponent<MeshFilter>().sharedMesh = _chipQuad;
+            var paperRenderer = paper.AddComponent<MeshRenderer>();
+            paperRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            paperRenderer.receiveShadows = false;
+            if (_inkMat != null) paperRenderer.sharedMaterial = _inkMat;
+            if (_cream == null) _cream = Solid(Color.white);
+            var block = new MaterialPropertyBlock();
+            paperRenderer.GetPropertyBlock(block);
+            if (_cream != null) block.SetTexture("_MainTex", _cream);
+            block.SetColor("_Color", Paper);
+            paperRenderer.SetPropertyBlock(block);
+
+            Line(_prompt.transform, "BackfillQuestion", PromptQuestion, null, 0.016f);
+            Line(_prompt.transform, PromptYesId, PromptYesLine, PromptYesId, 0f);
+            Line(_prompt.transform, PromptNoId, PromptNoLine, PromptNoId, -0.016f);
+            _prompt.SetActive(false);
+        }
+
+        void Line(Transform parent, string name, string text, string id, float y)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = new Vector3(0f, y, 0f);
+            AddInkLine(go, text, 46, 0.0025f);
+            if (id == null) return;
+            var box = go.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.09f, 0.014f, 0.008f);
+            var target = go.AddComponent<IntentTarget>();
+            target.Id = id;
+        }
+
+        TextMesh AddInkLine(GameObject go, string text, int fontSize, float characterSize)
+        {
+            var mesh = go.GetComponent<TextMesh>();
+            if (mesh == null) mesh = go.AddComponent<TextMesh>();
+            mesh.text = text;
+            mesh.anchor = TextAnchor.MiddleCenter;
+            mesh.alignment = TextAlignment.Center;
+            mesh.fontSize = fontSize;
+            mesh.characterSize = characterSize;
+            mesh.color = Ink;
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            if (font != null) mesh.font = font;
+            var renderer = mesh.GetComponent<MeshRenderer>();
+            if (renderer != null)
+            {
+                renderer.shadowCastingMode = ShadowCastingMode.Off;
+                renderer.receiveShadows = false;
+            }
+            return mesh;
+        }
+
+        static Texture2D Solid(Color color)
+        {
+            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            var pixels = new Color[4];
+            for (int i = 0; i < pixels.Length; i++) pixels[i] = color;
+            tex.SetPixels(pixels);
+            tex.Apply(false, false);
+            return tex;
+        }
+
+        static Mesh VerticalQuad()
+        {
+            var mesh = new Mesh { name = "PaperChip" };
+            mesh.vertices = new[]
+            {
+                new Vector3(-0.5f, -0.5f, 0f),
+                new Vector3(0.5f, -0.5f, 0f),
+                new Vector3(0.5f, 0.5f, 0f),
+                new Vector3(-0.5f, 0.5f, 0f)
+            };
+            mesh.uv = new[]
+            {
+                new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f)
+            };
+            mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         Transform FindNamed(string name)

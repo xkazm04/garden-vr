@@ -3,8 +3,8 @@
 // smoothed normal stored in UV1/UV2 (Nxy, Nz), so hard shading normals can stay on the mesh.
 // _OutlinePx is the width in screen pixels. _BoilPx is the 10 fps jitter in pixels (keep it at or under 1.2).
 // A negative _BoilTime falls back to _T, which is what older materials set.
-// _TileMode draws one instanced tile: UV3.x is the tile index, _StateTex is a 21-wide point texture
-// (R = state/4, G = arc/2). _TileMode 0 leaves the ramp path unchanged.
+// _TileMode draws one combined tile mesh: UV3.x is the tile index, _StateTex is a 21-wide point texture
+// (R = state/4, G = arc/2, B = ink flood 0-1 from the nib at uv.x = 0). _TileMode 0 leaves the ramp path unchanged.
 Shader "Fidelity/Toon"
 {
     Properties
@@ -118,53 +118,71 @@ Shader "Fidelity/Toon"
                 half4 st = LOAD_TEXTURE2D(_StateTex, int2(id, 0));
                 int state = (int)round(st.r * 4.0);
                 int arc = (int)round(st.g * 2.0);
+                // B is the ink flood. 1 is a finished tile. A kept tile below 1 is still leaving the nib.
+                float fill = saturate(st.b);
                 half3 wash = arc <= 0 ? _WashMorning.rgb : (arc == 1 ? _WashMidday.rgb : _WashDusk.rgb);
                 half3 paper = half3(0.965, 0.949, 0.914);
-                half3 pale = half3(0.953, 0.933, 0.886);
+                half3 pale = half3(0.937, 0.910, 0.855);
                 half3 pencil = half3(0.541, 0.506, 0.471);
                 half3 ink = _Ink.rgb;
-                float edge = smoothstep(0.10, 0.16, min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y)));
+                // uv.x 0 is the nib end of the raised tile (the -tangent corner).
+                float dry = smoothstep(fill - 0.035, fill + 0.012, uv.x);
+                int face = state;
+                if (state == 1 && fill < 0.995)
+                    face = dry > 0.5 ? 4 : 1;
+
                 half3 col = paper;
-                if (state == 1) col = wash;
-                else if (state == 2)
+                if (face == 1) col = wash;
+                else if (face == 2) col = lerp(paper, wash, 0.50);
+                else if (face == 3) col = pale;
+
+                // Painted atlas: morning, midday, dusk, cream. Before stays blank paper.
+                // Hatch and the dashed outline are drawn after this, so the paint cannot erase the shape.
+                if (_TilePaint > 0.5 && face != 0)
                 {
-                    float hatch = step(0.55, frac((uv.x + uv.y) * 7.0));
-                    col = lerp(paper, pencil, hatch * 0.55);
-                    col = lerp(col, wash, 0.55);
-                }
-                else if (state == 3)
-                {
-                    col = lerp(pencil, pale, edge);
-                }
-                else if (state == 4)
-                {
-                    float dash = step(0.5, frac((uv.x + uv.y) * 5.0));
-                    col = lerp(ink, paper, lerp(dash, 1.0, edge));
-                }
-                // Painted atlas: morning, midday, dusk, cream. _TilePaint 0 keeps the flat wash.
-                if (_TilePaint > 0.5)
-                {
-                    int paintCol = (state == 1 || state == 2) ? arc : 3;
+                    int paintCol = (face == 1 || face == 2) ? arc : 3;
                     float2 tuv = float2((saturate(uv.x) + (float)paintCol) * 0.25, saturate(uv.y));
                     half3 paint = SAMPLE_TEXTURE2D(_TileTex, sampler_TileTex, tuv).rgb;
-                    col = lerp(col, paint, 0.9);
+                    float paintMix = face == 1 ? 0.9 : (face == 3 ? 0.40 : 0.25);
+                    col = lerp(col, paint, paintMix);
                 }
-                // Light granulation and a thin ink edge. The wet pool stays pale so a tile cannot go muddy.
+
                 float2 q = uv - 0.5;
                 float wob = (h31(float3(uv.y * 13.0, tile + 1.7, uv.x * 9.0)) - 0.5) * 0.055;
                 float box = max(abs(q.x) + wob, abs(q.y) - wob * 0.6);
                 float rim = smoothstep(0.44, 0.50, box);
                 float grain = h31(float3(floor(uv * 22.0), tile * 1.3));
-                if (state == 1)
+                float border = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
+                if (face == 1)
                 {
                     half3 wet = arc <= 0 ? half3(0.93, 0.72, 0.42) : (arc == 1 ? half3(0.90, 0.48, 0.40) : half3(0.62, 0.50, 0.78));
                     col = lerp(col, wet, smoothstep(0.22, 0.42, box) * 0.28);
                     col *= lerp(0.96, 1.05, grain);
                 }
-                else if (state == 2)
+                else if (face == 2)
+                {
                     col *= lerp(0.95, 1.04, grain);
-                // Painted tiles already carry an ink outline. A heavy second rim doubles it.
-                col = lerp(col, ink, rim * (_TilePaint > 0.5 ? 0.28 : 0.7));
+                    float hatch = step(0.58, frac((uv.x * 1.15 + uv.y) * 8.0));
+                    col = lerp(col, pencil, hatch * 0.82);
+                }
+                else if (face == 3)
+                {
+                    float edge = smoothstep(0.07, 0.13, border);
+                    col = lerp(pencil, col, edge);
+                }
+                else if (face == 4)
+                {
+                    float edge = smoothstep(0.08, 0.15, border);
+                    float dash = step(0.42, frac(uv.x * 5.0 + uv.y * 2.0));
+                    col = lerp(lerp(ink, paper, dash), col, edge);
+                }
+
+                // Before is blank paper. Today and missed already drew their own outline.
+                float rimAmt = _TilePaint > 0.5 ? 0.28 : 0.7;
+                if (face == 0) rimAmt = 0.08;
+                if (face == 3 || face == 4) rimAmt = 0.0;
+                if (face == 2) rimAmt *= 0.35;
+                col = lerp(col, ink, rim * rimAmt);
                 return col;
             }
             half4 frag (V i, bool front : SV_IsFrontFace) : SV_Target
