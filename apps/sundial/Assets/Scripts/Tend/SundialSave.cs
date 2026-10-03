@@ -29,6 +29,8 @@ namespace GardenVR.Sundial
         public string FirstRunStep;
         /// <summary>Inked middays. Each row is a garden day and a symbol index. No note.</summary>
         public List<GratitudeMark> Gratitude = new List<GratitudeMark>();
+        /// <summary>The open or finished shadow hour. Null when no hour has been started.</summary>
+        public FocusSnapshot Focus;
         public Dictionary<string, JsonValue> Extra;
         public Dictionary<string, Dictionary<string, JsonValue>> HabitExtra;
         public Dictionary<string, Dictionary<string, JsonValue>> TendExtra;
@@ -39,12 +41,12 @@ namespace GardenVR.Sundial
     {
         static readonly string[] RootKnown =
         {
-            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep"
+            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Focus"
         };
 
         static readonly string[] RootKnownWithGratitude =
         {
-            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude"
+            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude", "Focus"
         };
 
         static readonly string[] HabitKnown =
@@ -66,6 +68,8 @@ namespace GardenVR.Sundial
                 && obj.Get("Gratitude").Kind == JsonKind.Array;
             save.Extra = obj.Passthrough(gratitudeArray ? RootKnownWithGratitude : RootKnown);
             save.Gratitude = gratitudeArray ? ReadGratitude(obj.Get("Gratitude").AsArray()) : new List<GratitudeMark>();
+            if (obj.Has("Focus") && !obj.Get("Focus").IsNull && obj.Get("Focus").Kind == JsonKind.Object)
+                save.Focus = ReadFocus(obj.Get("Focus").AsObject());
             save.Settings = ReadSettings(obj.Has("Settings") && !obj.Get("Settings").IsNull ? obj.Get("Settings").AsObject() : null);
             save.Habits = new List<HabitDef>();
             save.HabitExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
@@ -117,6 +121,8 @@ namespace GardenVR.Sundial
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
             if (save.Gratitude != null && save.Gratitude.Count > 0)
                 obj.Set("Gratitude", WriteGratitude(save.Gratitude));
+            if (save.Focus != null && !string.IsNullOrEmpty(save.Focus.Phase) && save.Focus.Phase != "Idle")
+                obj.Set("Focus", WriteFocus(save.Focus));
             obj.Restore(save.Extra);
             return obj;
         }
@@ -257,6 +263,37 @@ namespace GardenVR.Sundial
                 rows.Add(row);
             }
             return rows;
+        }
+
+        static FocusSnapshot ReadFocus(JsonObject obj)
+        {
+            var snap = new FocusSnapshot();
+            if (obj == null) return snap;
+            snap.Phase = StringMember(obj, "Phase");
+            if (obj.Has("StartedUtcMs") && !obj.Get("StartedUtcMs").IsNull) snap.StartedUtcMs = obj.Get("StartedUtcMs").AsLong();
+            if (obj.Has("PausedMs") && !obj.Get("PausedMs").IsNull) snap.PausedMs = obj.Get("PausedMs").AsLong();
+            if (obj.Has("PauseUtcMs") && !obj.Get("PauseUtcMs").IsNull) snap.PauseUtcMs = obj.Get("PauseUtcMs").AsLong();
+            snap.Arc = StringMember(obj, "Arc");
+            if (obj.Has("StartGnomonDeg") && !obj.Get("StartGnomonDeg").IsNull) snap.StartGnomonDeg = (float)obj.Get("StartGnomonDeg").AsDouble();
+            snap.EndedEarly = obj.Has("EndedEarly") && !obj.Get("EndedEarly").IsNull && obj.Get("EndedEarly").AsBool();
+            snap.TendPending = obj.Has("TendPending") && !obj.Get("TendPending").IsNull && obj.Get("TendPending").AsBool();
+            if (obj.Has("ElapsedSeconds") && !obj.Get("ElapsedSeconds").IsNull) snap.ElapsedSeconds = obj.Get("ElapsedSeconds").AsInt();
+            return snap;
+        }
+
+        static JsonObject WriteFocus(FocusSnapshot snap)
+        {
+            var obj = new JsonObject();
+            obj.Set("Phase", JsonValue.String(snap.Phase ?? "Idle"));
+            obj.Set("StartedUtcMs", JsonValue.Number(snap.StartedUtcMs));
+            obj.Set("PausedMs", JsonValue.Number(snap.PausedMs));
+            obj.Set("PauseUtcMs", JsonValue.Number(snap.PauseUtcMs));
+            obj.Set("Arc", snap.Arc == null ? JsonValue.Null() : JsonValue.String(snap.Arc));
+            obj.Set("StartGnomonDeg", JsonValue.Number((double)snap.StartGnomonDeg));
+            obj.Set("EndedEarly", JsonValue.Bool(snap.EndedEarly));
+            obj.Set("TendPending", JsonValue.Bool(snap.TendPending));
+            obj.Set("ElapsedSeconds", JsonValue.Number(snap.ElapsedSeconds));
+            return obj;
         }
 
         static string StringMember(JsonObject obj, string key)

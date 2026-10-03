@@ -134,6 +134,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<StretchRitualController>();
             if (UnityEngine.Object.FindAnyObjectByType<GratitudeRitualController>() == null)
                 view.gameObject.AddComponent<GratitudeRitualController>();
+            if (UnityEngine.Object.FindAnyObjectByType<FocusBlockController>() == null)
+                view.gameObject.AddComponent<FocusBlockController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -149,17 +151,22 @@ namespace GardenVR.Sundial
             if (stretch != null) stretch.SetSource(source);
             GratitudeRitualController gratitude = GetComponent<GratitudeRitualController>();
             if (gratitude != null) gratitude.SetSource(source);
+            FocusBlockController focus = GetComponent<FocusBlockController>();
+            if (focus != null) focus.SetSource(source);
         }
 
         /// <summary>
         /// Focus loss. A waiting tend is written. A breath in progress holds still.
-        /// The dial stays on the desk. Palm open is the gesture that puts it away.
+        /// A shadow hour pauses and does not fail. The dial stays on the desk.
+        /// Palm open is the gesture that puts it away.
         /// </summary>
         public void NotifyFocusLost()
         {
             CommitEarly();
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.NotifyFocusLost();
+            FocusBlockController focus = GetComponent<FocusBlockController>();
+            if (focus != null) focus.NotifyFocusLost();
         }
 
         public bool ShiftDay(int delta)
