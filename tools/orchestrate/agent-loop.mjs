@@ -41,10 +41,10 @@ const depMet = (d, done, merged) => merged.has(d) || (d.startsWith(PREFIX) && do
 
 function nextTask() {
   const done = ids('done'), merged = ids('merged');
-  for (const n of fs.readdirSync(O('queue', app)).filter((n) => n.endsWith('.md')).sort()) {
-    const f = front(fs.readFileSync(O('queue', app, n), 'utf8'));
-    if (f.depends.every((d) => depMet(d, done, merged))) return { file: n, ...f };
-  }
+  const tasks = fs.readdirSync(O('queue', app)).filter((n) => n.endsWith('.md'))
+    .map((n) => ({ file: n, ...front(fs.readFileSync(O('queue', app, n), 'utf8')) }))
+    .sort((a, b) => (Number(a.priority ?? 5) - Number(b.priority ?? 5)) || a.file.localeCompare(b.file));
+  for (const t of tasks) if (t.depends.every((d) => depMet(d, done, merged))) return t;
   return null;
 }
 
@@ -85,6 +85,21 @@ async function runGrok(task) {
       'Then finish the remaining steps, verify, commit, and write the REPORT.md. Do not end your turn until REPORT.md is committed.',
     ].join('\n'), ...flags], `.cont${n}`);
     session = sessionOf(`.cont${n}`) || session;
+  }
+  // Grok out of quota or rate-limited: hand the same task to Gemini 3.8 through the Antigravity CLI (owner-approved).
+  if (!fs.existsSync(report)) {
+    const blob = ['', '.cont1', '.cont2'].map((tag) => { try { return fs.readFileSync(path.join(runDir, `grok${tag}.json`), 'utf8') + fs.readFileSync(path.join(runDir, `grok${tag}.stderr.log`), 'utf8'); } catch { return ''; } }).join(String.fromCharCode(10));
+    if (/rate.?limit|quota|usage limit|429|insufficient|exhausted|too many requests/i.test(blob)) {
+      log(`${id}: Grok hit a usage limit, falling back to agy gemini-3.8-flash-high`);
+      const agy = process.env.AGY || path.join(process.env.LOCALAPPDATA, 'agy', 'bin', 'agy.exe');
+      code = await new Promise((resolve) => {
+        const c = spawn(agy, ['-p', prompt + String.fromCharCode(10) + 'Run every long process (Unity, Blender) in the foreground and read its log before you continue.',
+          '--model', 'gemini-3.8-flash-high', '--output-format', 'json'], { cwd: wt, windowsHide: true });
+        c.stdout.pipe(fs.createWriteStream(path.join(runDir, 'agy.json'))); c.stderr.pipe(fs.createWriteStream(path.join(runDir, 'agy.stderr.log')));
+        const timer = setTimeout(() => c.kill('SIGTERM'), timeoutMin * 60000);
+        c.on('close', (k) => { clearTimeout(timer); resolve(k); }); c.on('error', () => { clearTimeout(timer); resolve(-1); });
+      });
+    }
   }
   return { id, code, wallS: Math.round((Date.now() - t0) / 1000) };
 }
