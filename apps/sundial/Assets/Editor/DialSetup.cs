@@ -403,7 +403,7 @@ namespace GardenVR.Sundial.Editor
                 };
                 mesh.uv = new[] { new Vector2(0.38f, 0f), new Vector2(0.62f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
                 mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };
-                mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+                mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
             });
