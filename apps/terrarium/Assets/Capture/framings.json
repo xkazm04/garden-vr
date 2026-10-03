@@ -1,0 +1,15 @@
+{
+  "overrides": {},
+  "additions": [
+    {
+      "name": "FlowerClose",
+      "eye": [0.07, 0.072, -0.13],
+      "lookAt": [0.012, 0.058, 0.004],
+      "fov": 16,
+      "lensShift": [0, 0],
+      "plate": null,
+      "width": 1024,
+      "height": 1024
+    }
+  ]
+}

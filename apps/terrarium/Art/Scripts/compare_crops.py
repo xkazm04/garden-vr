@@ -2,15 +2,19 @@
 
     python apps/terrarium/Art/Scripts/compare_crops.py ref.png render.png out.png
 
-Each band is reference | render. Default regions are the G1 jar: glass rim, fronds, moss.
+Each band is reference | render. Default regions are the G1 jar: cork, glass rim, mist,
+then fronds and moss.
 """
 import sys
 
 from PIL import Image, ImageDraw
 
 # x, y, w, h in the 1824x1024 G1 frame. Jar base is near (915, 830).
+# Cork sits just under the mouth. Mist is the plume above it. Glass rim is the lip.
 REGIONS = [
-    ("glass rim", 740, 200, 360, 130),
+    ("cork", 760, 155, 320, 150),
+    ("glass rim", 730, 230, 380, 150),
+    ("mist", 760, 40, 340, 150),
     ("fronds", 750, 400, 400, 230),
     ("moss", 720, 640, 420, 180),
 ]

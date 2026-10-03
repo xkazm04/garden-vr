@@ -40,11 +40,17 @@ Shader "Fidelity/Glass"
             float3 n = normalize(i.wn); float3 v = normalize(GetWorldSpaceViewDir(i.wp));
             half ndv = saturate(abs(dot(n, v)));
             half rim = pow(1 - ndv, _RimPower);
-            float ang = atan2(i.op.z, i.op.x);
-            float2 cuv = float2(i.op.x + i.op.z * 0.7, i.op.y) * 4.0;   // planar-ish: droplets stay round
+            // Angle around the jar. A planar (x, z) UV barely changes across the front,
+            // which stretched each bead into a horizontal pill. The seam sits on the back.
+            // G is a highlight from an estimated normal (Sobel of the height), not a measured map.
+            float ang = atan2(i.op.x, -i.op.z);
+            float2 cuv = float2(ang * 1.15, i.op.y * 16.0);
             half3 cond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, cuv).rgb;
-            half upper = smoothstep(0.035, 0.10, i.op.y);                 // breath condenses high on the glass
-            half drops = cond.r * _Drops * (0.35 + 0.65 * upper) * smoothstep(0.012, 0.03, i.op.y);
+            // Droplets sit denser on the lower glass. `upper` is only the fog mask, so a falling
+            // _Fog still empties the base first and the breath fog keeps its bottom-up sweep.
+            half upper = smoothstep(0.035, 0.10, i.op.y);
+            half low = 1.0 - smoothstep(0.018, 0.085, i.op.y);
+            half drops = cond.r * _Drops * (0.12 + 1.15 * low) * smoothstep(0.006, 0.02, i.op.y);
             half fog = saturate(_Fog * (0.5 + 0.7 * cond.b) * (0.08 + 0.92 * upper));
             half inner = exp(-pow((i.op.y - _InnerY.x) / _InnerY.y, 2));   // glow is strongest beside the moss
             float vs = mul(UNITY_MATRIX_V, float4(i.wp, 1)).x - mul(UNITY_MATRIX_V, float4(TransformObjectToWorld(float3(0, 0, 0)) + float3(0, i.op.y, 0), 1)).x;

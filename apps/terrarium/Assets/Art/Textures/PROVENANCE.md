@@ -1,15 +1,15 @@
 # Jar textures
 
-Round-3 night-jar maps copied from `shared/assets/seed-textures/`. Origins follow `tools/blender/paint_textures.py` and the round-3 report (gate A4): a crop from the owner's frame is a stand-in, not authored art.
+Origins for the maps `JarView` binds. A generated plate is an `image_gen` or `image_edit` file under `Assets/Art/Source/` with a `.prompt.txt` sidecar. Code in `apps/terrarium/Art/Scripts/` only composes, keys, or grades those plates. Nothing bound here is sampled from the A1-03 reference frames.
 
-The T-TER-013 generated maps stay in this folder. `JarView` binds the round-3 names, not those.
+The T-TER-013 generated maps stay in this folder. `JarView` binds the names in the status column.
 
 | File | Origin | Source | Status |
 |---|---|---|---|
-| condensation.png | painted-by-code | `paint_textures.py` droplet field, via `shared/assets/seed-textures/condensation.png`. Replaces the T-TER-013 generated file of the same name. | bound on the glass |
+| condensation.png | generated | T-TER-007 macro beads `condensation_beads.png`. `compose_jar_detail.py` packs R as the droplet mask (denser in the lower half of the jar), B as haze, and G as a highlight. G is a normal estimate: Sobel of luminance height, not a measured normal. | bound on the glass |
 | cork.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
-| cork_side.png | crop-from-reference | `paint_textures.py` crop of the cork band in the A1-03 night frame | stand-in, art debt (gate A4). Bound on the cork side |
-| cork_top.png | painted-by-code | `paint_textures.py` fbm cork top, via `shared/assets/seed-textures/cork_top.png` | bound as the cork cap |
+| cork_side.png | generated | T-TER-007 macro `cork_macro.png`. `compose_jar_detail.py` makes it tileable and grades the mean to a light warm tan. Wrap-around edge diff is in `orchestration/runs/terrarium/T-TER-007/edge-diff.txt`. | bound on the cork side |
+| cork_top.png | generated | T-TER-007 top-down edit `cork_top_macro.png`. Same tile and grade as the side. | bound as the cork cap |
 | fern_a_albedo.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
 | fern_a_emission.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
 | fern_albedo.png | generated | T-TER-006 `image_gen` atlas of `fern_v0`, `fern_v1`, `fern_v2` in `Assets/Art/Source/`, keyed by `apps/terrarium/Art/Scripts/key_alpha.py`. Each mesh column uses one variant. | bound on the fronds |
@@ -17,7 +17,7 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the round-3 na
 | fern_b_emission.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
 | fern_emission.png | generated | T-TER-006 distance-field edge mask of the fern atlas alpha (`key_alpha.py`). Grayscale mask, mint comes from the shader. | bound on the fronds |
 | halo.png | painted-by-code | `paint_textures.py` radial falloff, via `shared/assets/seed-textures/halo.png` | bound on the spill and halos |
-| mist.png | painted-by-code | `paint_textures.py` noise wisp, via `shared/assets/seed-textures/mist.png` | bound on the five mist cards |
+| mist.png | generated | T-TER-007 eight wisp plates `mist_wisp_0` through `mist_wisp_7`. `compose_mist.py` builds one 8x8 flipbook. Each cell is a soft curl whose density the wisps modulate. One Card material steps the UV. | bound on the single mist card |
 | moss_band.png | retired | Earlier stand-in of the moss cap. Not bound. The mound uses `moss_macro`. | removed from the jar |
 | moss_card.png | generated | T-TER-006 4x4 tuft atlas. Sources `moss_tuft_0`, `moss_tuft_1`, `moss_tuft_2` in `Assets/Art/Source/`. The fourth tuft is a horizontal flip of `moss_tuft_2` (that generation was rate-limited). Keyed by `key_alpha.py`. | bound on MossSkirt |
 | moss_fuzz.png | retired | Earlier stand-in tuft tile. Not bound. | removed from the jar |
@@ -25,7 +25,8 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the round-3 na
 | moss_tile.png | retired | Earlier stand-in moss tile. Not bound. | removed from the jar |
 | moss_top.png | painted-by-code | `paint_textures.py` fbm moss cap, via `shared/assets/seed-textures/moss_top.png` | not bound. The mound uses `moss_macro`. |
 | moss_tuft.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
+| petal.png | generated | T-TER-007 plate `petal_macro.png`. `compose_jar_detail.py` keeps the amber petal and fills the background so the glow cutoff can drop it. | bound on the first flower |
 | ring.png | painted-by-code | `paint_textures.py` analytic ring and pool, via `shared/assets/seed-textures/ring.png` | bound on the breath ring |
 | soil.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
-| soil_band.png | crop-from-reference | `paint_textures.py` crop of the soil band in the A1-03 night frame | stand-in, art debt (gate A4). Bound on the soil |
+| soil_band.png | generated | T-TER-007 grade of the generated `Source/soil.png` plate. `compose_jar_detail.py` makes it tileable and moves the mean to measured loam `#0D231D`. | bound on the soil |
 | spore.png | painted-by-code | `paint_textures.py` radial sprite, via `shared/assets/seed-textures/spore.png` | bound on the spore particles |

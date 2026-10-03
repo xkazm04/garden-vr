@@ -18,6 +18,7 @@ namespace GardenVR.Terrarium.Editor
     public static class JarSetup
     {
         public const string ModelPath = "Assets/Art/Models/night_jar.fbx";
+        public const string FlowerModelPath = "Assets/Art/Models/flower.fbx";
         public const string PrefabPath = "Assets/Prefabs/Jar.prefab";
         public const string QuadPath = "Assets/Art/Models/CardQuad.asset";
         public const string LiveFiddlePath = "Assets/Art/Models/FiddleLive.asset";
@@ -26,7 +27,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "halo", "mist",
-            "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_tile", "moss_top", "ring", "soil_band", "spore"
+            "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
         };
 
         [MenuItem("Garden VR/Terrarium/Build Jar")]
@@ -59,11 +60,12 @@ namespace GardenVR.Terrarium.Editor
                 string path = "Assets/Art/Textures/" + name + ".png";
                 var importer = AssetImporter.GetAtPath(path) as TextureImporter;
                 if (importer == null) throw new InvalidOperationException("texture missing: " + path);
-                bool alpha = name == "fern_albedo" || name == "moss_card" || name == "moss_fuzz" || name == "mist";
+                bool alpha = name == "fern_albedo" || name == "moss_card" || name == "moss_fuzz" || name == "mist" || name == "petal";
                 bool linear = name == "condensation" || name == "ring" || name == "fern_emission";
                 bool repeat = name.IndexOf("band", StringComparison.Ordinal) >= 0
                     || name.IndexOf("side", StringComparison.Ordinal) >= 0
                     || name == "condensation"
+                    || name == "cork_top"
                     || name == "moss_macro";
                 importer.textureType = TextureImporterType.Default;
                 importer.sRGBTexture = !linear;
@@ -142,7 +144,7 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_RimPower", 3.0f);
                 m.SetColor("_Inner", new Color(0.05f, 0.22f, 0.15f));
                 m.SetVector("_InnerY", new Vector4(0.012f, 0.025f, 0f, 0f));
-                m.SetFloat("_Drops", 0.45f);
+                m.SetFloat("_Drops", 0.58f);
                 m.SetColor("_Streak", new Color(0.75f, 1f, 0.92f, 0.18f));
                 m.SetShaderPassEnabled("SRPDefaultUnlit", false);
             });
@@ -185,7 +187,7 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_MainTex", Tex("soil_band"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("soil_band"));
-                m.SetColor("_Emission", new Color(0.03f, 0.18f, 0.10f));
+                m.SetColor("_Emission", new Color(0.012f, 0.04f, 0.025f));
                 m.SetColor("_Rim", new Color(0.05f, 0.25f, 0.18f));
                 m.SetFloat("_RimPower", 3f);
                 m.SetFloat("_GradBottom", 0.9f);
@@ -198,18 +200,19 @@ namespace GardenVR.Terrarium.Editor
             });
             library.Cork = Mat("Jar_Cork", "Fidelity/Glow", m =>
             {
+                // The texture is already the warm tan. No dark tint, no rim gloss, lit from the jar below.
                 m.SetTexture("_MainTex", Tex("cork_side"));
-                m.SetColor("_Tint", new Color(0.92f, 0.84f, 0.76f));
+                m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Texture2D.whiteTexture);
                 m.SetColor("_Emission", Color.black);
-                m.SetColor("_Rim", new Color(0.06f, 0.05f, 0.04f));
-                m.SetFloat("_RimPower", 3f);
-                m.SetFloat("_GradBottom", 0.75f);
-                m.SetFloat("_GradTop", 1.05f);
+                m.SetColor("_Rim", Color.black);
+                m.SetFloat("_RimPower", 4f);
+                m.SetFloat("_GradBottom", 1.12f);
+                m.SetFloat("_GradTop", 0.84f);
                 m.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
-                m.SetFloat("_Tri", 30f);
+                m.SetFloat("_Tri", 16f);
                 m.SetTexture("_TopTex", Tex("cork_top"));
-                m.SetFloat("_TopTile", 9f);
+                m.SetFloat("_TopTile", 14f);
                 m.SetFloat("_TopAmount", 1f);
             });
             Material Fern(string materialName, float emissionScale) => Mat(materialName, "Fidelity/Glow", m =>
@@ -271,9 +274,62 @@ namespace GardenVR.Terrarium.Editor
             library.Spill = CardMat("Jar_Spill", Tex("halo"), new Color(0.05f, 0.20f, 0.13f), Color.black, false, -11);
             library.JarHalo = CardMat("Jar_Halo", Tex("halo"), new Color(0.05f, 0.22f, 0.15f), Color.black, false, 20);
             library.CoilHalo = CardMat("Jar_CoilHalo", Tex("halo"), new Color(0.30f, 0.85f, 0.45f) * 0.55f, Color.black, false, 21);
-            library.Mist = CardMat("Jar_Mist", Tex("mist"), new Color(0.72f, 0.86f, 0.84f, 0.8f), Color.black, true, 30);
-            library.Spore = CardMat("Jar_Spore", Tex("spore"), new Color(1.6f, 1.3f, 0.6f), Color.black, false, 40);
+            library.Mist = CardMat("Jar_Mist", Tex("mist"), new Color(0.78f, 0.90f, 0.86f, 0.88f), Color.black, true, 30);
+            library.Spore = CardMat("Jar_Spore", Tex("spore"), new Color(0.9490196f, 0.8235294f, 0.4784314f) * 1.35f, Color.black, false, 40);
+            library.Flower = Mat("Jar_Flower", "Fidelity/Glow", m =>
+            {
+                m.SetTexture("_MainTex", Tex("petal"));
+                m.SetColor("_Tint", new Color(1.05f, 0.86f, 0.52f));
+                m.SetTexture("_EmissionTex", Tex("petal"));
+                m.SetColor("_Emission", new Color(1.05f, 0.68f, 0.24f));
+                m.SetColor("_Rim", new Color(1.0f, 0.78f, 0.36f));
+                m.SetFloat("_RimPower", 2.1f);
+                m.SetFloat("_Cutoff", 0f);
+                m.SetFloat("_GradBottom", 0.9f);
+                m.SetFloat("_GradTop", 1.2f);
+                m.SetVector("_GradY", new Vector4(0.04f, 0.08f, 0f, 0f));
+            });
+            library.FlowerMesh = LoadFlowerMesh();
             return library;
+        }
+
+        static Mesh LoadFlowerMesh()
+        {
+            var importer = AssetImporter.GetAtPath(FlowerModelPath) as ModelImporter;
+            if (importer == null) throw new InvalidOperationException("model missing: " + FlowerModelPath);
+            importer.importBlendShapes = false;
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.globalScale = 1f;
+            importer.useFileScale = true;
+            importer.bakeAxisConversion = true;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.normalSmoothingAngle = 60f;
+            importer.weldVertices = false;
+            importer.isReadable = true;
+            importer.optimizeMeshPolygons = false;
+            importer.optimizeMeshVertices = false;
+            importer.SaveAndReimport();
+
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(FlowerModelPath);
+            if (prefab == null) throw new InvalidOperationException("flower not imported: " + FlowerModelPath);
+            MeshFilter[] filters = prefab.GetComponentsInChildren<MeshFilter>(true);
+            Mesh found = null;
+            for (int i = 0; i < filters.Length; i++)
+            {
+                Mesh mesh = filters[i].sharedMesh;
+                if (mesh == null) continue;
+                int tris = mesh.triangles.Length / 3;
+                Debug.Log("[JarSetup] flower " + filters[i].name + " verts=" + mesh.vertexCount + " tris=" + tris);
+                if (filters[i].name == "Flower" || mesh.name == "Flower") found = mesh;
+            }
+            if (found == null && filters.Length == 1) found = filters[0].sharedMesh;
+            if (found == null) throw new InvalidOperationException("flower mesh missing");
+            int flowerTris = found.triangles.Length / 3;
+            if (flowerTris >= 1500) throw new InvalidOperationException("flower over 1500 tris: " + flowerTris);
+            return found;
         }
 
         static Material CardMat(string name, Texture2D tex, Color color, Color color2, bool alpha, int queueOffset)

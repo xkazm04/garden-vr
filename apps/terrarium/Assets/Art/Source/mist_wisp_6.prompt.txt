@@ -1,0 +1,2 @@
+image_gen aspect_ratio 2:3. Session file images/7.jpg, kept in call order.
+A broad sheer veil of steam, slightly folded, fading from a soft cloud at the bottom to a nearly invisible haze at the top. Pale mint-white on a pure black background, quiet and translucent.

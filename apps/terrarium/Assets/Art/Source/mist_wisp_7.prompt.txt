@@ -1,0 +1,2 @@
+image_gen aspect_ratio 2:3. Session file images/8.jpg, kept in call order.
+A short curling wisp of steam shaped like a breaking wave, translucent and pale, with a thinner tail trailing upward. Pure black background, soft edges, no hard outline.

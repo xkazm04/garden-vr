@@ -31,12 +31,17 @@ Material:
     m_Floats:
     - _Boil: 0
     - _BoilFps: 10
+    - _BoilPx: 0
+    - _BoilTime: -1
+    - _Coverage: 0
     - _Dst: 1
     - _Fill: 1
+    - _Mask: 0
     - _Ring: 0
     - _Src: 1
     - _T: 0
     - _ZTest: 4
+    - _ZWrite: 0
     m_Colors:
     - _Color: {r: 0.0625, g: 0.275, b: 0.1875, a: 1.25}
     - _Color2: {r: 0, g: 0, b: 0, a: 1}
