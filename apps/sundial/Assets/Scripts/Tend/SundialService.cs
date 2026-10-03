@@ -33,6 +33,13 @@ namespace GardenVR.Sundial
 
         public void AddDays(int days) { _dayOffset += days; }
 
+        /// <summary>Puts <see cref="Now"/> on <paramref name="instant"/>. Playback injects a focus hour this way.</summary>
+        public void JumpTo(DateTimeOffset instant)
+        {
+            DateTimeOffset baseNow = _inner.Now.AddDays(_dayOffset);
+            _extraSeconds = (instant - baseNow).TotalSeconds;
+        }
+
         public void Step(float dt)
         {
             if (dt < 0f) dt = 0f;
@@ -68,6 +75,7 @@ namespace GardenVR.Sundial
         Ledger _ledger;
         DeferredTend _deferred;
         GratitudeRecord _gratitude;
+        FocusBlock _focus;
         string _stateJson = "";
 
         public LoadOutcome Outcome { get; private set; }
@@ -78,6 +86,7 @@ namespace GardenVR.Sundial
         public bool StateChanged { get; private set; }
         public Ledger Ledger { get { return _ledger; } }
         public GratitudeRecord Gratitude { get { return _gratitude; } }
+        public FocusBlock Focus { get { return _focus; } }
         public IClock Clock { get { return _clock; } }
         public SundialSave Save { get { return _save; } }
         public string PendingHabitId { get; private set; }
@@ -134,8 +143,61 @@ namespace GardenVR.Sundial
             if (_save.Gratitude == null) _save.Gratitude = new List<GratitudeMark>();
             _gratitude = new GratitudeRecord(_save.Gratitude);
             _deferred = new DeferredTend(_ledger);
+            _focus = FocusBlock.Restore(_save.Focus);
+            if (_focus.Phase == FocusPhase.Running)
+                _focus.Observe(_clock.Now);
+            if (_focus.Phase == FocusPhase.Complete && _focus.TendAuthorised)
+                CommitFocus();
             Recompute();
             StateChanged = true;
+        }
+
+        /// <summary>Opens a shadow hour at the clock. False when one is already open.</summary>
+        public bool TryStartFocus()
+        {
+            if (_focus == null) _focus = new FocusBlock();
+            if (!_focus.TryStart(_clock.Now, NowMin())) return false;
+            CopyFocus();
+            Persist();
+            return true;
+        }
+
+        /// <summary>Ends the open hour early. It still counts, and the arc it started in is tended.</summary>
+        public bool TryEndFocus()
+        {
+            if (_focus == null || !_focus.TryEndEarly(_clock.Now)) return false;
+            CommitFocus();
+            return true;
+        }
+
+        /// <summary>Holds the hour. The gap until <see cref="ResumeFocus"/> is not counted.</summary>
+        public bool PauseFocus()
+        {
+            if (_focus == null || !_focus.TryPause(_clock.Now)) return false;
+            CopyFocus();
+            Persist();
+            return true;
+        }
+
+        /// <summary>Continues a held hour. A full hour completes here and is tended.</summary>
+        public bool ResumeFocus()
+        {
+            if (_focus == null || !_focus.TryResume(_clock.Now)) return false;
+            if (_focus.Phase == FocusPhase.Complete) CommitFocus();
+            else
+            {
+                CopyFocus();
+                Persist();
+            }
+            return true;
+        }
+
+        /// <summary>Moves the injected clock and lets a running hour observe it.</summary>
+        public void JumpTo(DateTimeOffset instant)
+        {
+            _clock.JumpTo(instant);
+            ObserveFocus();
+            Recompute();
         }
 
         /// <summary>
@@ -183,7 +245,53 @@ namespace GardenVR.Sundial
                 PendingHabitId = null;
                 Persist();
             }
+            ObserveFocus();
             Recompute();
+        }
+
+        void ObserveFocus()
+        {
+            if (_focus == null || _focus.Phase != FocusPhase.Running) return;
+            _focus.Observe(_clock.Now);
+            if (_focus.Phase == FocusPhase.Complete) CommitFocus();
+        }
+
+        void CommitFocus()
+        {
+            if (_focus == null || _save == null) return;
+            if (_focus.Phase == FocusPhase.Complete && _focus.TendAuthorised && _focus.Arc.HasValue)
+            {
+                HabitDef habit = HabitForArc(ArcKey(_focus.Arc.Value));
+                if (habit != null)
+                {
+                    TendResult result = TendRitual(habit.Id);
+                    if (result != null && result.Ok) _focus.ConsumeTend();
+                }
+            }
+            CopyFocus();
+            Persist();
+        }
+
+        void CopyFocus()
+        {
+            if (_save == null) return;
+            if (_focus == null || _focus.Phase == FocusPhase.Idle) _save.Focus = null;
+            else _save.Focus = _focus.Capture();
+        }
+
+        static string ArcKey(ArcId arc)
+        {
+            if (arc == ArcId.Morning) return "morning";
+            if (arc == ArcId.Midday) return "midday";
+            return "winddown";
+        }
+
+        int NowMin()
+        {
+            int nowMin = (int)_clock.Now.TimeOfDay.TotalMinutes;
+            if (nowMin < 0) nowMin = 0;
+            if (nowMin > 1439) nowMin = 1439;
+            return nowMin;
         }
 
         /// <summary>
