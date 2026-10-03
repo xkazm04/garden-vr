@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using GardenVR.Audio;
 using GardenVR.Input;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -235,20 +234,9 @@ namespace GardenVR.Sundial
         void Tap()
         {
             _cues.Add(CueTap);
-            Debug.Log("[Sundial] cue " + CueTap);
-            PushAudio();
-            AudioCueService audio = UnityEngine.Object.FindAnyObjectByType<AudioCueService>();
-            if (audio != null) audio.Play(CueTap);
-        }
-
-        void PushAudio()
-        {
-            if (_service == null) return;
-            AudioCueService audio = UnityEngine.Object.FindAnyObjectByType<AudioCueService>();
-            if (audio == null) return;
-            if (audio.Mute != _service.Mute) audio.Mute = _service.Mute;
-            audio.VoiceGuide = _service.Voice;
-            audio.Beds = _service.Beds;
+            Transform at = _root != null ? _root.transform : transform;
+            if (_controller != null) _controller.Play(CueTap, at);
+            else Debug.Log("[Sundial] cue " + CueTap);
         }
 
         Row FindRow(string id)
