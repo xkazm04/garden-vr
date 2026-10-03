@@ -154,6 +154,9 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (_sundial != null && _sundial.Service != null && _sundial.Service.Scrubbing
+                && intent.Kind != HandIntentKind.Look)
+                return;
             if (intent.Kind == HandIntentKind.Look)
             {
                 _look = ParseSymbol(intent.TargetId);

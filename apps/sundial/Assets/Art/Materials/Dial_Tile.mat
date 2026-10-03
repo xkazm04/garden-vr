@@ -43,6 +43,7 @@ Material:
     - _BoilTime: 2.9
     - _Feather: 0.04
     - _Grain: 0.02
+    - _InkRingR: 0
     - _Outline: 0
     - _OutlinePx: 0
     - _ShadowStrength: 0
@@ -56,7 +57,7 @@ Material:
     - _Lit: {r: 1, g: 1, b: 1, a: 1}
     - _Shade: {r: 0.96, g: 0.93, b: 0.88, a: 1}
     - _Spec: {r: 0, g: 0, b: 0, a: 0}
-    - _WashDusk: {r: 0.792, g: 0.69, b: 0.773, a: 1}
+    - _WashDusk: {r: 0.731, g: 0.668, b: 0.898, a: 1}
     - _WashMidday: {r: 0.957, g: 0.714, b: 0.631, a: 1}
     - _WashMorning: {r: 0.965, g: 0.871, b: 0.718, a: 1}
   m_BuildTextureStacks: []

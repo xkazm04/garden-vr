@@ -123,7 +123,9 @@ namespace GardenVR.Sundial
         {
             new Vector2(0.064f, 0.096f),
             new Vector2(0.072f, 0.112f),
-            new Vector2(0.052f, 0.082f)
+            // 1.14x the old 0.052 x 0.082 card. The filled leaves measure as a two-texel
+            // shell, so the smaller card put the dusk contour at 1.44 px. This lands near 1.65.
+            new Vector2(0.0593f, 0.0935f)
         };
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
@@ -508,6 +510,8 @@ namespace GardenVR.Sundial
                 gameObject.AddComponent<FocusBlockController>();
             if (GetComponent<WeekDialController>() == null)
                 gameObject.AddComponent<WeekDialController>();
+            if (GetComponent<RimScrubController>() == null)
+                gameObject.AddComponent<RimScrubController>();
         }
 
         void OnEnable()
@@ -1056,21 +1060,25 @@ namespace GardenVR.Sundial
 
         Mesh CombineTiles(Mesh source)
         {
-            // Flat cards on the rim. The bevelled cube read as a row of blocks standing
-            // on edge, so each tile is a horizontal quad. The source mesh only has to exist.
+            // One combined mesh, one draw. Each tile lies flat on the rim: 12 x 9 mm,
+            // top 2 mm above the paper, 1.8 mm of solid thickness (the bottom clears the
+            // face by 0.2 mm). Sides are marked with UV3.y = 0 so the tile shader inks them.
+            // Vertex order per tile is 4 top corners, then 4 sides of 4. The A2 measure reads that.
+            // The source mesh only has to exist; the bevelled cube stood on edge.
             if (source == null || !source.isReadable) throw new InvalidOperationException("tile mesh is not readable");
             const float halfL = 0.006f;
             const float halfW = 0.0045f;
-            var verts = new List<Vector3>(TileCount * 4);
-            var normals = new List<Vector3>(TileCount * 4);
-            var uv = new List<Vector2>(TileCount * 4);
-            var nxy = new List<Vector2>(TileCount * 4);
-            var nz = new List<Vector2>(TileCount * 4);
-            var tileUv = new List<Vector2>(TileCount * 4);
-            var colors = new List<Color>(TileCount * 4);
-            var tris = new List<int>(TileCount * 6);
-            var upNxy = new Vector2(0.5f, 1f);
-            var upNz = new Vector2(0.5f, 0f);
+            const float topRaise = 0.002f;
+            const float clear = 0.0002f;
+            const int vertsPerTile = 20;
+            var verts = new List<Vector3>(TileCount * vertsPerTile);
+            var normals = new List<Vector3>(TileCount * vertsPerTile);
+            var uv = new List<Vector2>(TileCount * vertsPerTile);
+            var nxy = new List<Vector2>(TileCount * vertsPerTile);
+            var nz = new List<Vector2>(TileCount * vertsPerTile);
+            var tileUv = new List<Vector2>(TileCount * vertsPerTile);
+            var colors = new List<Color>(TileCount * vertsPerTile);
+            var tris = new List<int>(TileCount * 30);
             var upCol = new Color(0.5f, 1f, 0.5f, 1f);
 
             for (int i = 0; i < TileCount; i++)
@@ -1079,37 +1087,29 @@ namespace GardenVR.Sundial
                 int slot = i % TilesPerArc;
                 float deg = ArcSlot(arc, slot);
                 float rad = deg * Mathf.Deg2Rad;
-                Vector3 center = OnFace(deg, faceRadius * TileRadius, faceY + 0.002f);
+                float topY = faceY + topRaise;
+                float botY = faceY + clear;
+                Vector3 center = OnFace(deg, faceRadius * TileRadius, topY);
                 var tangent = new Vector3(Mathf.Sin(rad), 0f, -Mathf.Cos(rad));
                 var radial = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
-                int bas = verts.Count;
-                Vector3[] corner =
+                Vector3[] top =
                 {
                     center - tangent * halfL - radial * halfW,
                     center + tangent * halfL - radial * halfW,
                     center + tangent * halfL + radial * halfW,
                     center - tangent * halfL + radial * halfW
                 };
+                var bot = new Vector3[4];
+                for (int v = 0; v < 4; v++) bot[v] = new Vector3(top[v].x, botY, top[v].z);
                 Vector2[] cornerUv =
                 {
                     new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f)
                 };
-                for (int v = 0; v < 4; v++)
-                {
-                    verts.Add(corner[v]);
-                    normals.Add(Vector3.up);
-                    uv.Add(cornerUv[v]);
-                    nxy.Add(upNxy);
-                    nz.Add(upNz);
-                    tileUv.Add(new Vector2(i, arc));
-                    colors.Add(upCol);
-                }
-                tris.Add(bas + 0);
-                tris.Add(bas + 2);
-                tris.Add(bas + 1);
-                tris.Add(bas + 0);
-                tris.Add(bas + 3);
-                tris.Add(bas + 2);
+                AddTileFace(verts, normals, uv, nxy, nz, tileUv, colors, tris, top, Vector3.up, cornerUv, i, 1f, upCol);
+                AddTileSide(verts, normals, uv, nxy, nz, tileUv, colors, tris, top, bot, 0, 1, -radial, i, upCol);
+                AddTileSide(verts, normals, uv, nxy, nz, tileUv, colors, tris, top, bot, 1, 2, tangent, i, upCol);
+                AddTileSide(verts, normals, uv, nxy, nz, tileUv, colors, tris, top, bot, 2, 3, radial, i, upCol);
+                AddTileSide(verts, normals, uv, nxy, nz, tileUv, colors, tris, top, bot, 3, 0, -tangent, i, upCol);
             }
 
             var mesh = new Mesh { name = "TilesPlaced" };
@@ -1124,6 +1124,52 @@ namespace GardenVR.Sundial
             mesh.SetTriangles(tris, 0);
             mesh.RecalculateBounds();
             return mesh;
+        }
+
+        static void AddTileFace(
+            List<Vector3> verts, List<Vector3> normals, List<Vector2> uv, List<Vector2> nxy, List<Vector2> nz,
+            List<Vector2> tileUv, List<Color> colors, List<int> tris,
+            Vector3[] corner, Vector3 normal, Vector2[] cornerUv, int tile, float topFlag, Color col)
+        {
+            int bas = verts.Count;
+            Vector2 nxyV, nzV;
+            PackNormal(normal, out nxyV, out nzV);
+            for (int v = 0; v < 4; v++)
+            {
+                verts.Add(corner[v]);
+                normals.Add(normal);
+                uv.Add(cornerUv[v]);
+                nxy.Add(nxyV);
+                nz.Add(nzV);
+                tileUv.Add(new Vector2(tile, topFlag));
+                colors.Add(col);
+            }
+            tris.Add(bas + 0);
+            tris.Add(bas + 2);
+            tris.Add(bas + 1);
+            tris.Add(bas + 0);
+            tris.Add(bas + 3);
+            tris.Add(bas + 2);
+        }
+
+        static void AddTileSide(
+            List<Vector3> verts, List<Vector3> normals, List<Vector2> uv, List<Vector2> nxy, List<Vector2> nz,
+            List<Vector2> tileUv, List<Color> colors, List<int> tris,
+            Vector3[] top, Vector3[] bot, int a, int b, Vector3 outward, int tile, Color col)
+        {
+            Vector3[] corner = { bot[a], bot[b], top[b], top[a] };
+            Vector2[] sideUv =
+            {
+                new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f)
+            };
+            AddTileFace(verts, normals, uv, nxy, nz, tileUv, colors, tris, corner, outward.normalized, sideUv, tile, 0f, col);
+        }
+
+        static void PackNormal(Vector3 normal, out Vector2 nxy, out Vector2 nz)
+        {
+            Vector3 n = normal.sqrMagnitude > 1e-8f ? normal.normalized : Vector3.up;
+            nxy = new Vector2(n.x * 0.5f + 0.5f, n.y * 0.5f + 0.5f);
+            nz = new Vector2(n.z * 0.5f + 0.5f, 0f);
         }
 
         static float ArcMid(int arc)

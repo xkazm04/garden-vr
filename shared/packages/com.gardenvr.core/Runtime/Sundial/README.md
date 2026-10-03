@@ -64,3 +64,7 @@ Oldest first, today last. `Before` for a day before `CreatedDay`. A live tend is
 ## Week dial
 
 `WeekDial.Read` is the second page. Four weeks, 28 tiles, oldest day first. Week 0 is the oldest. Week 3 ends on today. `TileOn` is the same day rule as the 7-tile window: before the habit existed the day is blank, a live tend is kept or late, today with no tend is still open, and any earlier open day is a quiet miss. A miss does not change any other day. An undone row is not live, so that day reads as a miss once it is no longer today. The JSON is `weeks`, `span`, and `plants[{habit, tiles}]`. There is no run count. The query does not write the ledger.
+
+## Rim scrub
+
+`RimScrub.FromDrag` maps a backward drag on the rim to an earlier minute. The gnomon moves 15 degrees per hour, so one degree of drag is four minutes and the shadow can follow the hand. A forward drag stays at now. The far end is 03:00 on the day six days before today, the start of the seven-day window. `Query` returns a `SundialState` whose window ends on the day being read. `DueNow` and `CanBackfillYesterday` are false on that picture, so it cannot be tended. The query does not write the ledger. `AllowsWrite` is false while the gesture or its settle is open. The caption is empty at the current minute, "Earlier today" on this garden day, "Yesterday" one day back, and "Earlier this week" after that. There is no run count.
