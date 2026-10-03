@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: Seamless tileable macro photograph, camera straight down, of a velvety cushion-moss carpet. Fine dense irregular leaves only a few millimetres long, overlapping in every direction. Darker green-black crevices, brighter yellow-green rim light on the leaf tips. The surface is slightly mounded and continuous. No separate round clumps, no cobblestones, no honeycomb, no repeating cells, no flowers, no soil, no rocks, no text, no border. Photographic, square, soft even light. The left edge continues into the right edge and the top edge continues into the bottom edge.

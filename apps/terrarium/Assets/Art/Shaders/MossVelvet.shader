@@ -118,7 +118,8 @@ Shader "Fidelity/MossVelvet"
                 else
                 {
                     alb = SAMPLE_TEXTURE2D_BIAS(_MainTex, sampler_MainTex, uv, bias) * _Tint;
-                    em = SAMPLE_TEXTURE2D_BIAS(_EmissionTex, sampler_EmissionTex, uv, bias).r;
+                    // Green tips emit. The red channel of a moss photo is the dark one.
+                    em = dot(SAMPLE_TEXTURE2D_BIAS(_EmissionTex, sampler_EmissionTex, uv, bias).rgb, half3(0.25, 0.65, 0.10));
                 }
                 half topw = _TopAmount * smoothstep(0.45, 0.75, abs(n.y));
                 half3 top = SAMPLE_TEXTURE2D_BIAS(_TopTex, sampler_TopTex, wp.xz * _TopTile, bias).rgb * _Tint.rgb;
@@ -138,7 +139,8 @@ Shader "Fidelity/MossVelvet"
                 else
                 {
                     alb = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv) * _Tint;
-                    em = SAMPLE_TEXTURE2D(_EmissionTex, sampler_EmissionTex, i.uv).r;
+                    // Green tips emit. The red channel of a moss photo is the dark one.
+                    em = dot(SAMPLE_TEXTURE2D(_EmissionTex, sampler_EmissionTex, i.uv).rgb, half3(0.25, 0.65, 0.10));
                 }
                 if (_Shell > 0) clip(abs(n.y) - 0.45);   // fuzz only on the cap, never on the vertical skirt
                 // caps (moss top, cork top) take a planar texture so the lathe's pole never shows its radial pinch

@@ -1,12 +1,15 @@
-"""Clump moss and a silhouette skirt for the night jar.
+"""Low moss mound and a dense tuft carpet for the night jar.
 
 Imported by terrarium_jar.py after the scene reset. Also runnable alone:
 
     blender.exe -b -P tools/blender/terrarium_moss.py -- --out apps/terrarium/Assets/Art/Models
 
-The mound is a low carpet of small flat cushions (per-clump planar UV).
-MossSkirt is 128 tuft cards over that carpet, joined into one mesh so the
-draw stays one. Cards carry a 4x4 tuft atlas: each card's UV sits in one cell.
+The mound is one low irregular sheet. It is not a field of round cushions.
+MossSkirt is hundreds of small tuft cards over that sheet, authored as
+instances and joined into one mesh. BudgetMeasure counts a renderer as a
+draw, so a card per object would blow the 40-draw cap. The card material
+has GPU instancing on, and the shader compiles instancing. Each card's UV
+sits in one cell of the 8x8 tuft atlas.
 """
 import math
 import os
@@ -18,9 +21,10 @@ import bmesh
 from mathutils import Euler, Matrix, Vector, noise
 
 # One joined mesh. BudgetMeasure counts a renderer as a draw, and the cap is 40.
-# The card material has GPU instancing on, so this batch is one instanced draw.
-TUFT_CARDS = 200
-ATLAS = 4
+# The cards are instances welded into that mesh so the draw stays one.
+TUFT_CARDS = 980
+ATLAS = 8
+MOUND_R = 0.040
 
 
 def probe():
@@ -118,62 +122,88 @@ def tri_count(obj):
     return len(obj.data.loop_triangles)
 
 
-def make_clump(center, radius, seed, flatten, subdiv):
-    """One cushion. Vertices are in world space (object stays at the origin). UV is per-clump, planar."""
-    bm = bmesh.new()
-    bmesh.ops.create_icosphere(
-        bm, subdivisions=subdiv, radius=1.0, matrix=Matrix.Identity(4), calc_uvs=False
-    )
-    uv = bm.loops.layers.uv.new("UVMap")
-    spin = Euler((seed * 0.37, seed * 0.17, seed * 0.11), "XYZ")
-    center_v = Vector(center)
-    for vert in bm.verts:
-        p = vert.co.copy()
-        p.rotate(spin)
-        n1 = noise.noise(p * 2.1 + Vector((seed * 0.13, 0.2, 0.4)))
-        n2 = noise.noise(p * 5.4 + Vector((0.3, seed * 0.2, 1.1)))
-        deform = max(0.55, 0.80 + 0.30 * n1 + 0.10 * n2)
-        p.z *= flatten
-        vert.co = center_v + p * (deform * radius)
-    # One repeat of the macro across the cushion, so a lathe unwrap cannot stretch a strip over the dome.
-    tile = 1.15 / max(radius * 2.0, 1e-4)
-    for face in bm.faces:
-        for loop in face.loops:
-            p = loop.vert.co
-            loop[uv].uv = ((p.x - center_v.x) * tile + 0.5, (p.y - center_v.y) * tile + 0.5)
-    return finish(bm, "Clump%d" % seed)
+def soil_top(radius):
+    """Match the Soil lathe top in terrarium_jar.py. The carpet has to sit on it."""
+    if radius <= 0.030:
+        return 0.024 - 0.001 * (radius / 0.030)
+    t = min((radius - 0.030) / 0.0096, 1.0)
+    return 0.023 - 0.003 * t
+
+
+def mound_z(x, y):
+    """Low irregular carpet on the soil, draped over the dark soil wall.
+
+    Wavelengths stay clear of a cobblestone (about 1 cm).
+    """
+    radius = math.hypot(x, y)
+    if radius > 0.0365:
+        t = min((radius - 0.0365) / 0.0065, 1.0)
+        fall = t * t * (3.0 - 2.0 * t)
+        rim_z = soil_top(0.036) + 0.0032
+        return rim_z + (0.0115 - rim_z) * fall
+    t = min(radius / MOUND_R, 1.0)
+    dome = 0.0048 * ((1.0 - t * t) ** 1.15)
+    point = Vector((x, y, 0.2))
+    # About 3.5 cm and 1.4 cm. Amplitudes are a couple of millimetres, not spheres.
+    low = 0.0016 * noise.noise(point * 28.0)
+    fine = 0.0007 * noise.noise(point * 72.0 + Vector((3.0, 1.0, 0.0)))
+    edge = 1.0 if t < 0.82 else max(0.0, (1.0 - t) / 0.18)
+    lift = 0.0022 + (dome + max(low, -0.0008) + fine) * (0.25 + 0.75 * edge)
+    return soil_top(radius) + lift
+
+
+def force_up(obj):
+    total = 0.0
+    for poly in obj.data.polygons:
+        total += poly.normal.z
+    if total >= 0.0:
+        return
+    activate(obj)
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.flip_normals()
+    bpy.ops.object.mode_set(mode="OBJECT")
+    for poly in obj.data.polygons:
+        poly.use_smooth = True
 
 
 def build_mound():
-    """One low dome, plus small flat bumps. Separate spheres read as cobblestones."""
-    rng = random.Random(11)
-    # bmesh subdivisions=1 is the bare icosahedron. 4 is a smooth dome.
-    # Wide and low on the thin soil bed (top about 0.024). The carpet covers the bed; a rim of loam stays at the glass.
-    specs = [(0.0, 0.0, 0.040, 0.18, 0.022, 1, 4)]
-    for i in range(22):
-        ang = rng.random() * math.tau
-        rad = rng.uniform(0.0, 0.026) ** 0.8
-        specs.append((rad, ang, rng.uniform(0.0035, 0.0060), rng.uniform(0.16, 0.30), 0.023 + rng.uniform(0.0, 0.004), i + 2, 2))
-    objs = []
-    for rad, ang, radius, flat, z0, seed, subdiv in specs:
-        cx = rad * math.cos(ang)
-        cy = rad * math.sin(ang)
-        limit = 0.0430 - radius * 0.75
-        dist = math.hypot(cx, cy)
-        if dist > limit and dist > 1e-6:
-            cx *= limit / dist
-            cy *= limit / dist
-        objs.append(make_clump((cx, cy, z0), radius, seed, flat, subdiv))
-    activate(objs[0])
-    for ob in objs:
-        ob.select_set(True)
-    bpy.ops.object.join()
-    moss = bpy.context.view_layer.objects.active
-    moss.name = "Moss"
-    moss.data.name = "Moss"
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    """One sheet. Round icospheres read as a honeycomb, so they are not used."""
+    n = 52
+    extent = 0.044
+    bm = bmesh.new()
+    uv = bm.loops.layers.uv.new("UVMap")
+    grid = []
+    for j in range(n + 1):
+        y = -extent + 2.0 * extent * j / n
+        row = []
+        for i in range(n + 1):
+            x = -extent + 2.0 * extent * i / n
+            radius = math.hypot(x, y)
+            z = mound_z(x, y)
+            if radius > 0.043 and radius > 1e-8:
+                scale = 0.043 / radius
+                x *= scale
+                y *= scale
+                z = mound_z(x, y)
+            row.append(bm.verts.new((x, y, z)))
+        grid.append(row)
+    for j in range(n):
+        for i in range(n):
+            verts = (grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i])
+            cx = sum(vert.co.x for vert in verts) * 0.25
+            cy = sum(vert.co.y for vert in verts) * 0.25
+            if math.hypot(cx, cy) > 0.0432:
+                continue
+            face = bm.faces.new(verts)
+            for loop in face.loops:
+                point = loop.vert.co
+                # One carpet photo across the sheet. The rim stays inside 0..1, so the texture does not tile.
+                loop[uv].uv = (point.x / 0.092 + 0.5, point.y / 0.092 + 0.5)
+    moss = finish(bm, "Moss")
     pull_inside(moss, 0.0430)
     consistent_normals(moss)
+    force_up(moss)
     return moss
 
 
@@ -248,36 +278,102 @@ def pull_inside(obj, limit):
     print("[hero] pull_inside", obj.name, moved, "limit", "{:.4f}".format(limit))
 
 
+def card_matrix(loc, yaw, tilt, scale):
+    """Same basis as align_card, with scale baked in. Local +Z is the tuft tip."""
+    z_axis = Vector((
+        math.sin(tilt) * math.cos(yaw),
+        math.sin(tilt) * math.sin(yaw),
+        math.cos(tilt),
+    )).normalized()
+    radial = Vector((math.cos(yaw), math.sin(yaw), 0.0))
+    x_axis = radial.cross(Vector((0.0, 0.0, 1.0)))
+    if x_axis.length < 1e-6:
+        x_axis = Vector((1.0, 0.0, 0.0))
+    x_axis.normalize()
+    y_axis = z_axis.cross(x_axis).normalized()
+    x_axis = y_axis.cross(z_axis).normalized()
+    rot = Matrix((x_axis * scale[0], y_axis * scale[1], z_axis * scale[2])).transposed().to_4x4()
+    return Matrix.Translation(Vector(loc)) @ rot
+
+
 def build_skirt():
-    """Dense tuft cards over the whole mound. Joined into MossSkirt (one draw)."""
+    """Hundreds of small tuft cards, welded into one mesh so the draw stays one."""
     rng = random.Random(19)
-    cards = []
+    bm = bmesh.new()
+    uv = bm.loops.layers.uv.new("UVMap")
+    placed = []
+    min_dist = 0.0011
+    cols = 2
+    rows = 2
     for i in range(TUFT_CARDS):
-        ang = rng.random() * math.tau
-        # Flat overlapping patches on the mound. Tilted cards read as leaves on the soil.
-        u = rng.random()
-        rad = (u ** 0.45) * 0.032
-        z = 0.022 + rng.uniform(0.0, 0.006)
-        tilt = rng.uniform(0.02, 0.28)
-        cell = ((i * 3 + 1) % ATLAS, (i * 5 + 2) % ATLAS)
-        card = grid_mesh(
-            "Skirt%d" % i,
-            rng.uniform(0.010, 0.016),
-            rng.uniform(0.009, 0.014),
-            2, 2, 0.0004, 0.0002, cell,
+        x = y = yaw = 0.0
+        on_rim = rng.random() < 0.24
+        for _try in range(24):
+            yaw = rng.random() * math.tau
+            if on_rim:
+                rad = rng.uniform(0.036, 0.0415)
+            else:
+                rad = math.sqrt(rng.random()) * 0.036
+            x = rad * math.cos(yaw)
+            y = rad * math.sin(yaw)
+            if all((x - px) * (x - px) + (y - py) * (y - py) > min_dist * min_dist for px, py in placed[-64:]):
+                break
+        placed.append((x, y))
+        z = mound_z(x, y) - 0.0003
+        if on_rim:
+            tilt = rng.uniform(1.15, 1.55)
+            width = rng.uniform(0.0030, 0.0050)
+            height = rng.uniform(0.0035, 0.0060)
+        # Most cards are a short nap. A few lie flatter so the gaps are leaves, not holes.
+        elif rng.random() < 0.72:
+            tilt = rng.uniform(0.15, 0.62)
+            width = rng.uniform(0.0024, 0.0042)
+            height = rng.uniform(0.0028, 0.0050)
+        else:
+            tilt = rng.uniform(0.85, 1.15)
+            width = rng.uniform(0.0036, 0.0055)
+            height = rng.uniform(0.0026, 0.0044)
+        cell_x = (i * 3 + 1) % ATLAS
+        cell_y = (i * 5 + 2) % ATLAS
+        pad = 0.02 / ATLAS
+        u0 = cell_x / ATLAS + pad
+        v0 = cell_y / ATLAS + pad
+        u1 = (cell_x + 1) / ATLAS - pad
+        v1 = (cell_y + 1) / ATLAS - pad
+        fold = 0.00025
+        arch = 0.00012
+        scale = (
+            rng.uniform(0.85, 1.15),
+            rng.uniform(0.85, 1.15),
+            rng.uniform(0.85, 1.15),
         )
-        align_card(card, (rad * math.cos(ang), rad * math.sin(ang), z), ang + rng.uniform(-0.4, 0.4), tilt)
-        s = rng.uniform(0.70, 1.15)
-        card.scale = (s, s * rng.uniform(0.85, 1.1), s * rng.uniform(0.75, 1.2))
-        cards.append(card)
-    bpy.context.view_layer.update()
-    activate(cards[0])
-    for card in cards:
-        card.select_set(True)
-    bpy.ops.object.join()
-    skirt = bpy.context.view_layer.objects.active
-    skirt.name = "MossSkirt"
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        matrix = card_matrix((x, y, z), yaw + rng.uniform(-0.6, 0.6), tilt, scale)
+        grid = []
+        for j in range(rows + 1):
+            v = j / rows
+            row = []
+            for k in range(cols + 1):
+                u = k / cols
+                local = Vector((
+                    (u - 0.5) * width,
+                    -abs(u - 0.5) * 2.0 * fold - arch * (v ** 1.3),
+                    v * height,
+                ))
+                point = matrix @ Vector((local.x, local.y, local.z, 1.0))
+                row.append(bm.verts.new((point.x, point.y, point.z)))
+            grid.append(row)
+        for j in range(rows):
+            for k in range(cols):
+                face = bm.faces.new((grid[j][k], grid[j + 1][k], grid[j + 1][k + 1], grid[j][k + 1]))
+                coords = (
+                    (u0 + (k / cols) * (u1 - u0), v0 + (j / rows) * (v1 - v0)),
+                    (u0 + (k / cols) * (u1 - u0), v0 + ((j + 1) / rows) * (v1 - v0)),
+                    (u0 + ((k + 1) / cols) * (u1 - u0), v0 + ((j + 1) / rows) * (v1 - v0)),
+                    (u0 + ((k + 1) / cols) * (u1 - u0), v0 + (j / rows) * (v1 - v0)),
+                )
+                for loop, uvw in zip(face.loops, coords):
+                    loop[uv].uv = uvw
+    skirt = finish(bm, "MossSkirt")
     pull_inside(skirt, GLASS_INNER)
     consistent_normals(skirt)
     skirt.data.name = "MossSkirt"
