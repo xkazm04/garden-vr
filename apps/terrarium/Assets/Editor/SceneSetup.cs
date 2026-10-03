@@ -15,6 +15,7 @@ namespace GardenVR.Terrarium.Editor
     {
         public const string ScenePath = "Assets/Scenes/Main.unity";
         public const string PlatePath = "Assets/Art/Plates/plate-jar.png";
+        public const string SeatedPlatePath = "Assets/Art/Plates/plate-jar-seated.png";
         public const string PlateMaterialPath = "Assets/Art/Plates/PcRoomPlate.mat";
         public const string ProvenancePath = "Assets/Art/Plates/PROVENANCE.md";
 
@@ -31,30 +32,41 @@ namespace GardenVR.Terrarium.Editor
         {
             EnsureAssetFolder("Assets/Art");
             EnsureAssetFolder("Assets/Art/Plates");
-            string source = Path.GetFullPath(Path.Combine(
-                Application.dataPath, "..", "..", "..", "shared", "assets", "room-plates", "plate-jar.png"));
-            if (!File.Exists(source)) throw new System.InvalidOperationException("plate not found: " + source);
-            string destination = Path.GetFullPath(Path.Combine(Application.dataPath, "Art", "Plates", "plate-jar.png"));
-            File.Copy(source, destination, true);
+            CopySharedPlate("plate-jar.png", PlatePath);
+            CopySharedPlate("plate-jar-seated.png", SeatedPlatePath);
 
             const string provenance =
                 "# Plates\n\n" +
                 "Development stand-ins for passthrough. Never shipped.\n\n" +
                 "| File | Note |\n" +
                 "|---|---|\n" +
-                "| plate-jar.png | room plate, inpainted from the owner's reference frame, development only, never shipped |\n";
+                "| plate-jar.png | G1 plate, inpainted from the owner's reference frame, development only, never shipped |\n" +
+                "| plate-jar-seated.png | seated view of the same night desk, no hands, development only, never shipped |\n";
             File.WriteAllText(Path.Combine(Application.dataPath, "Art", "Plates", "PROVENANCE.md"), provenance);
 
-            AssetDatabase.ImportAsset(PlatePath, ImportAssetOptions.ForceUpdate);
-            var importer = AssetImporter.GetAtPath(PlatePath) as TextureImporter;
-            if (importer != null)
-            {
-                importer.sRGBTexture = true;
-                importer.mipmapEnabled = true;
-                importer.textureCompression = TextureImporterCompression.Uncompressed;
-                importer.wrapMode = TextureWrapMode.Clamp;
-                importer.SaveAndReimport();
-            }
+            ConfigurePlate(PlatePath);
+            ConfigurePlate(SeatedPlatePath);
+        }
+
+        static void CopySharedPlate(string fileName, string assetPath)
+        {
+            string source = Path.GetFullPath(Path.Combine(
+                Application.dataPath, "..", "..", "..", "shared", "assets", "room-plates", fileName));
+            if (!File.Exists(source)) throw new System.InvalidOperationException("plate not found: " + source);
+            string destination = Path.GetFullPath(Path.Combine(Application.dataPath, "Art", "Plates", fileName));
+            File.Copy(source, destination, true);
+            AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+        }
+
+        static void ConfigurePlate(string assetPath)
+        {
+            var importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (importer == null) return;
+            importer.sRGBTexture = true;
+            importer.mipmapEnabled = true;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.SaveAndReimport();
         }
 
         static void BuildScene()
@@ -85,8 +97,8 @@ namespace GardenVR.Terrarium.Editor
             rig.name = "SeatedRig";
             rig.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
 
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(PlatePath);
-            if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + PlatePath);
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(SeatedPlatePath);
+            if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + SeatedPlatePath);
             var plate = rig.GetComponentInChildren<PcRoomPlate>(true);
             if (plate == null) throw new System.InvalidOperationException("PcRoomPlate missing on the seated rig");
             var renderer = plate.GetComponent<Renderer>();

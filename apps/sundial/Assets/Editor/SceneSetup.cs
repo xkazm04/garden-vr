@@ -16,6 +16,7 @@ namespace GardenVR.Sundial.Editor
     {
         public const string ScenePath = "Assets/Scenes/Main.unity";
         public const string PlatePath = "Assets/Art/Plates/plate-dial.png";
+        public const string SeatedPlatePath = "Assets/Art/Plates/plate-dial-seated.png";
         public const string PlateMaterialPath = "Assets/Art/Plates/PcRoomPlate.mat";
         public const string ProvenancePath = "Assets/Art/Plates/PROVENANCE.md";
         public const string DialId = "dial";
@@ -29,9 +30,8 @@ namespace GardenVR.Sundial.Editor
         public const float DialG1Fov = 30f;
         public static readonly Vector2 DialG1LensShift = new Vector2(3.6f, 0.5f);
 
-        // Rig eye (0, 1.05, 0) and its look, written in DialRoot local space (tilt included).
+        // Rig eye (0, 1.05, 0) written in DialRoot local space (tilt included). The look aims at the desk.
         public static readonly Vector3 DialSeatedEye = new Vector3(0f, 0.407796f, -0.475608f);
-        public static readonly Vector3 DialSeatedLook = new Vector3(0f, 0.031187f, -0.146722f);
 
         // Round-3 sun: rays travel toward image-right and down, so the source is the upper-left window.
         static readonly Vector3 WindowLightDirection = new Vector3(0.45f, -0.62f, -0.64f);
@@ -48,30 +48,41 @@ namespace GardenVR.Sundial.Editor
         {
             EnsureAssetFolder("Assets/Art");
             EnsureAssetFolder("Assets/Art/Plates");
-            string source = Path.GetFullPath(Path.Combine(
-                Application.dataPath, "..", "..", "..", "shared", "assets", "room-plates", "plate-dial.png"));
-            if (!File.Exists(source)) throw new System.InvalidOperationException("plate not found: " + source);
-            string destination = Path.GetFullPath(Path.Combine(Application.dataPath, "Art", "Plates", "plate-dial.png"));
-            File.Copy(source, destination, true);
+            CopySharedPlate("plate-dial.png", PlatePath);
+            CopySharedPlate("plate-dial-seated.png", SeatedPlatePath);
 
             const string provenance =
                 "# Plates\n\n" +
                 "Development stand-ins for passthrough. Never shipped.\n\n" +
                 "| File | Note |\n" +
                 "|---|---|\n" +
-                "| plate-dial.png | kitchen plate, inpainted from the owner's reference frame, development only, never shipped |\n";
+                "| plate-dial.png | G1 kitchen plate, inpainted from the owner's reference frame, development only, never shipped |\n" +
+                "| plate-dial-seated.png | seated view of the same kitchen table, no hands, development only, never shipped |\n";
             File.WriteAllText(Path.Combine(Application.dataPath, "Art", "Plates", "PROVENANCE.md"), provenance);
 
-            AssetDatabase.ImportAsset(PlatePath, ImportAssetOptions.ForceUpdate);
-            var importer = AssetImporter.GetAtPath(PlatePath) as TextureImporter;
-            if (importer != null)
-            {
-                importer.sRGBTexture = true;
-                importer.mipmapEnabled = true;
-                importer.textureCompression = TextureImporterCompression.Uncompressed;
-                importer.wrapMode = TextureWrapMode.Clamp;
-                importer.SaveAndReimport();
-            }
+            ConfigurePlate(PlatePath);
+            ConfigurePlate(SeatedPlatePath);
+        }
+
+        static void CopySharedPlate(string fileName, string assetPath)
+        {
+            string source = Path.GetFullPath(Path.Combine(
+                Application.dataPath, "..", "..", "..", "shared", "assets", "room-plates", fileName));
+            if (!File.Exists(source)) throw new System.InvalidOperationException("plate not found: " + source);
+            string destination = Path.GetFullPath(Path.Combine(Application.dataPath, "Art", "Plates", fileName));
+            File.Copy(source, destination, true);
+            AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
+        }
+
+        static void ConfigurePlate(string assetPath)
+        {
+            var importer = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            if (importer == null) return;
+            importer.sRGBTexture = true;
+            importer.mipmapEnabled = true;
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.SaveAndReimport();
         }
 
         static void BuildScene()
@@ -101,8 +112,8 @@ namespace GardenVR.Sundial.Editor
             if (rig.GetComponent<KeyboardMouseIntentSource>() == null)
                 throw new System.InvalidOperationException("KeyboardMouseIntentSource missing on the seated rig");
 
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(PlatePath);
-            if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + PlatePath);
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(SeatedPlatePath);
+            if (texture == null) throw new System.InvalidOperationException("plate texture missing: " + SeatedPlatePath);
             var plate = rig.GetComponentInChildren<PcRoomPlate>(true);
             if (plate == null) throw new System.InvalidOperationException("PcRoomPlate missing on the seated rig");
             var renderer = plate.GetComponent<Renderer>();
@@ -123,6 +134,10 @@ namespace GardenVR.Sundial.Editor
             deskData.FindProperty("_lateral").floatValue = 0f;
             deskData.ApplyModifiedPropertiesWithoutUndo();
             desk.ApplyPose();
+            var seated = rig.GetComponent<SeatedRig>();
+            if (seated == null) throw new System.InvalidOperationException("SeatedRig missing on the seated rig");
+            seated.ApplyRest();
+            seated.ApplyPose();
 
             var dial = new GameObject("DialRoot");
             dial.transform.SetParent(desk.transform, false);
@@ -172,11 +187,12 @@ namespace GardenVR.Sundial.Editor
             if (eyeError > 0.002f)
                 throw new System.InvalidOperationException("DialSeated eye misses the rig eye by " + eyeError.ToString("0.0000") + " m");
 
-            Vector3 seatedLook = dial.transform.TransformPoint(DialSeatedLook);
-            Vector3 want = (seatedLook - eye.transform.position).normalized;
+            var desk = rig.GetComponentInChildren<PcDeskAnchor>(true);
+            if (desk == null) throw new System.InvalidOperationException("PcDeskAnchor missing");
+            Vector3 want = desk.transform.position - eye.transform.position;
             float lookError = Vector3.Angle(want, eye.transform.forward);
             if (lookError > 0.25f)
-                throw new System.InvalidOperationException("DialSeated look misses the rig view by " + lookError.ToString("0.00") + " deg");
+                throw new System.InvalidOperationException("seated look misses the dial by " + lookError.ToString("0.00") + " deg");
 
             Vector3 g1Eye = dial.transform.TransformPoint(DialG1Eye);
             Vector3 g1Look = dial.transform.TransformPoint(DialG1Look);
