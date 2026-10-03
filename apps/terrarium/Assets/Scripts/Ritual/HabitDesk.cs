@@ -24,8 +24,6 @@ namespace GardenVR.Terrarium
         static readonly Color Mint = new Color(0x8F / 255f, 0xF0 / 255f, 0xC8 / 255f, 1f);
         static readonly Color Moon = new Color(0xDD / 255f, 0xF3 / 255f, 0xFF / 255f, 1f);
         static readonly Color Gold = new Color(0xF2 / 255f, 0xD2 / 255f, 0x7A / 255f, 1f);
-        static readonly Color EtchInk = new Color(0xBF / 255f, 0xF5 / 255f, 0xDD / 255f, 1f);
-
         const float PacketWidth = 0.040f;
         const float PacketHeight = 0.034f;
         const float Span = 0.40f;
@@ -150,7 +148,7 @@ namespace GardenVR.Terrarium
             renderer.sharedMaterial = mat;
             renderer.shadowCastingMode = ShadowCastingMode.Off;
             renderer.receiveShadows = false;
-            // The packet root is yawed 180 so the card faces the user. TextMesh then needs the counter-yaw.
+            // The packet root is yawed 180 so the card faces the user. The etched line takes the counter-yaw.
             AddText(go.transform, Companions.Label(preset), 0.0009f, Vector3.zero, true);
             var box = go.AddComponent<BoxCollider>();
             box.size = new Vector3(PacketWidth, PacketHeight, 0.012f);
@@ -191,26 +189,9 @@ namespace GardenVR.Terrarium
 
         static void AddText(Transform parent, string word, float character, Vector3 localPos, bool counterTurn = false)
         {
-            var go = new GameObject("Words");
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = localPos;
-            if (counterTurn) go.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            var text = go.AddComponent<TextMesh>();
-            text.text = word;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 48;
-            text.characterSize = character;
-            text.color = EtchInk;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) text.font = font;
-            var renderer = text.GetComponent<MeshRenderer>();
-            if (renderer != null)
-            {
-                renderer.shadowCastingMode = ShadowCastingMode.Off;
-                renderer.receiveShadows = false;
-            }
+            Quaternion turn = counterTurn ? Quaternion.Euler(0f, 180f, 0f) : Quaternion.identity;
+            float cap = Mathf.Clamp(character * 9f, 0.0065f, 0.012f);
+            EtchedLettering.Place(parent, "Words", word, localPos, turn, 0.038f, cap);
         }
 
         Material Glow(Color tint)

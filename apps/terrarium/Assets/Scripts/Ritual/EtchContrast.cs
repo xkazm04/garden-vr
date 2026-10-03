@@ -11,22 +11,28 @@ namespace GardenVR.Terrarium
     public static class EtchContrast
     {
         public static readonly Color Ink = new Color(0xBF / 255f, 0xF5 / 255f, 0xDD / 255f, 0.70f);
+
+        /// <summary>Same etch colour at full strength. The 70% ink is only the night-card contrast sample.</summary>
+        public static readonly Color SceneInk = new Color(0xBF / 255f, 0xF5 / 255f, 0xDD / 255f, 1f);
         public static readonly Color Night = new Color(0x0E / 255f, 0x1A / 255f, 0x1C / 255f, 1f);
         public const float MinimumRatio = 4.5f;
         public const string HoldLine = "Hold to breathe in.";
         public const string ReleaseLine = "and let go.";
+        public const string AnswerLine = "This frond stays.";
 
         static TMP_FontAsset _font;
 
         public static TMP_FontAsset Font()
         {
             if (_font != null) return _font;
-            // Liberation Sans ships with the TextMesh Pro essentials. The built-in runtime font has no face data.
-            TMP_Settings settings = TMP_Settings.LoadDefaultSettings();
-            if (settings != null)
-                _font = TMP_Settings.defaultFontAsset;
+            _font = Resources.Load<TMP_FontAsset>(EtchedLettering.FontResource);
             if (_font == null)
-                _font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+            {
+                // The etched face is also the project default once the font setup has run.
+                TMP_Settings settings = TMP_Settings.LoadDefaultSettings();
+                if (settings != null)
+                    _font = TMP_Settings.defaultFontAsset;
+            }
             return _font;
         }
 
