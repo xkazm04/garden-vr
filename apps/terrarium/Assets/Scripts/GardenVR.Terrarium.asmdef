@@ -5,7 +5,8 @@
         "GardenVR.Core",
         "GardenVR.Input",
         "GardenVR.Capture",
-        "GardenVR.Room"
+        "GardenVR.Room",
+        "GardenVR.Audio"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
