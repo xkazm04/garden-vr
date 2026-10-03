@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: A small ragged tuft of cushion moss made of fine leaf tips, not a round dome and not a ball. Isolated on a pure black background. Macro photograph. Dense tiny leaves, dark at the base, bright yellow-green rim-lit tips. Soft irregular silhouette with a wide margin of pure black on every side. No pot, no soil, no text. A lopsided cluster, heavier on the right, with a thin wisp on the left.

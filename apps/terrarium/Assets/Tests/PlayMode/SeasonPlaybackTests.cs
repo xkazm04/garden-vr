@@ -43,12 +43,12 @@ namespace GardenVR.Terrarium.Tests
             Assert.AreEqual(0f, Season.Warmth(view.lifetimeFronds));
             Color inner1 = view.glassMat.GetColor("_Inner");
             Color moss1 = view.mossMat.GetColor("_Emission");
-            Assert.AreEqual(0.18f, inner1.r, 0.001f);
-            Assert.AreEqual(0.40f, inner1.g, 0.001f);
-            Assert.AreEqual(0.26f, inner1.b, 0.001f);
-            Assert.AreEqual(0.13f, moss1.r, 0.001f);
-            Assert.AreEqual(0.40f, moss1.g, 0.001f);
-            Assert.AreEqual(0.11f, moss1.b, 0.001f);
+            Assert.AreEqual(0.34f, inner1.r, 0.001f);
+            Assert.AreEqual(0.86f, inner1.g, 0.001f);
+            Assert.AreEqual(0.48f, inner1.b, 0.001f);
+            Assert.AreEqual(0.22f, moss1.r, 0.001f);
+            Assert.AreEqual(0.62f, moss1.g, 0.001f);
+            Assert.AreEqual(0.18f, moss1.b, 0.001f);
             Assert.AreEqual(0, CountActive(view, "SeasonSprig"));
             Assert.AreEqual(0, CountActive(view, "SeasonBloom"));
 

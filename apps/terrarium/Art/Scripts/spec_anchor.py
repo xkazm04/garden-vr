@@ -41,6 +41,19 @@ COIL_CM = 1.6
 # Authored ring card is 0.152 m. The stroke radius is measured from ring.png.
 RING_CARD_M = 0.152
 
+# Glow floor and ceiling, T-TER-032. Relative luminance (IEC sRGB to CIE Y, 0..1)
+# on the 1824x1024 JarG1 plate. The reference is A1-03-night-moss-1.png.
+# Crozier is the spiral head. Glass is the A2 empty-upper-glass rect. The ring
+# rect is the desk band the reference stroke crosses (near y=881).
+# Floor sits above the T-TER-030 undershoot (glass mean 0.105, ring peak 0.494).
+# Ceiling sits under the T-TER-019 / T-TER-028 mint wash (glass mean 0.424).
+# The crozier peak is already clipped near 1 on both the reference and T-TER-030.
+GLOW_CROZIER = (860, 420, 100, 100)
+GLOW_GLASS = (760, 368, 28, 36)
+GLOW_RING = (700, 850, 420, 140)
+GLOW_FLOOR = {"crozierPeak": 0.70, "glassMean": 0.145, "ringPeak": 0.60}
+GLOW_CEILING = {"crozierPeak": 1.0, "glassMean": 0.280, "ringPeak": 1.0}
+
 
 def ciede2000(lab1, lab2):
     """CIEDE2000. Sharma pair (50, 2.6772, -79.7751) vs (50, 0, -82.7485) is 2.0425."""
@@ -721,6 +734,67 @@ def draw_overlay(render, dims, regions, fiddle, ring, spores, out_path):
     im.save(out_path)
 
 
+def relative_luminance(rgb):
+    """IEC 61966-2-1 sRGB to CIE Y. rgb is 0..255. The result is 0..1."""
+    c = np.asarray(rgb, dtype=np.float64) / 255.0
+    lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+    return 0.2126729 * lin[..., 0] + 0.7151522 * lin[..., 1] + 0.0721750 * lin[..., 2]
+
+
+def _window(image, rect):
+    x, y, w, h = rect
+    return image[int(y) : int(y + h), int(x) : int(x + w)]
+
+
+def measure_glow(image):
+    """Peak at the crozier, mean of the glass rect, peak of the ring band.
+
+    Floor and ceiling are both returned. A value on either bound is inside.
+    """
+    luma = relative_luminance(image)
+    raw = {
+        "crozierPeak": float(_window(luma, GLOW_CROZIER).max()),
+        "glassMean": float(_window(luma, GLOW_GLASS).mean()),
+        "ringPeak": float(_window(luma, GLOW_RING).max()),
+    }
+    # A clipped white peak is 1. The comparison uses the reported 4 decimals,
+    # so a value that prints as the ceiling is inside the ceiling.
+    measured = {key: round(min(value, 1.0), 4) for key, value in raw.items()}
+    inside = {}
+    for key, value in measured.items():
+        inside[key] = bool(GLOW_FLOOR[key] <= value <= GLOW_CEILING[key])
+    return {
+        "units": "relative luminance, IEC sRGB to CIE Y, 0 to 1",
+        "crozierRect": list(GLOW_CROZIER),
+        "glassRect": list(GLOW_GLASS),
+        "ringRect": list(GLOW_RING),
+        "floor": dict(GLOW_FLOOR),
+        "ceiling": dict(GLOW_CEILING),
+        "measured": measured,
+        "inside": inside,
+        "pass": bool(all(inside.values())),
+        "note": "Floor is above the T-TER-030 undershoot. Ceiling is under the T-TER-028 mint wash. Both bounds are in LOCKED.md.",
+    }
+
+
+def print_glow(glow):
+    ref = glow.get("reference") or {}
+    for key in ("crozierPeak", "glassMean", "ringPeak"):
+        flag = "INSIDE" if glow["inside"][key] else "OUTSIDE"
+        print(
+            "glow",
+            key,
+            glow["measured"][key],
+            "floor",
+            glow["floor"][key],
+            "ceiling",
+            glow["ceiling"][key],
+            "ref",
+            ref.get(key),
+            flag,
+        )
+
+
 def self_test():
     a = (50.0000, 2.6772, -79.7751)
     b = (50.0000, 0.0000, -82.7485)
@@ -736,6 +810,12 @@ def self_test():
     # Bible: jar base at pixel (915, 830). A few pixels of lens-model error is expected.
     if abs(base[0] - 915) > 8 or abs(base[1] - 830) > 8:
         raise SystemExit("jar base projects to (%.1f, %.1f), bible is (915, 830)" % base)
+    for key in GLOW_FLOOR:
+        if GLOW_FLOOR[key] > GLOW_CEILING[key]:
+            raise SystemExit("glow floor is above the ceiling for %s" % key)
+    sample = relative_luminance(np.array([[[0, 0, 0], [255, 255, 255]]], dtype=np.float64))
+    if abs(float(sample[0, 0]) ) > 1e-6 or abs(float(sample[0, 1]) - 1.0) > 1e-4:
+        raise SystemExit("relative luminance black/white got %s" % sample)
     print("self-test ok  de2000=%.4f  base=(%.1f, %.1f)" % (got, base[0], base[1]))
 
 
@@ -743,8 +823,15 @@ def main():
     if len(sys.argv) == 2 and sys.argv[1] == "--self-test":
         self_test()
         return
+    if len(sys.argv) == 3 and sys.argv[1] == "--glow":
+        self_test()
+        image = load_rgb(sys.argv[2])
+        glow = measure_glow(image)
+        print_glow(glow)
+        print("glow", "PASS" if glow["pass"] else "FAIL")
+        return
     if len(sys.argv) != 2:
-        raise SystemExit("usage: spec_anchor.py <run-dir> | --self-test")
+        raise SystemExit("usage: spec_anchor.py <run-dir> | --self-test | --glow <png>")
     run = sys.argv[1]
     repo = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", ".."))
     render_path = os.path.join(run, "jar-g1.png")
@@ -757,6 +844,14 @@ def main():
     if render.shape[0] != H or render.shape[1] != W:
         raise SystemExit("render is %s, expected %dx%d" % (render.shape, W, H))
     self_test()
+    glow = measure_glow(render)
+    glow["reference"] = measure_glow(reference)["measured"]
+    glow_path = os.path.join(run, "glow-measure.json")
+    with open(glow_path, "w", encoding="utf-8", newline="\n") as handle:
+        json.dump(glow, handle, indent=2)
+        handle.write("\n")
+    print("wrote", glow_path)
+    print_glow(glow)
     texture = ring_texture_peak(ring_path)
     dims = measure_dimensions(render, plate)
     ring = measure_ring(render, plate, texture)
@@ -775,6 +870,7 @@ def main():
     ]
     for name, region in regions.items():
         checks.append(("region." + name, region.get("pass", False)))
+    checks.append(("glow", glow["pass"]))
     failed = [name for name, ok in checks if not ok]
     report = {
         "framing": "JarG1",
@@ -790,6 +886,7 @@ def main():
         "spores": {k: v for k, v in spores.items() if k != "blobs"},
         "sporeBlobs": spores["blobs"],
         "regions": regions,
+        "glow": glow,
         "failed": failed,
         "pass": len(failed) == 0,
     }
@@ -820,6 +917,7 @@ def main():
     print("spores", spores["count"], "PASS" if spores["pass"] else "FAIL")
     for name, region in regions.items():
         print(name, region.get("meanDeltaE"), "ref", region.get("referenceMeanDeltaE"), "PASS" if region.get("pass") else "FAIL")
+    print("glow", "PASS" if glow["pass"] else "FAIL")
 
 
 if __name__ == "__main__":

@@ -314,7 +314,7 @@ def assert_mirror(name, tol=2e-5):
 
 
 assert_bible()
-# Moss is clump cushions plus the tuft skirt (terrarium_moss.py), not a lathe dome.
+# Moss is a low irregular sheet plus tuft cards (terrarium_moss.py), not round clumps.
 moss_names = terrarium_moss.build()
 
 
