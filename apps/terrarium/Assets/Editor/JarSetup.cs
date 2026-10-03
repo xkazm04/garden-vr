@@ -27,7 +27,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "fiddle_hairs", "halo", "mist",
-            "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
+            "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_macro_b", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
         };
 
         [MenuItem("Garden VR/Terrarium/Build Jar")]
@@ -67,6 +67,7 @@ namespace GardenVR.Terrarium.Editor
                     || name == "condensation"
                     || name == "cork_top"
                     || name == "moss_macro"
+                    || name == "moss_macro_b"
                     || name == "fiddle_hairs";
                 importer.textureType = TextureImporterType.Default;
                 importer.sRGBTexture = !linear;
@@ -121,7 +122,9 @@ namespace GardenVR.Terrarium.Editor
                 Mesh mesh = filters[i].sharedMesh;
                 int tris = mesh != null ? mesh.triangles.Length / 3 : 0;
                 int verts = mesh != null ? mesh.vertexCount : 0;
+                int uv2 = mesh != null && mesh.uv2 != null ? mesh.uv2.Length : 0;
                 Debug.Log("[JarSetup] source " + filters[i].name + " verts=" + verts + " tris=" + tris
+                    + " uv2=" + uv2
                     + " readable=" + (mesh != null && mesh.isReadable)
                     + " euler=" + filters[i].transform.localEulerAngles.ToString("F1"));
                 if (filters[i].name.StartsWith("Fiddle", StringComparison.Ordinal))
@@ -147,36 +150,34 @@ namespace GardenVR.Terrarium.Editor
             library.Glass = Mat("Jar_Glass", "Fidelity/JarGlass", m =>
             {
                 m.SetTexture("_Cond", Tex("condensation"));
-                // Low base alpha. The rim is the bright edge. The volume alpha is a wall tint, not a fill.
+                // Low base alpha on the whole pane. Volume alpha 0 so the heel is not milkier than the neck.
                 m.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
                 m.SetColor("_Rim", new Color(0.90f, 1.12f, 1.00f, 0.90f));
                 m.SetFloat("_RimPower", 2.35f);
                 m.SetColor("_Inner", new Color(0.40f, 1.15f, 0.68f, 1f));
-                m.SetVector("_InnerY", new Vector4(0.038f, 0.072f, 0f, 0f));
-                m.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
-                m.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
+                m.SetVector("_InnerY", new Vector4(0.030f, 0.048f, 0f, 0f));
+                m.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0f));
+                m.SetVector("_VolumeY", new Vector4(0.020f, 0.030f, 0f, 0f));
                 m.SetFloat("_Drops", 1.15f);
                 m.SetColor("_Streak", new Color(0.90f, 1f, 0.96f, 0.46f));
                 m.SetShaderPassEnabled("SRPDefaultUnlit", false);
             });
-            library.Moss = Mat("Jar_Moss", "Fidelity/Glow", m =>
+            library.Moss = Mat("Jar_Moss", "Fidelity/Moss", m =>
             {
-                // Triplanar so the macro is not a strip stretched over a dome. Per-clump UVs are on the mesh too.
+                // Per-cushion crops in the mesh UV. Macro B is the second Nano Banana plate.
+                // _Tri only feathers steep sides, phased by that crop. It is not a world tile.
                 m.SetTexture("_MainTex", Tex("moss_macro"));
+                m.SetTexture("_MacroB", Tex("moss_macro_b"));
                 m.SetColor("_Tint", Color.white);
                 m.SetTexture("_EmissionTex", Tex("moss_macro"));
-                // Tips carry this. Apply multiplies it down toward the soil with _Tip.
                 m.SetColor("_Emission", new Color(0.16f, 0.48f, 0.26f));
                 m.SetColor("_Rim", new Color(0.42f, 0.90f, 0.55f));
                 m.SetFloat("_RimPower", 3.2f);
                 m.SetFloat("_GradBottom", 0.58f);
                 m.SetFloat("_GradTop", 1.02f);
-                m.SetVector("_GradY", new Vector4(0.016f, 0.032f, 0f, 0f));
-                m.SetTexture("_TopTex", Tex("moss_macro"));
-                // One texture width is a few cushions across the low mound.
-                m.SetFloat("_TopTile", 52f);
-                m.SetFloat("_TopAmount", 0.92f);
-                m.SetFloat("_Tri", 52f);
+                m.SetVector("_GradY", new Vector4(0.018f, 0.046f, 0f, 0f));
+                m.SetFloat("_TopAmount", 0f);
+                m.SetFloat("_Tri", 0f);
                 m.SetFloat("_Cutoff", 0f);
                 m.enableInstancing = true;
             });
@@ -227,7 +228,7 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_RimPower", 4f);
                 m.SetFloat("_GradBottom", 1.12f);
                 m.SetFloat("_GradTop", 0.84f);
-                m.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+                m.SetVector("_GradY", new Vector4(0.108f, 0.140f, 0f, 0f));
                 m.SetFloat("_Tri", 16f);
                 m.SetTexture("_TopTex", Tex("cork_top"));
                 m.SetFloat("_TopTile", 14f);

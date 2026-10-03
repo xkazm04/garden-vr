@@ -79,13 +79,67 @@ def export(names, path):
 
 # =========================================================================== JAR
 reset()
-# glass: one outer shell plus a short lip. The old inner cylinder ran back down the body.
-# Those triangles sit in front of the moss and the overdraw pass (Cull Off) counted them even
-# though the front glass pass never showed them. The mouth stays thick; the wall is one shell.
-outer = [(0.0, 0.0), (0.038, 0.0), (0.0445, 0.003), (0.0462, 0.012), (0.0465, 0.060), (0.0462, 0.098), (0.0440, 0.110),
-         (0.0400, 0.1165), (0.0378, 0.1195), (0.0376, 0.1215), (0.0388, 0.1235), (0.0390, 0.1270), (0.0378, 0.1290)]
-lip = [(0.0354, 0.1276), (0.0348, 0.1238), (0.0352, 0.1198), (0.0364, 0.1168)]
-lathe("Jar", outer + lip, 128)
+# Style bible (docs/art/terrarium-style.md): 14.0 cm with the cork, 8.7 cm across, cork 1.5 cm.
+# The body stays inside the +5% diameter band so the ferns still clear the wall.
+# A mason shoulder, a short neck, and a thick rounded heel. One outer shell plus a
+# short lip. An inner cylinder in front of the moss was dropped in T-TER-018: the
+# overdraw pass (Cull Off) counted those faces. The cork plug sits in the neck.
+BODY_R = 0.0450
+NECK_R = 0.0314
+LIP_TOP = 0.1250
+CORK_TOP = 0.1400
+
+
+def _smooth(t):
+    t = max(0.0, min(1.0, t))
+    return t * t * (3.0 - 2.0 * t)
+
+
+def mason_outer():
+    """(radius, height) up the outside, then a short lip folded into the mouth."""
+    pts = [(0.0, 0.0), (0.014, 0.0003), (0.022, 0.0010)]
+    # Thick heel: horizontal where it leaves the bottom, vertical where it joins the wall.
+    y0, y1 = 0.0010, 0.0200
+    r0 = 0.022
+    for i in range(1, 7):
+        t = i / 6.0
+        ang = t * math.pi * 0.5
+        r = r0 + (BODY_R - r0) * math.sin(ang)
+        y = y0 + (y1 - y0) * (1.0 - math.cos(ang))
+        pts.append((r, y))
+    pts.append((BODY_R, 0.0860))
+    # Rounded shoulder. Vertical tangent at the body and again at the neck.
+    y0, y1 = 0.0860, 0.1100
+    for i in range(1, 8):
+        t = i / 7.0
+        s = _smooth(t)
+        r = BODY_R + (NECK_R - BODY_R) * s
+        y = y0 + (y1 - y0) * t
+        pts.append((r, y))
+    # Short neck, then a lip bead the cork cap rests on.
+    pts.extend([
+        (NECK_R - 0.0004, 0.1160),
+        (0.0322, 0.1182),
+        (0.0342, 0.1204),
+        (0.0352, 0.1222),
+        (0.0340, 0.1238),
+        (0.0322, LIP_TOP),
+    ])
+    # Inner face of the lip only. Not a second wall down the body.
+    pts.extend([
+        (0.0300, 0.1236),
+        (0.0292, 0.1208),
+        (0.0298, 0.1180),
+        (0.0308, 0.1154),
+    ])
+    return pts
+
+
+outer = mason_outer()
+lathe("Jar", outer, 128)
+print("[hero] jar profile")
+for r, y in outer:
+    print("[hero]   r {r:.4f} y {y:.4f}".format(r=r, y=y))
 
 
 def drop_back_glass():
@@ -118,9 +172,13 @@ def drop_back_glass():
 
 
 drop_back_glass()
-# cork: slightly tapered plug with a rounded top edge
-cork = [(0.0, 0.1395), (0.0372, 0.1395), (0.0386, 0.1388), (0.0393, 0.1375), (0.0395, 0.1300), (0.0360, 0.1240), (0.0354, 0.1180), (0.0, 0.1180)]
-lathe("Cork", cork, 96, uv_v=[1.0, 1.0, 0.95, 0.9, 0.35, 0.1, 0.0, 0.0])
+# Cork cap is 1.5 cm above the lip. The plug continues down inside the neck.
+cork = [
+    (0.0, CORK_TOP), (0.0240, CORK_TOP), (0.0308, 0.1393), (0.0334, 0.1380),
+    (0.0342, 0.1362), (0.0336, 0.1334), (0.0322, 0.1298), (0.0308, 0.1264),
+    (0.0288, 0.1244), (0.0288, 0.1168), (0.0302, 0.1148), (0.0302, 0.1100), (0.0, 0.1100),
+]
+lathe("Cork", cork, 96, uv_v=[1.0, 1.0, 0.96, 0.90, 0.78, 0.62, 0.42, 0.22, 0.10, 0.06, 0.02, 0.0, 0.0])
 
 
 def roughen_cork_lip(amplitude=0.0009):
@@ -128,23 +186,23 @@ def roughen_cork_lip(amplitude=0.0009):
     mesh = bpy.data.objects["Cork"].data
     for vert in mesh.vertices:
         radial = math.hypot(vert.co.x, vert.co.y)
-        if vert.co.z < 0.133 or radial < 0.028:
+        if vert.co.z < 0.128 or radial < 0.020:
             continue
         sample = noise.noise(Vector((vert.co.x, vert.co.y, vert.co.z)) * 90.0)
         vert.co.x += (vert.co.x / radial) * sample * amplitude
         vert.co.y += (vert.co.y / radial) * sample * amplitude
-        if vert.co.z > 0.1365:
+        if vert.co.z > 0.136:
             vert.co.z += sample * 0.0007
     mesh.update()
     print("[hero] cork lip roughened", "{:.4f}".format(amplitude))
 
 
 roughen_cork_lip()
-# Soil is a thin bed, about 17% of the 0.140 m jar, flush with the glass floor.
+# Soil is a thin bed, about 17% of the 0.140 m jar, inside the rounded heel.
 # A tall taper read as a lava-rock mound. The top is nearly flat; the moss carpet covers it.
 lathe("Soil", [
-    (0.0, 0.002), (0.036, 0.002), (0.0430, 0.006), (0.0452, 0.014),
-    (0.0446, 0.021), (0.034, 0.023), (0.0, 0.024),
+    (0.0, 0.004), (0.026, 0.004), (0.034, 0.008), (0.0388, 0.014),
+    (0.0396, 0.020), (0.030, 0.023), (0.0, 0.024),
 ], 96, uv_v=[0, 0, 0.15, 0.45, 0.75, 0.92, 1.0])
 
 
@@ -161,6 +219,42 @@ def roughen_soil(amplitude=0.0004):
 
 
 roughen_soil()
+
+
+def mesh_bounds(name):
+    zs, rs = [], []
+    for vert in bpy.data.objects[name].data.vertices:
+        zs.append(vert.co.z)
+        rs.append(math.hypot(vert.co.x, vert.co.y))
+    return min(zs), max(zs), max(rs)
+
+
+def assert_bible():
+    """Height, diameter and cork stay inside docs/art/terrarium-style.md section 6."""
+    j0, j1, jr = mesh_bounds("Jar")
+    c0, c1, cr = mesh_bounds("Cork")
+    height = c1 - min(j0, 0.0)
+    diameter = 2.0 * jr
+    cork_h = c1 - LIP_TOP
+    neck_rs = [math.hypot(v.co.x, v.co.y) for v in bpy.data.objects["Jar"].data.vertices if 0.109 <= v.co.z <= 0.117]
+    if not neck_rs:
+        raise SystemExit("no neck vertices")
+    neck = min(neck_rs)
+    print("[hero] bible height {h:.4f} diameter {d:.4f} cork {c:.4f} neck {n:.4f} body {b:.4f}".format(
+        h=height, d=diameter, c=cork_h, n=neck, b=jr))
+    if not (0.133 <= height <= 0.147):
+        raise SystemExit("jar height {h:.4f} outside 0.133-0.147".format(h=height))
+    if not (0.0826 <= diameter <= 0.0914):
+        raise SystemExit("jar diameter {d:.4f} outside 0.0826-0.0914".format(d=diameter))
+    if not (0.0135 <= cork_h <= 0.0165):
+        raise SystemExit("cork height {c:.4f} outside 0.0135-0.0165".format(c=cork_h))
+    if neck > jr * 0.82:
+        raise SystemExit("neck {n:.4f} is not narrower than the body {b:.4f}".format(n=neck, b=jr))
+    if cr > jr * 0.86:
+        raise SystemExit("cork cap {c:.4f} is as wide as the body".format(c=cr))
+
+
+assert_bible()
 # Moss is clump cushions plus the tuft skirt (terrarium_moss.py), not a lathe dome.
 moss_names = terrarium_moss.build()
 

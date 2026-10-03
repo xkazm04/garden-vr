@@ -35,11 +35,11 @@ Material:
     - _RimPower: 2.35
     m_Colors:
     - _Inner: {r: 0.4, g: 1.15, b: 0.68, a: 1}
-    - _InnerY: {r: 0.038, g: 0.072, b: 0, a: 0}
+    - _InnerY: {r: 0.03, g: 0.048, b: 0, a: 0}
     - _Rim: {r: 0.9, g: 1.12, b: 1, a: 0.9}
     - _Streak: {r: 0.9, g: 1, b: 0.96, a: 0.46}
     - _Tint: {r: 0.75, g: 0.94, b: 0.84, a: 0.018}
-    - _Volume: {r: 0.3, g: 0.78, b: 0.52, a: 0.1}
-    - _VolumeY: {r: 0.038, g: 0.072, b: 0, a: 0}
+    - _Volume: {r: 0.3, g: 0.78, b: 0.52, a: 0}
+    - _VolumeY: {r: 0.02, g: 0.03, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

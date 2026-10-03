@@ -21,7 +21,8 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the names in t
 | moss_band.png | retired | Earlier stand-in of the moss cap. Not bound. The mound uses `moss_macro`. | removed from the jar |
 | moss_card.png | generated | T-TER-017 4x4 tuft atlas. Six Nano Banana clumps `moss_nb_tuft_0` through `moss_nb_tuft_5` in `Art/Source/`, keyed and graded by `compose_nb.py`. Flips fill the spare cells. | bound on MossSkirt |
 | moss_fuzz.png | retired | Earlier stand-in tuft tile. Not bound. | removed from the jar |
-| moss_macro.png | generated | T-TER-017 Nano Banana cushion tile `moss_nb_tile.png`. `compose_nb.py` makes it seamless and grades the mean toward measured moss `#376222` while keeping the dark gaps. Triplanar on the low mound, and per-clump UVs. | bound on the moss mound |
+| moss_macro.png | generated | T-TER-017 Nano Banana cushion tile `moss_nb_tile.png`. `compose_nb.py` makes it seamless and grades the mean toward measured moss `#376222` while keeping the dark gaps. T-TER-020 maps each flat patch to one sheared crop and blends `moss_macro_b`, so the kaleidoscope is not a honeycomb. | bound on the moss mound |
+| moss_macro_b.png | generated | Copy of T-TER-017 Nano Banana `Art/Source/moss_albedo.png` (the uniform cushion plate). Not regenerated. Blended per cushion against `moss_macro` by UV2. | bound on the moss mound |
 | moss_tile.png | retired | Earlier stand-in moss tile. Not bound. | removed from the jar |
 | moss_top.png | painted-by-code | `paint_textures.py` fbm moss cap, via `shared/assets/seed-textures/moss_top.png` | not bound. The mound uses `moss_macro`. |
 | moss_tuft.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
