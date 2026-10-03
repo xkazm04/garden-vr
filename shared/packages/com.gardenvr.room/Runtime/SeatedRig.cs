@@ -38,6 +38,7 @@ namespace GardenVR.Room
         [SerializeField] float _fieldOfView = DefaultFieldOfView;
         [SerializeField] float _nearClip = DefaultNearClip;
         [SerializeField] float _farClip = 20f;
+        [SerializeField] float _lookAboveDesk;
         [SerializeField] Transform _headPivot;
         [SerializeField] Camera _eye;
         [SerializeField] MonoBehaviour _headPoseBehaviour;
@@ -67,8 +68,23 @@ namespace GardenVR.Room
 
         public static Quaternion SeatedPitchQuaternion => Quaternion.Euler(DefaultSeatedPitch, 0f, 0f);
 
-        /// <summary>Pitch that puts the desk anchor in the centre of the view. Positive looks down.</summary>
+        /// <summary>Pitch that puts the desk anchor in the centre of the view, minus <see cref="LookAboveDesk"/>. Positive looks down.</summary>
         public float RestPitchDegrees { get; private set; } = DefaultSeatedPitch;
+
+        /// <summary>
+        /// Degrees the rest pose looks above the desk point, so the hero sits lower in the frame.
+        /// Zero aims at the desk. The plate anchor uses the same pitch, so the photograph stays square to the lens.
+        /// </summary>
+        public float LookAboveDesk
+        {
+            get => _lookAboveDesk;
+            set
+            {
+                _lookAboveDesk = Mathf.Max(0f, value);
+                ApplyRest();
+                if (!Application.isPlaying) ApplyPose();
+            }
+        }
 
         public Transform PlateAnchor => _plateAnchor;
 
@@ -82,8 +98,19 @@ namespace GardenVR.Room
         /// <summary>Put a unit quad (XY, facing the eye) on the capture frustum. Parent it to the plate anchor.</summary>
         public static void PlaceSeatedCard(Transform card)
         {
-            Vector2 size = SeatedCardSize(PlateDistance, SeatedCaptureFov, SeatedCaptureAspect) * SeatedCardMargin;
-            card.localPosition = new Vector3(0f, 0f, PlateDistance);
+            PlaceCard(card, PlateDistance, SeatedCaptureFov);
+        }
+
+        /// <summary>Same card, sized to the seated lens (<see cref="DefaultFieldOfView"/>) rather than the wide capture frustum.</summary>
+        public static void PlaceLensCard(Transform card)
+        {
+            PlaceCard(card, PlateDistance, DefaultFieldOfView);
+        }
+
+        public static void PlaceCard(Transform card, float distance, float verticalFovDegrees)
+        {
+            Vector2 size = SeatedCardSize(distance, verticalFovDegrees, SeatedCaptureAspect) * SeatedCardMargin;
+            card.localPosition = new Vector3(0f, 0f, distance);
             card.localRotation = Quaternion.identity;
             card.localScale = new Vector3(size.x, size.y, 1f);
         }
@@ -137,6 +164,7 @@ namespace GardenVR.Room
             PcDeskAnchor desk = GetComponentInChildren<PcDeskAnchor>(true);
             if (desk != null)
                 pitch = PitchAimingAt(_eyeHeight - desk.Height, desk.Distance);
+            pitch = Mathf.Max(0f, pitch - _lookAboveDesk);
             RestPitchDegrees = pitch;
             if (_plateAnchor == null)
             {

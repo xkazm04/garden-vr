@@ -13,9 +13,9 @@
   "additions": [
     {
       "name": "DialSeated",
-      "eye": [0, 0.407796, -0.475608],
-      "lookAt": [0, 0.012, 0],
-      "fov": 90,
+      "eye": [0, 0.200779, -0.223132],
+      "lookAt": [0, 0, 0],
+      "fov": 60,
       "lensShift": [0, 0],
       "plate": null,
       "width": 1824,

@@ -212,6 +212,10 @@ namespace GardenVR.Capture.Editor
                 {
                     cam.clearFlags = eyeCam.clearFlags;
                     cam.backgroundColor = eyeCam.backgroundColor;
+                    // The catalog SeatedPOV lens stays 90 deg for the old fallback pose.
+                    // A scene eye is the seated rig: use its lens (60 deg) so the shot matches the chair.
+                    cam.fieldOfView = eyeCam.fieldOfView;
+                    cam.nearClipPlane = eyeCam.nearClipPlane;
                 }
             }
             else
