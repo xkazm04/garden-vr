@@ -14,7 +14,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -38,17 +38,21 @@ Material:
     m_Ints: []
     m_Floats:
     - _Cutoff: 0
-    - _GradBottom: 0.72
-    - _GradTop: 1.18
-    - _RimPower: 2.6
+    - _GradBottom: 0.58
+    - _GradTop: 1.02
+    - _RimPower: 3.2
     - _Shell: 0
-    - _TopAmount: 0.12
-    - _TopTile: 24
-    - _Tri: 24
+    - _Soft: 0
+    - _TopAmount: 0.92
+    - _TopTile: 52
+    - _Trans: 0
+    - _Tri: 52
     m_Colors:
-    - _Emission: {r: 0.075, g: 0.24, b: 0.12, a: 1}
-    - _GradY: {r: 0.028, g: 0.048, b: 0, a: 0}
-    - _Rim: {r: 0.17999999, g: 0.414, b: 0.2475, a: 0.45}
+    - _Emission: {r: 0.012, g: 0.034, b: 0.018, a: 1}
+    - _GradY: {r: 0.03, g: 0.044, b: 0, a: 0}
+    - _LightColor: {r: 0.34, g: 0.68, b: 0.42, a: 1}
+    - _LightPos: {r: 0.0006574071, g: 0.08041298, b: 0.003608954, a: 0.092}
+    - _Rim: {r: 0.136, g: 0.30600002, b: 0.17, a: 0.85}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

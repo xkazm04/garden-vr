@@ -5,7 +5,7 @@ Units are metres. Blender Z is up; the FBX exporter writes Unity Y-up. Default -
 apps/terrarium/Assets/Art/Models, resolved from the current working directory.
 """
 import bpy, bmesh, math, os, sys
-from mathutils import Vector, noise
+from mathutils import Euler, Vector, noise
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
@@ -140,9 +140,9 @@ def roughen_cork_lip(amplitude=0.0009):
 
 
 roughen_cork_lip()
-# soil: the dark layer under the moss
-lathe("Soil", [(0.0, 0.004), (0.0428, 0.004), (0.0436, 0.016), (0.0436, 0.030), (0.0, 0.031)], 96, uv_v=[0, 0, 0.45, 1.0, 1.0])
-# Moss is clump cushions plus a 32-card skirt (terrarium_moss.py), not a lathe dome.
+# soil: wide at the glass base, narrow under the moss so the mound overhangs the band
+lathe("Soil", [(0.0, 0.004), (0.0405, 0.004), (0.0420, 0.010), (0.0400, 0.020), (0.0340, 0.028), (0.0, 0.032)], 96, uv_v=[0, 0, 0.25, 0.55, 0.85, 1.0])
+# Moss is clump cushions plus the tuft skirt (terrarium_moss.py), not a lathe dome.
 moss_names = terrarium_moss.build()
 
 
@@ -183,7 +183,15 @@ def tube(name, pts, r_base=0.0018, r_tip=0.0009, ring=12):
         up = Vector((0, 1, 0)) if abs(tan.y) < 0.9 else Vector((1, 0, 0))
         nx = tan.cross(up).normalized(); ny = tan.cross(nx).normalized()
         r = r_base + (r_tip - r_base) * t ** 0.8
-        rings.append([bm.verts.new(p + (nx * math.cos(2 * math.pi * k / ring) + ny * math.sin(2 * math.pi * k / ring)) * r) for k in range(ring)])
+        ring_vs = []
+        for k in range(ring):
+            # Same parametric spike on every uncoil state, so the vertex lerp keeps the hairs.
+            wobble = noise.noise(Vector((i * 0.23, k * 0.47, 3.1)))
+            spike = max(0.0, wobble) ** 2
+            rr = r * (1.0 + 2.2 * spike)
+            ang = 2 * math.pi * k / ring
+            ring_vs.append(bm.verts.new(p + (nx * math.cos(ang) + ny * math.sin(ang)) * rr))
+        rings.append(ring_vs)
     for i in range(len(rings) - 1):
         for k in range(ring):
             f = bm.faces.new((rings[i][k], rings[i][(k + 1) % ring], rings[i + 1][(k + 1) % ring], rings[i + 1][k]))
@@ -197,16 +205,22 @@ states = [0.0, 0.25, 0.5, 0.75, 1.0]
 for s_ in states: tube(f"Fiddle{int(s_ * 100)}", fiddle_points(s_))
 
 
-# frond card: a V-folded, arched strip that carries the painted pinnate texture (alpha-tested in Unity)
-def frond(name, w=0.040, h=0.082, fold=0.30, arch=0.016, cols=6, rows=20, uv_col=0, uv_cols=3):
-    """V-folded card. UV.x selects one column of the 3-frond atlas."""
+# frond card: a curled blade. The pinnae droop and the tip twists, so it is not a flat rectangle.
+def frond(name, w=0.040, h=0.082, fold=0.38, arch=0.020, curl=0.014, twist=0.22, cols=8, rows=22, uv_col=0, uv_cols=2):
+    """Curled card. UV.x selects one column of the 2-frond atlas."""
     bm = bmesh.new(); uv = bm.loops.layers.uv.new(); grid = []
     for j in range(rows + 1):
         v = j / rows; row = []
         for i in range(cols + 1):
-            u = i / cols; x = (u - 0.5) * w
-            y = -abs(x) * fold - arch * v * v      # fold along the rachis; arch back toward the tip
-            row.append(bm.verts.new((x, y, v * h)))
+            u = i / cols
+            x = (u - 0.5) * w
+            side = abs(u - 0.5) * 2.0
+            # Fold on the rachis, arch back, and curl the pinnae down through the middle of the blade.
+            y = -abs(x) * fold - arch * (v ** 1.35) - curl * math.sin(v * math.pi) * side
+            z = v * h - 0.004 * side * side * math.sin(v * math.pi)
+            p = Vector((x, y, z))
+            p.rotate(Euler((twist * math.sin(v * math.pi) * (u - 0.5), 0.0, 0.0)))
+            row.append(bm.verts.new(p))
         grid.append(row)
     for j in range(rows):
         for i in range(cols):
@@ -217,8 +231,8 @@ def frond(name, w=0.040, h=0.082, fold=0.30, arch=0.016, cols=6, rows=20, uv_col
 
 
 frond("FrondV0", uv_col=0)
-frond("FrondV1", w=0.036, h=0.074, fold=0.24, arch=0.012, uv_col=1)
-frond("FrondV2", w=0.044, h=0.086, fold=0.36, arch=0.020, uv_col=2)
+frond("FrondV1", w=0.034, h=0.076, fold=0.30, arch=0.016, curl=0.010, twist=0.16, uv_col=1)
+frond("FrondV2", w=0.044, h=0.088, fold=0.46, arch=0.026, curl=0.018, twist=-0.20, uv_col=0)
 
 
 # seedling: two cupped leaves on a short stem

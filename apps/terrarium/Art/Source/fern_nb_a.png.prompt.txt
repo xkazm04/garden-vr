@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: A single delicate fern frond, pinnate, translucent green with clearly visible darker veins. Backlit so the thin blade glows and the veins stay darker. Isolated on a pure black background #000000. Soft feathered edges, not a rectangle. Vertical, the frond fills most of the frame. No pot, no text, no hand. Botanical photograph.

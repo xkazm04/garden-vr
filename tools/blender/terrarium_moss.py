@@ -4,9 +4,9 @@ Imported by terrarium_jar.py after the scene reset. Also runnable alone:
 
     blender.exe -b -P tools/blender/terrarium_moss.py -- --out apps/terrarium/Assets/Art/Models
 
-The mound is joined icosphere cushions (per-clump planar UV, not a lathe dome)
-plus a lower lip. MossSkirt is 32 alpha cards at the silhouette. Cards carry a
-4x4 tuft atlas: each card's UV sits in one cell.
+The mound is a low carpet of small flat cushions (per-clump planar UV).
+MossSkirt is 128 tuft cards over that carpet, joined into one mesh so the
+draw stays one. Cards carry a 4x4 tuft atlas: each card's UV sits in one cell.
 """
 import math
 import os
@@ -17,7 +17,9 @@ import bpy
 import bmesh
 from mathutils import Euler, Matrix, Vector, noise
 
-SKIRT_CARDS = 32
+# One joined mesh. BudgetMeasure counts a renderer as a draw, and the cap is 40.
+# The card material has GPU instancing on, so this batch is one instanced draw.
+TUFT_CARDS = 200
 ATLAS = 4
 
 
@@ -143,27 +145,15 @@ def make_clump(center, radius, seed, flatten, subdiv):
 
 
 def build_mound():
+    """One low dome, plus small flat bumps. Separate spheres read as cobblestones."""
     rng = random.Random(11)
-    specs = []
-    for i in range(5):
+    # bmesh subdivisions=1 is the bare icosahedron. 4 is a smooth dome.
+    # Wide and low, sunk into the soil so the band is a rim and not a second ball.
+    specs = [(0.0, 0.0, 0.036, 0.20, 0.026, 1, 4)]
+    for i in range(22):
         ang = rng.random() * math.tau
-        rad = rng.uniform(0.0, 0.010)
-        radius = rng.uniform(0.011, 0.016)
-        specs.append((rad, ang, radius, rng.uniform(0.48, 0.62), 0.036 + rng.uniform(0.0, 0.004), i + 1, 2))
-    # Two cushions stacked so the top is not a single dome.
-    specs.append((0.004, 0.5, 0.010, 0.55, 0.044, 21, 2))
-    specs.append((0.009, 2.1, 0.009, 0.50, 0.042, 22, 2))
-    for i in range(8):
-        ang = rng.random() * math.tau
-        rad = rng.uniform(0.012, 0.026)
-        radius = rng.uniform(0.007, 0.011)
-        specs.append((rad, ang, radius, rng.uniform(0.46, 0.62), 0.032 + rng.uniform(0.0, 0.004), 30 + i, 1))
-    # Lower lip: flat cushions that cover the soil cap, so the lathe floor does not read as grass.
-    for i in range(16):
-        ang = (i / 16.0) * math.tau + rng.uniform(-0.12, 0.12)
-        rad = rng.uniform(0.012, 0.034)
-        radius = rng.uniform(0.008, 0.013)
-        specs.append((rad, ang, radius, rng.uniform(0.28, 0.42), 0.031, 60 + i, 1))
+        rad = rng.uniform(0.0, 0.024) ** 0.8
+        specs.append((rad, ang, rng.uniform(0.0035, 0.0060), rng.uniform(0.16, 0.30), 0.034 + rng.uniform(0.0, 0.004), i + 2, 2))
     objs = []
     for rad, ang, radius, flat, z0, seed, subdiv in specs:
         cx = rad * math.cos(ang)
@@ -239,8 +229,8 @@ def align_card(obj, loc, ang, tilt):
     obj.matrix_world = Matrix.Translation(Vector(loc)) @ rot
 
 
-# Inner glass near the soil line is about 0.044 m. Cards and clumps stay inside it.
-GLASS_INNER = 0.0395
+# Glass shell is about 0.046 m. Cards stay inside it and outside the tapered soil neck.
+GLASS_INNER = 0.0415
 
 
 def pull_inside(obj, limit):
@@ -259,24 +249,26 @@ def pull_inside(obj, limit):
 
 
 def build_skirt():
+    """Dense tuft cards over the whole mound. Joined into MossSkirt (one draw)."""
     rng = random.Random(19)
     cards = []
-    for i in range(SKIRT_CARDS):
-        ang = (i / float(SKIRT_CARDS)) * math.tau + rng.uniform(-0.09, 0.09)
-        # Outer lip only, stood up. Flat cards across the soil read as discs and a starburst.
-        rad = rng.uniform(0.032, 0.038)
-        z = rng.uniform(0.030, 0.033)
-        tilt = rng.uniform(0.12, 0.35)
-        cell = ((i * 5 + 2) % ATLAS, (i * 3 + 1) % ATLAS)
+    for i in range(TUFT_CARDS):
+        ang = rng.random() * math.tau
+        # Flat overlapping patches on the mound. Tilted cards read as leaves on the soil.
+        u = rng.random()
+        rad = (u ** 0.45) * 0.028
+        z = 0.030 + rng.uniform(0.0, 0.004)
+        tilt = rng.uniform(0.02, 0.28)
+        cell = ((i * 3 + 1) % ATLAS, (i * 5 + 2) % ATLAS)
         card = grid_mesh(
             "Skirt%d" % i,
-            rng.uniform(0.0045, 0.0075),
-            rng.uniform(0.005, 0.008),
-            2, 3, 0.0012, 0.0010, cell,
+            rng.uniform(0.010, 0.016),
+            rng.uniform(0.009, 0.014),
+            2, 2, 0.0004, 0.0002, cell,
         )
-        align_card(card, (rad * math.cos(ang), rad * math.sin(ang), z), ang + rng.uniform(-0.25, 0.25), tilt)
-        s = rng.uniform(0.75, 1.05)
-        card.scale = (s, s, s * rng.uniform(0.85, 1.15))
+        align_card(card, (rad * math.cos(ang), rad * math.sin(ang), z), ang + rng.uniform(-0.4, 0.4), tilt)
+        s = rng.uniform(0.70, 1.15)
+        card.scale = (s, s * rng.uniform(0.85, 1.1), s * rng.uniform(0.75, 1.2))
         cards.append(card)
     bpy.context.view_layer.update()
     activate(cards[0])
@@ -309,7 +301,7 @@ def build():
     for ob in (moss, skirt):
         z0, z1, rad = bounds(ob)
         print("[hero] tris", ob.name, tri_count(ob), "z", "{:.4f}".format(z0), "{:.4f}".format(z1), "r", "{:.4f}".format(rad))
-    print("[probe] moss cards", SKIRT_CARDS)
+    print("[probe] moss cards", TUFT_CARDS)
     return ["Moss", "MossSkirt"]
 
 

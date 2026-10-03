@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: Seamless tileable macro photograph, top-down, of fine dark potting soil. Nearly black chocolate loam, fine crumbs, tiny pebbles, and scattered small white perlite specks. No large stones, no plants, no moss, no text, no border. Square. The left edge continues into the right edge and the top edge continues into the bottom edge.

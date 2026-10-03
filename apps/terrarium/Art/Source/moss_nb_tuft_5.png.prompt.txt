@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: One tiny tight cushion of velvety moss, smaller than a coin, isolated on a pure black background #000000. Extreme macro, three-quarter view. Dark green body, bright yellow-green tips. Soft silhouette. No pot, no soil, no text. Pure black background.

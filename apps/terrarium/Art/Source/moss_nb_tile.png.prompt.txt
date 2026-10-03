@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: Seamless tileable macro photograph, top-down, of dense velvety cushion moss. Tiny rounded cushions packed tight. Deep dark green-black gaps between the cushions. Bright yellow-green rim-lit tips in a soft mint light. No flowers, no soil, no rocks, no text, no border. Photographic, square. The left edge continues into the right edge and the top edge continues into the bottom edge.

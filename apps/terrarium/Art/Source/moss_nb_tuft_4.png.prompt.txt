@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: One small split clump of velvety cushion moss, two lobes with a dark gap between them, isolated on a pure black background #000000. Macro from above. Bright rim-lit tips, deep crevice. Soft edge. No pot, no soil, no text. Pure black background.

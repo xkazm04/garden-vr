@@ -26,6 +26,9 @@ Shader "Fidelity/Card"
         _Coverage ("Alpha to coverage", Float) = 0
         _Mask ("Halo mask (B line, G glow)", Float) = 0
         _Sparkle ("Sparkle", Range(0, 1)) = 0
+        // Zero leaves every existing card unchanged. A positive power fades the card from _Focus.
+        _Falloff ("Radial falloff (0 = off)", Float) = 0
+        _Focus ("Focus uv xy, radius z", Vector) = (0.5, 0.5, 0.5, 0)
     }
     SubShader
     {
@@ -47,7 +50,8 @@ Shader "Fidelity/Card"
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color, _Color2;
-                half _Ring, _Fill, _Boil, _BoilPx, _BoilFps, _BoilTime, _T, _Src, _Dst, _ZTest, _ZWrite, _Coverage, _Mask, _Sparkle;
+                half _Ring, _Fill, _Boil, _BoilPx, _BoilFps, _BoilTime, _T, _Src, _Dst, _ZTest, _ZWrite, _Coverage, _Mask, _Sparkle, _Falloff;
+                float4 _Focus;
             CBUFFER_END
             struct A { float4 pos : POSITION; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_OUTPUT_STEREO };
@@ -130,6 +134,14 @@ Shader "Fidelity/Card"
                     half spark = (half)(on * dotp * max(edge, rim * 0.85) * _Sparkle);
                     c.rgb += half3(1.0, 0.92, 0.55) * spark * 1.8;
                     c.a = max(c.a, spark);
+                }
+                if (_Falloff > 0.001)
+                {
+                    float d = length(i.uv - _Focus.xy);
+                    float f = saturate(1.0 - d / max(_Focus.z, 1e-3));
+                    f = pow(f, _Falloff);
+                    c.rgb *= (half)f;
+                    if (_Src > 4.5) c.a *= (half)f;
                 }
                 return c * i.col;
             }

@@ -49,9 +49,15 @@ namespace GardenVR.Core
             return Math.Max(VitalityFloor, 1f - 0.15f * (gap - 1));
         }
 
+        /// <summary>False when <paramref name="today"/> is before the last ritual. The core will not rewrite that day.</summary>
+        public bool AcceptsDay(int today)
+        {
+            return !LastRitualDay.HasValue || today >= LastRitualDay.Value;
+        }
+
         public GrowthAnswer CompleteRitual(int today)
         {
-            if (LastRitualDay.HasValue && today < LastRitualDay.Value)
+            if (!AcceptsDay(today))
                 throw new ArgumentException("clock went backwards; the core refuses to rewrite history");
             bool drooping = Vitality(today) < 1f;
             bool newDay = LastRitualDay != today;
@@ -66,6 +72,35 @@ namespace GardenVR.Core
             LastRitualDay = today;
             _frondDays.Add(today);
             return new GrowthAnswer(true, drooping, OpensFlower(Fronds), 0);
+        }
+
+        /// <summary>Growth fields only. Habits, tends, and settings stay with the document the app owns.</summary>
+        public TerrariumSave ToSave()
+        {
+            var save = new TerrariumSave();
+            save.SchemaVersion = TerrariumSaveMigrations.CurrentSchema;
+            save.FrondDays = _frondDays.ToArray();
+            save.DewToday = DewToday;
+            save.LastRitualDay = LastRitualDay;
+            save.Returns = Returns;
+            save.RitualsCompleted = RitualsCompleted;
+            return save;
+        }
+
+        public static Garden FromSave(TerrariumSave save)
+        {
+            var garden = new Garden();
+            if (save == null) return garden;
+            if (save.FrondDays != null)
+            {
+                for (int i = 0; i < save.FrondDays.Length; i++)
+                    garden._frondDays.Add(save.FrondDays[i]);
+            }
+            garden.DewToday = save.DewToday;
+            garden.LastRitualDay = save.LastRitualDay;
+            garden.Returns = save.Returns;
+            garden.RitualsCompleted = save.RitualsCompleted;
+            return garden;
         }
 
         // ---- persistence: one plain line, versioned, human-readable on disk ----

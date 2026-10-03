@@ -35,9 +35,11 @@ Material:
     - _BoilTime: -1
     - _Coverage: 0
     - _Dst: 10
+    - _Falloff: 0
     - _Fill: 1
     - _Mask: 0
     - _Ring: 0
+    - _Sparkle: 0
     - _Src: 5
     - _T: 0
     - _ZTest: 4
@@ -45,5 +47,6 @@ Material:
     m_Colors:
     - _Color: {r: 0.84, g: 0.93, b: 0.9, a: 0.8}
     - _Color2: {r: 0, g: 0, b: 0, a: 1}
+    - _Focus: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
