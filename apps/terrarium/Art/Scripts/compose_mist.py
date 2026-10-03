@@ -17,7 +17,7 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 SRC = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source")
 TEX = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures")
-RUN = os.path.join(ROOT, "orchestration", "runs", "terrarium", "T-TER-007")
+RUN = os.path.join(ROOT, "orchestration", "runs", "terrarium", "T-TER-015")
 GRID = 8
 CELL = 256
 FRAMES = GRID * GRID
@@ -67,42 +67,38 @@ def soft_field(alpha):
 
 
 def frame(wisps, index):
-    """Two thin curls. y=0 in the buffer is the top of the cell.
+    """One soft plume. y=0 in the buffer is the top of the cell.
 
-    Round 1 normalized a wide gaussian into a solid bell. These ribbons stay
-    narrow, break into wisps, and thin out before the top of the frame.
+    Wide and soft at the cork, thinner as it rises, with a slow curl. Wisps
+    punch holes through the body so it is not a solid bell and not two ribbons.
     """
     t = index / float(FRAMES)
     fields = [soft_field(alpha) for _color, alpha in wisps]
     yy, xx = np.mgrid[0:CELL, 0:CELL]
     x = xx / (CELL - 1.0) - 0.5
     y = 1.0 - yy / (CELL - 1.0)  # 0 at the cork, 1 at the thin top
-    sway = math.sin(t * math.tau) * 0.07
-    spine_a = sway + np.sin(y * math.pi * 1.7 + t * math.tau) * (0.04 + 0.26 * y)
-    spine_b = sway * 0.35 + 0.06 + np.sin(y * math.pi * 2.4 + t * math.tau + 2.0) * (0.02 + 0.14 * y)
-    width_a = 0.014 + 0.030 * ((1.0 - y) ** 1.05)
-    width_b = 0.009 + 0.018 * ((1.0 - y) ** 1.15)
-    rib_a = np.exp(-((x - spine_a) ** 2) / (2.0 * width_a ** 2))
-    rib_b = np.exp(-((x - spine_b) ** 2) / (2.0 * width_b ** 2))
-    # Gaps along the rise, so a ribbon is a chain of curls and not a stroke.
-    gap_a = 0.15 + 0.85 * np.clip(0.5 + 0.5 * np.sin(y * math.pi * 4.5 - t * math.tau * 2.0), 0.0, 1.0)
-    gap_b = 0.15 + 0.85 * np.clip(0.5 + 0.5 * np.sin(y * math.pi * 6.5 + t * math.tau * 2.0 + 1.1), 0.0, 1.0)
-    column = rib_a * gap_a + rib_b * gap_b * 0.55
-    # Alpha starts at the cork. The card is tucked into the cork, so the plume leaves the lip.
-    column *= smooth(0.0, 0.02, y) * (1.0 - smooth(0.62, 0.97, y))
-    column *= 0.35 + 0.65 * (1.0 - y)
+    sway = math.sin(t * math.tau) * 0.06
+    curl = np.sin(y * math.pi * 1.15 + t * math.tau) * (0.02 + 0.20 * y)
+    spine = sway * (0.2 + y) + curl
+    # Wide at the lip (about half the card), a wisp by the top of the frame.
+    width = 0.145 * ((1.0 - y) ** 1.15) + 0.010
+    body = np.exp(-((x - spine) ** 2) / (2.0 * width ** 2))
+    # Break the bell into curls. A high floor here is what filled the cone.
+    gap = 0.25 + 0.75 * np.clip(0.5 + 0.5 * np.sin(y * math.pi * 3.2 - t * math.tau * 1.5 + x * 6.0), 0.0, 1.0)
+    column = body * gap
+    column *= smooth(0.0, 0.04, y) * (1.0 - smooth(0.50, 0.96, y))
+    column *= 0.35 + 0.65 * ((1.0 - y) ** 0.65)
     density = np.zeros((CELL, CELL), np.float32)
     for i, field in enumerate(fields):
-        phase = (t * 0.65 + i / float(len(fields))) % 1.0
+        phase = (t * 0.5 + i / float(len(fields))) % 1.0
         rolled = np.roll(field, int(phase * field.shape[0]), axis=0)
-        rolled = np.roll(rolled, int((i * 23) % rolled.shape[1]), axis=1)
+        rolled = np.roll(rolled, int((i * 17 + 5) % rolled.shape[1]), axis=1)
         sampled = cv2.resize(rolled, (CELL, CELL), interpolation=cv2.INTER_LINEAR)
-        band = np.exp(-((y - (0.08 + 0.7 * phase)) ** 2) / 0.035)
-        # The ribbon is there from the cork. A wisp only brightens its own band.
-        density += column * (0.42 + 0.58 * sampled) * (0.4 + 0.6 * band)
-    density = cv2.GaussianBlur(density, (0, 0), 1.3)
-    # Leave the peak where the curls land. Normalizing filled the bell in round 1.
-    alpha = np.clip(density * 1.2, 0.0, 0.40)
+        band = np.exp(-((y - (0.02 + 0.85 * phase)) ** 2) / 0.045)
+        density += column * sampled * (0.35 + 0.65 * band)
+    density = cv2.GaussianBlur(density, (0, 0), 2.2)
+    peak = max(float(density.max()), 1e-4)
+    alpha = np.clip(density / peak * 0.34, 0.0, 0.34)
     alpha[alpha < 0.02] = 0.0
     vapor = np.array([198.0, 214.0, 208.0], np.float32)
     color = np.ones((CELL, CELL, 3), np.float32) * vapor
@@ -144,7 +140,9 @@ def main():
         sheet_c[y:y + CELL, x:x + CELL] = color
         sheet_a[y:y + CELL, x:x + CELL] = alpha
         if index in (0, 16, 32, 48):
-            preview.append(np.dstack([color, alpha * 255.0]))
+            # Show relative density. A flat RGB fill hides whether the plume is a solid bell.
+            shown = color * (alpha / max(float(alpha.max()), 1e-4))[..., None]
+            preview.append(np.dstack([shown, np.full_like(alpha, 255.0)]))
     rgba = np.dstack([sheet_c, sheet_a * 255.0])
     os.makedirs(TEX, exist_ok=True)
     os.makedirs(RUN, exist_ok=True)

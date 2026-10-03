@@ -17,7 +17,7 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the names in t
 | fern_b_emission.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
 | fern_emission.png | generated | T-TER-006 distance-field edge mask of the fern atlas alpha (`key_alpha.py`). Grayscale mask, mint comes from the shader. | bound on the fronds |
 | halo.png | painted-by-code | `paint_textures.py` radial falloff, via `shared/assets/seed-textures/halo.png` | bound on the spill and halos |
-| mist.png | generated | T-TER-007 eight wisp plates `mist_wisp_0` through `mist_wisp_7`. `compose_mist.py` builds one 8x8 flipbook. Each cell is a soft curl whose density the wisps modulate. One Card material steps the UV. | bound on the single mist card |
+| mist.png | generated | T-TER-007 eight wisp plates `mist_wisp_0` through `mist_wisp_7`. `compose_mist.py` builds one 8x8 flipbook. T-TER-015 reshapes each cell into one soft plume, wide at the cork and thin as it rises. One Card material steps the UV. | bound on the single mist card |
 | moss_band.png | retired | Earlier stand-in of the moss cap. Not bound. The mound uses `moss_macro`. | removed from the jar |
 | moss_card.png | generated | T-TER-006 4x4 tuft atlas. Sources `moss_tuft_0`, `moss_tuft_1`, `moss_tuft_2` in `Assets/Art/Source/`. The fourth tuft is a horizontal flip of `moss_tuft_2` (that generation was rate-limited). Keyed by `key_alpha.py`. | bound on MossSkirt |
 | moss_fuzz.png | retired | Earlier stand-in tuft tile. Not bound. | removed from the jar |
@@ -28,5 +28,5 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the names in t
 | petal.png | generated | T-TER-007 plate `petal_macro.png`. `compose_jar_detail.py` keeps the amber petal and fills the background so the glow cutoff can drop it. | bound on the first flower |
 | ring.png | painted-by-code | `paint_textures.py` analytic ring and pool, via `shared/assets/seed-textures/ring.png` | bound on the breath ring |
 | soil.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
-| soil_band.png | generated | T-TER-007 grade of the generated `Source/soil.png` plate. `compose_jar_detail.py` makes it tileable and moves the mean to measured loam `#0D231D`. | bound on the soil |
+| soil_band.png | generated | T-TER-015 fine grain of the generated `Source/soil.png` plate. `compose_soil.py` drops landmarks bigger than a crumb (the old wrap read as stacked coins) and keeps a dark loam mean. Triplanar on the soil, so the cylinder does not stretch one tile into rings. | bound on the soil |
 | spore.png | painted-by-code | `paint_textures.py` radial sprite, via `shared/assets/seed-textures/spore.png` | bound on the spore particles |
