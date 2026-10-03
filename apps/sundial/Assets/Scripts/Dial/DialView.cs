@@ -44,6 +44,13 @@ namespace GardenVR.Sundial
         public const float OutlinePixels = 3f;
         public const float BoilPixels = 1f;
         public const float BloomCloseSeconds = 1.2f;
+        /// <summary>T-SUN-017 gold, retuned in T-SUN-031 so the same stroke reads on the brighter plants.</summary>
+        public const float HaloClosePx = 5f;
+        public const float HaloCorePx = 3.0f;
+        public const float HaloGlowPx = 8.0f;
+        public const float HaloFit = 1f;
+        public const float HaloPush = 0.0035f;
+        public const float BloomCardLift = 0.0015f;
 
         // SVG dial face, degrees. 0 is +X (image right), 90 is +Z (image top, far side).
         public const float MorningArc0 = 242f;
@@ -232,7 +239,14 @@ namespace GardenVR.Sundial
                 {
                     var block = new MaterialPropertyBlock();
                     haloRenderer.GetPropertyBlock(block);
-                    block.SetTexture("_MainTex", HaloMask(haloCard, bloomTex2d));
+                    int bloomLift = 0;
+                    if (bloomTex2d != null)
+                    {
+                        Transform haloPlant = HaloPlant();
+                        float cardH = haloPlant != null ? haloPlant.localScale.y : 0.112f;
+                        bloomLift = Mathf.RoundToInt(BloomCardLift / Mathf.Max(cardH, 0.02f) * haloCard.height);
+                    }
+                    block.SetTexture("_MainTex", HaloMask(haloCard, bloomTex2d, bloomLift));
                     haloRenderer.SetPropertyBlock(block);
                 }
             }
@@ -241,10 +255,12 @@ namespace GardenVR.Sundial
             {
                 // Gold core and a short falloff. Hot enough to glow, low enough that the
                 // breath does not clip to white on every frame.
+                // T-SUN-017 core gold. The falloff is a little stronger so the short glow
+                // still reads against the saturated T-SUN-028 flowers.
                 haloMat.SetColor("_Color", new Color(1.15f, 0.86f, 0.32f) * amount);
-                haloMat.SetColor("_Color2", new Color(0.40f, 0.26f, 0.08f) * amount);
+                haloMat.SetColor("_Color2", new Color(0.58f, 0.38f, 0.12f) * amount);
                 if (haloMat.HasProperty("_Silhouette")) haloMat.SetFloat("_Silhouette", 2.15f);
-                if (haloMat.HasProperty("_Fit")) haloMat.SetFloat("_Fit", 1.18f);
+                if (haloMat.HasProperty("_Fit")) haloMat.SetFloat("_Fit", HaloFit);
             }
             if (poolRenderer != null)
             {
@@ -956,22 +972,22 @@ namespace GardenVR.Sundial
             renderer.SetPropertyBlock(block);
         }
 
-        Texture2D HaloMask(Texture2D plant, Texture2D extra)
+        Texture2D HaloMask(Texture2D plant, Texture2D extra, int bloomLiftPx)
         {
             string key = plant != null ? plant.name : "";
-            if (extra != null) key = key + "+" + extra.name;
+            if (extra != null) key = key + "+" + extra.name + "@" + bloomLiftPx;
             Texture2D cached;
             if (_haloMasks.TryGetValue(key, out cached) && cached != null) return cached;
-            Texture2D made = BakeHaloMask(plant, extra);
+            Texture2D made = BakeHaloMask(plant, extra, bloomLiftPx);
             _haloMasks[key] = made;
             return made;
         }
 
         /// <summary>
-        /// Close the plant alpha (and the bloom, when it sticks out), then keep a thin
-        /// ring just outside that shape. R is the core, G is the short falloff.
+        /// Close the plant alpha (and the bloom, lifted to where that card is drawn),
+        /// then keep a thin ring just outside that shape. R is the core, G is the short falloff.
         /// </summary>
-        static Texture2D BakeHaloMask(Texture2D plant, Texture2D extra)
+        static Texture2D BakeHaloMask(Texture2D plant, Texture2D extra, int bloomLiftPx)
         {
             if (plant == null) throw new InvalidOperationException("halo plant texture is missing");
             if (!plant.isReadable) throw new InvalidOperationException(plant.name + " is not readable");
@@ -982,19 +998,30 @@ namespace GardenVR.Sundial
             if (extra != null && extra.isReadable && extra.width == w && extra.height == h)
                 extraPx = extra.GetPixels32();
             var on = new bool[w * h];
-            for (int i = 0; i < on.Length; i++)
+            int lift = bloomLiftPx > 0 ? bloomLiftPx : 0;
+            for (int y = 0; y < h; y++)
             {
-                int a = plantPx[i].a;
-                if (extraPx != null && extraPx[i].a > a) a = extraPx[i].a;
-                on[i] = a >= 128;
+                int sy = y - lift;
+                for (int x = 0; x < w; x++)
+                {
+                    int i = y * w + x;
+                    int a = plantPx[i].a;
+                    if (extraPx != null && sy >= 0 && sy < h)
+                    {
+                        int ea = extraPx[sy * w + x].a;
+                        if (ea > a) a = ea;
+                    }
+                    on[i] = a >= 128;
+                }
             }
-            // 12 px bridges neighbouring leaves. The ring then sits on that outer contour.
-            const int closePx = 12;
+            // A short close bridges a hairline gap. A wide close turned the flowering plant
+            // into one blob, and the outline stopped reading as a stroke around the leaves.
+            int closePx = Mathf.RoundToInt(HaloClosePx);
             bool[] closed = CloseMask(on, w, h, closePx);
             int[] dist = DistanceToOn(closed, w, h);
             var pixels = new Color32[on.Length];
-            const float corePx = 2.6f;
-            const float glowPx = 5.4f;
+            float corePx = HaloCorePx;
+            float glowPx = HaloGlowPx;
             for (int i = 0; i < pixels.Length; i++)
             {
                 if (closed[i]) continue;
@@ -1073,14 +1100,13 @@ namespace GardenVR.Sundial
             if (haloRenderer == null || plant == null) return;
             Transform haloTransform = haloRenderer.transform;
             haloTransform.localRotation = plant.localRotation;
-            // The card's +Z faces the camera. A small push keeps the additive glow off the ink.
+            // The card's +Z faces the camera. The push clears the plant's depth write so the
+            // gold sits on the silhouette instead of behind the leaves. Same scale as the plant:
+            // a larger card bulged past the drawing and hid the core.
             Vector3 face = haloTransform.localRotation * Vector3.forward;
-            haloTransform.localPosition = plant.localPosition + face * 0.0025f + Vector3.up * 0.001f;
+            haloTransform.localPosition = plant.localPosition + face * HaloPush + Vector3.up * 0.001f;
             Vector3 plantScale = plant.localScale;
-            // Same pivot as the plant (the base of the card). _Fit insets the texture so this
-            // larger card is margin for the dilated glow, not a bigger drawing.
-            const float haloScale = 1.18f;
-            haloTransform.localScale = new Vector3(plantScale.x * haloScale, plantScale.y * haloScale, plantScale.z * haloScale);
+            haloTransform.localScale = new Vector3(plantScale.x * HaloFit, plantScale.y * HaloFit, plantScale.z * HaloFit);
             if (poolRenderer == null) return;
             Transform pool = poolRenderer.transform;
             pool.localRotation = Quaternion.identity;

@@ -125,8 +125,18 @@ namespace GardenVR.Sundial
             _frames++;
             if (_frames % 120 == 0)
                 Debug.Log("[FirstRun] record frames=" + _frames + " t=" + (_frames / (float)Fps).ToString("0.0"));
-            int goal = 180 * Fps;
+            int goal = GoalFrames();
             if (_frames >= goal) Close(0);
+        }
+
+        static int GoalFrames()
+        {
+            int seconds = 180;
+            string raw = Environment.GetEnvironmentVariable("GARDEN_FIRSTRUN_SECONDS");
+            int parsed;
+            if (!string.IsNullOrEmpty(raw) && int.TryParse(raw, out parsed) && parsed > 0)
+                seconds = parsed;
+            return seconds * Fps;
         }
 
         void Close(int code)
