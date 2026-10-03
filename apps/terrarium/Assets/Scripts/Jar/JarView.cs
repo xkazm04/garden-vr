@@ -67,6 +67,8 @@ namespace GardenVR.Terrarium
         public BreathPhase phase = BreathPhase.Waiting;
         /// <summary>Seconds since the answer began. Negative means the answer is not playing.</summary>
         public float answerTime = -1f;
+        /// <summary>Seconds since a recovery ripple began. Negative means it is not playing. It runs 2.5 s.</summary>
+        public float recoveredTime = -1f;
         /// <summary>Spore step this frame. Negative keeps the capture resim from <see cref="time"/>.</summary>
         public float sporeStep = -1f;
 
@@ -120,6 +122,31 @@ namespace GardenVR.Terrarium
         Quaternion[] _g1Rotation;
         Vector3[] _g1Scale;
         int _weekApplied = -1;
+        bool _hasLook;
+        GardenLook _look;
+        readonly List<Transform> _recordFronds = new List<Transform>();
+        readonly List<Material> _recordMats = new List<Material>();
+        readonly List<Transform> _dewBeads = new List<Transform>();
+        Transform _ripple;
+        Material _rippleMat;
+
+        public int RecordFrondCount { get; private set; }
+        public float ShownLean { get; private set; }
+        public int ShownDew { get; private set; }
+        public bool FiddleQuiet { get; private set; }
+        public bool FiddleWaiting { get; private set; }
+
+        struct GardenLook
+        {
+            public int[] Days;
+            public float Vitality;
+            public int Flowers;
+            public int Dew;
+            public bool Gap;
+            public bool Waiting;
+            public bool AnimatingNew;
+            public bool Recovered;
+        }
         // Dew stays on the tip until the frond has settled, then rolls for 1.2 s.
         const float DewStart = 0.72f;
         const float DewRollSeconds = 1.2f;
@@ -137,8 +164,15 @@ namespace GardenVR.Terrarium
         {
             if (state == null) return;
             bool sawAnswerTime = state.ContainsKey("answerTime");
+            bool sawJourney = false;
             foreach (var pair in state)
             {
+                if (pair.Key == "journey")
+                {
+                    ApplyJourney(pair.Value);
+                    sawJourney = true;
+                    continue;
+                }
                 float value = Parse(pair.Key, pair.Value);
                 switch (pair.Key)
                 {
@@ -161,8 +195,75 @@ namespace GardenVR.Terrarium
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
             }
+            if (!sawJourney) _hasLook = false;
             HookCamera();
             Apply();
+        }
+
+        /// <summary>Pose the jar from the core garden and an injected clock. The art week pose stays on <c>day</c>.</summary>
+        void ApplyJourney(string name)
+        {
+            GardenJourney journey = GardenJourney.Build(name);
+            day = 0;
+            breath = 0.12f;
+            uncoil = 0f;
+            fog = name == "missed2" ? 0.04f : 0.1f;
+            answer = 0f;
+            answerTime = -1f;
+            time = 4f;
+            recoveredTime = journey.Recovered ? 1.15f : -1f;
+            PresentGarden(journey.Garden, journey.Today, false, journey.Recovered);
+        }
+
+        /// <summary>The live garden. Frond slots, lean, dew, and the waiting fiddle all come from this record.</summary>
+        public void PresentGarden(Garden garden, int today, bool animatingNewFrond, bool recoveredRipple)
+        {
+            if (garden == null) throw new ArgumentNullException(nameof(garden));
+            int count = garden.FrondDays.Count;
+            var days = new int[count];
+            for (int i = 0; i < count; i++) days[i] = garden.FrondDays[i];
+            float life = garden.Vitality(today);
+            _look = new GardenLook
+            {
+                Days = days,
+                Vitality = life,
+                Flowers = garden.Flowers,
+                Dew = garden.DewToday,
+                Gap = garden.DaysSinceRitual(today) > 1,
+                Waiting = !garden.LastRitualDay.HasValue || garden.LastRitualDay.Value != today,
+                AnimatingNew = animatingNewFrond,
+                Recovered = recoveredRipple
+            };
+            _hasLook = true;
+            vitality = life;
+            flowers = garden.Flowers;
+            RecordFrondCount = count;
+            ShownLean = LeanDegrees(life);
+            ShownDew = garden.DewToday;
+            FiddleQuiet = _look.Gap;
+            FiddleWaiting = _look.Waiting;
+        }
+
+        /// <summary>0 at full vitality, 6 degrees at the floor. Never past 6.</summary>
+        public static float LeanDegrees(float vitality)
+        {
+            float t = (1f - Mathf.Clamp(vitality, Garden.VitalityFloor, 1f)) / (1f - Garden.VitalityFloor);
+            return Mathf.Clamp(t * 6f, 0f, 6f);
+        }
+
+        /// <summary>Index in <see cref="Garden.FrondDays"/>. The inner ring starts at 12.</summary>
+        public static Vector3 FrondSlot(int index)
+        {
+            bool inner = index >= Garden.FrondsBeforeInnerLayer;
+            int n = inner ? index - Garden.FrondsBeforeInnerLayer : index;
+            float yaw = (n * 137.50776f + (inner ? 11f : 0f)) * Mathf.Deg2Rad;
+            float radius = inner ? 0.0125f : 0.027f;
+            return new Vector3(Mathf.Cos(yaw) * radius, 0.041f, Mathf.Sin(yaw) * radius);
+        }
+
+        public static float FrondSpread(int index)
+        {
+            return Mathf.Sin(index * 2.399963f) * 26f;
         }
 
         public void Apply()
@@ -199,7 +300,10 @@ namespace GardenVR.Terrarium
                 glassMat.SetFloat("_Drops", 1.0f);
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
             }
-            float mossGlow = answering ? ripple : pulse;
+            float recoveredWave = 0f;
+            if (_hasLook && _look.Recovered && recoveredTime >= 0f && recoveredTime <= 2.5f)
+                recoveredWave = Mathf.Sin(Mathf.Clamp01(recoveredTime / 2.5f) * Mathf.PI);
+            float mossGlow = Mathf.Max(answering ? ripple : pulse, recoveredWave * 1.65f);
             if (mossMat != null)
             {
                 mossMat.SetColor("_Emission", new Color(0.012f, 0.034f, 0.018f) * (1f + 0.45f * mossGlow));
@@ -208,6 +312,7 @@ namespace GardenVR.Terrarium
             if (mossCardMat != null)
                 mossCardMat.SetColor("_Emission", new Color(0.016f, 0.045f, 0.024f) * (1f + 0.40f * mossGlow));
             float coil = answer > 0f ? 0.55f + 0.25f * pulse : 0.75f + 0.15f * Mathf.Sin(breath * Mathf.PI);
+            if (_hasLook && _look.Gap) coil = 0.22f;
             if (coilHaloMat != null)
                 coilHaloMat.SetColor("_Color", new Color(0.18f, 0.48f, 0.28f) * coil);
             if (jarHaloMat != null)
@@ -219,7 +324,8 @@ namespace GardenVR.Terrarium
                 float newest = day >= 7 ? 1.15f : 1f;
                 newFrondMat.SetColor("_Emission", FernEmission * (1f + frondGlow) * life * newest);
             }
-            if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * (0.9f + 0.25f * life));
+            float fiddleScale = _hasLook && _look.Gap ? 0.28f : (0.9f + 0.25f * life);
+            if (fiddleMat != null) fiddleMat.SetColor("_Emission", FiddleEmission * fiddleScale);
             if (dew != null && dew.sharedMaterial != null)
             {
                 dew.sharedMaterial.SetColor("_Tint", new Color(0.78f, 1f, 0.92f));
@@ -232,7 +338,10 @@ namespace GardenVR.Terrarium
             DriveSporeLook();
             DriveSpores();
             ApplyFlowers();
-            ApplyFocusedLight(day >= 7 ? FocusWarm : FocusMint);
+            bool warm = day >= 7 || (_hasLook && flowers > 0);
+            ApplyFocusedLight(warm ? FocusWarm : FocusMint);
+            ApplyGardenLook();
+            DriveRipple();
         }
 
         /// <summary>
@@ -259,7 +368,8 @@ namespace GardenVR.Terrarium
 
         Vector3 FocusPoint()
         {
-            if (day >= 7 && _flowerRoots != null && _flowerRoots.Count > 0 && _flowerRoots[0] != null)
+            bool flowerLit = (day >= 7 || (_hasLook && flowers > 0)) && _flowerRoots != null && _flowerRoots.Count > 0 && _flowerRoots[0] != null;
+            if (flowerLit)
                 return _flowerRoots[0].transform.position;
             if (answer >= 0.5f && newFrond != null)
             {
@@ -1095,6 +1205,225 @@ namespace GardenVR.Terrarium
             if (!float.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 throw new FormatException("JarView state " + key + " is not a number: " + text);
             return value;
+        }
+
+        void ApplyGardenLook()
+        {
+            if (!_hasLook || day >= 7)
+            {
+                HideRecord();
+                SuppressArtPair(false);
+                return;
+            }
+            ResolveFrondSlots();
+            int count = _look.Days == null ? 0 : _look.Days.Length;
+            bool animateLast = _look.AnimatingNew && count > 0;
+            int placed = animateLast ? count - 1 : count;
+            EnsureRecord(placed);
+            float lean = LeanDegrees(_look.Vitality);
+            ShownLean = lean;
+            for (int i = 0; i < _recordFronds.Count; i++)
+            {
+                Transform slot = _recordFronds[i];
+                if (slot == null) continue;
+                bool on = i < placed;
+                slot.gameObject.SetActive(on);
+                if (!on) continue;
+                PlaceRecord(slot, i, placed, lean);
+            }
+            SuppressArtPair(true);
+            if (newFrond != null && !animateLast) newFrond.enabled = false;
+            if (fiddle != null)
+            {
+                Renderer fiddleRenderer = fiddle.GetComponent<Renderer>();
+                if (fiddleRenderer != null)
+                    fiddleRenderer.enabled = _look.Waiting && !_look.AnimatingNew;
+            }
+            PlaceDew(placed);
+        }
+
+        void PlaceRecord(Transform slot, int index, int placed, float lean)
+        {
+            bool inner = index >= Garden.FrondsBeforeInnerLayer;
+            float scale = inner ? 0.40f : 0.56f + (index % 3) * 0.05f;
+            if (index == placed - 1 && _look.Vitality > 0.99f) scale += 0.14f;
+            float mirror = index % 2 == 0 ? 1f : -1f;
+            slot.localPosition = FrondSlot(index);
+            Transform meshSource = FindMesh(transform, "FrondV0");
+            Quaternion axis = meshSource != null ? meshSource.localRotation : Quaternion.identity;
+            Quaternion rest = Quaternion.Euler(-8f, 0f, FrondSpread(index)) * axis;
+            slot.localRotation = Quaternion.Euler(lean, 0f, 0f) * rest;
+            slot.localScale = new Vector3(mirror * scale, scale, scale);
+            if (_frondVariants != null && _frondVariants.Length == 3)
+            {
+                int mod = (shapeSeed + index) % _frondVariants.Length;
+                if (mod < 0) mod += _frondVariants.Length;
+                MeshFilter filter = slot.GetComponent<MeshFilter>();
+                if (filter != null && _frondVariants[mod] != null) filter.sharedMesh = _frondVariants[mod];
+            }
+            float glow = _look.Vitality;
+            if (index == placed - 1 && _look.Vitality > 0.99f) glow *= 1.12f;
+            Material material = index < _recordMats.Count ? _recordMats[index] : null;
+            if (material != null) material.SetColor("_Emission", FernEmission * glow);
+            Renderer renderer = slot.GetComponent<Renderer>();
+            if (renderer != null) renderer.enabled = true;
+        }
+
+        void EnsureRecord(int count)
+        {
+            Transform source = FindNamed("Frond");
+            if (source == null && _frondSlots != null && _frondSlots.Length > 0) source = _frondSlots[0];
+            if (source == null) return;
+            while (_recordFronds.Count < count)
+            {
+                int index = _recordFronds.Count;
+                GameObject copy = Instantiate(source.gameObject, source.parent);
+                copy.name = "RecordFrond" + index.ToString(CultureInfo.InvariantCulture);
+                copy.SetActive(true);
+                Material material = null;
+                Renderer renderer = copy.GetComponent<Renderer>();
+                Material shared = fernMat != null ? fernMat : (renderer != null ? renderer.sharedMaterial : null);
+                if (shared != null)
+                {
+                    material = new Material(shared) { name = "RecordFern" + index.ToString(CultureInfo.InvariantCulture) };
+                    SetMat(copy.transform, material);
+                }
+                _recordMats.Add(material);
+                _recordFronds.Add(copy.transform);
+            }
+        }
+
+        void PlaceDew(int placed)
+        {
+            int count = Mathf.Max(0, _look.Dew);
+            ShownDew = count;
+            Material shared = dew != null ? dew.sharedMaterial : null;
+            Transform parent = _recordFronds.Count > 0 && _recordFronds[0] != null ? _recordFronds[0].parent : transform;
+            Vector3 anchor = placed > 0 && placed - 1 < _recordFronds.Count && _recordFronds[placed - 1] != null
+                ? _recordFronds[placed - 1].localPosition
+                : new Vector3(0f, 0.05f, 0f);
+            while (_dewBeads.Count < count)
+            {
+                var bead = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                Collider collider = bead.GetComponent<Collider>();
+                if (collider != null) DestroyObject(collider);
+                bead.name = "DewBead" + _dewBeads.Count.ToString(CultureInfo.InvariantCulture);
+                bead.transform.SetParent(parent, false);
+                if (shared != null) SetMat(bead.transform, shared);
+                _dewBeads.Add(bead.transform);
+            }
+            for (int i = 0; i < _dewBeads.Count; i++)
+            {
+                Transform bead = _dewBeads[i];
+                if (bead == null) continue;
+                bool on = i < count;
+                bead.gameObject.SetActive(on);
+                if (!on) continue;
+                float side = (i - (count - 1) * 0.5f) * 0.006f;
+                bead.localPosition = anchor + new Vector3(side, 0.028f + i * 0.0015f, -0.004f);
+                bead.localScale = Vector3.one * 0.0042f;
+            }
+        }
+
+        void HideRecord()
+        {
+            for (int i = 0; i < _recordFronds.Count; i++)
+            {
+                if (_recordFronds[i] != null) _recordFronds[i].gameObject.SetActive(false);
+            }
+            for (int i = 0; i < _dewBeads.Count; i++)
+            {
+                if (_dewBeads[i] != null) _dewBeads[i].gameObject.SetActive(false);
+            }
+        }
+
+        void SuppressArtPair(bool suppress)
+        {
+            SetNamedActive("Frond", !suppress);
+            SetNamedActive("FrondRight", !suppress);
+        }
+
+        void SetNamedActive(string name, bool active)
+        {
+            Transform found = FindNamed(name);
+            if (found != null && found.gameObject.activeSelf != active)
+                found.gameObject.SetActive(active);
+        }
+
+        void DriveRipple()
+        {
+            bool on = _hasLook && _look.Recovered && recoveredTime >= 0f && recoveredTime <= 2.5f;
+            if (!on)
+            {
+                if (_ripple != null) _ripple.gameObject.SetActive(false);
+                return;
+            }
+            EnsureRipple();
+            if (_ripple == null) return;
+            _ripple.gameObject.SetActive(true);
+            _ripple.position = NewestFrondWorld();
+            float u = Mathf.Clamp01(recoveredTime / 2.5f);
+            float size = Mathf.Lerp(0.028f, 0.18f, u);
+            _ripple.localScale = new Vector3(size, size, 1f);
+            if (_rippleMat != null)
+                _rippleMat.SetColor("_Color", new Color(0.42f, 1.05f, 0.62f) * (1.9f * (1f - u)));
+            AddBillboard(_ripple);
+        }
+
+        void EnsureRipple()
+        {
+            if (_ripple != null) return;
+            Transform halo = FindNamed("JarHalo");
+            if (halo == null) return;
+            GameObject copy = Instantiate(halo.gameObject, transform);
+            copy.name = "RecoveredRipple";
+            _ripple = copy.transform;
+            Renderer renderer = copy.GetComponent<Renderer>();
+            if (renderer != null && renderer.sharedMaterial != null)
+            {
+                _rippleMat = new Material(renderer.sharedMaterial) { name = "RecoveredRipple" };
+                renderer.sharedMaterial = _rippleMat;
+            }
+            copy.SetActive(false);
+        }
+
+        Vector3 NewestFrondWorld()
+        {
+            for (int i = _recordFronds.Count - 1; i >= 0; i--)
+            {
+                Transform slot = _recordFronds[i];
+                if (slot != null && slot.gameObject.activeInHierarchy) return slot.position;
+            }
+            if (newFrond != null && newFrond.enabled) return newFrond.transform.position;
+            return transform.TransformPoint(new Vector3(0f, 0.05f, 0f));
+        }
+
+        void AddBillboard(Transform card)
+        {
+            if (card == null) return;
+            if (billboards != null)
+            {
+                for (int i = 0; i < billboards.Length; i++)
+                {
+                    if (billboards[i] == card) return;
+                }
+            }
+            var list = new List<Transform>();
+            if (billboards != null)
+            {
+                for (int i = 0; i < billboards.Length; i++)
+                {
+                    if (billboards[i] != null) list.Add(billboards[i]);
+                }
+            }
+            list.Add(card);
+            billboards = list.ToArray();
+        }
+
+        void OnDestroy()
+        {
+            for (int i = 0; i < _recordMats.Count; i++) DestroyObject(_recordMats[i]);
+            DestroyObject(_rippleMat);
         }
 
         static void DestroyObject(UnityEngine.Object obj)
