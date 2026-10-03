@@ -50,3 +50,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   task had targeted objects and materials, none named text. Rule: the style bible and the art tasks must include
   typography and UI surfaces, with a "no default font" grep in the gate. Target: game-production / art direction;
   software-engineering / design-tokens.
+- 2026-10-03 - **A rubric-driven blind judge turns "looks off" into a named fix.** After calibration, the Terrarium judge
+  named the same disqualifier ("neon / harsh bloom") on every draw of every frame, and the Sundial spec measurement put
+  one wash at CIEDE2000 16 while the others sat near 7. Those two numbers became the next two task targets directly.
+  Rule: give the judge the style bible's rubric with explicit disqualifiers, and log which disqualifier fired; a
+  repeated disqualifier is the highest-value art fix. Target: llm-observability / judge-contract-design.
