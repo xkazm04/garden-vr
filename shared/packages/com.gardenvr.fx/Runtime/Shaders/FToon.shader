@@ -23,6 +23,7 @@ Shader "Fidelity/Toon"
         _WashDusk ("Dusk tile wash", Color) = (0.792, 0.690, 0.773, 1)
         _TileTex ("Painted tile atlas (4 columns)", 2D) = "white" {}
         _TilePaint ("Use painted tiles", Float) = 0
+        _InkRingR ("Face ink ring radius in UV metres, 0 off", Float) = 0
         _Outline ("Outline width (m, used when _OutlinePx is 0)", Float) = 0.0009
         _OutlinePx ("Outline width (pixels)", Float) = 0
         _Boil ("Outline boil (fraction of the metre width)", Range(0, 1)) = 0
@@ -46,7 +47,7 @@ Shader "Fidelity/Toon"
             float4 _MainTex_ST;
             float4 _TileTex_ST;
             half4 _Lit, _Shade, _Spec, _Ink, _WashMorning, _WashMidday, _WashDusk;
-            half _Step, _Feather, _SpecStep, _Outline, _OutlinePx, _Boil, _BoilPx, _BoilTime, _T, _Grain, _ShadowStrength, _TileMode, _TilePaint;
+            half _Step, _Feather, _SpecStep, _Outline, _OutlinePx, _Boil, _BoilPx, _BoilTime, _T, _Grain, _ShadowStrength, _TileMode, _TilePaint, _InkRingR;
         CBUFFER_END
         float h31(float3 p) { p = frac(p * 0.1031); p += dot(p, p.zyx + 31.32); return frac((p.x + p.y) * p.z); }
         float BoilClock()
@@ -95,7 +96,7 @@ Shader "Fidelity/Toon"
                 float3 wn : TEXCOORD1;
                 float3 wp : TEXCOORD2;
                 float3 op : TEXCOORD3;
-                float tile : TEXCOORD4;
+                float2 tile : TEXCOORD4;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
             V vert (A i)
@@ -108,12 +109,16 @@ Shader "Fidelity/Toon"
                 o.pos = TransformWorldToHClip(o.wp);
                 o.wn = TransformObjectToWorldNormal(i.n);
                 o.uv = TRANSFORM_TEX(i.uv, _MainTex);
-                o.tile = i.tile.x;
+                // x is the tile index. y is 1 on the top face and 0 on the sides.
+                o.tile = i.tile;
                 return o;
             }
-            half3 TileAlbedo(float2 uv, float tile)
+            half3 TileAlbedo(float2 uv, float2 tile)
             {
-                int id = (int)round(tile);
+                // The side of the raised tile is the ink outline. The top keeps the painted face.
+                if (tile.y < 0.5)
+                    return _Ink.rgb;
+                int id = (int)round(tile.x);
                 id = id < 0 ? 0 : (id > 20 ? 20 : id);
                 half4 st = LOAD_TEXTURE2D(_StateTex, int2(id, 0));
                 int state = (int)round(st.r * 4.0);
@@ -148,10 +153,10 @@ Shader "Fidelity/Toon"
                 }
 
                 float2 q = uv - 0.5;
-                float wob = (h31(float3(uv.y * 13.0, tile + 1.7, uv.x * 9.0)) - 0.5) * 0.055;
+                float wob = (h31(float3(uv.y * 13.0, tile.x + 1.7, uv.x * 9.0)) - 0.5) * 0.055;
                 float box = max(abs(q.x) + wob, abs(q.y) - wob * 0.6);
                 float rim = smoothstep(0.44, 0.50, box);
-                float grain = h31(float3(floor(uv * 22.0), tile * 1.3));
+                float grain = h31(float3(floor(uv * 22.0), tile.x * 1.3));
                 float border = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
                 if (face == 1)
                 {
@@ -188,6 +193,35 @@ Shader "Fidelity/Toon"
             half4 frag (V i, bool front : SV_IsFrontFace) : SV_Target
             {
                 half3 alb = _TileMode > 0.5 ? TileAlbedo(i.uv, i.tile) : SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv).rgb;
+                // Screen-pixel ink on the dial face. The painted texture cannot hold 3 px
+                // after the 1024 import, so the ring is drawn here and the texture is paper.
+                // A derivative of the radius tracks magnification and came out about twice
+                // as wide on the near rim. This measures the same circle in pixels directly.
+                // Other Toon users leave _InkRingR at 0.
+                if (_InkRingR > 0.001)
+                {
+                    // The imported dial is still Blender Z-up in object space. The disc
+                    // lies in XY and the object's transform tips it into Unity Y-up.
+                    float2 xy = i.op.xy;
+                    float rad = max(length(xy), 1e-5);
+                    float ang = atan2(xy.y, xy.x);
+                    float wob = (h31(float3(ang * 2.0, 1.7, 4.0)) - 0.5) * 0.00025;
+                    float rr = _InkRingR + wob;
+                    float3 ringObj = float3(xy.x / rad * rr, xy.y / rad * rr, i.op.z);
+                    float4 clipFrag = TransformWorldToHClip(i.wp);
+                    float4 clipRing = TransformWorldToHClip(TransformObjectToWorld(ringObj));
+                    float2 fragNdc = clipFrag.xy / clipFrag.w;
+                    float2 ringNdc = clipRing.xy / clipRing.w;
+                    // SV_POSITION is in pixels. Scale the NDC gap by how many pixels
+                    // one NDC unit covers in this quad, so the near rim is not thicker.
+                    float2 ndcPerPx = float2(
+                        length(float2(ddx(fragNdc.x), ddy(fragNdc.x))),
+                        length(float2(ddx(fragNdc.y), ddy(fragNdc.y))));
+                    float2 pxPerNdc = rcp(max(ndcPerPx, float2(1e-6, 1e-6)));
+                    float dpx = length((fragNdc - ringNdc) * pxPerNdc);
+                    half ring = 1.0 - smoothstep(1.35, 1.75, dpx);
+                    alb = lerp(alb, _Ink.rgb, ring);
+                }
                 float3 n = normalize(i.wn) * (front ? 1 : -1);
                 Light L = GetMainLight(TransformWorldToShadowCoord(i.wp));
                 half ndl = dot(n, L.direction);

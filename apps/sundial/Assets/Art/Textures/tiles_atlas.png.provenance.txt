@@ -1,4 +1,4 @@
 asset: tiles_atlas.png
-method: painted plate fitted by code. apps/sundial/Art/Scripts/fit_notebook.py fit_tiles reads apps/sundial/Assets/Art/Source/tiles_nb.png
-note: Prompt apps/sundial/Assets/Art/Source/tiles_nb.png.prompt.txt. Four wash cells are packed into one atlas. This census did not re-run the script. Not copied from the art reference.
+method: painted plate fitted by code, then graded. apps/sundial/Art/Scripts/fit_notebook.py fit_tiles reads apps/sundial/Assets/Art/Source/tiles_nb.png. apps/sundial/Art/Scripts/grade_a2.py shifts the dusk column the same way as the face wash.
+note: Prompt apps/sundial/Assets/Art/Source/tiles_nb.png.prompt.txt. Four wash cells are packed into one atlas. The dusk column, ink borders left alone, is multiplied so a kept tile lands near ref-1 #BFA1BC under the warm key light. Not copied from the art reference.
 derived_from_art_reference: no
