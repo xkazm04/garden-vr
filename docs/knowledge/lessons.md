@@ -35,3 +35,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   single Nano Banana macro generated in 30 s exceeded every moss texture the passes produced. Rule: when a visual
   metric stops moving across passes, change the input (asset source), not the number of passes. Target: game-production
   / art pipeline; llm-observability / judge-calibration (a blind judge as the plateau detector).
+- 2026-10-03 - **A blind image judge comparing a real-time render to a photoreal generated reference has its own
+  ceiling.** After the Nano Banana material pass the Sundial dial was visibly the closest to its reference so far (host
+  read), yet Gemini still scored 2/5, citing "billboards" and photoreal glass the engine target never had. Rule: calibrate
+  the judge before using it as a gate - score reference A against reference B (same style, different image) and read
+  every frame's score against that ceiling. Target: llm-observability / judge-calibration-and-drift.
