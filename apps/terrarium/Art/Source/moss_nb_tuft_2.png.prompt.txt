@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: One flat wide tuft of velvety cushion moss, like a small carpet patch, isolated on a pure black background #000000. Top-down macro. Dark crevices between tiny cushions, bright yellow-green tips. Irregular soft edge. No pot, no soil, no text. Pure black background.

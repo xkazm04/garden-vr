@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: A single narrower fern frond, more lace-like pinnae, translucent green with dark veins showing through the blade. Backlit, soft feathered edges. Isolated on a pure black background #000000. Vertical composition. No pot, no text. Botanical photograph.

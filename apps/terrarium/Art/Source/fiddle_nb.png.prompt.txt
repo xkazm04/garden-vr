@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: Extreme macro of a young fern fiddlehead stem surface, seamless tile. Lime green skin covered in fine white hairs lying along the stem. Soft mint light, no black background, no pot, no text, photographic, square. The left edge continues into the right edge.

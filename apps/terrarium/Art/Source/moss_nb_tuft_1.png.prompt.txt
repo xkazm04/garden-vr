@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: One small lopsided clump of velvety cushion moss, taller on the left, isolated on a pure black background #000000. Macro photo, three-quarter view. Dense tiny leaves, dark gaps, bright rim-lit tips. Soft irregular silhouette. No pot, no soil, no text. Pure black background.

@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: One small clump of velvety cushion moss, a low round dome, isolated on a pure black background #000000. Macro photo from slightly above. Dense tiny leaves, dark crevices, bright yellow-green rim-lit tips. Soft irregular silhouette, not a rectangle. No pot, no soil, no text. The background is pure black.
