@@ -106,6 +106,20 @@ namespace GardenVR.Sundial
         public bool Voice { get { return _save != null && _save.Settings != null && _save.Settings.Voice; } }
         public bool Beds { get { return _save != null && _save.Settings != null && _save.Settings.Beds; } }
 
+        /// <summary>
+        /// The saved arc boundaries, pulled back inside the hour guard.
+        /// A missing save is the plan: 06:00, 11:00, 18:00, rolling at 03:00.
+        /// </summary>
+        public ArcTimes ArcSchedule
+        {
+            get
+            {
+                if (_save == null || _save.Settings == null) return ArcTimes.Default;
+                SundialSettings settings = _save.Settings;
+                return ArcTimes.From(settings.BoundaryMin, settings.MorningMin, settings.MiddayMin, settings.DuskMin);
+            }
+        }
+
         public SundialService(IClock clock, string directory)
         {
             if (clock == null) throw new ArgumentNullException(nameof(clock));
@@ -165,7 +179,7 @@ namespace GardenVR.Sundial
         {
             if (Scrubbing) return false;
             if (_focus == null) _focus = new FocusBlock();
-            if (!_focus.TryStart(_clock.Now, NowMin())) return false;
+            if (!_focus.TryStart(_clock.Now, NowMin(), ArcSchedule)) return false;
             CopyFocus();
             Persist();
             return true;
@@ -403,6 +417,26 @@ namespace GardenVR.Sundial
 
         public void SetBeds(bool on) { EditSettings(s => s.Beds = on); }
 
+        /// <summary>
+        /// Moves one arc edge to the rim angle. Snaps to 15 minutes and keeps each arc at least an hour.
+        /// The day boundary is not written. The ledger is not written. False when a rim read is up.
+        /// </summary>
+        public bool DragArcEdge(ArcEdge edge, float gnomonDeg)
+        {
+            if (Scrubbing || _save == null) return false;
+            if (_save.Settings == null) _save.Settings = new SundialSettings();
+            ArcTimes before = ArcSchedule;
+            ArcTimes next = before.Dragged(edge, gnomonDeg);
+            _save.Settings.MorningMin = next.MorningMin;
+            _save.Settings.MiddayMin = next.MiddayMin;
+            _save.Settings.DuskMin = next.DuskMin;
+            Persist();
+            Recompute();
+            return next.MorningMin != before.MorningMin
+                || next.MiddayMin != before.MiddayMin
+                || next.DuskMin != before.DuskMin;
+        }
+
         void EditSettings(Action<SundialSettings> edit)
         {
             if (_save == null || edit == null) return;
@@ -602,7 +636,7 @@ namespace GardenVR.Sundial
             int nowMin = (int)_clock.Now.TimeOfDay.TotalMinutes;
             if (nowMin < 0) nowMin = 0;
             if (nowMin > 1439) nowMin = 1439;
-            SundialState next = SundialState.Capture(_save.Habits, _ledger, Today(), nowMin);
+            SundialState next = SundialState.Capture(_save.Habits, _ledger, Today(), nowMin, ArcSchedule);
             string json = next.ToJson();
             StateChanged = json != _stateJson;
             State = next;

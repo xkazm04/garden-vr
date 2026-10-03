@@ -16,16 +16,27 @@ namespace GardenVR.Core
 
         public static SundialState Capture(IReadOnlyList<HabitDef> habits, Ledger ledger, GardenDay today, int nowMin)
         {
+            return Capture(habits, ledger, today, nowMin, null);
+        }
+
+        /// <summary>
+        /// Same picture as <see cref="Capture(IReadOnlyList{HabitDef}, Ledger, GardenDay, int)"/>,
+        /// read against <paramref name="times"/>. A null schedule is the plan default.
+        /// The gnomon stays on the clock. Only the arc and due flags follow the boundaries.
+        /// </summary>
+        public static SundialState Capture(IReadOnlyList<HabitDef> habits, Ledger ledger, GardenDay today, int nowMin, ArcTimes times)
+        {
             if (ledger == null) throw new ArgumentNullException(nameof(ledger));
+            ArcTimes schedule = times ?? ArcTimes.Default;
             var state = new SundialState();
             state.Now = nowMin;
-            state.Arc = SundialRules.ArcAt(nowMin);
+            state.Arc = schedule.ArcAt(nowMin);
             state.GnomonDeg = SundialRules.GnomonAngleDeg(nowMin);
             if (habits == null) return state;
             for (int i = 0; i < habits.Count; i++)
             {
                 if (habits[i] == null) continue;
-                state.Plants.Add(SundialRules.Plant(habits[i], ledger, today, nowMin));
+                state.Plants.Add(SundialRules.Plant(habits[i], ledger, today, nowMin, schedule));
             }
             return state;
         }

@@ -145,6 +145,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<WeekDialController>();
             if (UnityEngine.Object.FindAnyObjectByType<RimScrubController>() == null)
                 view.gameObject.AddComponent<RimScrubController>();
+            if (UnityEngine.Object.FindAnyObjectByType<ArcTimesController>() == null)
+                view.gameObject.AddComponent<ArcTimesController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -155,6 +157,8 @@ namespace GardenVR.Sundial
             if (isActiveAndEnabled) Subscribe();
             RimScrubController rim = GetComponent<RimScrubController>();
             if (rim != null) rim.SetSource(source);
+            ArcTimesController arcs = GetComponent<ArcTimesController>();
+            if (arcs != null) arcs.SetSource(source);
             if (_wizard != null) _wizard.SetSource(source);
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.SetSource(source);
