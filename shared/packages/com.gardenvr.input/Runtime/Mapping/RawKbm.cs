@@ -23,6 +23,7 @@ namespace GardenVR.Input
         public bool F2;
         public bool BracketLeft;
         public bool BracketRight;
+        public bool T;
         public Vector2 MousePosition;
         public Vector2 MouseDelta;
         public float Dt;

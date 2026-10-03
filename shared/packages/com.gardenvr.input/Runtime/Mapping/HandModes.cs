@@ -17,6 +17,8 @@ namespace GardenVR.Input
         /// <summary>[ previous day. The core refuses a rewrite of history.</summary>
         PreviousDay,
         /// <summary>] next day.</summary>
-        NextDay
+        NextDay,
+        /// <summary>T, run the clock at sixty times. A second press returns to real time.</summary>
+        ClockFast
     }
 }
