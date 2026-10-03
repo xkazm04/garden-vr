@@ -209,10 +209,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(SundialArcs.TileDigit(TileState.Missed), controller.View.tiles[7 + 5]);
             Assert.AreEqual(TileLabels.Missed, TileLabels.For(TileState.Missed));
             Assert.IsTrue(controller.AskVisible("midday"));
-            TextMesh ask = AskMesh("midday");
-            Assert.AreEqual("?", ask.text);
-            Assert.Less(ask.color.r, 0.45f, "the ask mark is ink, not an alarm red");
-            Assert.Greater(ask.color.g, 0.05f);
+            AssertAskMark("midday");
             Assert.AreEqual(cuesBefore, controller.Cues.Count, "a missed day plays nothing");
             AssertNoShame(controller);
 
@@ -263,7 +260,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
                 Assert.AreEqual(TileLabels.For(dusk.Window[i]), Label(dusk.Window[i]));
             }
             Assert.IsTrue(controller.AskVisible("winddown"), "yesterday's pale tile still carries the quiet ask");
-            Assert.AreEqual("?", AskMesh("winddown").text);
+            AssertAskMark("winddown");
             Assert.AreEqual(ArcId.WindDown, controller.State.Arc);
             AssertNoShame(controller);
         }
@@ -545,6 +542,32 @@ namespace GardenVR.Sundial.Tests.PlayMode
             DisableAsyncShaders();
 
             SundialController controller = null;
+            SundialService.DevSeedOnFresh = false;
+            SundialService.FreshReducedMotion = true;
+            SundialController.SaveDirectoryOverride = SundialPlay.FreshDir();
+            SundialController.ClockOverride = SundialPlay.Clock1420();
+            yield return SundialPlay.LoadMain(c => controller = c);
+            SundialPlay.FixedStep();
+            yield return SundialPlay.Seconds(0.35f);
+            FirstRunWizard wizard = controller.Wizard;
+            Assert.IsNotNull(wizard);
+            Assert.IsTrue(wizard.Running, "first run did not start");
+            Assert.AreEqual(FirstRunSteps.PickMorning, wizard.Step);
+            GameObject captionGo = GameObject.Find("DayCaption");
+            Assert.IsNotNull(captionGo, "DayCaption");
+            TextMesh caption = captionGo.GetComponent<TextMesh>();
+            Assert.IsNotNull(caption);
+            Assert.AreEqual(SeedCatalog.DayCaption, caption.text);
+            Assert.AreEqual(InkLetter.Hand, caption.font, "first-run caption is Patrick Hand");
+            Assert.IsNotNull(captionGo.transform.Find("paper"), "caption sits on a paper tag");
+            Camera cam = PoseDial();
+            yield return null;
+            AttachPlate(cam);
+            Shot(cam, Path.Combine(dir, "firstrun.png"));
+            yield return SundialPlay.Unload();
+            SundialService.DevSeedOnFresh = true;
+            SundialService.FreshReducedMotion = null;
+
             yield return SundialPlay.Open(c => controller = c);
             SundialPlay.FixedStep();
             for (int i = 0; i < 5; i++)
@@ -560,7 +583,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(TileState.Missed, missed.Window[5]);
             Assert.AreEqual(Stage.Young, missed.Stage);
             Assert.AreEqual(Bloom.Bud, missed.Bloom);
-            Camera cam = PoseDial();
+            cam = PoseDial();
+            yield return null;
             AttachPlate(cam);
             Shot(cam, Path.Combine(dir, "missed.png"));
 
@@ -575,6 +599,11 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.IsTrue(controller.Service.Voice);
             Assert.IsFalse(controller.Service.Mute);
             Assert.IsFalse(controller.Service.ReducedMotion);
+            GameObject ear = GameObject.Find("ear");
+            Assert.IsNotNull(ear, "settings tab");
+            TextMesh earMesh = ear.GetComponent<TextMesh>();
+            Assert.AreEqual(InkLetter.Hand, earMesh.font);
+            Assert.IsNotNull(ear.transform.Find("paper"));
             Shot(cam, Path.Combine(dir, "settings.png"));
 
             yield return SundialPlay.Unload();
@@ -588,8 +617,22 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(Stage.Sprout, Plant(controller, "morning").Stage);
             Assert.AreEqual(Bloom.Bud, Plant(controller, "midday").Bloom);
             cam = PoseDial();
+            yield return null;
             AttachPlate(cam);
+            GameObject offer = GameObject.Find("BreathPrompt");
+            Assert.IsNotNull(offer, "breath offer");
+            TextMesh offerMesh = offer.GetComponent<TextMesh>();
+            Assert.AreEqual(SeedCatalog.BreathOffer, offerMesh.text);
+            Assert.AreEqual(InkLetter.Hand, offerMesh.font);
+            Assert.IsNotNull(offer.transform.Find("chip"));
             Shot(cam, Path.Combine(dir, "day7.png"));
+
+            string reference = Path.Combine(RepoRoot(), "shared", "assets", "art-reference", "A2-05-field-notebook-1.png");
+            Assert.IsTrue(File.Exists(reference), reference);
+            ComposePair(dir, "firstrun", reference);
+            ComposePair(dir, "missed", reference);
+            ComposePair(dir, "settings", reference);
+            ComposePair(dir, "day7", reference);
         }
 
         static IEnumerator Boot(string dir, FixedClock clock, Action<SundialController> ready)
@@ -656,13 +699,13 @@ namespace GardenVR.Sundial.Tests.PlayMode
             }
         }
 
-        static TextMesh AskMesh(string arc)
+        static void AssertAskMark(string arc)
         {
             GameObject go = GameObject.Find("tile." + arc + ".yesterday.ask");
             Assert.IsNotNull(go, arc);
-            TextMesh mesh = go.GetComponent<TextMesh>();
-            Assert.IsNotNull(mesh, arc);
-            return mesh;
+            Assert.IsNull(go.GetComponent<TextMesh>(), arc + " ask is a mark, not a glyph");
+            Assert.AreEqual(0, go.GetComponentsInChildren<TextMesh>(true).Length, arc);
+            Assert.IsNotNull(go.GetComponentInChildren<Renderer>(), arc);
         }
 
         static void AssertNoShame(SundialController controller)
@@ -727,10 +770,30 @@ namespace GardenVR.Sundial.Tests.PlayMode
             sb.Append("}\n");
         }
 
+        static string RepoRoot()
+        {
+            return Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", ".."));
+        }
+
         static string RunDir()
         {
-            string root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", ".."));
-            return Path.Combine(root, "orchestration", "runs", "sundial", "T-SUN-018");
+            string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
+            if (!string.IsNullOrEmpty(env)) return env;
+            return Path.Combine(RepoRoot(), "orchestration", "runs", "sundial", "T-SUN-020");
+        }
+
+        static void ComposePair(string dir, string shotName, string referencePath)
+        {
+            string shot = Path.Combine(dir, shotName + ".png");
+            RgbaImage reference = PngIO.Load(referencePath);
+            RgbaImage render = PngIO.Load(shot);
+            RgbaImage sbs = SideBySide.Compose(reference, render, "A2-05-field-notebook-1", shotName, "dial-g1", shotName);
+            FrameGrab.WritePixels(Path.Combine(dir, shotName + ".sbs.png"), sbs.Pixels, sbs.Width, sbs.Height);
+            string before = Path.Combine(dir, shotName + ".before.png");
+            if (!File.Exists(before)) return;
+            RgbaImage prior = PngIO.Load(before);
+            RgbaImage versus = SideBySide.Compose(prior, render, shotName + " before", shotName, "dial-g1", "before-after");
+            FrameGrab.WritePixels(Path.Combine(dir, shotName + ".before-after.png"), versus.Pixels, versus.Width, versus.Height);
         }
 
         static void Shot(Camera cam, string path)

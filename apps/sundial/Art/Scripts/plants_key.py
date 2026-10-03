@@ -7,6 +7,7 @@
 #   python apps/sundial/Art/Scripts/plants_key.py --report-only
 import argparse
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -115,6 +116,75 @@ def key_white(rgb):
     return out
 
 
+def drop_paper_crust(rgba):
+    """Pale low-chroma paper that survived the white key. On the soil it reads as frost or dead roots."""
+    rgb = rgba[:, :, :3].astype(np.float32)
+    r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
+    luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    chroma = np.maximum(np.maximum(r, g), b) - np.minimum(np.minimum(r, g), b)
+    # Keep a one-pixel rim where ink meets paper. A wider pale field is spilled paper, not a highlight.
+    # Beige paper (not a living green) as well as near-white. A green highlight stays.
+    pale = (rgba[:, :, 3] > 8) & (luma > 176) & (chroma < 48) & (g + 4 <= r)
+    # The mound's light skirt is the same beige, and a one-pixel ink rim turns it into a web.
+    # Drop the whole skirt. The dark soil stays, and that is the contact the pivot measures.
+    soil_rows = np.zeros(pale.shape[0], dtype=bool)
+    ys = np.where(rgba[:, :, 3] > 24)[0]
+    if ys.size and int(ys.max() - ys.min()) > 80:
+        yb = int(ys.max())
+        soil_rows[max(0, yb - 40) :] = True
+        skirt = soil_rows[:, None] & (rgba[:, :, 3] > 8) & (luma > 150) & (chroma < 90) & (g + 2 <= r)
+        pale = pale | skirt
+    if not pale.any():
+        return rgba
+    ink = ((rgba[:, :, 3] > 160) & (luma < 96)).astype(np.uint8)
+    rim = cv2.dilate(ink, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3)))
+    dist = cv2.distanceTransform(pale.astype(np.uint8), cv2.DIST_L2, 3)
+    keep = pale & (rim > 0) & (dist <= 1.15) & ~soil_rows[:, None]
+    kill = pale & (~keep)
+    if not kill.any():
+        return rgba
+    out = rgba.copy()
+    out[kill, 3] = 0
+    return out
+
+
+def revive_sunrise(rgba):
+    """Sunrise foliage came out brown-grey, which reads as a wilted plant. Sage stays living. Soil stays."""
+    rgb = rgba[:, :, :3].astype(np.float32)
+    alpha = rgba[:, :, 3]
+    r, g, b = rgb[:, :, 0], rgb[:, :, 1], rgb[:, :, 2]
+    luma = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    ink = (alpha > 150) & (luma < 96)
+    ys = np.where(alpha > 24)[0]
+    if ys.size == 0:
+        return rgba
+    yb = int(ys.max())
+    soil_band = np.zeros(alpha.shape, dtype=bool)
+    soil_band[max(0, yb - 46) :, :] = True
+    brown = (r > g + 4) & (luma < 170)
+    soil = soil_band & brown & (alpha > 24)
+    # Only the leaf body. The pale arc wash stays ochre so the species hue check still holds.
+    dead = (alpha > 80) & (luma > 78) & (luma < 158) & (~ink) & (~soil) & (g <= r + 6)
+    if not dead.any():
+        return rgba
+    target = np.array([118.0, 152.0, 76.0], np.float32)
+    shade = np.clip(luma[dead] / 148.0, 0.62, 1.12)[:, None]
+    mixed = rgb[dead] * 0.18 + target * shade * 0.82
+    out = rgba.copy()
+    out[dead, :3] = np.clip(mixed, 0, 255).astype(np.uint8)
+    return out
+
+
+def finish_card(rgba, arc, revive):
+    """Crust off, sunrise foliage back to a living sage, then seat the contact on the pivot."""
+    card = drop_paper_crust(rgba)
+    if revive and arc == "sunrise":
+        card = revive_sunrise(card)
+    card = extrude(snap_pivot(card))
+    card = drop_paper_crust(card)
+    return snap_pivot(card)
+
+
 def drop_ochre_puddle(rgba):
     """A saturated ochre mass that does not touch a leaf is spilled wash, not the plant."""
     hsv = cv2.cvtColor(rgba[:, :, :3], cv2.COLOR_RGB2HSV)
@@ -175,6 +245,61 @@ def seat_floating(rgba):
     move = np.zeros(mask.shape, np.uint8)
     for c in others:
         move[labels == c[0]] = 1
+    piece = rgba.copy()
+    piece[move == 0] = 0
+    out = rgba.copy()
+    out[move == 1] = 0
+    affine = np.float32([[1, 0, 0], [0, 1, shift]])
+    shifted = cv2.warpAffine(
+        piece, affine, (rgba.shape[1], rgba.shape[0]),
+        flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0),
+    )
+    m = shifted[:, :, 3] > 8
+    out[m] = shifted[m]
+    return out
+
+
+def seat_detached(rgba):
+    """A plant drawn above its mound, with paper specks on the soil line, still needs to sit down.
+
+    Only the upper drawing moves. The mound stays, so the soil contact, and the pivot, stay put.
+    """
+    mask = (rgba[:, :, 3] > 28).astype(np.uint8)
+    n, labels, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    comps = []
+    for i in range(1, n):
+        area = int(stats[i, cv2.CC_STAT_AREA])
+        if area < 80:
+            continue
+        y = int(stats[i, cv2.CC_STAT_TOP])
+        h = int(stats[i, cv2.CC_STAT_HEIGHT])
+        comps.append((i, y, y + h, area))
+    if len(comps) < 2:
+        return rgba
+    ymax = max(c[2] for c in comps)
+    soil_cands = [c for c in comps if c[2] >= ymax - 12]
+    soil = max(soil_cands, key=lambda c: c[3])
+    above = [c for c in comps if c[0] != soil[0] and c[2] < soil[1] - 36]
+    if not above:
+        return rgba
+    plant = max(above, key=lambda c: c[3])
+    gap = soil[1] - plant[2]
+    if gap < 36:
+        return rgba
+    shift = int(gap - 2)
+    move_ids = []
+    for c in comps:
+        if c[0] == soil[0]:
+            continue
+        if c[2] <= plant[2] + 10 and c[1] + 10 >= plant[1]:
+            move_ids.append(c[0])
+    if not move_ids:
+        return rgba
+    move = np.isin(labels, np.array(move_ids, np.int32))
+    move = cv2.dilate(move.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+    move[soil[1] :, :] = 0
+    if int(move.sum()) < 40:
+        return rgba
     piece = rgba.copy()
     piece[move == 0] = 0
     out = rgba.copy()
@@ -415,7 +540,9 @@ def prepare(path):
     rgb = load_rgb(path)
     rgba = key_white(rgb)
     rgba = fade_distant_wash(rgba)
+    rgba = drop_paper_crust(rgba)
     rgba = seat_floating(rgba)
+    rgba = seat_detached(rgba)
     return rgba
 
 
@@ -526,26 +653,24 @@ def process():
         print("scale %s %.3f" % (arc, scale))
         cards = {}
         for stage in STAGES:
-            card = snap_pivot(grade_wash(place(raw[stage], scale), arc))
-            cards[stage] = card
-        for stage in STAGES:
-            card = extrude(snap_pivot(cards[stage]))
-            cards[stage] = card
-            save_png(TEX / ("plant_%s_%s.png" % (arc, stage)), card)
+            graded = grade_wash(place(raw[stage], scale), arc)
+            cards[stage] = finish_card(graded, arc, True)
+            save_png(TEX / ("plant_%s_%s.png" % (arc, stage)), cards[stage])
         full = cards["full"]
         for bloom in BLOOMS:
             if arc == "midday":
-                seated = snap_pivot(place(raw[bloom], scale))
-                over = extrude(snap_pivot(grade_wash(midday_flowers(seated, bloom), arc)))
+                seated = place(raw[bloom], scale)
+                over = finish_card(grade_wash(midday_flowers(seated, bloom), arc), arc, False)
             else:
-                seated = snap_pivot(grade_wash(place(raw[bloom], scale), arc))
-                over = extrude(flower_mask(full, seated, arc))
+                seated = grade_wash(place(raw[bloom], scale), arc)
+                over = finish_card(flower_mask(full, seated, arc), arc, False)
             cards[bloom] = over
             save_png(TEX / ("bloom_%s_%s.png" % (arc, bloom)), over)
             cover = float((over[:, :, 3] > 24).mean())
             print("  bloom %s %s alpha cover %.3f" % (arc, bloom, cover))
         placed[arc] = cards
-    contact(placed, RUN / "plants-contact.png")
+    run = Path(os.environ["GARDEN_RUN_DIR"]) if os.environ.get("GARDEN_RUN_DIR") else RUN
+    contact(placed, run / "plants-contact.png")
     text = report_from_memory(placed)
     print(text)
     return text

@@ -89,13 +89,9 @@ namespace GardenVR.Sundial
         string _promptArc;
         Material _inkMat;
         Texture2D _ring;
-        Texture2D _cream;
         Mesh _quad;
         Mesh _chipQuad;
         GUIStyle _overlayStyle;
-
-        static readonly Color Ink = new Color(0.165f, 0.149f, 0.133f, 1f);
-        static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.96f);
 
         public SundialService Service { get { return _service; } }
         public FirstRunWizard Wizard { get { return _wizard; } }
@@ -238,7 +234,6 @@ namespace GardenVR.Sundial
             CommitEarly();
             if (_inkMat != null) Destroy(_inkMat);
             if (_ring != null) Destroy(_ring);
-            if (_cream != null) Destroy(_cream);
             if (_quad != null) Destroy(_quad);
             if (_chipQuad != null) Destroy(_chipQuad);
         }
@@ -307,6 +302,8 @@ namespace GardenVR.Sundial
                 _overlayStyle.fontSize = 14;
                 _overlayStyle.wordWrap = true;
                 _overlayStyle.normal.textColor = new Color(0.16f, 0.15f, 0.13f, 1f);
+                Font hand = InkLetter.Hand;
+                if (hand != null) _overlayStyle.font = hand;
             }
             GUI.Label(new Rect(16f, 16f, 920f, 420f), _service.StateJson + "\n" + TileCaption(), _overlayStyle);
         }
@@ -866,8 +863,19 @@ namespace GardenVR.Sundial
         {
             var go = new GameObject("tile." + arc + ".yesterday.ask");
             go.transform.SetParent(transform, false);
-            TextMesh mesh = AddInkLine(go, "?", 64, 0.0034f);
-            mesh.anchor = TextAnchor.MiddleCenter;
+            EnsureInk();
+            var mark = new GameObject("mark");
+            mark.transform.SetParent(go.transform, false);
+            mark.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            mark.transform.localPosition = new Vector3(0f, 0f, 0.001f);
+            mark.transform.localScale = new Vector3(0.016f, 0.016f, 1f);
+            if (_chipQuad == null) _chipQuad = VerticalQuad();
+            mark.AddComponent<MeshFilter>().sharedMesh = _chipQuad;
+            var renderer = mark.AddComponent<MeshRenderer>();
+            if (_inkMat != null) renderer.sharedMaterial = _inkMat;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            InkLetter.Tint(renderer, InkLetter.AskMark(), Color.white);
             var box = go.AddComponent<BoxCollider>();
             box.size = new Vector3(0.018f, 0.018f, 0.008f);
             var target = go.AddComponent<IntentTarget>();
@@ -886,19 +894,14 @@ namespace GardenVR.Sundial
             paper.transform.SetParent(_prompt.transform, false);
             paper.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
             paper.transform.localPosition = new Vector3(0f, 0f, 0.002f);
-            paper.transform.localScale = new Vector3(0.098f, 0.062f, 1f);
+            paper.transform.localScale = new Vector3(0.132f, 0.078f, 1f);
             if (_chipQuad == null) _chipQuad = VerticalQuad();
             paper.AddComponent<MeshFilter>().sharedMesh = _chipQuad;
             var paperRenderer = paper.AddComponent<MeshRenderer>();
             paperRenderer.shadowCastingMode = ShadowCastingMode.Off;
             paperRenderer.receiveShadows = false;
             if (_inkMat != null) paperRenderer.sharedMaterial = _inkMat;
-            if (_cream == null) _cream = Solid(Color.white);
-            var block = new MaterialPropertyBlock();
-            paperRenderer.GetPropertyBlock(block);
-            if (_cream != null) block.SetTexture("_MainTex", _cream);
-            block.SetColor("_Color", Paper);
-            paperRenderer.SetPropertyBlock(block);
+            InkLetter.Tint(paperRenderer, InkLetter.Note(0.132f / 0.078f), Color.white);
 
             Line(_prompt.transform, "BackfillQuestion", PromptQuestion, null, 0.016f);
             Line(_prompt.transform, PromptYesId, PromptYesLine, PromptYesId, 0f);
@@ -923,32 +926,8 @@ namespace GardenVR.Sundial
         {
             var mesh = go.GetComponent<TextMesh>();
             if (mesh == null) mesh = go.AddComponent<TextMesh>();
-            mesh.text = text;
-            mesh.anchor = TextAnchor.MiddleCenter;
-            mesh.alignment = TextAlignment.Center;
-            mesh.fontSize = fontSize;
-            mesh.characterSize = characterSize;
-            mesh.color = Ink;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) mesh.font = font;
-            var renderer = mesh.GetComponent<MeshRenderer>();
-            if (renderer != null)
-            {
-                renderer.shadowCastingMode = ShadowCastingMode.Off;
-                renderer.receiveShadows = false;
-            }
+            InkLetter.Apply(mesh, text, fontSize, characterSize);
             return mesh;
-        }
-
-        static Texture2D Solid(Color color)
-        {
-            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            var pixels = new Color[4];
-            for (int i = 0; i < pixels.Length; i++) pixels[i] = color;
-            tex.SetPixels(pixels);
-            tex.Apply(false, false);
-            return tex;
         }
 
         static Mesh VerticalQuad()

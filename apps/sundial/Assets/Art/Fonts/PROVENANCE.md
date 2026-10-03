@@ -7,4 +7,4 @@
 
 The player also loads this file as `Assets/Resources/FirstRunHand.ttf` so `Resources.Load` can find it. It is the same font, not a second design.
 
-Used for the first-run caption "This is your day." and the seed-packet cue chips.
+This is the only UI face. Prompts, settings, the first-run caption, and the dev overlay all use it. There is no Liberation Sans and no Arial fallback.
