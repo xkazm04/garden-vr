@@ -146,7 +146,7 @@ function face() {
 
   const washPaths = WASHES.map((w) => {
     const band = arc(R * 0.46, R * 0.875, w.a0, w.a1);
-    const inner = arcStroke(R * 0.50, w.a0, w.a1);
+    const inner = arcStroke(R * 0.66, w.a0, w.a1);
     const side0 = (() => {
       const [x0, y0] = pol(R * 0.46, w.a0), [x1, y1] = pol(R * 0.875, w.a0);
       return `M${r2(x0)},${r2(y0)} L${r2(x1)},${r2(y1)}`;
@@ -158,7 +158,7 @@ function face() {
     return `<g>
         <path d="${band}" fill="url(#g-${w.id})" filter="url(#wc)"/>
         <path d="${band}" fill="${w.mid}" opacity="0.18" filter="url(#gran)"/>
-        <path d="${inner}" fill="none" stroke="${w.deep}" stroke-width="34" stroke-opacity="0.55" stroke-linecap="round" filter="url(#wcEdge)"/>
+        <path d="${inner}" fill="none" stroke="${w.deep}" stroke-width="28" stroke-opacity="0.62" stroke-linecap="round" filter="url(#wcEdge)"/>
         <path d="${side0}" fill="none" stroke="${w.wet}" stroke-width="16" stroke-opacity="0.35" filter="url(#wcEdge)"/>
         <path d="${side1}" fill="none" stroke="${w.wet}" stroke-width="16" stroke-opacity="0.35" filter="url(#wcEdge)"/>
       </g>`;
@@ -218,7 +218,7 @@ function face() {
     <circle cx="${C}" cy="${C}" r="${r2(R * 0.97)}" fill="none" stroke="#DAC9B9" stroke-width="46" opacity="0.85"/>
     ${washPaths}
     <g filter="url(#wc)" opacity="0.9">${brushes}</g>
-    <ellipse cx="${C}" cy="${C}" rx="${r2(R * 0.63)}" ry="${r2(R * 0.60)}" fill="#4A3324" filter="url(#soil)"/>
+    <ellipse cx="${C}" cy="${C}" rx="${r2(R * 0.62)}" ry="${r2(R * 0.60)}" fill="#4A3324" filter="url(#soil)"/>
     <ellipse cx="${C}" cy="${C + R * 0.03}" rx="${r2(R * 0.34)}" ry="${r2(R * 0.30)}" fill="#3A281C" opacity="0.45"/>
     <g>${stipple}</g>
     <g filter="url(#ink)">${pebbles}</g>
@@ -267,12 +267,12 @@ function shadow() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
     <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#5A4538" stop-opacity="0.84"/>
-      <stop offset="0.5" stop-color="#5A4538" stop-opacity="0.46"/>
-      <stop offset="1" stop-color="#5A4538" stop-opacity="0"/>
+      <stop offset="0" stop-color="#1A100C" stop-opacity="0.88"/>
+      <stop offset="0.45" stop-color="#2A1A12" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="#2A1A12" stop-opacity="0"/>
     </linearGradient>
     <filter id="soft" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="34"/>
+      <feGaussianBlur stdDeviation="18"/>
     </filter>
     <filter id="speck" x="-8%" y="-8%" width="116%" height="116%">
       <feTurbulence type="fractalNoise" baseFrequency="0.45" numOctaves="2" seed="3" result="n"/>
@@ -281,8 +281,8 @@ function shadow() {
     </filter>
   </defs>
   <g filter="url(#soft)">
-    <polygon points="492,90 532,90 740,820 284,820" fill="url(#fade)"/>
-    <polygon points="504,140 520,140 660,720 364,720" fill="#5A4538" opacity="0.32"/>
+    <polygon points="470,70 554,70 820,900 204,900" fill="url(#fade)"/>
+    <polygon points="496,120 528,120 700,780 324,780" fill="#140E0A" opacity="0.45"/>
   </g>
   <polygon points="500,180 524,180 640,700 384,700" fill="#5A4538" filter="url(#speck)" opacity="0.55"/>
 </svg>`;

@@ -279,11 +279,12 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Boil", 0f);
                 m.SetFloat("_BoilPx", 0f);
                 m.SetFloat("_ZWrite", 0f);
+                // Transparent queue. 2440 sat in the opaque range and the depth prepass dropped the wash.
                 m.SetFloat("_ZTest", (float)CompareFunction.LessEqual);
                 m.SetFloat("_Coverage", 0f);
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
-                m.renderQueue = 2440;
+                m.renderQueue = 3000;
             });
             return library;
         }
@@ -398,8 +399,8 @@ namespace GardenVR.Sundial.Editor
                 // Local +Z is the shadow direction. UV v grows away from the nib.
                 mesh.vertices = new[]
                 {
-                    new Vector3(-0.016f, 0f, 0.012f), new Vector3(0.016f, 0f, 0.012f),
-                    new Vector3(0.078f, 0f, 0.168f), new Vector3(-0.078f, 0f, 0.168f)
+                    new Vector3(-0.02f, 0.002f, 0.01f), new Vector3(0.02f, 0.002f, 0.01f),
+                    new Vector3(0.11f, 0.002f, 0.20f), new Vector3(-0.11f, 0.002f, 0.20f)
                 };
                 mesh.uv = new[] { new Vector2(0.38f, 0f), new Vector2(0.62f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
                 mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };

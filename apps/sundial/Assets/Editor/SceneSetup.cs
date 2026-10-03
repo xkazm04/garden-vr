@@ -35,7 +35,7 @@ namespace GardenVR.Sundial.Editor
         public static readonly Vector3 DialSeatedLook = new Vector3(0f, 0.012f, 0f);
 
         /// <summary>Kitchen photo vertical angle in the seated view. Wider than DialG1's 30 deg, narrower than the 130 deg sphere that cropped the inpaint.</summary>
-        public const float SeatedPlateVerticalDegrees = 64f;
+        public const float SeatedPlateVerticalDegrees = 90f;
         public const float SeatedPlateDistance = 2.2f;
         public const string SeatedPlateMeshPath = "Assets/Art/Models/SeatedPlate.asset";
 
