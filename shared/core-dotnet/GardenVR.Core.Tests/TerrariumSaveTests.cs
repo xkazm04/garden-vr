@@ -97,6 +97,7 @@ public class TerrariumSaveTests
         Assert.DoesNotContain("Mute", json);
         Assert.DoesNotContain("RitualOpen", json);
         Assert.DoesNotContain("GladDay", json);
+        Assert.DoesNotContain("BoxPace", json);
         Assert.DoesNotContain("Settings", json);
 
         var changed = new TerrariumSave();
@@ -128,6 +129,29 @@ public class TerrariumSaveTests
         string cleared = again.ToJson();
         Assert.DoesNotContain("Mute", cleared);
         Assert.DoesNotContain("RitualOpen", cleared);
+    }
+
+    [Fact]
+    public void Box_pace_is_written_only_when_chosen()
+    {
+        string plain = new TerrariumSave().ToJson();
+        Assert.DoesNotContain("BoxPace", plain);
+
+        var save = new TerrariumSave();
+        save.Settings.BoxPace = true;
+        save.Settings.Breaths = 4;
+        string json = save.ToJson();
+        Assert.Contains("\"BoxPace\":true", json);
+        Assert.Contains("\"Breaths\":4", json);
+        TerrariumSave again = TerrariumSave.FromJson(json);
+        Assert.True(again.Settings.BoxPace);
+        Assert.Equal(4, again.Settings.Breaths);
+        Assert.Equal(json, again.ToJson());
+
+        again.Settings.BoxPace = false;
+        string off = again.ToJson();
+        Assert.DoesNotContain("BoxPace", off);
+        Assert.False(TerrariumSave.FromJson(off).Settings.BoxPace);
     }
 
     [Fact]

@@ -567,11 +567,23 @@ namespace GardenVR.Terrarium
         {
             if (_autoPace && !_awaitContinue)
             {
-                float inhaleSec = PaceIn();
-                float period = inhaleSec + PaceOut();
-                float local = period <= 0f ? 0f : _autoClock % period;
-                bool inhale = local < inhaleSec;
-                return new PinchSample(inhale ? 0.95f : 0.05f, true);
+                float period;
+                float along;
+                bool held;
+                if (BoxPaceOn())
+                {
+                    period = BreathConfig.BoxSideSeconds * 4f;
+                    along = period <= 0f ? 0f : _autoClock % period;
+                    held = along < BreathConfig.BoxSideSeconds * 2f;
+                }
+                else
+                {
+                    float inhaleSec = PaceIn();
+                    period = inhaleSec + PaceOut();
+                    along = period <= 0f ? 0f : _autoClock % period;
+                    held = along < inhaleSec;
+                }
+                return new PinchSample(held ? 0.95f : 0.05f, true);
             }
             float strength = _source != null ? _source.PinchStrength : 0f;
             bool tracked = _source == null || _source.IsTracked;
@@ -589,6 +601,8 @@ namespace GardenVR.Terrarium
             float fraction = 0f;
             if (_session.Phase == BreathPhase.Inhaling)
                 fraction = Mathf.Clamp01(_session.PhaseTime / Mathf.Max(0.01f, _config.IdealInhaleSeconds));
+            else if (_session.Phase == BreathPhase.HoldingFull)
+                fraction = 1f;
             else if (_session.Phase == BreathPhase.Exhaling && _session.PhaseTime < _config.MinExhaleSeconds)
                 fraction = 1f;
             float target = Mathf.Max(1, _session.TargetBreaths);
@@ -603,6 +617,13 @@ namespace GardenVR.Terrarium
                 float target = Mathf.Max(1, _session.TargetBreaths);
                 float stepped = _session.Phase == BreathPhase.Complete ? 1f : _session.Breaths / target;
                 _paceMat.SetFloat("_Fill", stepped);
+                _paceMat.SetColor("_Color", _holdAck ? AckMint : PaceMint);
+                return;
+            }
+            if (BoxPaceOn())
+            {
+                if (_paceMat == null || _session == null) return;
+                _paceMat.SetFloat("_Fill", BoxFill());
                 _paceMat.SetColor("_Color", _holdAck ? AckMint : PaceMint);
                 return;
             }
@@ -820,10 +841,18 @@ namespace GardenVR.Terrarium
         {
             if (_autoPace && !_awaitContinue)
             {
+                float period;
+                float along;
+                if (BoxPaceOn())
+                {
+                    period = BreathConfig.BoxSideSeconds * 4f;
+                    along = period <= 0f ? 0f : _autoClock % period;
+                    return along < BreathConfig.BoxSideSeconds * 2f;
+                }
                 float inhaleSec = PaceIn();
-                float period = inhaleSec + PaceOut();
-                float local = period <= 0f ? 0f : _autoClock % period;
-                return local < inhaleSec;
+                period = inhaleSec + PaceOut();
+                along = period <= 0f ? 0f : _autoClock % period;
+                return along < inhaleSec;
             }
             return _source != null && _source.IsPinching;
         }
@@ -859,7 +888,9 @@ namespace GardenVR.Terrarium
             if (_service == null || _service.RestoreOffered) return false;
             if (_awaitContinue || _lookPlaying || _latchedPause) return false;
             if (_session == null) return false;
-            if (_session.Phase == BreathPhase.Inhaling || _session.Phase == BreathPhase.Exhaling || _session.Phase == BreathPhase.Paused)
+            if (_session.Phase == BreathPhase.Inhaling || _session.Phase == BreathPhase.HoldingFull
+                || _session.Phase == BreathPhase.Exhaling || _session.Phase == BreathPhase.HoldingEmpty
+                || _session.Phase == BreathPhase.Paused)
                 return false;
             return true;
         }
@@ -1304,6 +1335,34 @@ namespace GardenVR.Terrarium
                 _config = ConfigFrom(_service.Settings);
                 _session = new BreathSession(_config);
             }
+            SyncBoxMarks();
+        }
+
+        /// <summary>0..1 around the ring. Each side of the box is one quarter.</summary>
+        float BoxFill()
+        {
+            if (_session == null) return 0f;
+            float side = Mathf.Max(0.01f, BreathConfig.BoxSideSeconds);
+            float u = Mathf.Clamp01(_session.PhaseTime / side);
+            if (_session.Phase == BreathPhase.Inhaling) return 0.25f * u;
+            if (_session.Phase == BreathPhase.HoldingFull) return 0.25f + 0.25f * u;
+            if (_session.Phase == BreathPhase.Exhaling) return 0.50f + 0.25f * u;
+            if (_session.Phase == BreathPhase.HoldingEmpty) return 0.75f + 0.25f * u;
+            if (_session.Phase == BreathPhase.Complete) return 1f;
+            return 0f;
+        }
+
+        bool BoxPaceOn()
+        {
+            return _service != null && _service.Settings != null && _service.Settings.BoxPace;
+        }
+
+        void SyncBoxMarks()
+        {
+            Transform pace = FindNamed(transform, "PaceRing");
+            if (pace == null) pace = FindNamed(transform, "BreathRing");
+            if (BoxPaceOn()) BoxPaceMarks.Present(pace);
+            else BoxPaceMarks.Clear(pace);
         }
 
         float PaceIn()
@@ -1326,6 +1385,7 @@ namespace GardenVR.Terrarium
             if (settings == null) return config;
             int breaths = settings.Breaths;
             if (breaths != 3 && breaths != 4 && breaths != 6 && breaths != 8) breaths = BreathConfigDefaults();
+            if (settings.BoxPace) return BreathConfig.Box(breaths);
             config.TargetBreaths = breaths;
             if (settings.InhaleSec >= 1.2d) config.IdealInhaleSeconds = (float)settings.InhaleSec;
             return config;
@@ -1426,6 +1486,7 @@ namespace GardenVR.Terrarium
             renderer.sharedMaterial = _paceMat;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
+            SyncBoxMarks();
         }
 
         void BuildPrompt()
@@ -1593,6 +1654,8 @@ namespace GardenVR.Terrarium
             }
             if (_session.Phase == BreathPhase.Waiting || _session.Phase == BreathPhase.Complete)
                 _shareLatched = false;
+            else if (_session.Phase == BreathPhase.HoldingFull)
+                _shareLatched = true;
             else if (_session.Phase == BreathPhase.Inhaling && _session.PhaseTime + 0.0001f >= ReducedMinInhale)
                 _shareLatched = true;
         }

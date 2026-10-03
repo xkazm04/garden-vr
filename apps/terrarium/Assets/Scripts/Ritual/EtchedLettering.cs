@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GardenVR.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -166,6 +167,7 @@ namespace GardenVR.Terrarium
         {
             if (jar == null || string.IsNullOrEmpty(mode)) return;
             ClearCapture(jar);
+            BoxPaceMarks.Clear(BoxPaceMarks.FindRing(jar));
             if (mode == "hold")
             {
                 Place(jar, "EtchedWords", EtchContrast.HoldLine + "\nSpace or mouse",
@@ -180,6 +182,12 @@ namespace GardenVR.Terrarium
             else if (mode == "settings")
             {
                 SettingsPebbles.PresentOpen(jar);
+            }
+            else if (mode == "settings-box")
+            {
+                var preset = new RitualSettings();
+                preset.BoxPace = true;
+                SettingsPebbles.PresentOpen(jar, preset);
             }
         }
 

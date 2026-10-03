@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace GardenVR.Core
 {
-    public enum BreathPhase { Waiting, Inhaling, Exhaling, Paused, Complete }
+    public enum BreathPhase { Waiting, Inhaling, Exhaling, Paused, Complete, HoldingFull, HoldingEmpty }
 
-    public enum BreathEventKind { InhaleStarted, ExhaleStarted, BreathCounted, ShortInhaleIgnored, Paused, Resumed, RitualComplete }
+    public enum BreathEventKind { InhaleStarted, ExhaleStarted, BreathCounted, ShortInhaleIgnored, Paused, Resumed, RitualComplete, HoldFullStarted, HoldEmptyStarted }
 
     public readonly struct BreathEvent
     {
@@ -16,11 +16,33 @@ namespace GardenVR.Core
 
     public sealed class BreathConfig
     {
+        /// <summary>One side of the 4-4-4-4 pace. Inhale, hold full, exhale, hold empty.</summary>
+        public const float BoxSideSeconds = 4f;
+
         public int TargetBreaths = 6;
         public float MinInhaleSeconds = 1.2f;   // shorter holds are fidgets, not breaths - ignored, never penalised
         public float IdealInhaleSeconds = 4.0f; // the frond finishes this breath's share of uncoil at this length
         public float MinExhaleSeconds = 1.0f;   // the breath counts once the release has lasted this long
         public float FogDecaySeconds = 2.5f;
+        /// <summary>0 keeps the free pace: release after the inhale goes straight to the exhale. Above 0, a pinch that is still held when the inhale side ends enters <see cref="BreathPhase.HoldingFull"/>.</summary>
+        public float HoldFullSeconds = 0f;
+        /// <summary>Length of the open side after the exhale. 0 skips it. The breath still counts at <see cref="MinExhaleSeconds"/>.</summary>
+        public float HoldEmptySeconds = 0f;
+        /// <summary>How long the exhale side lasts before the empty hold. 0 skips that gate.</summary>
+        public float IdealExhaleSeconds = 0f;
+
+        /// <summary>Four equal sides. The free-pace defaults for fidgets and fog stay.</summary>
+        public static BreathConfig Box(int targetBreaths)
+        {
+            return new BreathConfig
+            {
+                TargetBreaths = targetBreaths,
+                IdealInhaleSeconds = BoxSideSeconds,
+                HoldFullSeconds = BoxSideSeconds,
+                IdealExhaleSeconds = BoxSideSeconds,
+                HoldEmptySeconds = BoxSideSeconds
+            };
+        }
     }
 
     /// <summary>
@@ -70,9 +92,16 @@ namespace GardenVR.Core
             if (Phase == BreathPhase.Paused)
             {
                 // Resume into whatever the hand is doing now; an inhale cut by a long drop restarts cleanly.
+                // A held-full beat resumes as itself, so the pinch does not start a second inhale.
                 Emit(BreathEventKind.Resumed);
-                Phase = p == PinchState.Held ? BreathPhase.Inhaling
-                      : (_beforePause == BreathPhase.Waiting ? BreathPhase.Waiting : BreathPhase.Exhaling);
+                if (p == PinchState.Held)
+                    Phase = _beforePause == BreathPhase.HoldingFull ? BreathPhase.HoldingFull : BreathPhase.Inhaling;
+                else if (_beforePause == BreathPhase.Waiting)
+                    Phase = BreathPhase.Waiting;
+                else if (_beforePause == BreathPhase.HoldingEmpty)
+                    Phase = BreathPhase.HoldingEmpty;
+                else
+                    Phase = BreathPhase.Exhaling;
                 PhaseTime = 0f; _exhaleCounted = true;
                 if (Phase == BreathPhase.Inhaling) Emit(BreathEventKind.InhaleStarted);
             }
@@ -106,6 +135,18 @@ namespace GardenVR.Core
                     float eased = 1f - (1f - x) * (1f - x);
                     float share = 1f / _c.TargetBreaths;
                     Uncoil = Math.Max(Uncoil, Progress + share * eased);
+                    // The pinch stays down. The held-full beat is the next side, not a new inhale.
+                    if (_c.HoldFullSeconds > 0f && PhaseTime >= _c.IdealInhaleSeconds)
+                        Enter(BreathPhase.HoldingFull, BreathEventKind.HoldFullStarted);
+                    break;
+
+                case BreathPhase.HoldingFull:
+                    if (p == PinchState.Open)
+                    {
+                        Enter(BreathPhase.Exhaling, BreathEventKind.ExhaleStarted);
+                        _exhaleCounted = false;
+                        Fog = 1f;
+                    }
                     break;
 
                 case BreathPhase.Exhaling:
@@ -117,6 +158,21 @@ namespace GardenVR.Core
                         if (Breaths >= _c.TargetBreaths) { Enter(BreathPhase.Complete, BreathEventKind.RitualComplete); break; }
                     }
                     if (p == PinchState.Held) { Enter(BreathPhase.Inhaling, BreathEventKind.InhaleStarted); break; }
+                    if (_c.HoldEmptySeconds > 0f && _c.IdealExhaleSeconds > 0f && _exhaleCounted && PhaseTime >= _c.IdealExhaleSeconds)
+                    {
+                        Enter(BreathPhase.HoldingEmpty, BreathEventKind.HoldEmptyStarted);
+                        break;
+                    }
+                    Settle(dt);
+                    break;
+
+                case BreathPhase.HoldingEmpty:
+                    if (p == PinchState.Held) { Enter(BreathPhase.Inhaling, BreathEventKind.InhaleStarted); break; }
+                    if (PhaseTime >= _c.HoldEmptySeconds)
+                    {
+                        Phase = BreathPhase.Waiting;
+                        PhaseTime = 0f;
+                    }
                     Settle(dt);
                     break;
             }

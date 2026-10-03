@@ -104,6 +104,91 @@ public class BreathRitualTests
         Assert.Equal(3, s.Events.Count(e => e.Kind == BreathEventKind.BreathCounted));
         Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.ShortInhaleIgnored);
     }
+
+    [Fact]
+    public void Free_pace_never_enters_the_held_full_beat()
+    {
+        var s = new SimulatedHand(seed: 12).Rest(0.4f).Breaths(2, inhale: 5f, exhale: 4f).Drive(new BreathSession());
+        Assert.Equal(2, s.Breaths);
+        Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.HoldFullStarted);
+        Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.HoldEmptyStarted);
+        Assert.NotEqual(BreathPhase.HoldingFull, s.Phase);
+    }
+
+    [Fact]
+    public void Box_hold_at_top_keeps_the_pinch_and_does_not_count()
+    {
+        var hand = new SimulatedHand(seed: 21).Rest(0.5f).Hold(8.5f).Rest(8.5f);
+        var s = new BreathSession(BreathConfig.Box(4));
+        float dt = 1f / 72f;
+        bool sawHold = false;
+        bool heldPinch = false;
+        float uncoilAtHold = -1f;
+        float uncoilDuringHold = -1f;
+        float fogDuringHold = 0f;
+        int steps = (int)Math.Ceiling((hand.Duration + 0.5f) * 72f);
+        for (int i = 0; i < steps; i++)
+        {
+            s.Update(dt, hand.Sample(i * dt));
+            if (s.Phase != BreathPhase.HoldingFull) continue;
+            sawHold = true;
+            if (s.Pinch == PinchState.Held) heldPinch = true;
+            if (uncoilAtHold < 0f) uncoilAtHold = s.Uncoil;
+            uncoilDuringHold = Math.Max(uncoilDuringHold, s.Uncoil);
+            fogDuringHold = Math.Max(fogDuringHold, s.Fog);
+            Assert.Equal(0, s.Breaths);
+        }
+
+        Assert.True(sawHold, "the pinch never entered the held-full beat");
+        Assert.True(heldPinch, "the held-full beat ran after the pinch had already opened");
+        Assert.Equal(1, s.Events.Count(e => e.Kind == BreathEventKind.InhaleStarted));
+        Assert.Equal(1, s.Events.Count(e => e.Kind == BreathEventKind.HoldFullStarted));
+        Assert.Equal(1, s.Events.Count(e => e.Kind == BreathEventKind.ExhaleStarted));
+        Assert.Equal(1, s.Events.Count(e => e.Kind == BreathEventKind.HoldEmptyStarted));
+        Assert.InRange(uncoilAtHold, 0.24f, 0.26f);
+        Assert.True(uncoilDuringHold <= uncoilAtHold + 0.002f, "uncoil grew during the hold: " + uncoilDuringHold);
+        Assert.True(fogDuringHold < 0.05f, "the glass fogged while the pinch was still held");
+        Assert.Equal(1, s.Breaths);
+        float holdAt = s.Events.Single(e => e.Kind == BreathEventKind.HoldFullStarted).Time;
+        float exhaledAt = s.Events.Single(e => e.Kind == BreathEventKind.ExhaleStarted).Time;
+        float countedAt = s.Events.Single(e => e.Kind == BreathEventKind.BreathCounted).Time;
+        Assert.True(exhaledAt > holdAt + 3.5f, "the release came before the held-full beat");
+        Assert.True(countedAt > exhaledAt, "the breath counted during the pinch");
+    }
+
+    [Fact]
+    public void Releasing_before_the_inhale_side_skips_the_hold()
+    {
+        var s = new SimulatedHand(seed: 23).Rest(0.4f).Hold(2.2f).Rest(3f).Drive(new BreathSession(BreathConfig.Box(4)));
+        Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.HoldFullStarted);
+        Assert.Contains(s.Events, e => e.Kind == BreathEventKind.ExhaleStarted);
+        Assert.Equal(1, s.Breaths);
+        Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.ShortInhaleIgnored);
+    }
+
+    [Fact]
+    public void A_fidget_on_the_box_pace_is_still_ignored()
+    {
+        var s = new SimulatedHand(seed: 24).Rest(0.4f).Hold(0.4f).Rest(1f).Drive(new BreathSession(BreathConfig.Box(4)));
+        Assert.Equal(0, s.Breaths);
+        Assert.Contains(s.Events, e => e.Kind == BreathEventKind.ShortInhaleIgnored);
+        Assert.DoesNotContain(s.Events, e => e.Kind == BreathEventKind.HoldFullStarted);
+    }
+
+    [Fact]
+    public void Four_box_breaths_visit_the_hold_and_then_complete()
+    {
+        var hand = new SimulatedHand(seed: 22).Rest(0.4f);
+        for (int i = 0; i < 4; i++) hand.Hold(8.5f).Rest(8.5f);
+        var s = hand.Drive(new BreathSession(BreathConfig.Box(4)));
+        foreach (var e in s.Events) _out.WriteLine(e.ToString());
+        Assert.Equal(BreathPhase.Complete, s.Phase);
+        Assert.Equal(4, s.Breaths);
+        Assert.Equal(4, s.Events.Count(e => e.Kind == BreathEventKind.HoldFullStarted));
+        Assert.Equal(3, s.Events.Count(e => e.Kind == BreathEventKind.HoldEmptyStarted));
+        Assert.Equal(1f, s.Uncoil, 3);
+        Assert.True(s.Time < 10 * 60);
+    }
 }
 
 public class GardenTests

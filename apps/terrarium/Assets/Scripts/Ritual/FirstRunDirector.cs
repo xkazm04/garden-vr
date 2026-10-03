@@ -275,6 +275,8 @@ namespace GardenVR.Terrarium
         {
             if (_reduced || _controller == null || _controller.Session == null) return 1f;
             BreathSession session = _controller.Session;
+            if (session.Phase == BreathPhase.HoldingFull)
+                return 1f;
             if (session.Phase == BreathPhase.Inhaling)
                 return 0.55f + 0.45f * Mathf.Clamp01(session.Uncoil);
             if (session.Phase == BreathPhase.Exhaling)
