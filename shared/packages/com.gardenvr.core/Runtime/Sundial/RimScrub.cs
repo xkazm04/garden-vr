@@ -113,13 +113,14 @@ namespace GardenVR.Core
         /// Due and backfill are false, so the picture cannot be tended.
         /// Nothing in <paramref name="ledger"/> is added or undone.
         /// </summary>
-        public static SundialState Query(IReadOnlyList<HabitDef> habits, Ledger ledger, GardenDay today, RimRead read)
+        public static SundialState Query(IReadOnlyList<HabitDef> habits, Ledger ledger, GardenDay today, RimRead read, ArcTimes times = null)
         {
             if (ledger == null) throw new ArgumentNullException(nameof(ledger));
+            ArcTimes schedule = times ?? ArcTimes.Default;
             var day = new GardenDay(today.Index - read.DaysBack);
-            SundialState state = SundialState.Capture(habits, ledger, day, read.Minute);
+            SundialState state = SundialState.Capture(habits, ledger, day, read.Minute, schedule);
             state.Now = read.Minute;
-            state.Arc = SundialRules.ArcAt(read.Minute);
+            state.Arc = schedule.ArcAt(read.Minute);
             state.GnomonDeg = read.GnomonDeg;
             if (state.Plants == null) return state;
             for (int i = 0; i < state.Plants.Count; i++)

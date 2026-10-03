@@ -56,13 +56,23 @@ namespace GardenVR.Core
         /// </summary>
         public bool TryStart(DateTimeOffset now, int nowMin)
         {
+            return TryStart(now, nowMin, null);
+        }
+
+        /// <summary>
+        /// Opens an hour on <paramref name="times"/>. A null schedule uses the plan arcs.
+        /// The locked arc follows the user's boundaries. The gnomon is still the clock.
+        /// </summary>
+        public bool TryStart(DateTimeOffset now, int nowMin, ArcTimes times)
+        {
             if (Phase == FocusPhase.Running || Phase == FocusPhase.Paused) return false;
             int minute = nowMin % SundialRules.MinutesPerDay;
             if (minute < 0) minute += SundialRules.MinutesPerDay;
             _started = now;
             _pauseAt = default(DateTimeOffset);
             _paused = TimeSpan.Zero;
-            Arc = SundialRules.ArcAt(minute);
+            ArcTimes schedule = times ?? ArcTimes.Default;
+            Arc = schedule.ArcAt(minute);
             StartGnomonDeg = SundialRules.GnomonAngleDeg(minute);
             EndedEarly = false;
             Counted = false;
