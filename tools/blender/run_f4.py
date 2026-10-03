@@ -23,6 +23,7 @@ from PIL import Image
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 BLENDER = r"C:\Program Files\Blender Foundation\Blender 4.2\blender.exe"
+GIT_BASH = r"C:\Program Files\Git\bin\bash.exe"
 HERE = os.path.dirname(os.path.abspath(__file__))
 MACRO = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures", "moss_macro.png")
 STYLE = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source", "moss_macro.png")
@@ -56,6 +57,14 @@ def run(cmd, log_path):
         say(tail)
         raise SystemExit(proc.returncode or 1)
     return proc.returncode
+
+
+def bash_exe():
+    """PATH `bash` from this Python is WSL, which cannot see C:/ paths. Git bash can."""
+    if os.path.isfile(GIT_BASH):
+        return GIT_BASH
+    found = shutil.which("bash")
+    return found or "bash"
 
 
 def blender(script, args, log_path):
@@ -183,7 +192,7 @@ def main():
         raw = os.path.join(out, "repaint", "raw-%s.png" % view)
         os.makedirs(os.path.dirname(raw), exist_ok=True)
         run(
-            ["bash", os.path.join(ROOT, "tools", "agy", "image.sh").replace("\\", "/"),
+            [bash_exe(), os.path.join(ROOT, "tools", "agy", "image.sh").replace("\\", "/"),
              PROMPT, raw.replace("\\", "/"), flat.replace("\\", "/")],
             os.path.join(out, "repaint", "agy-%s.log" % view),
         )
