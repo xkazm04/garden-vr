@@ -3,7 +3,9 @@ using UnityEngine;
 namespace GardenVR.Room
 {
     /// <summary>
-    /// Large curved room card parented to the eye camera, drawn with Fidelity/Plate.
+    /// Seated room card drawn with Fidelity/Plate. The rig parks it on RoomPlateAnchor, not on the eye,
+    /// so the photograph stays put when the head looks around. G1 captures disable this object and draw
+    /// their own screen-aligned plate.
     /// <see cref="PcOnly"/> stays on for PC. The Quest phase turns it off so the card never renders there.
     /// Batch captures do not enter play mode, so the saved material keeps the full exposure.
     /// Play mode calls <see cref="Show"/> from Start and fades up from black.

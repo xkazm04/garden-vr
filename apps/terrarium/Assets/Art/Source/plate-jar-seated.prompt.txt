@@ -1,0 +1,10 @@
+tool: image_edit
+aspect_ratio: 16:9
+reference: shared/assets/room-plates/plate-jar.png
+native_size: 1376x752
+stored_size: 1824x1024
+pixels: generated from the night plate, not cropped from the owner's frame
+prompt:
+A wide nighttime photograph from a chair at this same desk, looking down so the near wooden desktop fills the bottom of the frame and the far edge of the desk sits near the middle. The centre of the desk is bare dark wood with a faint cool reflection, empty and ready for a small jar. The same quiet room stays: a warm lamp glowing in the upper left, dark teal walls, dim framed pictures, and a soft plant in the far right. Photographed, natural grain, the room is empty.
+second pass:
+The same empty night desk and the same warm lamp, framed from a little higher and aimed further down. The wooden desktop fills the frame from the bottom up to the upper third, and the centre of the picture is bare wood well in front of the far edge. The far wall, framed pictures and lamp stay small along the top. Sharp wood grain in the middle of the desk, photographed, the room is empty.

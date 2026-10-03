@@ -25,7 +25,7 @@ namespace GardenVR.Room.Editor
             EnsureFolder("Packages/com.gardenvr.room/Runtime/Prefabs");
             EnsureFolder("Packages/com.gardenvr.room/Runtime/Meshes");
 
-            Mesh curve = SaveMesh(MeshPath, RoomPlateMesh.Curve(RoomPlateMesh.Radius, 80f, 65f, 64, 32));
+            SaveMesh(MeshPath, RoomPlateMesh.Curve(RoomPlateMesh.Radius, 80f, 65f, 64, 32));
             Mesh traceMesh = SaveMesh(TraceMeshPath, RoomPlateMesh.TraceQuad());
             Material plateMaterial = SavePlateMaterial();
             Material traceMaterial = SaveTraceMaterial();
@@ -53,9 +53,15 @@ namespace GardenVR.Room.Editor
                 if (eyeGo.GetComponent<UniversalAdditionalCameraData>() == null)
                     eyeGo.AddComponent<UniversalAdditionalCameraData>();
 
+                // World-anchored. The G1 photos are only true at their own camera, so the seated view
+                // uses a card sized to the 90 deg capture and a wider plate with no hands.
+                var anchorGo = new GameObject("RoomPlateAnchor");
+                anchorGo.transform.SetParent(root.transform, false);
+
                 var plateGo = new GameObject("PcRoomPlate");
-                plateGo.transform.SetParent(eyeGo.transform, false);
-                plateGo.AddComponent<MeshFilter>().sharedMesh = curve;
+                plateGo.transform.SetParent(anchorGo.transform, false);
+                plateGo.AddComponent<MeshFilter>().sharedMesh = traceMesh;
+                SeatedRig.PlaceSeatedCard(plateGo.transform);
                 var plateRenderer = plateGo.AddComponent<MeshRenderer>();
                 plateRenderer.sharedMaterial = plateMaterial;
                 plateRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -75,6 +81,7 @@ namespace GardenVR.Room.Editor
                 traceRenderer.receiveShadows = false;
 
                 rig.Bind(pivot.transform, camera, headPose);
+                rig.SetPlateAnchor(anchorGo.transform);
                 intents.View = camera;
                 desk.Height = PcDeskAnchor.DefaultHeight;
                 desk.Distance = PcDeskAnchor.TerrariumDistance;
