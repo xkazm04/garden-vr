@@ -54,11 +54,11 @@ Material:
     - _Tri: 0
     - _Velvet: 0.85
     m_Colors:
-    - _Emission: {r: 0.12, g: 0.36, b: 0.2, a: 1}
+    - _Emission: {r: 0.1, g: 0.3, b: 0.1, a: 1}
     - _GradY: {r: 0.018, g: 0.032, b: 0, a: 0}
-    - _LightColor: {r: 0.55, g: 1.2, b: 0.7, a: 1}
-    - _LightPos: {r: 0.0006574071, g: 0.06841296, b: 0.0036089527, a: 0.12}
-    - _Rim: {r: 0.4, g: 0.88, b: 0.52, a: 1}
+    - _LightColor: {r: 0.24, g: 0.52, b: 0.32, a: 1}
+    - _LightPos: {r: -0.0006976384, g: 0.06774951, b: 0.0035546946, a: 0.08}
+    - _Rim: {r: 0.16, g: 0.36, b: 0.16, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
     - _Tip: {r: 0.02, g: 0.052, b: 0.22, a: 1}
   m_BuildTextureStacks: []

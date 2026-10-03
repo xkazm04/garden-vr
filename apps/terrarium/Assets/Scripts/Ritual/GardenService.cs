@@ -205,6 +205,26 @@ namespace GardenVR.Terrarium
             return answer;
         }
 
+        /// <summary>
+        /// Three dew drops count this garden day the same way a finished breath ritual does.
+        /// Already done today leaves growth where it is. The three things are not written.
+        /// </summary>
+        public bool TryCompleteGlad(ThreeGoodThings session, out GrowthAnswer answer)
+        {
+            answer = default(GrowthAnswer);
+            if (session == null) return false;
+            if (RestoreOffered)
+                throw new InvalidOperationException("the save needs a restore before the next ritual");
+            if (_readOnly)
+                throw new InvalidOperationException("this save was written by a newer version and is read-only");
+            int? done = _save != null ? _save.GladDay : null;
+            if (!session.TryCountDay(Garden, TodayIndex, done, out answer)) return false;
+            if (_save != null) _save.GladDay = TodayIndex;
+            CopyGrowth();
+            Persist();
+            return true;
+        }
+
         public void ApplySettings(RitualSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));

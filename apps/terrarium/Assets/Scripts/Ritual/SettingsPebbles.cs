@@ -26,6 +26,7 @@ namespace GardenVR.Terrarium
         static readonly int[] Inhale = { 3, 4, 5 };
         static readonly int[] Exhale = { 5, 6, 7 };
         static readonly int[] BreathChoices = { 3, 4, 6, 8 };
+        const int BoxSlot = 3;
 
         static readonly Color Stone = new Color(0.22f, 0.20f, 0.17f, 1f);
         static readonly Color StoneLit = new Color(0.16f, 0.34f, 0.26f, 1f);
@@ -42,8 +43,16 @@ namespace GardenVR.Terrarium
         }
 
         Row[] _rows;
+        RitualSettings _preset;
 
         public bool Open { get { return _open; } }
+
+        /// <summary>Etched label for the 4-4-4-4 pace. No claim about health.</summary>
+        public static string BoxLabel()
+        {
+            int side = (int)BreathConfig.BoxSideSeconds;
+            return "Box, " + side.ToString(CultureInfo.InvariantCulture) + " s sides";
+        }
 
         public void Bind(JarRitualController controller)
         {
@@ -110,12 +119,21 @@ namespace GardenVR.Terrarium
         /// <summary>Seated capture of the open pebbles. Defaults, no save file.</summary>
         public static void PresentOpen(Transform jar)
         {
+            PresentOpen(jar, null);
+        }
+
+        /// <summary>Same fan, with a preset already chosen. Used by the box-pace capture.</summary>
+        public static void PresentOpen(Transform jar, RitualSettings preset)
+        {
             if (jar == null) return;
             var go = new GameObject("SettingsPebbles");
             go.transform.SetParent(jar, false);
             var pebbles = go.AddComponent<SettingsPebbles>();
+            pebbles._preset = preset;
             pebbles.Build();
             pebbles.SetOpen(true);
+            if (preset != null && preset.BoxPace)
+                BoxPaceMarks.Present(BoxPaceMarks.FindRing(jar));
         }
 
         void Cycle(string kind)
@@ -123,14 +141,28 @@ namespace GardenVR.Terrarium
             RitualSettings settings = ReadSettings();
             if (kind == "pace")
             {
-                int index = 0;
-                for (int i = 0; i < Inhale.Length; i++)
+                int index = BoxSlot;
+                if (!settings.BoxPace)
                 {
-                    if ((int)settings.InhaleSec == Inhale[i]) index = i;
+                    index = 0;
+                    for (int i = 0; i < Inhale.Length; i++)
+                    {
+                        if ((int)settings.InhaleSec == Inhale[i]) index = i;
+                    }
                 }
-                index = (index + 1) % Inhale.Length;
-                settings.InhaleSec = Inhale[index];
-                settings.ExhaleSec = Exhale[index];
+                index = (index + 1) % (Inhale.Length + 1);
+                if (index == BoxSlot)
+                {
+                    settings.BoxPace = true;
+                    settings.InhaleSec = BreathConfig.BoxSideSeconds;
+                    settings.ExhaleSec = BreathConfig.BoxSideSeconds;
+                }
+                else
+                {
+                    settings.BoxPace = false;
+                    settings.InhaleSec = Inhale[index];
+                    settings.ExhaleSec = Exhale[index];
+                }
             }
             else if (kind == "breaths")
             {
@@ -177,6 +209,7 @@ namespace GardenVR.Terrarium
 
         RitualSettings ReadSettings()
         {
+            if (_preset != null) return _preset;
             if (_controller != null && _controller.Service != null && _controller.Service.Settings != null)
                 return _controller.Service.Settings;
             return new RitualSettings();
@@ -253,6 +286,7 @@ namespace GardenVR.Terrarium
 
         static string PaceText(RitualSettings settings)
         {
+            if (settings != null && settings.BoxPace) return BoxLabel();
             int inhale = settings != null ? (int)settings.InhaleSec : 4;
             int exhale = settings != null ? (int)settings.ExhaleSec : 6;
             return inhale.ToString(CultureInfo.InvariantCulture) + " s in, " + exhale.ToString(CultureInfo.InvariantCulture) + " s out";

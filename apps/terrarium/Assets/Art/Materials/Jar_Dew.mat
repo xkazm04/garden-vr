@@ -49,7 +49,7 @@ Material:
     - _Trans: 0
     - _Tri: 0
     m_Colors:
-    - _Emission: {r: 0.75, g: 1, b: 0.88, a: 1}
+    - _Emission: {r: 0.7, g: 0.98, b: 0.84, a: 1}
     - _GradY: {r: 0, g: 0.1, b: 0, a: 0}
     - _LightColor: {r: 0, g: 0, b: 0, a: 1}
     - _LightPos: {r: 0, g: 0, b: 0, a: 0}

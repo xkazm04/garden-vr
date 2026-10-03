@@ -40,6 +40,24 @@ Shader "Fidelity/Glow"
             #pragma fragment frag
             #pragma multi_compile_instancing
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // #E8FFF4 in linear. A bright saturated green used to clip one channel and read as neon.
+            // Warm pixels (cork, soil, flower) and anything under the cap stay as authored.
+            half3 SoftBiolume(half3 c)
+            {
+                half greenness = c.g - max(c.r, c.b);
+                if (greenness <= 0.02) return c;
+                half3 cap = half3(0.804, 1.0, 0.903);
+                half peak = max(c.r, max(c.g, c.b));
+                half lo = min(c.r, min(c.g, c.b));
+                half sat = (peak - lo) / max(peak, 1e-3);
+                half hot = saturate((peak - 0.55) / 0.40) * saturate((sat - 0.28) / 0.40) * saturate(greenness / 0.15);
+                half y = dot(c, half3(0.2126, 0.7152, 0.0722));
+                half capY = dot(cap, half3(0.2126, 0.7152, 0.0722));
+                half3 pale = cap * (y / max(capY, 1e-3));
+                c = lerp(c, pale, hot * 0.70);
+                half3 over = max(c - cap, 0);
+                return min(c, cap) + over / (1.0 + over * 4.0);
+            }
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
             TEXTURE2D(_EmissionTex); SAMPLER(sampler_EmissionTex);
             TEXTURE2D(_TopTex); SAMPLER(sampler_TopTex);
@@ -115,6 +133,7 @@ Shader "Fidelity/Glow"
                     half outline = saturate(fwidth(alb.a) * 4.5);
                     c += _Rim.rgb * outline * _Edge * saturate(alb.a * 2.0);
                 }
+                c = SoftBiolume(c);
                 return half4(c, 1);
             }
             ENDHLSL
