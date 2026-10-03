@@ -138,6 +138,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<FocusBlockController>();
             if (UnityEngine.Object.FindAnyObjectByType<WeekDialController>() == null)
                 view.gameObject.AddComponent<WeekDialController>();
+            if (UnityEngine.Object.FindAnyObjectByType<RimScrubController>() == null)
+                view.gameObject.AddComponent<RimScrubController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -146,6 +148,8 @@ namespace GardenVR.Sundial
             _source = source;
             _keyboard = source as KeyboardMouseIntentSource;
             if (isActiveAndEnabled) Subscribe();
+            RimScrubController rim = GetComponent<RimScrubController>();
+            if (rim != null) rim.SetSource(source);
             if (_wizard != null) _wizard.SetSource(source);
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.SetSource(source);
@@ -182,6 +186,7 @@ namespace GardenVR.Sundial
         public void HandleDev(DevCommand command)
         {
             if (_service == null) return;
+            if (_service.Scrubbing && command != DevCommand.StateOverlay) return;
             if (command == DevCommand.StateOverlay) OverlayVisible = !OverlayVisible;
             else if (command == DevCommand.NextDay) _service.TryShiftDay(1);
             else if (command == DevCommand.PreviousDay) _service.TryShiftDay(-1);
@@ -352,6 +357,11 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (_service != null && _service.Scrubbing)
+            {
+                if (intent.Kind == HandIntentKind.Look) OnLook(intent.TargetId);
+                return;
+            }
             if (intent.Kind == HandIntentKind.Look) OnLook(intent.TargetId);
             else if (intent.Kind == HandIntentKind.Pinch) OnPinch(intent.TargetId);
             else if (intent.Kind == HandIntentKind.Poke) OnPoke(intent.TargetId);

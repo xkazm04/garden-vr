@@ -211,6 +211,7 @@ namespace GardenVR.Sundial
 
         bool Blocked()
         {
+            if (_sundial != null && _sundial.Service != null && _sundial.Service.Scrubbing) return true;
             if (_sundial != null && _sundial.Dismissed) return true;
             FirstRunWizard wizard = GetComponent<FirstRunWizard>();
             if (wizard != null && wizard.Running) return true;

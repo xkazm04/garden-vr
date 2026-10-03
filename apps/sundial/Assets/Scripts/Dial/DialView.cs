@@ -510,6 +510,8 @@ namespace GardenVR.Sundial
                 gameObject.AddComponent<FocusBlockController>();
             if (GetComponent<WeekDialController>() == null)
                 gameObject.AddComponent<WeekDialController>();
+            if (GetComponent<RimScrubController>() == null)
+                gameObject.AddComponent<RimScrubController>();
         }
 
         void OnEnable()
