@@ -8,6 +8,12 @@ namespace GardenVR.Sundial
     public sealed class SundialSettings
     {
         public int BoundaryMin = 180;
+        /// <summary>06:00. The morning arc opens here. A drag snaps this to 15 minutes.</summary>
+        public int MorningMin = 6 * 60;
+        /// <summary>11:00. Midday opens here.</summary>
+        public int MiddayMin = 11 * 60;
+        /// <summary>18:00. Dusk, the wind-down arc, opens here. It still ends at <see cref="BoundaryMin"/>.</summary>
+        public int DuskMin = 18 * 60;
         public bool Voice;
         public bool Beds;
         public bool ReducedMotion;
@@ -132,6 +138,9 @@ namespace GardenVR.Sundial
             var settings = new SundialSettings();
             if (obj == null) return settings;
             if (obj.Has("BoundaryMin")) settings.BoundaryMin = obj.Get("BoundaryMin").AsInt();
+            if (obj.Has("MorningMin")) settings.MorningMin = obj.Get("MorningMin").AsInt();
+            if (obj.Has("MiddayMin")) settings.MiddayMin = obj.Get("MiddayMin").AsInt();
+            if (obj.Has("DuskMin")) settings.DuskMin = obj.Get("DuskMin").AsInt();
             if (obj.Has("Voice")) settings.Voice = obj.Get("Voice").AsBool();
             if (obj.Has("Beds")) settings.Beds = obj.Get("Beds").AsBool();
             if (obj.Has("ReducedMotion")) settings.ReducedMotion = obj.Get("ReducedMotion").AsBool();
@@ -144,6 +153,9 @@ namespace GardenVR.Sundial
         {
             var obj = new JsonObject();
             obj.Set("BoundaryMin", JsonValue.Number(settings.BoundaryMin));
+            obj.Set("MorningMin", JsonValue.Number(settings.MorningMin));
+            obj.Set("MiddayMin", JsonValue.Number(settings.MiddayMin));
+            obj.Set("DuskMin", JsonValue.Number(settings.DuskMin));
             obj.Set("Voice", JsonValue.Bool(settings.Voice));
             obj.Set("Beds", JsonValue.Bool(settings.Beds));
             obj.Set("ReducedMotion", JsonValue.Bool(settings.ReducedMotion));

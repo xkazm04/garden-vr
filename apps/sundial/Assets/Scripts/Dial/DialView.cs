@@ -585,6 +585,8 @@ namespace GardenVR.Sundial
                 gameObject.AddComponent<WeekDialController>();
             if (GetComponent<RimScrubController>() == null)
                 gameObject.AddComponent<RimScrubController>();
+            if (GetComponent<ArcTimesController>() == null)
+                gameObject.AddComponent<ArcTimesController>();
         }
 
         void OnEnable()

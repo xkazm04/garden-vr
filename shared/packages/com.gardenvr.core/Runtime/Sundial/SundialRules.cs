@@ -67,6 +67,15 @@ namespace GardenVR.Core
         /// </summary>
         public static PlantState Plant(HabitDef habit, Ledger ledger, GardenDay today, int nowMin)
         {
+            return Plant(habit, ledger, today, nowMin, null);
+        }
+
+        /// <summary>
+        /// Same plant as <see cref="Plant(HabitDef, Ledger, GardenDay, int)"/>, with due read from
+        /// <paramref name="times"/>. A null schedule is the plan default.
+        /// </summary>
+        public static PlantState Plant(HabitDef habit, Ledger ledger, GardenDay today, int nowMin, ArcTimes times)
+        {
             if (habit == null) throw new ArgumentNullException(nameof(habit));
             if (ledger == null) throw new ArgumentNullException(nameof(ledger));
             if (string.IsNullOrEmpty(habit.Id)) throw new ArgumentException("habit id");
@@ -83,6 +92,7 @@ namespace GardenVR.Core
 
             int lifetime = LifetimeKept(ledger, habit, today);
             ArcId arc;
+            ArcTimes schedule = times ?? ArcTimes.Default;
             var state = new PlantState();
             state.HabitId = habit.Id;
             state.Window = window;
@@ -90,7 +100,7 @@ namespace GardenVR.Core
             state.LifetimeKept = lifetime;
             state.Stage = StageFor(lifetime);
             state.Bloom = BloomFor(windowKept);
-            state.DueNow = window[6] == TileState.Today && TryArc(habit.Group, out arc) && ArcAt(nowMin) == arc;
+            state.DueNow = window[6] == TileState.Today && TryArc(habit.Group, out arc) && schedule.ArcAt(nowMin) == arc;
             int yesterday = today.Index - 1;
             state.CanBackfillYesterday = yesterday >= habit.CreatedDay && !ledger.IsKept(habit.Id, yesterday);
             return state;

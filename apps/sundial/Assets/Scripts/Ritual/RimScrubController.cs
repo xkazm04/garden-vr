@@ -203,6 +203,8 @@ namespace GardenVR.Sundial
 
         bool Blocked()
         {
+            SettingsTabs settings = GetComponent<SettingsTabs>();
+            if (settings != null && settings.Open) return true;
             if (_sundial != null && _sundial.Dismissed) return true;
             if (_sundial != null && _sundial.View != null && _sundial.View.weekPage) return true;
             FirstRunWizard wizard = GetComponent<FirstRunWizard>();
@@ -222,7 +224,7 @@ namespace GardenVR.Sundial
             RimRead read = Read;
             SundialState picture = null;
             if (Service.Ledger != null)
-                picture = RimScrub.Query(Service.Save == null ? null : Service.Save.Habits, Service.Ledger, Service.Today(), read);
+                picture = RimScrub.Query(Service.Save == null ? null : Service.Save.Habits, Service.Ledger, Service.Today(), read, Service.ArcSchedule);
             if (view.tiles == null || view.tiles.Length != DialView.TileCount)
                 view.tiles = new int[DialView.TileCount];
             for (int t = 0; t < view.tiles.Length; t++) view.tiles[t] = DialView.HiddenTile;
