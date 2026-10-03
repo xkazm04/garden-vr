@@ -64,6 +64,11 @@ namespace GardenVR.Terrarium
         GUIStyle _overlayStyle;
         HabitDesk _desk;
         AudioCueService _audio;
+        VoiceGuide _guide;
+        GameObject _voiceShell;
+        GameObject _voiceCaption;
+        Material _shellMat;
+        bool _gapReturn;
         readonly Dictionary<string, int> _cues = new Dictionary<string, int>();
         bool _cuedLand;
         bool _cuedLid;
@@ -85,6 +90,17 @@ namespace GardenVR.Terrarium
         public JarView View => _view;
         public bool AutoPace => _autoPace;
         public bool OverlayVisible => _overlay;
+        public bool VoiceShellVisible => _voiceShell != null && _voiceShell.activeSelf;
+
+        public string VoiceShellLabel
+        {
+            get
+            {
+                if (_voiceShell == null) return null;
+                TextMesh mesh = _voiceShell.GetComponentInChildren<TextMesh>(true);
+                return mesh != null ? mesh.text : null;
+            }
+        }
         public bool AwaitingContinue => _awaitContinue;
         public bool HoldingBreath => _holdVisual;
         public float PausedFor => _pausedFor;
@@ -175,6 +191,8 @@ namespace GardenVR.Terrarium
             _pace = -1f;
             _cuedMoss = false;
             _cuedDew = false;
+            LatchGap();
+            if (_guide != null) _guide.ResetRitual();
             PushGarden();
         }
 
@@ -247,6 +265,7 @@ namespace GardenVR.Terrarium
             if (_view == null) _view = GetComponent<JarView>();
             if (_view != null) _view.reducedMotion = _service.Settings.ReducedMotion;
             EnsureAudio();
+            LatchGap();
         }
 
         void Start()
@@ -265,6 +284,7 @@ namespace GardenVR.Terrarium
             PushIdle();
             RefreshHabits();
             Play("amb.room", null, 0f);
+            SyncBed();
             Log("SessionStart");
         }
 
@@ -294,6 +314,7 @@ namespace GardenVR.Terrarium
                 }
             }
             if (_paceMat != null) Destroy(_paceMat);
+            if (_shellMat != null) Destroy(_shellMat);
         }
 
         void Update()
@@ -314,6 +335,12 @@ namespace GardenVR.Terrarium
             RefreshHabits();
 
             bool pinching = LivePinch();
+            if (_guide != null)
+            {
+                _guide.ObservePinching(pinching);
+                _guide.Tick(dt);
+            }
+            TickVoiceOffer();
             if (_needFreshPinch && !pinching)
                 _sawOpen = true;
             if (_needFreshPinch && _sawOpen && !_awaitContinue && pinching)
@@ -475,6 +502,7 @@ namespace GardenVR.Terrarium
             Log("Answer");
             if (_lastAnswer.NewFrond)
                 Play("answer.chime", FrondAnchor(), 0f);
+            if (_guide != null) _guide.OnAnswer();
         }
 
         void FlushSessionEvents()
@@ -484,7 +512,11 @@ namespace GardenVR.Terrarium
                 BreathEvent ev = _session.Events[_loggedEvents++];
                 if (ev.Kind == BreathEventKind.InhaleStarted) NoteInhaleStart();
                 if (ev.Kind == BreathEventKind.ExhaleStarted) Play("fog.hiss", JarAnchor(), 0f);
-                if (ev.Kind == BreathEventKind.BreathCounted) Play("breath.exhale.end", JarAnchor(), 0f);
+                if (ev.Kind == BreathEventKind.BreathCounted)
+                {
+                    Play("breath.exhale.end", JarAnchor(), 0f);
+                    if (_guide != null) _guide.OnBreathCounted(ev.Breaths);
+                }
                 if (ev.Kind == BreathEventKind.Paused) Play("pause.hold", null, 0f);
                 Log(ev.Kind.ToString());
             }
@@ -545,8 +577,21 @@ namespace GardenVR.Terrarium
                 Play("pebble.tap", _view != null ? FindNamed(_view.transform, "Pebbles") : null, 0f);
                 return;
             }
+            if ((intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
+                && intent.TargetId == VoiceGuide.ShellId
+                && VoiceShellVisible)
+            {
+                bool on = _service != null && _service.Settings != null && _service.Settings.VoiceGuide;
+                SetVoiceGuide(!on);
+                return;
+            }
             if (intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
                 HandleHabitIntent(intent);
+            if (_guide != null && _session != null
+                && (intent.Kind == HandIntentKind.PinchHold || intent.Kind == HandIntentKind.Release))
+            {
+                _guide.OnIntent(intent, _session.Breaths, _session.TargetBreaths, _gapReturn, _latchedPause);
+            }
         }
 
         void OnSystemPause()
@@ -735,25 +780,118 @@ namespace GardenVR.Terrarium
 
         void EnsureAudio()
         {
-            if (_audio != null) return;
-            _audio = GetComponent<AudioCueService>();
-            if (_audio == null) _audio = gameObject.AddComponent<AudioCueService>();
-            if (_service != null && _service.Settings != null)
+            if (_audio == null)
             {
-                _audio.VoiceGuide = _service.Settings.VoiceGuide;
-                _audio.Beds = _service.Settings.NightBed;
+                _audio = GetComponent<AudioCueService>();
+                if (_audio == null) _audio = gameObject.AddComponent<AudioCueService>();
             }
+            if (_guide == null) _guide = new VoiceGuide(_audio, id => Play(id, null, 0f), SetVoiceCaption);
+            SyncGuideFlag();
         }
 
         /// <summary>Counts the request, then asks the cue service. The string id stays here so tests can scan it.</summary>
-        void Play(string id, Transform at, float semitones)
+        bool Play(string id, Transform at, float semitones)
         {
             int count;
             _cues.TryGetValue(id, out count);
             _cues[id] = count + 1;
             Debug.Log("[Terrarium] cue " + id + " semitones " + semitones.ToString(CultureInfo.InvariantCulture));
             EnsureAudio();
-            if (_audio != null) _audio.Play(id, at, semitones);
+            return _audio != null && _audio.Play(id, at, semitones);
+        }
+
+        /// <summary>Turns the guide and the night bed on for a mixdown run. Both stay off in a normal first ritual.</summary>
+        public void UseVoiceAndBed()
+        {
+            if (_service == null || _service.Settings == null) return;
+            _service.Settings.VoiceGuide = true;
+            _service.Settings.NightBed = true;
+            _service.Save();
+            SyncGuideFlag();
+            SyncBed();
+        }
+
+        public void SetVoiceGuide(bool on)
+        {
+            if (_service == null || _service.Settings == null) return;
+            if (_service.Settings.VoiceGuide != on)
+            {
+                _service.Settings.VoiceGuide = on;
+                _service.Save();
+            }
+            SyncGuideFlag();
+            RefreshVoiceShell();
+        }
+
+        void SyncGuideFlag()
+        {
+            bool voice = _service != null && _service.Settings != null && _service.Settings.VoiceGuide;
+            bool bed = _service != null && _service.Settings != null && _service.Settings.NightBed;
+            if (_audio != null)
+            {
+                _audio.VoiceGuide = voice;
+                _audio.Beds = bed;
+            }
+            if (_guide != null) _guide.Enabled = voice;
+        }
+
+        void SyncBed()
+        {
+            EnsureAudio();
+            bool on = _service != null && _service.Settings != null && _service.Settings.NightBed;
+            if (_audio != null) _audio.Beds = on;
+            if (!on)
+            {
+                if (_audio != null) _audio.Stop(VoiceGuide.BedId);
+                return;
+            }
+            if (_audio != null && _audio.IsPlaying(VoiceGuide.BedId)) return;
+            Play(VoiceGuide.BedId, null, 0f);
+        }
+
+        void LatchGap()
+        {
+            _gapReturn = _garden != null && _service != null && _garden.DaysSinceRitual(_service.TodayIndex) > 1;
+        }
+
+        void TickVoiceOffer()
+        {
+            if (_voiceShell == null || _service == null || _service.Document == null) return;
+            if (_service.RestoreOffered)
+            {
+                if (_voiceShell.activeSelf) _voiceShell.SetActive(false);
+                return;
+            }
+            bool show = VoiceOfferDue();
+            if (_voiceShell.activeSelf != show) _voiceShell.SetActive(show);
+            if (show) RefreshVoiceShell();
+        }
+
+        bool VoiceOfferDue()
+        {
+            int done = _service.Document.RitualsCompleted;
+            if (done <= 0) return false;
+            if (done == 1 && _answered && _answerTime < VoiceGuide.OfferAfterSeconds) return false;
+            return true;
+        }
+
+        void SetVoiceCaption(string text)
+        {
+            if (_voiceCaption == null) return;
+            bool on = !string.IsNullOrEmpty(text);
+            var mesh = _voiceCaption.GetComponent<TextMesh>();
+            if (mesh != null && on) mesh.text = text;
+            if (_voiceCaption.activeSelf != on) _voiceCaption.SetActive(on);
+        }
+
+        void RefreshVoiceShell()
+        {
+            if (_voiceShell == null) return;
+            TextMesh mesh = _voiceShell.GetComponentInChildren<TextMesh>(true);
+            if (mesh == null) return;
+            bool on = _service != null && _service.Settings != null && _service.Settings.VoiceGuide;
+            mesh.text = on ? "Voice guide on." : "A voice can follow your breath.";
+            if (_shellMat != null) _shellMat.SetColor("_Emission", on ? DotLit : PaceMint);
         }
 
         void TickFirstRunCues()
@@ -841,6 +979,8 @@ namespace GardenVR.Terrarium
             BuildPaceRing();
             BuildPrompt();
             BuildRestorePrompt();
+            BuildVoiceShell();
+            BuildVoiceCaption();
         }
 
         static BreathConfig ConfigFrom(RitualSettings settings)
@@ -1009,6 +1149,76 @@ namespace GardenVR.Terrarium
             var target = _restore.AddComponent<IntentTarget>();
             target.Id = RestorePromptId;
             _restore.SetActive(false);
+        }
+
+        void BuildVoiceShell()
+        {
+            _voiceShell = new GameObject("VoiceShell");
+            _voiceShell.transform.SetParent(transform, false);
+            _voiceShell.transform.localPosition = new Vector3(0.12f, 0.03f, -0.04f);
+            _voiceShell.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+
+            var bead = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            bead.name = "ShellBead";
+            Collider beadCollider = bead.GetComponent<Collider>();
+            if (beadCollider != null) Destroy(beadCollider);
+            bead.transform.SetParent(_voiceShell.transform, false);
+            bead.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            bead.transform.localScale = Vector3.one * 0.018f;
+            Shader shader = Shader.Find("Fidelity/Glow");
+            if (shader != null)
+            {
+                _shellMat = new Material(shader) { name = "VoiceShell" };
+                _shellMat.SetColor("_Tint", Color.white);
+                _shellMat.SetColor("_Emission", PaceMint);
+                _shellMat.SetColor("_Rim", Color.black);
+                var beadRenderer = bead.GetComponent<Renderer>();
+                beadRenderer.sharedMaterial = _shellMat;
+                beadRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                beadRenderer.receiveShadows = false;
+            }
+
+            var label = new GameObject("ShellLabel");
+            label.transform.SetParent(_voiceShell.transform, false);
+            label.transform.localPosition = new Vector3(0f, -0.01f, 0f);
+            StyleLabel(label.AddComponent<TextMesh>(), "A voice can follow your breath.", 0.0016f);
+
+            var box = _voiceShell.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.16f, 0.06f, 0.02f);
+            box.center = new Vector3(0f, 0.01f, 0f);
+            _voiceShell.SetActive(true);
+            var target = _voiceShell.AddComponent<IntentTarget>();
+            target.Id = VoiceGuide.ShellId;
+            _voiceShell.SetActive(false);
+        }
+
+        void BuildVoiceCaption()
+        {
+            _voiceCaption = new GameObject("VoiceCaption");
+            _voiceCaption.transform.SetParent(transform, false);
+            _voiceCaption.transform.localPosition = new Vector3(0f, 0.055f, -0.08f);
+            _voiceCaption.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            StyleLabel(_voiceCaption.AddComponent<TextMesh>(), "", 0.002f);
+            _voiceCaption.SetActive(false);
+        }
+
+        static void StyleLabel(TextMesh text, string value, float characterSize)
+        {
+            text.text = value;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.fontSize = 48;
+            text.characterSize = characterSize;
+            text.color = Etch;
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            if (font != null) text.font = font;
+            MeshRenderer meshRenderer = text.GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                meshRenderer.receiveShadows = false;
+            }
         }
 
         void Subscribe()

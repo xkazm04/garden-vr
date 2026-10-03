@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Jar_Moss
-  m_Shader: {fileID: 4800000, guid: 88fd645f85b6421448a0135ed11607d4, type: 3}
+  m_Shader: {fileID: 4800000, guid: 73580834996bac044a7068eccdb00f31, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,6 +25,10 @@ Material:
     m_TexEnvs:
     - _EmissionTex:
         m_Texture: {fileID: 2800000, guid: 79ef0e63e6dda3648b9da2e3e95ad382, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MacroB:
+        m_Texture: {fileID: 2800000, guid: b17cacfb8f71f904b9950efd45bb0dd2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -44,13 +48,13 @@ Material:
     - _RimPower: 3.2
     - _Shell: 0
     - _Soft: 0
-    - _TopAmount: 0.92
+    - _TopAmount: 0
     - _TopTile: 52
     - _Trans: 0
-    - _Tri: 52
+    - _Tri: 0
     m_Colors:
     - _Emission: {r: 0.16, g: 0.48, b: 0.26, a: 1}
-    - _GradY: {r: 0.016, g: 0.032, b: 0, a: 0}
+    - _GradY: {r: 0.018, g: 0.046, b: 0, a: 0}
     - _LightColor: {r: 0.55, g: 1.2, b: 0.7, a: 1}
     - _LightPos: {r: 0.0006574071, g: 0.06841296, b: 0.0036089527, a: 0.12}
     - _Rim: {r: 0.357, g: 0.765, b: 0.46750003, a: 0.85}
