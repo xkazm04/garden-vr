@@ -56,19 +56,19 @@ namespace GardenVR.Terrarium
         static readonly Color FernRim = new Color(0.32f, 0.50f, 0.42f);
         static readonly Color FiddleEmission = new Color(0.46f, 0.95f, 0.55f);
         static readonly Color FiddleRim = new Color(0.48f, 0.70f, 0.52f);
-        static readonly Color MossEmission = new Color(0.13f, 0.40f, 0.11f);
-        static readonly Color MossRim = new Color(0.18f, 0.42f, 0.16f);
-        static readonly Color MossCardEmission = new Color(0.10f, 0.30f, 0.10f);
-        static readonly Color MossCardRim = new Color(0.16f, 0.36f, 0.16f);
-        static readonly Color FocusMint = new Color(0.24f, 0.52f, 0.32f, 1f);
+        static readonly Color MossEmission = new Color(0.22f, 0.62f, 0.18f);
+        static readonly Color MossRim = new Color(0.20f, 0.48f, 0.18f);
+        static readonly Color MossCardEmission = new Color(0.12f, 0.42f, 0.11f);
+        static readonly Color MossCardRim = new Color(0.18f, 0.44f, 0.16f);
+        static readonly Color FocusMint = new Color(0.32f, 0.66f, 0.40f, 1f);
         static readonly Color FocusWarm = new Color(0.55f, 0.32f, 0.12f, 1f);
         const float FocusRadius = 0.080f;
-        static readonly Color GlassRim = new Color(0.38f, 0.58f, 0.66f, 0.26f);
-        static readonly Color GlassInner = new Color(0.18f, 0.40f, 0.26f, 1f);
+        static readonly Color GlassRim = new Color(0.48f, 0.72f, 0.78f, 0.32f);
+        static readonly Color GlassInner = new Color(0.34f, 0.86f, 0.48f, 1f);
         const float GlassRimPower = 2.40f;
         static readonly Color DewEmission = new Color(0.70f, 0.98f, 0.84f);
         static readonly Color CoilGlow = new Color(0.42f, 0.78f, 0.50f);
-        static readonly Color JarGlow = new Color(0.10f, 0.26f, 0.16f);
+        static readonly Color JarGlow = new Color(0.16f, 0.40f, 0.24f);
 
         [Header("State")]
         [Range(0f, 1f)] public float breath = 0.5f;
@@ -189,31 +189,32 @@ namespace GardenVR.Terrarium
         // #F2D27A, the style-bible spore gold. The card multiplies it, so the material stays this hue.
         static readonly Color SporeGold = new Color(0.9490196f, 0.8235294f, 0.4784314f, 1f);
 
-        static readonly Color RingMint = new Color(0.16f, 0.28f, 0.20f);
-        static readonly Color RingAnswer = new Color(0.20f, 0.34f, 0.24f);
+        static readonly Color RingMint = new Color(0.46f, 0.82f, 0.54f);
+        static readonly Color RingAnswer = new Color(0.50f, 0.88f, 0.58f);
         static readonly Color RingGold = new Color(0.92f, 0.70f, 0.32f);
-        static readonly Color SpillMint = new Color(0.12f, 0.30f, 0.18f, 1f);
+        static readonly Color RingPool = new Color(0.12f, 0.32f, 0.18f, 1f);
+        static readonly Color SpillMint = new Color(0.20f, 0.48f, 0.28f, 1f);
 
         // Week 6 endpoints. Week 1 returns the locked colours above, unchanged.
-        static readonly Color MossEmissionWarm = new Color(0.34f, 0.40f, 0.10f);
-        static readonly Color MossRimWarm = new Color(0.36f, 0.40f, 0.12f);
-        static readonly Color MossCardEmissionWarm = new Color(0.26f, 0.30f, 0.08f);
-        static readonly Color MossCardRimWarm = new Color(0.32f, 0.34f, 0.12f);
+        static readonly Color MossEmissionWarm = new Color(0.36f, 0.50f, 0.12f);
+        static readonly Color MossRimWarm = new Color(0.40f, 0.46f, 0.14f);
+        static readonly Color MossCardEmissionWarm = new Color(0.30f, 0.44f, 0.12f);
+        static readonly Color MossCardRimWarm = new Color(0.36f, 0.42f, 0.14f);
         static readonly Color FernEmissionWarm = new Color(0.36f, 0.50f, 0.18f);
         static readonly Color FernRimWarm = new Color(0.48f, 0.46f, 0.24f);
         static readonly Color FiddleEmissionWarm = new Color(0.58f, 0.82f, 0.34f);
         static readonly Color FiddleRimWarm = new Color(0.62f, 0.58f, 0.28f);
         static readonly Color FocusGold = new Color(0.46f, 0.40f, 0.16f, 1f);
-        static readonly Color GlassRimWarm = new Color(0.52f, 0.56f, 0.42f, 0.26f);
-        static readonly Color GlassInnerWarm = new Color(0.42f, 0.40f, 0.14f, 1f);
+        static readonly Color GlassRimWarm = new Color(0.62f, 0.64f, 0.48f, 0.32f);
+        static readonly Color GlassInnerWarm = new Color(0.52f, 0.64f, 0.22f, 1f);
         static readonly Color GlassVolumeCool = new Color(0.30f, 0.78f, 0.52f, 0.10f);
         static readonly Color GlassVolumeWarm = new Color(0.50f, 0.68f, 0.30f, 0.10f);
         static readonly Color GlassStreakCool = new Color(0.50f, 0.66f, 0.74f, 0.12f);
         static readonly Color GlassStreakWarm = new Color(0.64f, 0.62f, 0.42f, 0.12f);
         static readonly Color DewEmissionWarm = new Color(0.86f, 0.88f, 0.52f);
         static readonly Color CoilGlowWarm = new Color(0.64f, 0.66f, 0.28f);
-        static readonly Color JarGlowWarm = new Color(0.30f, 0.24f, 0.10f);
-        static readonly Color SpillWarm = new Color(0.34f, 0.26f, 0.10f, 1f);
+        static readonly Color JarGlowWarm = new Color(0.36f, 0.32f, 0.12f);
+        static readonly Color SpillWarm = new Color(0.42f, 0.36f, 0.14f, 1f);
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
@@ -441,6 +442,7 @@ namespace GardenVR.Terrarium
                 ringMat.SetColor("_Color", answering
                     ? Color.Lerp(RingMint, RingGold, gold)
                     : Color.Lerp(RingMint, RingAnswer, pulse));
+                ringMat.SetColor("_Color2", RingPool);
             }
             if (glassMat != null)
             {
@@ -451,9 +453,8 @@ namespace GardenVR.Terrarium
                 glassMat.SetColor("_Rim", SeasonColor(GlassRim, GlassRimWarm, seasonWarmth));
                 glassMat.SetFloat("_RimPower", GlassRimPower);
                 glassMat.SetColor("_Inner", SeasonColor(GlassInner, GlassInnerWarm, seasonWarmth));
-                // Locked in Assets/Art/LOCKED.md from T-TER-019. Full beside the moss, gone by the shoulder.
-                // Full beside the moss, gone before the shoulder, so the upper pane is not a glowing edge.
-                glassMat.SetVector("_InnerY", new Vector4(0.030f, 0.040f, 0f, 0f));
+                // Full through the moss and the crozier, half-gone near the upper pane, out by the lip.
+                glassMat.SetVector("_InnerY", new Vector4(0.078f, 0.052f, 0f, 0f));
                 glassMat.SetColor("_Volume", SeasonColor(GlassVolumeCool, GlassVolumeWarm, seasonWarmth));
                 glassMat.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
                 // A near-white streak at 0.46 was a hard column in the pane. Keep the stroke, under the cap.
@@ -468,13 +469,16 @@ namespace GardenVR.Terrarium
             {
                 mossMat.SetColor("_Emission", SeasonColor(MossEmission, MossEmissionWarm, seasonWarmth) * (1f + 0.45f * mossGlow));
                 mossMat.SetColor("_Rim", SeasonColor(MossRim, MossRimWarm, seasonWarmth) * (0.85f + 0.35f * mossGlow));
-                SetTip(mossMat, 0.018f, 0.048f, 0.18f, 1f);
+                // One carpet photo. A repeating tile put a cross of cells through the mound.
+                mossMat.SetFloat("_Tri", 0f);
+                mossMat.SetFloat("_TopAmount", 0f);
+                SetTip(mossMat, 0.018f, 0.048f, 0.55f, 1f);
             }
             if (mossCardMat != null)
             {
                 mossCardMat.SetColor("_Emission", SeasonColor(MossCardEmission, MossCardEmissionWarm, seasonWarmth) * (1f + 0.40f * mossGlow));
                 mossCardMat.SetColor("_Rim", SeasonColor(MossCardRim, MossCardRimWarm, seasonWarmth));
-                SetTip(mossCardMat, 0.020f, 0.052f, 0.22f, 1f);
+                SetTip(mossCardMat, 0.020f, 0.052f, 0.28f, 1f);
             }
             float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
             if (_hasLook && _look.Gap) coil = 0.35f;
