@@ -28,7 +28,6 @@ namespace GardenVR.Sundial
         public const string MotionLabel = "Reduced motion";
 
         static readonly Color Ink = new Color(0.165f, 0.149f, 0.133f, 1f);
-        static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.96f);
         static readonly Color Pencil = new Color(0.541f, 0.506f, 0.471f, 1f);
 
         SundialController _controller;
@@ -38,7 +37,6 @@ namespace GardenVR.Sundial
         GameObject _root;
         GameObject _sheet;
         Material _inkMat;
-        Texture2D _paperTex;
         Texture2D _disc;
         Texture2D _ring;
         Mesh _quad;
@@ -113,7 +111,6 @@ namespace GardenVR.Sundial
         void OnDestroy()
         {
             if (_inkMat != null) Destroy(_inkMat);
-            if (_paperTex != null) Destroy(_paperTex);
             if (_disc != null) Destroy(_disc);
             if (_ring != null) Destroy(_ring);
             if (_quad != null) Destroy(_quad);
@@ -131,25 +128,26 @@ namespace GardenVR.Sundial
 
             _root = new GameObject(TabId);
             _root.transform.SetParent(transform, false);
-            var ear = MakeTarget(_root.transform, "ear", TabLabel, TabId, 0.052f, 0.018f);
+            var ear = MakeTarget(_root.transform, "ear", TabLabel, TabId, 0.092f, 0.032f);
             ear.transform.localPosition = Vector3.zero;
+            InkLetter.AttachNote(ear.transform, new Vector2(0.092f, 0.032f));
 
             _sheet = new GameObject("sheet");
             _sheet.transform.SetParent(_root.transform, false);
-            _sheet.transform.localPosition = new Vector3(0f, 0.078f, 0f);
+            _sheet.transform.localPosition = new Vector3(0f, 0.112f, 0f);
             var paper = new GameObject("paper");
             paper.transform.SetParent(_sheet.transform, false);
             paper.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            paper.transform.localPosition = new Vector3(0f, 0.010f, 0.002f);
-            paper.transform.localScale = new Vector3(0.168f, 0.132f, 1f);
+            paper.transform.localPosition = new Vector3(0f, 0.016f, 0.002f);
+            paper.transform.localScale = new Vector3(0.220f, 0.188f, 1f);
             paper.AddComponent<MeshFilter>().sharedMesh = _quad;
             var paperRenderer = paper.AddComponent<MeshRenderer>();
             paperRenderer.sharedMaterial = _inkMat;
             paperRenderer.shadowCastingMode = ShadowCastingMode.Off;
             paperRenderer.receiveShadows = false;
-            Tint(paperRenderer, _paperTex, Paper);
+            InkLetter.Tint(paperRenderer, InkLetter.Note(0.220f / 0.188f), Color.white);
 
-            float[] ys = { 0.044f, 0.020f, -0.004f, -0.028f };
+            float[] ys = { 0.056f, 0.030f, 0.004f, -0.022f };
             for (int i = 0; i < _rows.Length; i++)
             {
                 Row row = _rows[i];
@@ -167,23 +165,7 @@ namespace GardenVR.Sundial
             var go = new GameObject(name);
             go.transform.SetParent(parent, false);
             var mesh = go.AddComponent<TextMesh>();
-            mesh.text = text;
-            mesh.anchor = TextAnchor.MiddleCenter;
-            mesh.alignment = TextAlignment.Center;
-            mesh.fontSize = 48;
-            mesh.characterSize = 0.0022f;
-            mesh.color = Ink;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) mesh.font = font;
-            var textRenderer = mesh.GetComponent<MeshRenderer>();
-            if (textRenderer != null)
-            {
-                textRenderer.shadowCastingMode = ShadowCastingMode.Off;
-                textRenderer.receiveShadows = false;
-                // The paper is a transparent card. Labels draw after it, or the lower rows vanish behind the sheet.
-                textRenderer.material.renderQueue = 3100;
-            }
+            InkLetter.Apply(mesh, text, 48, 0.0022f);
             var box = go.AddComponent<BoxCollider>();
             box.size = new Vector3(width, height, 0.01f);
             var target = go.AddComponent<IntentTarget>();
@@ -268,7 +250,6 @@ namespace GardenVR.Sundial
             _inkMat.SetFloat("_Coverage", 0f);
             _inkMat.SetFloat("_Mask", 0f);
             _inkMat.SetFloat("_ZWrite", 0f);
-            _paperTex = Solid(Color.white);
             _disc = Disc(Ink, true);
             _ring = Disc(Pencil, false);
             _quad = Quad();
@@ -282,16 +263,6 @@ namespace GardenVR.Sundial
             if (texture != null) block.SetTexture("_MainTex", texture);
             block.SetColor("_Color", color);
             renderer.SetPropertyBlock(block);
-        }
-
-        static Texture2D Solid(Color color)
-        {
-            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            var pixels = new Color[4];
-            for (int i = 0; i < pixels.Length; i++) pixels[i] = color;
-            tex.SetPixels(pixels);
-            tex.Apply(false, false);
-            return tex;
         }
 
         static Texture2D Disc(Color ink, bool filled)

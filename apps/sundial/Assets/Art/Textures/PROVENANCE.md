@@ -21,7 +21,7 @@ Interim art for the drawn dial. Nothing in this folder that the dial uses is tak
 | halo_sunrise.png | removed. Interim IWSDK halo, replaced by halo_sunrise_seed/sprout/young/leafy/full |
 | halo_midday.png | removed. Interim IWSDK halo |
 | halo_dusk.png | removed. Interim IWSDK halo |
-| plant_sunrise_{seed,sprout,young,leafy,full}.png | generated. Prompt apps/sundial/Art/Source/plants/src_sunrise_{stage}.prompt.txt. Keyed by plants_key.py |
+| plant_sunrise_{seed,sprout,young,leafy,full}.png | generated. Prompt apps/sundial/Art/Source/plants/src_sunrise_{stage}.prompt.txt. Keyed by plants_key.py. Pale paper crust is dropped. Brown-grey sunrise leaves are graded back to sage so a quiet stage stays green. |
 | plant_midday_{seed,sprout,young,leafy,full}.png | generated. Prompt apps/sundial/Art/Source/plants/src_midday_{stage}.prompt.txt |
 | plant_dusk_{seed,sprout,young,leafy,full}.png | generated. Prompt apps/sundial/Art/Source/plants/src_dusk_{stage}.prompt.txt |
 | bloom_{sunrise,midday,dusk}_{bud,open}.png | generated. Overlay only. Prompt apps/sundial/Art/Source/plants/src_{arc}_{bud|open}.prompt.txt |

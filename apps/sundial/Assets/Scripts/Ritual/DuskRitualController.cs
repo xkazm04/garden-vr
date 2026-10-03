@@ -61,7 +61,6 @@ namespace GardenVR.Sundial
         Material _sparkleMat;
         Texture2D _ringTex;
         Texture2D _fillTex;
-        Texture2D _cream;
         Mesh _quad;
         readonly List<Texture2D> _sparkles = new List<Texture2D>();
         readonly List<string> _cues = new List<string>();
@@ -71,7 +70,6 @@ namespace GardenVR.Sundial
         TextMesh _captionMesh;
 
         static readonly Color Ink = new Color(0.165f, 0.149f, 0.133f, 1f);
-        static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.94f);
 
         public BreathSession Session { get { return _session; } }
         public bool Active { get { return _active; } }
@@ -141,7 +139,6 @@ namespace GardenVR.Sundial
             if (_sparkleMat != null) Destroy(_sparkleMat);
             if (_ringTex != null) Destroy(_ringTex);
             if (_fillTex != null) Destroy(_fillTex);
-            if (_cream != null) Destroy(_cream);
             if (_quad != null) Destroy(_quad);
             for (int i = 0; i < _sparkles.Count; i++)
             {
@@ -468,7 +465,7 @@ namespace GardenVR.Sundial
             if (_caption == null) return;
             bool show = !string.IsNullOrEmpty(text);
             if (_caption.activeSelf != show) _caption.SetActive(show);
-            if (show && _captionMesh != null) _captionMesh.text = text;
+            if (show && _captionMesh != null) InkLetter.Apply(_captionMesh, text, 48, 0.0032f);
         }
 
         void TouchVoice()
@@ -576,35 +573,16 @@ namespace GardenVR.Sundial
             // The chip quad faces +Z, so it turns again and sits just behind the glyphs.
             chip.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
             chip.transform.localPosition = new Vector3(0f, 0f, 0.002f);
-            chip.transform.localScale = new Vector3(0.128f, 0.022f, 1f);
+            chip.transform.localScale = new Vector3(0.168f, 0.040f, 1f);
             chip.AddComponent<MeshFilter>().sharedMesh = _quad;
             var chipRenderer = chip.AddComponent<MeshRenderer>();
             chipRenderer.sharedMaterial = _inkMat;
             chipRenderer.shadowCastingMode = ShadowCastingMode.Off;
             chipRenderer.receiveShadows = false;
-            SetTexture(chip, _cream);
-            var block = new MaterialPropertyBlock();
-            chipRenderer.GetPropertyBlock(block);
-            block.SetTexture("_MainTex", _cream);
-            block.SetColor("_Color", Paper);
-            chipRenderer.SetPropertyBlock(block);
+            InkLetter.Tint(chipRenderer, InkLetter.Note(0.168f / 0.040f), Color.white);
 
             var mesh = go.AddComponent<TextMesh>();
-            mesh.text = text;
-            mesh.anchor = TextAnchor.MiddleCenter;
-            mesh.alignment = TextAlignment.Center;
-            mesh.fontSize = 48;
-            mesh.characterSize = 0.0034f;
-            mesh.color = Ink;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) mesh.font = font;
-            var textRenderer = mesh.GetComponent<MeshRenderer>();
-            if (textRenderer != null)
-            {
-                textRenderer.shadowCastingMode = ShadowCastingMode.Off;
-                textRenderer.receiveShadows = false;
-            }
+            InkLetter.Apply(mesh, text, 48, 0.0031f);
             var box = go.AddComponent<BoxCollider>();
             box.size = new Vector3(0.18f, 0.036f, 0.01f);
             var target = go.AddComponent<IntentTarget>();
@@ -617,21 +595,8 @@ namespace GardenVR.Sundial
             var go = new GameObject("VoiceCaption");
             go.transform.SetParent(transform, false);
             _captionMesh = go.AddComponent<TextMesh>();
-            _captionMesh.text = "";
-            _captionMesh.anchor = TextAnchor.MiddleCenter;
-            _captionMesh.alignment = TextAlignment.Center;
-            _captionMesh.fontSize = 48;
-            _captionMesh.characterSize = 0.0032f;
-            _captionMesh.color = Ink;
-            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            if (font != null) _captionMesh.font = font;
-            var textRenderer = _captionMesh.GetComponent<MeshRenderer>();
-            if (textRenderer != null)
-            {
-                textRenderer.shadowCastingMode = ShadowCastingMode.Off;
-                textRenderer.receiveShadows = false;
-            }
+            InkLetter.Apply(_captionMesh, "", 48, 0.0032f);
+            InkLetter.AttachNote(go.transform, new Vector2(0.30f, 0.042f));
             go.SetActive(false);
             return go;
         }
@@ -644,11 +609,6 @@ namespace GardenVR.Sundial
             _sparkleMat = new Material(shader) { name = "DuskSparkle" };
             Prepare(_inkMat);
             Prepare(_sparkleMat);
-            _cream = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            var pixels = new Color[4];
-            for (int i = 0; i < pixels.Length; i++) pixels[i] = Color.white;
-            _cream.SetPixels(pixels);
-            _cream.Apply(false, false);
         }
 
         static void Prepare(Material mat)
