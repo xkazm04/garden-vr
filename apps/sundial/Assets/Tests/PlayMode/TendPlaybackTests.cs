@@ -224,6 +224,11 @@ namespace GardenVR.Sundial.Tests.PlayMode
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void IsolateBootSave()
         {
+            // A canonical recording sets this and owns the save path itself.
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GARDEN_FIRSTRUN_MP4")))
+                return;
+            SundialService.DevSeedOnFresh = true;
+            SundialService.FreshReducedMotion = null;
             SundialController.SaveDirectoryOverride = FreshDir();
             SundialController.ClockOverride = Clock1420();
         }
@@ -257,6 +262,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
 
         public static IEnumerator Open(Action<SundialController> ready)
         {
+            SundialService.DevSeedOnFresh = true;
+            SundialService.FreshReducedMotion = null;
             SundialController.SaveDirectoryOverride = FreshDir();
             SundialController.ClockOverride = Clock1420();
             yield return LoadMain(ready);

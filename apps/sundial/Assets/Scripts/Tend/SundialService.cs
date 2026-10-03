@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using GardenVR.Core;
 
 namespace GardenVR.Sundial
@@ -43,15 +44,25 @@ namespace GardenVR.Sundial
 
     /// <summary>
     /// Habits, tends and settings in one save file. The state oracle is rebuilt when the minute or the ledger changes.
-    /// Until first run lands, a fresh file is seeded with one habit on each arc.
+    /// A fresh file stays empty so the first run can plant one habit per arc. Tests opt into the old dev seed.
     /// </summary>
     public sealed class SundialService
     {
         public const int SchemaVersion = 1;
         public const string DevSeedStep = "dev-seed";
 
+        /// <summary>
+        /// Tests that still want the three dev habits on a fresh file set this before the scene loads.
+        /// The player leaves it false, so a fresh file starts the first run instead.
+        /// </summary>
+        public static bool DevSeedOnFresh;
+
+        /// <summary>Applied to a fresh file's settings before the wizard reads them. Null leaves the default.</summary>
+        public static bool? FreshReducedMotion;
+
         readonly SteppingClock _clock;
         readonly SaveStore<SundialSave> _store;
+        readonly string _directory;
         readonly bool _readOnly;
         SundialSave _save;
         Ledger _ledger;
@@ -59,6 +70,8 @@ namespace GardenVR.Sundial
         string _stateJson = "";
 
         public LoadOutcome Outcome { get; private set; }
+        public bool BackupAvailable { get; private set; }
+        public string FailedStep { get; private set; }
         public SundialState State { get; private set; }
         public string StateJson { get { return _stateJson; } }
         public bool StateChanged { get; private set; }
@@ -75,10 +88,13 @@ namespace GardenVR.Sundial
         {
             if (clock == null) throw new ArgumentNullException(nameof(clock));
             if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory");
+            _directory = directory;
             _clock = new SteppingClock(clock);
             _store = new SaveStore<SundialSave>(new DiskSaveIo(directory), SchemaVersion, CreateFresh, SundialCodec.Read, SundialCodec.Write, null);
             LoadResult<SundialSave> result = _store.Load();
             Outcome = result.Outcome;
+            BackupAvailable = result.BackupAvailable;
+            FailedStep = result.FailedStep;
             _readOnly = result.ReadOnly;
             if (result.Outcome == LoadOutcome.Failed || result.Doc == null)
             {
@@ -93,9 +109,17 @@ namespace GardenVR.Sundial
                 if (_save.Tends == null) _save.Tends = new List<TendEvent>();
                 if (result.Outcome == LoadOutcome.Fresh)
                 {
-                    SeedDev(GardenDay.From(_clock.Now, Boundary));
-                    _ledger = new Ledger();
-                    Persist();
+                    if (FreshReducedMotion.HasValue) _save.Settings.ReducedMotion = FreshReducedMotion.Value;
+                    if (DevSeedOnFresh)
+                    {
+                        SeedDev(GardenDay.From(_clock.Now, Boundary));
+                        _ledger = new Ledger();
+                        Persist();
+                    }
+                    else
+                    {
+                        _ledger = new Ledger();
+                    }
                 }
                 else
                 {
@@ -129,6 +153,53 @@ namespace GardenVR.Sundial
             if (result.Ok && !result.AlreadyKept) Persist();
             Recompute();
             return result;
+        }
+
+        /// <summary>Remembers the wizard step and writes the file. A failed load writes nothing.</summary>
+        public void SetFirstRunStep(string step)
+        {
+            if (_save == null) return;
+            _save.FirstRunStep = step;
+            Persist();
+        }
+
+        /// <summary>
+        /// Plants one preset on an arc. A second pinch on an arc that already has a habit keeps the first.
+        /// </summary>
+        public HabitDef PlantPreset(SeedPreset preset)
+        {
+            if (preset == null) throw new ArgumentNullException(nameof(preset));
+            if (_save == null) return null;
+            if (_save.Habits == null) _save.Habits = new List<HabitDef>();
+            string arcKey = SundialArcs.Key(preset.Group);
+            HabitDef existing = HabitForArc(arcKey);
+            if (existing != null) return existing;
+            var habit = new HabitDef
+            {
+                Id = string.IsNullOrEmpty(preset.HabitId) ? preset.Key : preset.HabitId,
+                PresetKey = preset.Key,
+                Group = preset.Group,
+                Kind = preset.Kind,
+                Slot = SundialArcs.Index(arcKey),
+                CreatedDay = Today().Index
+            };
+            _save.Habits.Add(habit);
+            Persist();
+            Recompute();
+            return habit;
+        }
+
+        /// <summary>Copies the newest backup over the live file. The caller reloads to read it.</summary>
+        public bool TryRestoreBackup()
+        {
+            if (!BackupAvailable || string.IsNullOrEmpty(_directory)) return false;
+            string live = Path.Combine(_directory, "save.json");
+            string prev = Path.Combine(_directory, "save.prev1.json");
+            if (!File.Exists(prev)) prev = Path.Combine(_directory, "save.prev2.json");
+            if (!File.Exists(prev)) prev = Path.Combine(_directory, "save.snapshot.json");
+            if (!File.Exists(prev)) return false;
+            File.Copy(prev, live, true);
+            return true;
         }
 
         public void SetReducedMotion(bool on)

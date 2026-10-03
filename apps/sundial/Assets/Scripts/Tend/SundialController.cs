@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using GardenVR.Core;
@@ -38,6 +39,7 @@ namespace GardenVR.Sundial
 
         DialView _view;
         SundialService _service;
+        FirstRunWizard _wizard;
         IHandIntentSource _source;
         KeyboardMouseIntentSource _keyboard;
         bool _subscribed;
@@ -59,6 +61,11 @@ namespace GardenVR.Sundial
         bool _sweeping;
         bool _sweepBegun;
         float _swept;
+        bool _readyLogged;
+        /// <summary>The first run holds the shadow at 06:00 until the sweep step.</summary>
+        public bool HoldSweep;
+        /// <summary>A resumed journey shows the shadow where it is, with no replay.</summary>
+        public bool SnapSweep;
         readonly int[] _stageFloor = { -1, -1, -1 };
 
         GameObject _undo;
@@ -76,6 +83,7 @@ namespace GardenVR.Sundial
         static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.96f);
 
         public SundialService Service { get { return _service; } }
+        public FirstRunWizard Wizard { get { return _wizard; } }
         public IHandIntentSource Source { get { return _source; } }
         public SundialState State { get { return _service == null ? null : _service.State; } }
         public string StateJson { get { return _service == null ? "" : _service.StateJson; } }
@@ -114,6 +122,7 @@ namespace GardenVR.Sundial
             _source = source;
             _keyboard = source as KeyboardMouseIntentSource;
             if (isActiveAndEnabled) Subscribe();
+            if (_wizard != null) _wizard.SetSource(source);
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.SetSource(source);
         }
@@ -157,6 +166,10 @@ namespace GardenVR.Sundial
                 : SaveDirectoryOverride;
             IClock clock = ClockOverride ?? new SystemClock();
             _service = new SundialService(clock, directory);
+            if (GetComponent<FirstRunWizard>() == null)
+                _wizard = gameObject.AddComponent<FirstRunWizard>();
+            else
+                _wizard = GetComponent<FirstRunWizard>();
             if (_view != null)
             {
                 _view.halo = 0f;
@@ -196,6 +209,25 @@ namespace GardenVR.Sundial
         void Update()
         {
             if (!Application.isPlaying || _service == null || _view == null) return;
+            if (!_readyLogged)
+            {
+                _readyLogged = true;
+                string ready = Time.realtimeSinceStartup.ToString("0.000", CultureInfo.InvariantCulture);
+                Debug.Log("[Sundial] first-interactive t=" + ready);
+                if (!Application.isEditor)
+                {
+                    try
+                    {
+                        string folder = Path.GetDirectoryName(Application.dataPath);
+                        if (!string.IsNullOrEmpty(folder))
+                            File.WriteAllText(Path.Combine(folder, "first-interactive.txt"), ready);
+                    }
+                    catch (Exception)
+                    {
+                        // The player log line is the measurement. A locked folder must not stop the dial.
+                    }
+                }
+            }
             float dt = ClampStep(Time.deltaTime);
             _service.Step(dt);
             if (_pendingArc != null && !_service.IsPending)
@@ -303,6 +335,7 @@ namespace GardenVR.Sundial
 
         void OnPinch(string id)
         {
+            if (_wizard != null && _wizard.Handles(id)) return;
             if (TryBackfillGesture(id)) return;
             string undoArc;
             if (SundialArcs.TryUndo(id, out undoArc))
@@ -312,6 +345,7 @@ namespace GardenVR.Sundial
             }
             string arc;
             if (!SundialArcs.TryPlant(id, out arc)) return;
+            if (_wizard != null && !_wizard.AllowsPlantTend(arc)) return;
             HabitDef habit = _service.HabitForArc(arc);
             PlantState plant = _service.PlantFor(habit);
             if (habit == null || plant == null || plant.Window == null || plant.Window.Length < 7) return;
@@ -386,12 +420,20 @@ namespace GardenVR.Sundial
             }
         }
 
+        /// <summary>The sweep step calls this. A held sweep stays at 06:00 until then.</summary>
+        public void ReleaseSweep()
+        {
+            HoldSweep = false;
+            _sweepBegun = false;
+            BeginSweep();
+        }
+
         void BeginSweep()
         {
-            if (_sweepBegun || _view == null || _service == null || _service.State == null) return;
+            if (HoldSweep || _sweepBegun || _view == null || _service == null || _service.State == null) return;
             _sweepBegun = true;
             _swept = 0f;
-            if (_service.ReducedMotion)
+            if (_service.ReducedMotion || SnapSweep)
             {
                 _sweeping = false;
                 _view.gnomonDeg = _service.State.GnomonDeg;
@@ -407,6 +449,11 @@ namespace GardenVR.Sundial
         {
             if (_view == null || _service == null || _service.State == null) return;
             float target = _service.State.GnomonDeg;
+            if (HoldSweep)
+            {
+                _view.gnomonDeg = 0f;
+                return;
+            }
             if (!_sweeping)
             {
                 _view.gnomonDeg = target;

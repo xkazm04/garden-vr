@@ -262,6 +262,9 @@ namespace GardenVR.Sundial.Editor
                 importer.textureType = TextureImporterType.Default;
                 // Halo R/G are linear masks for the additive card. Colour lives in the material.
                 importer.sRGBTexture = !name.StartsWith("halo_", StringComparison.Ordinal);
+                // The pinch outline is a close-and-edge of these alphas. GetPixels needs them readable.
+                importer.isReadable = name.StartsWith("plant_", StringComparison.Ordinal)
+                    || name.StartsWith("bloom_", StringComparison.Ordinal);
                 importer.alphaIsTransparency = alpha;
                 importer.mipmapEnabled = true;
                 importer.wrapMode = TextureWrapMode.Clamp;
@@ -399,9 +402,9 @@ namespace GardenVR.Sundial.Editor
             library.Halo = Mat("Dial_Halo", "Fidelity/Card", m =>
             {
                 m.SetTexture("_MainTex", library.MiddayCards[4]);
-                m.SetColor("_Color", new Color(1.45f, 1.12f, 0.46f, 1f));
-                m.SetColor("_Color2", new Color(1.05f, 0.82f, 0.32f, 1f));
-                // Additive. The shader dilates the plant alpha into a gold line and a soft bloom.
+                m.SetColor("_Color", new Color(1.15f, 0.86f, 0.32f, 1f));
+                m.SetColor("_Color2", new Color(0.40f, 0.26f, 0.08f, 1f));
+                // Additive. The shader draws a few pixels of gold just outside the plant alpha.
                 m.SetFloat("_Src", (float)BlendMode.One);
                 m.SetFloat("_Dst", (float)BlendMode.One);
                 m.SetFloat("_Boil", 0f);
@@ -412,7 +415,7 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
                 m.SetFloat("_Sparkle", 0f);
-                m.SetFloat("_Silhouette", 6.0f);
+                m.SetFloat("_Silhouette", 2.15f);
                 m.SetFloat("_Fit", 1.18f);
                 m.SetFloat("_Falloff", 0f);
                 m.renderQueue = 3012;
@@ -420,7 +423,7 @@ namespace GardenVR.Sundial.Editor
             library.Pool = Mat("Dial_HaloPool", "Fidelity/Card", m =>
             {
                 m.SetTexture("_MainTex", Texture2D.whiteTexture);
-                m.SetColor("_Color", new Color(1.25f, 0.96f, 0.42f, 1f));
+                m.SetColor("_Color", new Color(0.16f, 0.10f, 0.035f, 1f));
                 m.SetColor("_Color2", Color.black);
                 m.SetFloat("_Src", (float)BlendMode.One);
                 m.SetFloat("_Dst", (float)BlendMode.One);
@@ -433,8 +436,8 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Ring", 0f);
                 m.SetFloat("_Sparkle", 0f);
                 m.SetFloat("_Silhouette", 0f);
-                m.SetFloat("_Falloff", 1.65f);
-                m.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.62f, 0f));
+                m.SetFloat("_Falloff", 2.8f);
+                m.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.36f, 0f));
                 m.renderQueue = 3004;
             });
             library.Contact = Mat("Dial_Contact", "Fidelity/Card", m =>

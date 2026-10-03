@@ -41,15 +41,15 @@ Material:
     - _Fit: 1.18
     - _Mask: 0
     - _Ring: 0
-    - _Silhouette: 5.040038
+    - _Silhouette: 2.15
     - _Sparkle: 0
     - _Src: 1
     - _T: 2.9
     - _ZTest: 4
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 1.0780249, g: 0.83268124, b: 0.34199408, a: 0.74346536}
-    - _Color2: {r: 0.7806386, g: 0.6096416, b: 0.23790891, a: 0.74346536}
+    - _Color: {r: 1.15, g: 0.86, b: 0.32, a: 1}
+    - _Color2: {r: 0.4, g: 0.26, b: 0.08, a: 1}
     - _Focus: {r: 0.5, g: 0.5, b: 0.5, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
