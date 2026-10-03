@@ -18,6 +18,13 @@ namespace GardenVR.Core
         public string Species;
         public HabitKind Kind;
         public int Slot;
+
+        /// <summary>
+        /// Sundial row inside the arc: 0, 1 or 2. Terrarium leaves this at 0.
+        /// A saved habit with no row is row 0, the only row the one-habit dial used.
+        /// </summary>
+        public int Row;
+
         public int CreatedDay;
         public int? ArchivedDay;
     }
