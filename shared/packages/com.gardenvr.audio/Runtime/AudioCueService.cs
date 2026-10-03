@@ -41,6 +41,17 @@ namespace GardenVR.Audio
             public AudioSource Source;
         }
 
+        sealed class Tail
+        {
+            public string CueId;
+            public string Bus;
+            public float From;
+            public float Until;
+            public float Seconds;
+            public float BaseGainDb;
+            public AudioSource Source;
+        }
+
         sealed class Memory
         {
             public int Next;
@@ -50,6 +61,7 @@ namespace GardenVR.Audio
         }
 
         readonly List<Active> _voices = new List<Active>(MaxVoices);
+        readonly List<Tail> _tails = new List<Tail>(4);
         readonly List<AudioSource> _pool = new List<AudioSource>(MaxVoices);
         readonly Dictionary<string, Memory> _memory = new Dictionary<string, Memory>(StringComparer.Ordinal);
         readonly HashSet<string> _announced = new HashSet<string>(StringComparer.Ordinal);
@@ -75,6 +87,13 @@ namespace GardenVR.Audio
         public float Now { get { return _now; } }
         public float DuckLevel { get { return _duck; } }
         public int ActiveVoices { get { return _voices.Count; } }
+
+        /// <summary>Lines that have been cut and are still fading out. They no longer count as playing.</summary>
+        public int FadingCount { get { return _tails.Count; } }
+
+        /// <summary>Tests drive <see cref="Advance"/> themselves. <c>Update</c> does not also step the clock.</summary>
+        public bool ManualClock;
+
         public string LastClip { get; private set; }
         public int PlaceholderAnnouncements { get { return _announced.Count; } }
 
@@ -123,7 +142,7 @@ namespace GardenVR.Audio
 
         void Update()
         {
-            if (!Application.isPlaying) return;
+            if (ManualClock || !Application.isPlaying) return;
             Advance(Time.deltaTime);
         }
 
@@ -152,6 +171,13 @@ namespace GardenVR.Audio
             {
                 Active voice = _voices[i];
                 if (!voice.Loop && _now >= voice.EndAt) Release(voice);
+            }
+            for (int i = _tails.Count - 1; i >= 0; i--)
+            {
+                Tail tail = _tails[i];
+                if (_now < tail.Until) continue;
+                HardStop(tail.Source);
+                _tails.RemoveAt(i);
             }
             bool voiceOn = VoicePlaying();
             float target = voiceOn ? 1f : 0f;
@@ -258,6 +284,55 @@ namespace GardenVR.Audio
             {
                 if (_voices[i].CueId == id) Release(_voices[i]);
             }
+            for (int i = _tails.Count - 1; i >= 0; i--)
+            {
+                if (_tails[i].CueId != id) continue;
+                HardStop(_tails[i].Source);
+                _tails.RemoveAt(i);
+            }
+        }
+
+        /// <summary>True while a cue on <paramref name="bus"/> is playing. A fade tail does not count.</summary>
+        public bool IsBusActive(string bus)
+        {
+            if (string.IsNullOrEmpty(bus)) return false;
+            for (int i = 0; i < _voices.Count; i++)
+            {
+                if (_voices[i].Bus == bus) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Drops every cue on <paramref name="bus"/> out of the playing set immediately, and fades its
+        /// source to silence over <paramref name="seconds"/>. The next <see cref="Play"/> can start at once.
+        /// A zero fade stops hard. Synthetic tests still record the fade window with no audio source.
+        /// </summary>
+        public void FadeBus(string bus, float seconds)
+        {
+            if (string.IsNullOrEmpty(bus)) return;
+            if (seconds < 0f) seconds = 0f;
+            for (int i = _voices.Count - 1; i >= 0; i--)
+            {
+                Active voice = _voices[i];
+                if (voice.Bus != bus) continue;
+                _voices.RemoveAt(i);
+                if (seconds <= 0.01f)
+                {
+                    HardStop(voice.Source);
+                    continue;
+                }
+                _tails.Add(new Tail
+                {
+                    CueId = voice.CueId,
+                    Bus = voice.Bus,
+                    From = _now,
+                    Until = _now + seconds,
+                    Seconds = seconds,
+                    BaseGainDb = voice.BaseGainDb,
+                    Source = voice.Source
+                });
+            }
         }
 
         void Announce(string id)
@@ -325,9 +400,10 @@ namespace GardenVR.Audio
 
         bool VoicePlaying()
         {
-            for (int i = 0; i < _voices.Count; i++)
+            if (IsBusActive("voice")) return true;
+            for (int i = 0; i < _tails.Count; i++)
             {
-                if (_voices[i].Bus == "voice") return true;
+                if (_tails[i].Bus == "voice") return true;
             }
             return false;
         }
@@ -376,19 +452,24 @@ namespace GardenVR.Audio
         void Silence()
         {
             for (int i = _voices.Count - 1; i >= 0; i--) Release(_voices[i]);
+            for (int i = _tails.Count - 1; i >= 0; i--) HardStop(_tails[i].Source);
+            _tails.Clear();
             _duck = 0f;
         }
 
         void Release(Active voice)
         {
             if (voice == null) return;
-            if (voice.Source != null)
-            {
-                voice.Source.Stop();
-                voice.Source.clip = null;
-                voice.Source.gameObject.SetActive(false);
-            }
+            HardStop(voice.Source);
             _voices.Remove(voice);
+        }
+
+        static void HardStop(AudioSource source)
+        {
+            if (source == null) return;
+            source.Stop();
+            source.clip = null;
+            source.gameObject.SetActive(false);
         }
 
         AudioSource StartSource(Active voice, CueDefinition cue, Transform at, float pitch)
@@ -435,6 +516,15 @@ namespace GardenVR.Audio
                 Active voice = _voices[i];
                 if (voice.Source == null) continue;
                 voice.Source.volume = Mute ? 0f : Linear(voice.BaseGainDb + DuckDb(voice.Bus));
+            }
+            for (int i = 0; i < _tails.Count; i++)
+            {
+                Tail tail = _tails[i];
+                if (tail.Source == null) continue;
+                float span = tail.Seconds <= 0.01f ? 1f : (_now - tail.From) / tail.Seconds;
+                float fade = 1f - Mathf.Clamp01(span);
+                float linear = Mute ? 0f : Linear(tail.BaseGainDb + DuckDb(tail.Bus));
+                tail.Source.volume = linear * fade;
             }
         }
 
