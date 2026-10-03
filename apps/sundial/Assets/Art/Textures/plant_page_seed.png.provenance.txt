@@ -1,0 +1,5 @@
+asset: plant_page_seed.png
+method: keyed by apps/sundial/Art/Scripts/plants_more.py from Art/Source/plants/page-strip.jpg
+prompt: The same five-stage strip, redrawn as a plant with broad page-like leaves stacked on a stem. Soil mound under each stage, gaps kept, no text.
+note: Imagine made the five-stage strip (reed by image_gen, the others by image_edit of that strip). The card is one stage, keyed off the paper, seated on the shared pivot. Not copied from the art reference.
+derived_from_art_reference: no

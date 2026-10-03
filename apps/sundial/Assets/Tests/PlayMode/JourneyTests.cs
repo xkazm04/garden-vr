@@ -206,7 +206,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(Bloom.Bud, missed.Bloom, "under five kept days the flower is a bud");
             Assert.AreEqual(TileState.Missed, missed.Window[5]);
             Assert.AreEqual(TileState.Today, missed.Window[6]);
-            Assert.AreEqual(SundialArcs.TileDigit(TileState.Missed), controller.View.tiles[7 + 5]);
+            Assert.AreEqual(SundialArcs.TileDigit(TileState.Missed), controller.View.tiles[DialView.TileIndex(1, 0, 5)]);
             Assert.AreEqual(TileLabels.Missed, TileLabels.For(TileState.Missed));
             Assert.IsTrue(controller.AskVisible("midday"));
             AssertAskMark("midday");
@@ -256,7 +256,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
 
             for (int i = 0; i < 7; i++)
             {
-                Assert.AreEqual(SundialArcs.TileDigit(dusk.Window[i]), controller.View.tiles[14 + i], "dusk slot " + i);
+                Assert.AreEqual(SundialArcs.TileDigit(dusk.Window[i]), controller.View.tiles[DialView.TileIndex(2, 0, i)], "dusk slot " + i);
                 Assert.AreEqual(TileLabels.For(dusk.Window[i]), Label(dusk.Window[i]));
             }
             Assert.IsTrue(controller.AskVisible("winddown"), "yesterday's pale tile still carries the quiet ask");

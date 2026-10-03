@@ -40,6 +40,12 @@ namespace GardenVR.Sundial.Editor
             "plant_sunrise_seed", "plant_sunrise_sprout", "plant_sunrise_young", "plant_sunrise_leafy", "plant_sunrise_full",
             "plant_midday_seed", "plant_midday_sprout", "plant_midday_young", "plant_midday_leafy", "plant_midday_full",
             "plant_dusk_seed", "plant_dusk_sprout", "plant_dusk_young", "plant_dusk_leafy", "plant_dusk_full",
+            "plant_reed_seed", "plant_reed_sprout", "plant_reed_young", "plant_reed_leafy", "plant_reed_full",
+            "plant_clover_seed", "plant_clover_sprout", "plant_clover_young", "plant_clover_leafy", "plant_clover_full",
+            "plant_vine_seed", "plant_vine_sprout", "plant_vine_young", "plant_vine_leafy", "plant_vine_full",
+            "plant_sprig_seed", "plant_sprig_sprout", "plant_sprig_young", "plant_sprig_leafy", "plant_sprig_full",
+            "plant_bell_seed", "plant_bell_sprout", "plant_bell_young", "plant_bell_leafy", "plant_bell_full",
+            "plant_page_seed", "plant_page_sprout", "plant_page_young", "plant_page_leafy", "plant_page_full",
             "bloom_sunrise_bud", "bloom_sunrise_open",
             "bloom_midday_bud", "bloom_midday_open",
             "bloom_dusk_bud", "bloom_dusk_open",
@@ -364,6 +370,7 @@ namespace GardenVR.Sundial.Editor
                 MorningCards = StageCards("sunrise"),
                 MiddayCards = StageCards("midday"),
                 WindDownCards = StageCards("dusk"),
+                SpeciesCards = AllSpeciesCards(),
                 BloomCards = new[]
                 {
                     Tex("bloom_sunrise_bud"), Tex("bloom_sunrise_open"),
@@ -490,6 +497,19 @@ namespace GardenVR.Sundial.Editor
                 m.renderQueue = 3000;
             });
             return library;
+        }
+
+        static Texture2D[] AllSpeciesCards()
+        {
+            string[] species = { "sunrise", "midday", "dusk", "reed", "clover", "vine", "sprig", "bell", "page" };
+            var textures = new Texture2D[species.Length * 5];
+            int n = 0;
+            for (int s = 0; s < species.Length; s++)
+            {
+                Texture2D[] cards = StageCards(species[s]);
+                for (int i = 0; i < cards.Length; i++) textures[n++] = cards[i];
+            }
+            return textures;
         }
 
         static Texture2D[] StageCards(string arc)
@@ -792,10 +812,20 @@ namespace GardenVR.Sundial.Editor
             {
                 string plant = "plant." + arcs[a];
                 if (!ids.Contains(plant)) throw new InvalidOperationException("missing IntentTarget " + plant);
-                for (int slot = 0; slot < DialView.TilesPerArc; slot++)
+                for (int day = 0; day < DialView.DaysPerRow; day++)
                 {
-                    string tile = "tile." + arcs[a] + "." + slot;
+                    string tile = "tile." + arcs[a] + "." + day;
                     if (!ids.Contains(tile)) throw new InvalidOperationException("missing IntentTarget " + tile);
+                }
+                for (int row = 1; row < DialView.RowsPerArc; row++)
+                {
+                    string companion = "plant." + arcs[a] + ".r" + row;
+                    if (!ids.Contains(companion)) throw new InvalidOperationException("missing IntentTarget " + companion);
+                    for (int day = 0; day < DialView.DaysPerRow; day++)
+                    {
+                        string tile = "tile." + arcs[a] + ".r" + row + "." + day;
+                        if (!ids.Contains(tile)) throw new InvalidOperationException("missing IntentTarget " + tile);
+                    }
                 }
             }
         }

@@ -1,0 +1,5 @@
+asset: plant_reed_young.png
+method: keyed by apps/sundial/Art/Scripts/plants_more.py from Art/Source/plants/reed-strip.jpg
+prompt: Five growth stages of one reed, left to right, well separated on warm off-white paper: a seed, a two-blade sprout, a starburst tuft, a leafy clump, a tall reed with seed heads. Hand-drawn ink contours of varying weight, flat cel colour, one soft shade, a soil mound under each stage. No text, no frame letters.
+note: Imagine made the five-stage strip (reed by image_gen, the others by image_edit of that strip). The card is one stage, keyed off the paper, seated on the shared pivot. Not copied from the art reference.
+derived_from_art_reference: no

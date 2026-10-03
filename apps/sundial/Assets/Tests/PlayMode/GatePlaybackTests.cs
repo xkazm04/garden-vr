@@ -97,8 +97,9 @@ namespace GardenVR.Sundial.Tests.PlayMode
                 app += Time.deltaTime;
                 if (controller.View.pulse <= 0f && !controller.UndoVisible) continue;
                 sawFill = true;
-                Assert.AreEqual(1f, controller.View.tileFill[13], 0.001f, "the ink should already fill today's tile");
-                Assert.AreEqual(SundialArcs.TileDigit(TileState.Kept), controller.View.tiles[13]);
+                int today = DialView.TileIndex(1, 0, 6);
+                Assert.AreEqual(1f, controller.View.tileFill[today], 0.001f, "the ink should already fill today's tile");
+                Assert.AreEqual(SundialArcs.TileDigit(TileState.Kept), controller.View.tiles[today]);
                 break;
             }
 

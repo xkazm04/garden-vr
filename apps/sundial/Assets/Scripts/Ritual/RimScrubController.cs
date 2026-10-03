@@ -225,6 +225,7 @@ namespace GardenVR.Sundial
                 picture = RimScrub.Query(Service.Save == null ? null : Service.Save.Habits, Service.Ledger, Service.Today(), read);
             if (view.tiles == null || view.tiles.Length != DialView.TileCount)
                 view.tiles = new int[DialView.TileCount];
+            for (int t = 0; t < view.tiles.Length; t++) view.tiles[t] = DialView.HiddenTile;
             if (picture != null && picture.Plants != null && Service.Save != null && Service.Save.Habits != null)
             {
                 for (int i = 0; i < Service.Save.Habits.Count; i++)
@@ -232,21 +233,22 @@ namespace GardenVR.Sundial
                     HabitDef habit = Service.Save.Habits[i];
                     if (habit == null) continue;
                     int arc = SundialArcs.Index(SundialArcs.Key(habit.Group));
-                    if (arc < 0) continue;
+                    int row = SundialRules.RowOf(Service.Save.Habits, habit);
+                    if (arc < 0 || row < 0) continue;
                     PlantState plant = null;
                     for (int p = 0; p < picture.Plants.Count; p++)
                     {
-                        PlantState row = picture.Plants[p];
-                        if (row != null && row.HabitId == habit.Id)
+                        PlantState found = picture.Plants[p];
+                        if (found != null && found.HabitId == habit.Id)
                         {
-                            plant = row;
+                            plant = found;
                             break;
                         }
                     }
                     if (plant == null || plant.Window == null) continue;
                     int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
                     for (int slot = 0; slot < count; slot++)
-                        view.tiles[arc * 7 + slot] = SundialArcs.TileDigit(plant.Window[slot]);
+                        view.tiles[DialView.TileIndex(arc, row, slot)] = SundialArcs.TileDigit(plant.Window[slot]);
                 }
             }
             view.waiting = 0f;

@@ -67,6 +67,8 @@ namespace GardenVR.Sundial
         string _lookArc;
 
         string _pendingArc;
+        string _pendingHabitId;
+        int _pendingRow;
         bool _filling;
         bool _fillDone;
         float _fillT;
@@ -82,12 +84,15 @@ namespace GardenVR.Sundial
         public bool HoldSweep;
         /// <summary>A resumed journey shows the shadow where it is, with no replay.</summary>
         public bool SnapSweep;
-        readonly int[] _stageFloor = { -1, -1, -1 };
+        readonly int[] _stageFloor = { -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
         GameObject _undo;
         readonly GameObject[] _asks = new GameObject[3];
+        readonly GameObject[] _extraAsks = new GameObject[6];
+        readonly GameObject[] _more = new GameObject[3];
         GameObject _prompt;
         string _promptArc;
+        int _promptRow;
         Material _inkMat;
         Texture2D _ring;
         Mesh _quad;
@@ -302,6 +307,7 @@ namespace GardenVR.Sundial
             PushView();
             UpdateAudio();
             RefreshAsks();
+            RefreshMore();
             UpdateSweep(dt);
             _view.time += dt;
             _view.Apply();
@@ -392,11 +398,14 @@ namespace GardenVR.Sundial
         void ShowLookHalo(string id)
         {
             string arc;
-            if (!SundialArcs.TryPlant(id, out arc) || _view == null) return;
-            if (_lookArc == arc && _view.halo > 0.5f) return;
+            int row;
+            if (!SundialArcs.TryPlant(id, out arc, out row) || _view == null) return;
+            int slot = SundialArcs.Index(arc) * 3 + row;
+            if (_lookArc == arc && _view.haloSlot == slot && _view.halo > 0.5f) return;
             _lookArc = arc;
             _view.halo = 1f;
             _view.haloTarget = arc;
+            _view.haloSlot = slot;
         }
 
         void OnPoke(string id)
@@ -430,39 +439,59 @@ namespace GardenVR.Sundial
                 TryUndo(undoArc);
                 return;
             }
+            if (TryAnother(id)) return;
             string arc;
-            if (!SundialArcs.TryPlant(id, out arc)) return;
+            int row;
+            if (!SundialArcs.TryPlant(id, out arc, out row)) return;
             if (_wizard != null && !_wizard.AllowsPlantTend(arc)) return;
-            HabitDef habit = _service.HabitForArc(arc);
+            HabitDef habit = _service.HabitAt(arc, row);
             PlantState plant = _service.PlantFor(habit);
             if (habit == null || plant == null || plant.Window == null || plant.Window.Length < 7) return;
-            // The wind-down habit is the dusk ritual. A quick pinch does not keep it.
+            // An in-app ritual, including the wind-down breaths, is not a quick pinch.
             if (habit.Kind == HabitKind.InAppRitual) return;
             // A second pinch the same day, or a pinch while one tend is still waiting, leaves the picture alone.
             if (_service.IsPending) return;
             if (plant.Window[6] != TileState.Today) return;
 
             _service.Arm(habit.Id);
-            Play(CueTock, At("plant." + arc));
-            Play(CueInk, At("tile." + arc + ".6"));
-            Play(CueFlutter, At("plant." + arc));
+            Play(CueTock, At(SundialArcs.PlantId(arc, row)));
+            Play(CueInk, At(SundialArcs.TileId(arc, row, 6)));
+            Play(CueFlutter, At(SundialArcs.PlantId(arc, row)));
             _pendingArc = arc;
+            _pendingRow = row;
+            _pendingHabitId = habit.Id;
             _pulseArc = SundialArcs.Index(arc);
             _pulsing = true;
             _pulseT = 0f;
             _view.pulse = 0.001f;
             _view.pulseArc = _pulseArc;
+            _view.pulseSlot = _pulseArc * 3 + row;
             _fillT = 0f;
             _fillDone = _service.ReducedMotion;
             _filling = !_service.ReducedMotion;
-            ShowUndo(arc);
+            ShowUndo(arc, row);
+        }
+
+        bool TryAnother(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !id.StartsWith("more.", StringComparison.Ordinal)) return false;
+            string arc = id.Substring("more.".Length);
+            if (SundialArcs.Index(arc) < 0) return false;
+            if (_wizard != null && _wizard.Running) return true;
+            if (_view != null && _view.weekPage) return true;
+            if (_service == null || _service.Save == null) return true;
+            SeedPreset preset = SeedCatalog.NextFree(arc, _service.Save.Habits);
+            if (preset == null) return true;
+            HabitDef planted = _service.TryAdmit(preset);
+            if (planted != null) Play(CueSeed, At(SundialArcs.PlantId(arc, planted.Row)));
+            return true;
         }
 
         void TryUndo(string arc)
         {
             if (!_service.IsPending || _pendingArc != arc) return;
             if (!_service.Cancel()) return;
-            Play(CueUndo, At("tile." + arc + ".6"));
+            Play(CueUndo, At(SundialArcs.TileId(arc, _pendingRow, 6)));
             ClearTendVisual();
         }
 
@@ -476,6 +505,8 @@ namespace GardenVR.Sundial
         void ClearTendVisual()
         {
             _pendingArc = null;
+            _pendingHabitId = null;
+            _pendingRow = 0;
             _filling = false;
             _fillDone = false;
             _pulsing = false;
@@ -563,14 +594,22 @@ namespace GardenVR.Sundial
         {
             SundialState state = _service.State;
             if (state == null) return;
+            _view.EnsureTiles();
+            _view.EnsurePlantArrays();
             if (_view.tiles == null || _view.tiles.Length != DialView.TileCount)
                 _view.tiles = new int[DialView.TileCount];
             if (_view.tileFill == null || _view.tileFill.Length != DialView.TileCount)
                 _view.tileFill = new float[DialView.TileCount];
             for (int i = 0; i < _view.tiles.Length; i++)
             {
-                _view.tiles[i] = 0;
+                _view.tiles[i] = DialView.HiddenTile;
                 _view.tileFill[i] = 1f;
+            }
+            for (int i = 0; i < _view.plantOn.Length; i++)
+            {
+                _view.plantOn[i] = false;
+                _view.plantDue[i] = false;
+                _view.plantSpecies[i] = -1;
             }
 
             int due = -1;
@@ -582,21 +621,30 @@ namespace GardenVR.Sundial
                     PlantState plant = _service.PlantFor(habit);
                     if (habit == null || plant == null || plant.Window == null) continue;
                     int arc = SundialArcs.Index(SundialArcs.Key(habit.Group));
-                    if (arc < 0) continue;
+                    int row = SundialRules.RowOf(_service.Save.Habits, habit);
+                    if (arc < 0 || row < 0) continue;
+                    int plantIndex = arc * 3 + row;
                     int stage = (int)plant.Stage;
                     // A miss never shrinks the drawing. The card stays on the fullest stage this session has shown.
-                    if (_stageFloor[arc] < 0 || stage > _stageFloor[arc]) _stageFloor[arc] = stage;
-                    else stage = _stageFloor[arc];
+                    if (_stageFloor[plantIndex] < 0 || stage > _stageFloor[plantIndex]) _stageFloor[plantIndex] = stage;
+                    else stage = _stageFloor[plantIndex];
                     float bloom = plant.Bloom == Bloom.Open ? 2f : plant.Bloom == Bloom.Bud ? 1f : 0f;
-                    if (arc == 0) { _view.stageMorning = stage; _view.bloomMorning = bloom; }
-                    else if (arc == 1) { _view.stageMidday = stage; _view.bloomMidday = bloom; }
-                    else { _view.stageWinddown = stage; _view.bloomWinddown = bloom; }
-                    int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
-                    for (int slot = 0; slot < count; slot++)
-                        _view.tiles[arc * 7 + slot] = SundialArcs.TileDigit(plant.Window[slot]);
-                    if (_pendingArc != null && SundialArcs.Index(_pendingArc) == arc && (_filling || _fillDone))
+                    _view.plantStage[plantIndex] = stage;
+                    _view.plantOn[plantIndex] = true;
+                    _view.plantDue[plantIndex] = plant.DueNow;
+                    _view.plantSpecies[plantIndex] = SundialSpecies.Index(habit.Species);
+                    if (row == 0)
                     {
-                        int today = arc * 7 + 6;
+                        if (arc == 0) { _view.stageMorning = stage; _view.bloomMorning = bloom; }
+                        else if (arc == 1) { _view.stageMidday = stage; _view.bloomMidday = bloom; }
+                        else { _view.stageWinddown = stage; _view.bloomWinddown = bloom; }
+                    }
+                    int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
+                    for (int day = 0; day < count; day++)
+                        _view.tiles[DialView.TileIndex(arc, row, day)] = SundialArcs.TileDigit(plant.Window[day]);
+                    if (_pendingHabitId != null && habit.Id == _pendingHabitId && (_filling || _fillDone))
+                    {
+                        int today = DialView.TileIndex(arc, row, 6);
                         _view.tiles[today] = SundialArcs.TileDigit(TileState.Kept);
                         float flood = _service.ReducedMotion ? 1f : Mathf.Clamp01(_fillT / TileFillSeconds);
                         _view.tileFill[today] = _fillDone ? 1f : flood;
@@ -694,10 +742,10 @@ namespace GardenVR.Sundial
             return found != null ? found : transform;
         }
 
-        void ShowUndo(string arc)
+        void ShowUndo(string arc, int row)
         {
             HideUndo();
-            Transform tile = FindNamed("tile." + arc + ".6");
+            Transform tile = FindNamed(SundialArcs.TileId(arc, row, 6));
             _undo = MakeMark("undo." + arc, _ring, Color.white, 0.012f);
             var box = _undo.AddComponent<BoxCollider>();
             box.size = new Vector3(0.016f, 0.012f, 0.016f);
@@ -806,47 +854,64 @@ namespace GardenVR.Sundial
                 return true;
             }
             string arc;
-            if (!TryAsk(id, out arc)) return false;
-            OpenPrompt(arc);
+            int row;
+            if (!TryAsk(id, out arc, out row)) return false;
+            OpenPrompt(arc, row);
             return true;
         }
 
-        static bool TryAsk(string id, out string arc)
+        static bool TryAsk(string id, out string arc, out int row)
         {
             arc = null;
+            row = 0;
             const string marker = ".yesterday.ask";
             if (string.IsNullOrEmpty(id) || !id.StartsWith("tile.", StringComparison.Ordinal) || !id.EndsWith(marker, StringComparison.Ordinal))
                 return false;
             string middle = id.Substring("tile.".Length, id.Length - "tile.".Length - marker.Length);
             if (middle.EndsWith(".", StringComparison.Ordinal))
                 middle = middle.Substring(0, middle.Length - 1);
-            if (SundialArcs.Index(middle) < 0) return false;
-            arc = middle;
-            return true;
+            int dot = middle.IndexOf('.');
+            string arcPart = dot < 0 ? middle : middle.Substring(0, dot);
+            if (SundialArcs.Index(arcPart) < 0) return false;
+            arc = arcPart;
+            if (dot < 0) return true;
+            string tail = middle.Substring(dot + 1);
+            if (tail.Length == 2 && tail[0] == 'r' && (tail[1] == '1' || tail[1] == '2'))
+            {
+                row = tail[1] - '0';
+                return true;
+            }
+            return false;
         }
 
-        void OpenPrompt(string arc)
+        void OpenPrompt(string arc, int row)
         {
             if (_service == null || string.IsNullOrEmpty(arc)) return;
-            if (!_service.BackfillOffered(_service.HabitForArc(arc))) return;
+            HabitDef habit = row <= 0 ? _service.HabitForArc(arc) : _service.HabitAt(arc, row);
+            if (!_service.BackfillOffered(habit)) return;
             EnsurePrompt();
             _promptArc = arc;
+            _promptRow = row;
             if (_prompt != null) _prompt.SetActive(true);
         }
 
         void ClosePrompt()
         {
             _promptArc = null;
+            _promptRow = 0;
             if (_prompt != null) _prompt.SetActive(false);
         }
 
         void ConfirmBackfill()
         {
             string arc = _promptArc;
-            HabitDef habit = _service == null || string.IsNullOrEmpty(arc) ? null : _service.HabitForArc(arc);
+            int row = _promptRow;
+            HabitDef habit = null;
+            if (_service != null && !string.IsNullOrEmpty(arc))
+                habit = row <= 0 ? _service.HabitForArc(arc) : _service.HabitAt(arc, row);
             TendResult result = habit == null ? null : _service.BackfillYesterday(habit);
             ClosePrompt();
-            if (result != null && result.Ok) Play(CueHatch, At("tile." + arc + ".5"));
+            if (result != null && result.Ok) Play(CueHatch, At(SundialArcs.TileId(arc, row, 5)));
         }
 
         void RefreshAsks()
@@ -855,13 +920,38 @@ namespace GardenVR.Sundial
             for (int arc = 0; arc < 3; arc++)
             {
                 string key = SundialArcs.FromIndex(arc);
-                bool show = _service.BackfillOffered(_service.HabitForArc(key));
-                if (show && _asks[arc] == null) _asks[arc] = MakeAsk(key);
-                if (_asks[arc] == null) continue;
-                if (_asks[arc].activeSelf != show) _asks[arc].SetActive(show);
+                for (int row = 0; row < 3; row++)
+                {
+                    HabitDef habit = row == 0 ? _service.HabitForArc(key) : _service.HabitAt(key, row);
+                    bool show = _service.BackfillOffered(habit);
+                    GameObject ask = AskObject(arc, row);
+                    if (show && ask == null)
+                    {
+                        ask = MakeAsk(key, row);
+                        SetAsk(arc, row, ask);
+                    }
+                    ask = AskObject(arc, row);
+                    if (ask == null) continue;
+                    if (ask.activeSelf != show) ask.SetActive(show);
+                }
             }
-            if (PromptVisible && !_service.BackfillOffered(_service.HabitForArc(_promptArc)))
+            HabitDef prompted = null;
+            if (!string.IsNullOrEmpty(_promptArc))
+                prompted = _promptRow <= 0 ? _service.HabitForArc(_promptArc) : _service.HabitAt(_promptArc, _promptRow);
+            if (PromptVisible && !_service.BackfillOffered(prompted))
                 ClosePrompt();
+        }
+
+        GameObject AskObject(int arc, int row)
+        {
+            if (row <= 0) return _asks[arc];
+            return _extraAsks[arc * 2 + (row - 1)];
+        }
+
+        void SetAsk(int arc, int row, GameObject ask)
+        {
+            if (row <= 0) _asks[arc] = ask;
+            else _extraAsks[arc * 2 + (row - 1)] = ask;
         }
 
         void PlaceRecordMarks()
@@ -870,14 +960,18 @@ namespace GardenVR.Sundial
             Camera cam = Camera.main;
             for (int arc = 0; arc < 3; arc++)
             {
-                GameObject ask = _asks[arc];
-                if (ask == null || !ask.activeSelf) continue;
-                Transform tile = FindNamed("tile." + SundialArcs.FromIndex(arc) + ".5");
-                Vector3 pos = tile != null ? tile.position + Vector3.up * 0.008f : transform.position;
-                FaceCamera(ask.transform, pos, cam);
+                for (int row = 0; row < 3; row++)
+                {
+                    GameObject ask = AskObject(arc, row);
+                    if (ask == null || !ask.activeSelf) continue;
+                    Transform tile = FindNamed(SundialArcs.TileId(SundialArcs.FromIndex(arc), row, 5));
+                    Vector3 pos = tile != null ? tile.position + Vector3.up * 0.008f : transform.position;
+                    FaceCamera(ask.transform, pos, cam);
+                }
             }
+            PlaceMoreMarks(cam);
             if (_prompt == null || !_prompt.activeSelf || string.IsNullOrEmpty(_promptArc)) return;
-            Transform yesterday = FindNamed("tile." + _promptArc + ".5");
+            Transform yesterday = FindNamed(SundialArcs.TileId(_promptArc, _promptRow, 5));
             Vector3 at = yesterday != null ? yesterday.position + Vector3.up * 0.034f : transform.position + Vector3.up * 0.05f;
             FaceCamera(_prompt.transform, at, cam);
         }
@@ -891,9 +985,12 @@ namespace GardenVR.Sundial
             mark.rotation = Quaternion.LookRotation(away, Vector3.up);
         }
 
-        GameObject MakeAsk(string arc)
+        GameObject MakeAsk(string arc, int row)
         {
-            var go = new GameObject("tile." + arc + ".yesterday.ask");
+            string name = row <= 0
+                ? "tile." + arc + ".yesterday.ask"
+                : "tile." + arc + ".r" + row + ".yesterday.ask";
+            var go = new GameObject(name);
             go.transform.SetParent(transform, false);
             EnsureInk();
             var mark = new GameObject("mark");
@@ -913,6 +1010,70 @@ namespace GardenVR.Sundial
             var target = go.AddComponent<IntentTarget>();
             target.Id = go.name;
             return go;
+        }
+
+        void RefreshMore()
+        {
+            if (_service == null || _service.Save == null) return;
+            for (int arc = 0; arc < 3; arc++)
+            {
+                string key = SundialArcs.FromIndex(arc);
+                bool show = ShowMore(key);
+                if (show && _more[arc] == null) _more[arc] = MakeMore(key);
+                if (_more[arc] == null) continue;
+                if (_more[arc].activeSelf != show) _more[arc].SetActive(show);
+            }
+        }
+
+        bool ShowMore(string arc)
+        {
+            if (_wizard != null && _wizard.Running) return false;
+            if (_view != null && _view.weekPage) return false;
+            if (_service.Scrubbing || Dismissed) return false;
+            int live = _service.LiveInArc(arc);
+            if (live < 1 || live >= SundialRules.MaxHabitsPerArc) return false;
+            return SeedCatalog.NextFree(arc, _service.Save.Habits) != null;
+        }
+
+        GameObject MakeMore(string arc)
+        {
+            var go = new GameObject("more." + arc);
+            go.transform.SetParent(transform, false);
+            EnsureInk();
+            var paper = new GameObject("chip");
+            paper.transform.SetParent(go.transform, false);
+            paper.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+            paper.transform.localScale = new Vector3(0.046f, 0.016f, 1f);
+            if (_chipQuad == null) _chipQuad = VerticalQuad();
+            paper.AddComponent<MeshFilter>().sharedMesh = _chipQuad;
+            var renderer = paper.AddComponent<MeshRenderer>();
+            if (_inkMat != null) renderer.sharedMaterial = _inkMat;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            InkLetter.Tint(renderer, InkLetter.Note(0.046f / 0.016f), Color.white);
+            var label = new GameObject("label");
+            label.transform.SetParent(go.transform, false);
+            label.transform.localPosition = new Vector3(0f, 0f, 0.001f);
+            AddInkLine(label, "Another", 42, 0.0022f);
+            var box = go.AddComponent<BoxCollider>();
+            box.size = new Vector3(0.05f, 0.018f, 0.008f);
+            var target = go.AddComponent<IntentTarget>();
+            target.Id = go.name;
+            return go;
+        }
+
+        void PlaceMoreMarks(Camera cam)
+        {
+            for (int arc = 0; arc < 3; arc++)
+            {
+                GameObject chip = _more[arc];
+                if (chip == null || !chip.activeSelf) continue;
+                Transform plant = FindNamed(SundialArcs.PlantId(SundialArcs.FromIndex(arc), 0));
+                Vector3 pos = plant != null
+                    ? plant.position + Vector3.up * (plant.lossyScale.y * 1.05f)
+                    : transform.position + Vector3.up * 0.08f;
+                FaceCamera(chip.transform, pos, cam);
+            }
         }
 
         void EnsurePrompt()
