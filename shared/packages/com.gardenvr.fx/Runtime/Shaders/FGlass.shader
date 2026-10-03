@@ -44,20 +44,27 @@ Shader "Fidelity/Glass"
             // which stretched each bead into a horizontal pill. The seam sits on the back.
             // G is a highlight from an estimated normal (Sobel of the height), not a measured map.
             float ang = atan2(i.op.x, -i.op.z);
-            float2 cuv = float2(ang * 1.15, i.op.y * 16.0);
-            half3 cond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, cuv).rgb;
-            // Droplets sit denser on the lower glass. `upper` is only the fog mask, so a falling
-            // _Fog still empties the base first and the breath fog keeps its bottom-up sweep.
+            // Fog keeps the original sample, so the breath haze still clears bottom-up.
+            float2 fogUv = float2(ang * 1.15, i.op.y * 16.0);
+            half3 fogCond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, fogUv).rgb;
+            // The bead plate is dense in its lower half. Upper glass reads only the sparse top,
+            // in a short band under the cork, so the droplets stay a few beads and not a field.
+            float band = saturate((i.op.y - 0.092) / 0.026);
+            float2 beadUv = float2(ang * 0.22 + 0.37, lerp(0.82, 0.97, band));
+            half3 cond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, beadUv).rgb;
             half upper = smoothstep(0.035, 0.10, i.op.y);
-            half low = 1.0 - smoothstep(0.018, 0.085, i.op.y);
-            half drops = cond.r * _Drops * (0.12 + 1.15 * low) * smoothstep(0.006, 0.02, i.op.y);
-            half fog = saturate(_Fog * (0.5 + 0.7 * cond.b) * (0.08 + 0.92 * upper));
+            half beads = smoothstep(0.094, 0.104, i.op.y) * (1.0 - smoothstep(0.116, 0.124, i.op.y));
+            half bead = smoothstep(0.72, 0.94, cond.r);
+            // The plate is still a field of cores. Keep about a third so the band stays a few beads.
+            float keep = frac(sin(dot(floor(beadUv * float2(14.0, 28.0)), float2(127.1, 311.7))) * 43758.5453);
+            half drops = bead * beads * _Drops * step(0.66, keep);
+            half fog = saturate(_Fog * (0.5 + 0.7 * fogCond.b) * (0.08 + 0.92 * upper));
             half inner = exp(-pow((i.op.y - _InnerY.x) / _InnerY.y, 2));   // glow is strongest beside the moss
             float vs = mul(UNITY_MATRIX_V, float4(i.wp, 1)).x - mul(UNITY_MATRIX_V, float4(TransformObjectToWorld(float3(0, 0, 0)) + float3(0, i.op.y, 0), 1)).x;
             half streak = (smoothstep(0.006, 0.0, abs(vs + 0.030)) + 0.6 * smoothstep(0.003, 0.0, abs(vs + 0.022))) * smoothstep(0.02, 0.05, i.op.y) * smoothstep(0.125, 0.10, i.op.y);
             half3 c = _Tint.rgb + _Inner.rgb * inner * (0.35 + rim) + _Rim.rgb * rim;
-            c += drops * (_Inner.rgb * 0.6 + cond.g * 1.5) + fog * _Inner.rgb * 0.5 + _Streak.rgb * streak * (1 - backWall * 0.7);
-            half a = saturate(_Tint.a + rim * _Rim.a + inner * 0.10 + drops * 0.55 + fog * 0.35 + streak * _Streak.a);
+            c += drops * (half3(0.42, 0.72, 0.58) + cond.g * 0.20) + fog * _Inner.rgb * 0.5 + _Streak.rgb * streak * (1 - backWall * 0.7);
+            half a = saturate(_Tint.a + rim * _Rim.a + inner * 0.10 + drops * 0.34 + fog * 0.35 + streak * _Streak.a);
             a *= backWall > 0.5 ? 0.55 : 1;
             return half4(c, a);
         }
