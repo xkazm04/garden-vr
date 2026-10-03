@@ -241,7 +241,7 @@ namespace GardenVR.Sundial.Editor
         public static void FixSeatedView()
         {
             var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(
-                ScenePath, UnityEditor.SceneManagement.EditorSceneManager.OpenSceneMode.Single);
+                ScenePath, UnityEditor.SceneManagement.OpenSceneMode.Single);
             GameObject dial = GameObject.Find("DialRoot");
             if (dial == null) throw new System.InvalidOperationException("DialRoot missing");
             AimSeatedAtDial(dial);
