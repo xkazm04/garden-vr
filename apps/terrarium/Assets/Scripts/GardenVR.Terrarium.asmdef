@@ -4,7 +4,8 @@
     "references": [
         "GardenVR.Core",
         "GardenVR.Input",
-        "GardenVR.Capture"
+        "GardenVR.Capture",
+        "GardenVR.Room"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

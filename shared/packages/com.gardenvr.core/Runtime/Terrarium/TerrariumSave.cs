@@ -26,7 +26,7 @@ namespace GardenVR.Core
 
     /// <summary>
     /// The terrarium save document. Schema 1. Unknown members are kept and written back.
-    /// Habits and tends are stored for the life-habit task; this document does not interpret them.
+    /// Habits and tends live here. Companion leaves are the live rows in <see cref="Tends"/>.
     /// </summary>
     public sealed class TerrariumSave
     {

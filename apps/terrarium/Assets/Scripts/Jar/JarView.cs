@@ -132,6 +132,10 @@ namespace GardenVR.Terrarium
         readonly List<Transform> _dewBeads = new List<Transform>();
         Transform _ripple;
         Material _rippleMat;
+        readonly CompanionGarden _companions = new CompanionGarden();
+        bool _liveCompanions;
+        List<CompanionGarden.Shot> _liveShots = new List<CompanionGarden.Shot>();
+        List<CompanionGarden.Shot> _captureShots = new List<CompanionGarden.Shot>();
 
         public int RecordFrondCount { get; private set; }
         public float ShownLean { get; private set; }
@@ -168,6 +172,9 @@ namespace GardenVR.Terrarium
             if (state == null) return;
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
+            int capCompanions = 0;
+            int capLeaves = 0;
+            bool sawHabits = false;
             foreach (var pair in state)
             {
                 if (pair.Key == "journey")
@@ -194,13 +201,32 @@ namespace GardenVR.Terrarium
                     case "reducedMotion": reducedMotion = value > 0.5f; break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
+                    case "companions":
+                        capCompanions = Mathf.Clamp((int)value, 0, Companions.MaxHabits);
+                        sawHabits = true;
+                        break;
+                    case "leaves":
+                        capLeaves = Mathf.Max(0, (int)value);
+                        sawHabits = true;
+                        break;
                     default:
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
             }
             if (!sawJourney) _hasLook = false;
+            _liveCompanions = false;
+            _captureShots = sawHabits
+                ? CompanionGarden.CaptureShots(capCompanions, capLeaves)
+                : new List<CompanionGarden.Shot>();
             HookCamera();
             Apply();
+        }
+
+        /// <summary>The live companions. Capture state replaces this until the next present.</summary>
+        public void PresentCompanions(IReadOnlyList<CompanionGarden.Shot> shots)
+        {
+            _liveCompanions = true;
+            _liveShots = shots != null ? new List<CompanionGarden.Shot>(shots) : new List<CompanionGarden.Shot>();
         }
 
         /// <summary>Pose the jar from the core garden and an injected clock. The art week pose stays on <c>day</c>.</summary>
@@ -345,6 +371,7 @@ namespace GardenVR.Terrarium
             ApplyFocusedLight(warm ? FocusWarm : FocusMint);
             ApplyGardenLook();
             DriveRipple();
+            _companions.Show(transform, _liveCompanions ? _liveShots : _captureShots);
         }
 
         /// <summary>

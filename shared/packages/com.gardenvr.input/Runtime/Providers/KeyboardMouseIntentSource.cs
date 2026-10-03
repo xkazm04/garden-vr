@@ -112,6 +112,7 @@ namespace GardenVR.Input
             raw.R = keyboard.rKey.isPressed;
             raw.F1 = keyboard.f1Key.isPressed;
             raw.F2 = keyboard.f2Key.isPressed;
+            raw.F3 = keyboard.f3Key.isPressed;
             raw.BracketLeft = keyboard.leftBracketKey.isPressed;
             raw.BracketRight = keyboard.rightBracketKey.isPressed;
             raw.T = keyboard.tKey.isPressed;

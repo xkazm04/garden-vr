@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using GardenVR.Core;
 using GardenVR.Input;
+using GardenVR.Room;
 using UnityEngine;
 
 namespace GardenVR.Terrarium
@@ -59,6 +61,8 @@ namespace GardenVR.Terrarium
         GameObject _prompt;
         GameObject _restore;
         GUIStyle _overlayStyle;
+        HabitDesk _desk;
+        readonly Dictionary<string, int> _cues = new Dictionary<string, int>();
 
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
         static readonly Color DotDim = new Color(0.015f, 0.04f, 0.028f);
@@ -82,6 +86,52 @@ namespace GardenVR.Terrarium
         public float AnswerTime => _answerTime;
         public int Updates => _updates;
         public int FilledDots { get; private set; }
+        public int LastPluckSemitones { get; private set; }
+        public Ledger Ledger { get { return _service != null ? _service.HabitLedger : null; } }
+
+        public int ShownLeaves(string habitId)
+        {
+            return _service != null ? _service.ShownLeaves(habitId) : 0;
+        }
+
+        public int CueCount(string id)
+        {
+            int count;
+            return id != null && _cues.TryGetValue(id, out count) ? count : 0;
+        }
+
+        public bool YesterdayVisible(string preset)
+        {
+            return _desk != null && _desk.YesterdayVisible(preset);
+        }
+
+        public bool UndoMarkVisible(string preset)
+        {
+            return _desk != null && _desk.UndoVisible(preset);
+        }
+
+        /// <summary>Hook for the first-run ritual. A dev command calls this same method.</summary>
+        public void OfferSeedPackets()
+        {
+            if (_service == null) return;
+            bool first = _service.OfferSeedPackets();
+            if (first) PlayCue("seed.appear", 0);
+            RefreshHabits();
+        }
+
+        public void HandleDev(DevCommand command)
+        {
+            OnDev(command);
+        }
+
+        public bool TryUndoHabit()
+        {
+            if (_service == null || !_service.TryUndoHabit()) return false;
+            PlayCue("habit.undo", 0);
+            RefreshHabits();
+            PushGarden();
+            return true;
+        }
 
         public static string LogPath => Path.Combine(Application.persistentDataPath, "logs", "ritual.jsonl");
 
@@ -119,7 +169,11 @@ namespace GardenVR.Terrarium
         {
             if (!DevClockAllowed() || _service == null) return false;
             bool moved = _service.TryShiftDay(delta);
-            if (moved) PushGarden();
+            if (moved)
+            {
+                RefreshHabits();
+                PushGarden();
+            }
             return moved;
         }
 
@@ -191,7 +245,9 @@ namespace GardenVR.Terrarium
                 FirstRunStarted = false;
                 if (_restore != null) _restore.SetActive(true);
             }
+            EnsureDesk();
             PushIdle();
+            RefreshHabits();
             Log("SessionStart");
         }
 
@@ -205,8 +261,14 @@ namespace GardenVR.Terrarium
             Unsubscribe();
         }
 
+        void OnApplicationQuit()
+        {
+            if (_service != null) _service.FlushHabits();
+        }
+
         void OnDestroy()
         {
+            if (_service != null) _service.FlushHabits();
             if (_dotMats != null)
             {
                 for (int i = 0; i < _dotMats.Length; i++)
@@ -230,6 +292,8 @@ namespace GardenVR.Terrarium
             float dt = Time.deltaTime;
             if (dt < 0f) dt = 0f;
             _appTime += dt;
+            if (_service != null) _service.StepHabits(dt);
+            RefreshHabits();
 
             bool pinching = LivePinch();
             if (_needFreshPinch && !pinching)
@@ -404,6 +468,9 @@ namespace GardenVR.Terrarium
         {
             if (intent.Kind == HandIntentKind.PalmOpen)
             {
+                if (_service != null) _service.FlushHabits();
+                RefreshHabits();
+                PushGarden();
                 LatchPause();
                 return;
             }
@@ -444,12 +511,21 @@ namespace GardenVR.Terrarium
                 }
                 if (_prompt != null) _prompt.SetActive(false);
                 Log("Continue");
+                return;
             }
+            if (intent.Kind == HandIntentKind.Pinch || intent.Kind == HandIntentKind.Poke)
+                HandleHabitIntent(intent);
         }
 
         void OnSystemPause()
         {
-            if (_service != null) _service.Save();
+            if (_service != null)
+            {
+                _service.FlushHabits();
+                _service.Save();
+            }
+            RefreshHabits();
+            PushGarden();
             // Batch PlayMode runs have no user focus. A startup focus-loss must not freeze the scripted ritual.
             if (Application.isBatchMode) return;
             LatchPause();
@@ -496,6 +572,7 @@ namespace GardenVR.Terrarium
             else if (command == DevCommand.AutoPace) SetAutoPace(!_autoPace);
             else if (command == DevCommand.NextDay) ShiftDay(1);
             else if (command == DevCommand.PreviousDay) ShiftDay(-1);
+            else if (command == DevCommand.SeedPackets) OfferSeedPackets();
         }
 
         void PushIdle()
@@ -519,7 +596,116 @@ namespace GardenVR.Terrarium
             _view.recoveredTime = recovered ? _answerTime : -1f;
             if (CoilWaitingFiddle()) _view.uncoil = 0f;
             _view.PresentGarden(_garden, _service.TodayIndex, animating, recovered);
+            _view.PresentCompanions(CompanionShots());
             _view.Apply();
+        }
+
+        List<CompanionGarden.Shot> CompanionShots()
+        {
+            var shots = new List<CompanionGarden.Shot>();
+            if (_service == null) return shots;
+            List<HabitDef> habits = _service.ActiveHabits();
+            for (int i = 0; i < habits.Count; i++)
+            {
+                HabitDef habit = habits[i];
+                if (habit == null) continue;
+                shots.Add(new CompanionGarden.Shot
+                {
+                    Preset = habit.PresetKey,
+                    Species = Companions.SpeciesFor(habit.PresetKey),
+                    Leaves = _service.ShownLeaves(habit.Id),
+                    Vitality = _service.HabitVitality(habit.Id),
+                    Etch = false
+                });
+            }
+            return shots;
+        }
+
+        void EnsureDesk()
+        {
+            if (_desk != null) return;
+            var go = new GameObject("HabitDesk");
+            PcDeskAnchor anchor = FindAnyObjectByType<PcDeskAnchor>();
+            Transform parent = anchor != null ? anchor.transform : transform;
+            go.transform.SetParent(parent, false);
+            _desk = go.AddComponent<HabitDesk>();
+            _desk.Bind(anchor);
+        }
+
+        void RefreshHabits()
+        {
+            if (!Application.isPlaying) return;
+            EnsureDesk();
+            if (_desk == null || _service == null) return;
+            List<HabitDef> habits = _service.ActiveHabits();
+            var views = new List<HabitDesk.HabitView>(habits.Count);
+            for (int i = 0; i < habits.Count; i++)
+            {
+                HabitDef habit = habits[i];
+                if (habit == null) continue;
+                views.Add(new HabitDesk.HabitView
+                {
+                    Preset = habit.PresetKey,
+                    Yesterday = _service.YesterdayVisible(habit.Id),
+                    Undo = _service.PendingHabitId == habit.Id
+                });
+            }
+            _desk.Apply(_service.PacketsOffered, _service.Settings.ReducedMotion, views);
+        }
+
+        void HandleHabitIntent(HandIntent intent)
+        {
+            if (_service == null || string.IsNullOrEmpty(intent.TargetId)) return;
+            string id = intent.TargetId;
+            TendSource source = intent.Kind == HandIntentKind.Poke ? TendSource.Poke : TendSource.Pinch;
+            if (id.StartsWith("seed.", StringComparison.Ordinal))
+            {
+                _service.TryPlantHabit(id.Substring(5));
+                RefreshHabits();
+                PushGarden();
+                return;
+            }
+            if (id.StartsWith("undo.", StringComparison.Ordinal))
+            {
+                TryUndoHabit();
+                return;
+            }
+            string preset;
+            if (SplitLabel(id, ".today", out preset))
+            {
+                TryCheckIn(preset, false, source);
+                return;
+            }
+            if (SplitLabel(id, ".yesterday", out preset))
+                TryCheckIn(preset, true, source);
+        }
+
+        void TryCheckIn(string preset, bool yesterday, TendSource source)
+        {
+            int semitones;
+            if (_service == null || !_service.TryArmHabit(preset, yesterday, source, out semitones)) return;
+            LastPluckSemitones = semitones;
+            PlayCue("habit.pluck", semitones);
+            RefreshHabits();
+            PushGarden();
+        }
+
+        static bool SplitLabel(string id, string suffix, out string preset)
+        {
+            const string prefix = "label.";
+            preset = null;
+            if (id == null || !id.StartsWith(prefix, StringComparison.Ordinal) || !id.EndsWith(suffix, StringComparison.Ordinal))
+                return false;
+            preset = id.Substring(prefix.Length, id.Length - prefix.Length - suffix.Length);
+            return preset.Length > 0;
+        }
+
+        void PlayCue(string id, int semitones)
+        {
+            int count;
+            _cues.TryGetValue(id, out count);
+            _cues[id] = count + 1;
+            Debug.Log("[Terrarium] cue " + id + " semitones " + semitones.ToString(CultureInfo.InvariantCulture));
         }
 
         bool CoilWaitingFiddle()
