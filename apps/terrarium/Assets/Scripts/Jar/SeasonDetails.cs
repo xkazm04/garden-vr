@@ -12,13 +12,14 @@ namespace GardenVR.Terrarium
     /// </summary>
     public sealed class SeasonDetails
     {
-        public const float SprigHeight = 0.030f;
+        public const float SprigHeight = 0.034f;
         const int MaxShownBlooms = 6;
 
+        // Front lip of the moss, toward the JarG1 eye (-Z), one to each side of the fiddle.
         static readonly Vector3[] SprigSeats =
         {
-            new Vector3(0.020f, 0f, -0.012f),
-            new Vector3(-0.016f, 0f, 0.008f)
+            new Vector3(-0.018f, 0f, -0.018f),
+            new Vector3(0.020f, 0f, -0.016f)
         };
 
         static readonly Color SprigCool = new Color(0.40f, 0.58f, 0.24f);
