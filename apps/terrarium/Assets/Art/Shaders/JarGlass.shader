@@ -2,9 +2,8 @@
 // Fidelity/Glass is the shared shader. This copy adds _Volume, which is off when its alpha is 0.
 // Output is premultiplied (Blend One OneMinusSrcAlpha). The pane stays clear so the moss and the fern
 // read through it. _Volume is a faint mint tint on the silhouette only, and it falls off with height.
-// The air light comes from _Inner: brightest beside the moss, gone before the shoulder.
-// It is added, not used as coverage. The lower third uses the same base alpha as the
-// shoulder. _Volume stays at alpha 0 so it cannot milk the heel.
+// The air light comes from _Inner: brightest beside the moss and the crozier, gone by the shoulder,
+// thinner toward the glass. It is added, not used as coverage, so it does not become a mint block.
 // Breath fog is a separate term. It is zero when _Fog is zero, and its coverage never exceeds 0.30.
 // Condensation beads stay in the upper third. No refraction: a grab pass is the one thing Quest cannot afford here.
 Shader "Fidelity/JarGlass"
@@ -50,12 +49,11 @@ Shader "Fidelity/JarGlass"
             float ang = atan2(i.op.x, -i.op.z);
             float2 fogUv = float2(ang * 1.15, i.op.y * 16.0);
             half3 fogCond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, fogUv).rgb;
-            // Beads sit on the shoulder and the short neck, under the cork.
-            float band = saturate((i.op.y - 0.078) / 0.034);
+            float band = saturate((i.op.y - 0.092) / 0.026);
             float2 beadUv = float2(ang * 0.22 + 0.37, lerp(0.82, 0.97, band));
             half3 cond = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, beadUv).rgb;
             half upper = smoothstep(0.035, 0.10, i.op.y);
-            half beads = smoothstep(0.082, 0.094, i.op.y) * (1.0 - smoothstep(0.114, 0.123, i.op.y));
+            half beads = smoothstep(0.094, 0.104, i.op.y) * (1.0 - smoothstep(0.116, 0.124, i.op.y));
             half bead = smoothstep(0.72, 0.94, cond.r);
             float keep = frac(sin(dot(floor(beadUv * float2(14.0, 28.0)), float2(127.1, 311.7))) * 43758.5453);
             half drops = bead * beads * _Drops * step(0.66, keep);
@@ -76,9 +74,7 @@ Shader "Fidelity/JarGlass"
             half baseA = _Tint.a;
             half streakA = streak * _Streak.a * (1.0 - backWall * 0.7);
             half a = saturate(baseA + rimA + dropA + fogA + wallA + streakA);
-            // Cavity keeps the air light. The wall term stays small so the lower glass
-            // is not a greener, milkier pane than the shoulder.
-            half3 light = _Inner.rgb * air * lerp(0.08, 1.0, cavity) * 0.18;
+            half3 light = _Inner.rgb * air * lerp(0.35, 1.0, cavity) * 0.22;
             half3 fogRgb = lerp(_Inner.rgb, half3(0.82, 0.94, 0.90), 0.55);
             half3 c =
                 _Tint.rgb * baseA
