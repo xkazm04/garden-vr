@@ -52,3 +52,7 @@ Oldest first, today last. `Before` for a day before `CreatedDay`. A live tend is
 ## Stretch reach
 
 `StretchSession` is the morning ritual. Three marks, in order. A sample counts only when `PalmCommit` is true and `LookMark` is the next index. A repeat or a later mark is ignored and does not lower `Stretch`. `Stretch` is earned reaches / 3 and only rises. Completion sets `TendAuthorised` for `ArcId.Morning` with `TendSource.Ritual`. `ConsumeTend` returns true once. The session does not write the ledger. The app does, with `TendRitual`.
+
+## Gratitude at midday
+
+`GratitudeRecord` is the midday record. Five symbols, index 0..4: sun, leaf, cup, star, hearth. `TryInk(day, symbol)` writes one mark for that garden day. The mark is the day index and the symbol index. A second symbol the same day is refused and the first choice stays. Each new ink authorises one `TendSource.Ritual` on `ArcId.Midday`. `ConsumeTend` returns true once per unconsumed ink. A record built from saved marks does not authorise a tend. The record does not write the ledger. The app does, with `TendRitual`.

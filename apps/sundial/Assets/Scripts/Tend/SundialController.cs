@@ -132,6 +132,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<DuskRitualController>();
             if (UnityEngine.Object.FindAnyObjectByType<StretchRitualController>() == null)
                 view.gameObject.AddComponent<StretchRitualController>();
+            if (UnityEngine.Object.FindAnyObjectByType<GratitudeRitualController>() == null)
+                view.gameObject.AddComponent<GratitudeRitualController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -145,6 +147,8 @@ namespace GardenVR.Sundial
             if (dusk != null) dusk.SetSource(source);
             StretchRitualController stretch = GetComponent<StretchRitualController>();
             if (stretch != null) stretch.SetSource(source);
+            GratitudeRitualController gratitude = GetComponent<GratitudeRitualController>();
+            if (gratitude != null) gratitude.SetSource(source);
         }
 
         /// <summary>

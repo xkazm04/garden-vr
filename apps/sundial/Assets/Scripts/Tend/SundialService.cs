@@ -67,6 +67,7 @@ namespace GardenVR.Sundial
         SundialSave _save;
         Ledger _ledger;
         DeferredTend _deferred;
+        GratitudeRecord _gratitude;
         string _stateJson = "";
 
         public LoadOutcome Outcome { get; private set; }
@@ -76,6 +77,7 @@ namespace GardenVR.Sundial
         public string StateJson { get { return _stateJson; } }
         public bool StateChanged { get; private set; }
         public Ledger Ledger { get { return _ledger; } }
+        public GratitudeRecord Gratitude { get { return _gratitude; } }
         public IClock Clock { get { return _clock; } }
         public SundialSave Save { get { return _save; } }
         public string PendingHabitId { get; private set; }
@@ -129,9 +131,47 @@ namespace GardenVR.Sundial
                     _ledger = new Ledger(_save.Tends);
                 }
             }
+            if (_save.Gratitude == null) _save.Gratitude = new List<GratitudeMark>();
+            _gratitude = new GratitudeRecord(_save.Gratitude);
             _deferred = new DeferredTend(_ledger);
             Recompute();
             StateChanged = true;
+        }
+
+        /// <summary>
+        /// Inks one of the five symbols for today and tends the midday habit at once.
+        /// A second symbol the same day returns null and writes nothing.
+        /// The save row is the day and the symbol index.
+        /// </summary>
+        public TendResult InkGratitude(int symbol)
+        {
+            if (_save == null) return null;
+            if (_gratitude == null) _gratitude = new GratitudeRecord(_save.Gratitude);
+            if (!_gratitude.TryInk(Today().Index, symbol)) return null;
+            CopyGratitude();
+            HabitDef habit = HabitForArc("midday");
+            if (habit == null)
+            {
+                Persist();
+                return null;
+            }
+            TendResult result = TendRitual(habit.Id);
+            if (result != null && result.Ok) _gratitude.ConsumeTend();
+            if (result == null || !result.Ok || result.AlreadyKept) Persist();
+            return result;
+        }
+
+        void CopyGratitude()
+        {
+            if (_save.Gratitude == null) _save.Gratitude = new List<GratitudeMark>();
+            _save.Gratitude.Clear();
+            IReadOnlyList<GratitudeMark> marks = _gratitude.Marks;
+            for (int i = 0; i < marks.Count; i++)
+            {
+                GratitudeMark mark = marks[i];
+                if (mark == null) continue;
+                _save.Gratitude.Add(new GratitudeMark { Day = mark.Day, Symbol = mark.Symbol });
+            }
         }
 
         public void Step(float dt)
@@ -407,7 +447,8 @@ namespace GardenVR.Sundial
                 Habits = new List<HabitDef>(),
                 Tends = new List<TendEvent>(),
                 Settings = new SundialSettings(),
-                FirstRunStep = null
+                FirstRunStep = null,
+                Gratitude = new List<GratitudeMark>()
             };
         }
     }

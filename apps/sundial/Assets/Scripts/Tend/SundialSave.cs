@@ -27,6 +27,8 @@ namespace GardenVR.Sundial
         public List<TendEvent> Tends = new List<TendEvent>();
         public SundialSettings Settings = new SundialSettings();
         public string FirstRunStep;
+        /// <summary>Inked middays. Each row is a garden day and a symbol index. No note.</summary>
+        public List<GratitudeMark> Gratitude = new List<GratitudeMark>();
         public Dictionary<string, JsonValue> Extra;
         public Dictionary<string, Dictionary<string, JsonValue>> HabitExtra;
         public Dictionary<string, Dictionary<string, JsonValue>> TendExtra;
@@ -38,6 +40,11 @@ namespace GardenVR.Sundial
         static readonly string[] RootKnown =
         {
             "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep"
+        };
+
+        static readonly string[] RootKnownWithGratitude =
+        {
+            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude"
         };
 
         static readonly string[] HabitKnown =
@@ -55,7 +62,10 @@ namespace GardenVR.Sundial
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             var save = new SundialSave();
             save.SchemaVersion = obj.Has("SchemaVersion") ? obj.Get("SchemaVersion").AsInt() : 1;
-            save.Extra = obj.Passthrough(RootKnown);
+            bool gratitudeArray = obj.Has("Gratitude") && !obj.Get("Gratitude").IsNull
+                && obj.Get("Gratitude").Kind == JsonKind.Array;
+            save.Extra = obj.Passthrough(gratitudeArray ? RootKnownWithGratitude : RootKnown);
+            save.Gratitude = gratitudeArray ? ReadGratitude(obj.Get("Gratitude").AsArray()) : new List<GratitudeMark>();
             save.Settings = ReadSettings(obj.Has("Settings") && !obj.Get("Settings").IsNull ? obj.Get("Settings").AsObject() : null);
             save.Habits = new List<HabitDef>();
             save.HabitExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
@@ -105,6 +115,8 @@ namespace GardenVR.Sundial
             obj.Set("Tends", tends);
             obj.Set("Settings", WriteSettings(save.Settings ?? new SundialSettings()));
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
+            if (save.Gratitude != null && save.Gratitude.Count > 0)
+                obj.Set("Gratitude", WriteGratitude(save.Gratitude));
             obj.Restore(save.Extra);
             return obj;
         }
@@ -204,6 +216,47 @@ namespace GardenVR.Sundial
             if (extras != null && tend.Id != null && extras.TryGetValue(tend.Id, out extra))
                 obj.Restore(extra);
             return obj;
+        }
+
+        static List<GratitudeMark> ReadGratitude(JsonArray rows)
+        {
+            var list = new List<GratitudeMark>();
+            if (rows == null) return list;
+            for (int i = 0; i < rows.Count; i++)
+            {
+                if (rows[i] == null || rows[i].Kind != JsonKind.Object) continue;
+                JsonObject row = rows[i].AsObject();
+                if (!row.Has("Day") || !row.Has("Symbol")) continue;
+                JsonValue day = row.Get("Day");
+                JsonValue symbol = row.Get("Symbol");
+                if (day.Kind != JsonKind.Number || symbol.Kind != JsonKind.Number) continue;
+                int index = symbol.AsInt();
+                if (!GratitudeRecord.IsSymbol(index)) continue;
+                int dayIndex = day.AsInt();
+                bool duplicate = false;
+                for (int j = 0; j < list.Count; j++)
+                {
+                    if (list[j].Day == dayIndex) { duplicate = true; break; }
+                }
+                if (duplicate) continue;
+                list.Add(new GratitudeMark { Day = dayIndex, Symbol = index });
+            }
+            return list;
+        }
+
+        static JsonArray WriteGratitude(List<GratitudeMark> marks)
+        {
+            var rows = new JsonArray();
+            for (int i = 0; i < marks.Count; i++)
+            {
+                GratitudeMark mark = marks[i];
+                if (mark == null || !GratitudeRecord.IsSymbol(mark.Symbol)) continue;
+                var row = new JsonObject();
+                row.Set("Day", JsonValue.Number(mark.Day));
+                row.Set("Symbol", JsonValue.Number(mark.Symbol));
+                rows.Add(row);
+            }
+            return rows;
         }
 
         static string StringMember(JsonObject obj, string key)
