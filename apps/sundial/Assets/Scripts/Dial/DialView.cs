@@ -70,6 +70,9 @@ namespace GardenVR.Sundial
         [Range(0f, 1f)] public float appear = 1f;
         /// <summary>False hides the three plant cards. The first run turns this on when the seeds land.</summary>
         public bool showPlants = true;
+
+        /// <summary>The week page is in front. The paper and the rim stay. The day drawing steps aside.</summary>
+        public bool weekPage;
         [Range(0f, 1f)] public float waiting;
         public string waitingTarget = "midday";
         [Range(0f, 1f)] public float pulse;
@@ -264,6 +267,49 @@ namespace GardenVR.Sundial
                 }
             }
             PlaceHalo(haloArc);
+            if (weekPage) CoverDayDrawing();
+        }
+
+        /// <summary>
+        /// The second page covers the day. Plants, tiles and the gnomon would poke through a flat sheet,
+        /// so they step aside until the page turns back. The face and the rim stay.
+        /// </summary>
+        void CoverDayDrawing()
+        {
+            if (tileRenderer != null) tileRenderer.enabled = false;
+            if (haloRenderer != null) haloRenderer.enabled = false;
+            if (poolRenderer != null) poolRenderer.enabled = false;
+            if (contactRenderer != null) contactRenderer.enabled = false;
+            if (shadow != null)
+            {
+                Renderer drawn = shadow.GetComponent<Renderer>();
+                if (drawn != null) drawn.enabled = false;
+            }
+            EnableNamed("Gnomon", false);
+            EnableNamed("Soil", false);
+            if (uprightCards != null)
+            {
+                for (int i = 0; i < uprightCards.Length; i++)
+                {
+                    if (uprightCards[i] == null) continue;
+                    Renderer renderer = uprightCards[i].GetComponent<Renderer>();
+                    if (renderer != null) renderer.enabled = false;
+                }
+            }
+            if (bloomRenderers != null)
+            {
+                for (int i = 0; i < bloomRenderers.Length; i++)
+                {
+                    if (bloomRenderers[i] != null) bloomRenderers[i].enabled = false;
+                }
+            }
+            if (stripRenderers != null)
+            {
+                for (int i = 0; i < stripRenderers.Length; i++)
+                {
+                    if (stripRenderers[i] != null) stripRenderers[i].enabled = false;
+                }
+            }
         }
 
         /// <summary>
@@ -460,6 +506,8 @@ namespace GardenVR.Sundial
                 gameObject.AddComponent<GratitudeRitualController>();
             if (GetComponent<FocusBlockController>() == null)
                 gameObject.AddComponent<FocusBlockController>();
+            if (GetComponent<WeekDialController>() == null)
+                gameObject.AddComponent<WeekDialController>();
         }
 
         void OnEnable()

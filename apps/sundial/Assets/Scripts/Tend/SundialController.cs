@@ -136,6 +136,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<GratitudeRitualController>();
             if (UnityEngine.Object.FindAnyObjectByType<FocusBlockController>() == null)
                 view.gameObject.AddComponent<FocusBlockController>();
+            if (UnityEngine.Object.FindAnyObjectByType<WeekDialController>() == null)
+                view.gameObject.AddComponent<WeekDialController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -153,6 +155,8 @@ namespace GardenVR.Sundial
             if (gratitude != null) gratitude.SetSource(source);
             FocusBlockController focus = GetComponent<FocusBlockController>();
             if (focus != null) focus.SetSource(source);
+            WeekDialController week = GetComponent<WeekDialController>();
+            if (week != null) week.SetSource(source);
         }
 
         /// <summary>
