@@ -96,6 +96,7 @@ namespace GardenVR.Sundial
         public MeshRenderer tileRenderer;
 
         int _haloArc = 1;
+        readonly Dictionary<string, Texture2D> _haloMasks = new Dictionary<string, Texture2D>();
 
         Texture2D _stateTex;
         bool _hooked;
@@ -184,12 +185,19 @@ namespace GardenVR.Sundial
             ApplyPulse();
             ApplyBloomFold();
 
-            // Gentle. A faster sine read as a flicker on the gold line.
-            float breathe = reducedMotion ? 1f : 0.86f + 0.14f * Mathf.Sin(time * 2.2f);
+            // Brightness only. The line stays a few pixels wide; a width pulse read as a throb.
+            const float breathHz = Mathf.PI * 2f / 2.6f;
+            // 0.40 to 1 over 2.6 s. The trough stays under the clip so the breath reads.
+            float breathe = reducedMotion ? 1f : 0.70f + 0.30f * Mathf.Sin(time * breathHz);
             float amount = Mathf.Clamp01(halo) * breathe;
             int haloStage = haloArc == 0 ? stageMorning : haloArc == 1 ? stageMidday : stageWinddown;
             Texture2D[] haloSet = haloArc == 0 ? morningCards : haloArc == 1 ? middayCards : windDownCards;
             int stageCard = Mathf.Clamp(haloStage, 0, 4);
+            int bloomCard = ShownBloomCard(haloArc);
+            int bloomTex = haloArc * 2 + Mathf.Max(bloomCard, 0);
+            Texture2D bloomTex2d = null;
+            if (bloomCard >= 0 && bloomTextures != null && bloomTex < bloomTextures.Length)
+                bloomTex2d = bloomTextures[bloomTex];
             if (haloRenderer != null)
             {
                 haloRenderer.enabled = !stageStrip && amount > 0.01f;
@@ -197,31 +205,33 @@ namespace GardenVR.Sundial
                 {
                     var block = new MaterialPropertyBlock();
                     haloRenderer.GetPropertyBlock(block);
-                    block.SetTexture("_MainTex", haloSet[stageCard]);
+                    block.SetTexture("_MainTex", HaloMask(haloSet[stageCard], bloomTex2d));
                     haloRenderer.SetPropertyBlock(block);
                 }
             }
             Material haloMat = haloRenderer != null ? haloRenderer.sharedMaterial : null;
-            if (haloMat != null)
+            if (haloMat != null && amount > 0.01f)
             {
-                // Warm gold line and a softer gold skirt. Yellow, not the orange flame.
-                var line = new Color(1.45f, 1.12f, 0.46f) * amount;
-                var bloom = new Color(1.05f, 0.82f, 0.32f) * amount;
-                haloMat.SetColor("_Color", line);
-                haloMat.SetColor("_Color2", bloom);
-                float widen = reducedMotion ? 1f : 0.92f + 0.08f * Mathf.Sin(time * 2.2f + 0.6f);
-                if (haloMat.HasProperty("_Silhouette")) haloMat.SetFloat("_Silhouette", 6.0f * widen);
+                // Gold core and a short falloff. Hot enough to glow, low enough that the
+                // breath does not clip to white on every frame.
+                haloMat.SetColor("_Color", new Color(1.15f, 0.86f, 0.32f) * amount);
+                haloMat.SetColor("_Color2", new Color(0.40f, 0.26f, 0.08f) * amount);
+                if (haloMat.HasProperty("_Silhouette")) haloMat.SetFloat("_Silhouette", 2.15f);
                 if (haloMat.HasProperty("_Fit")) haloMat.SetFloat("_Fit", 1.18f);
             }
             if (poolRenderer != null)
             {
                 poolRenderer.enabled = !stageStrip && amount > 0.01f;
                 Material poolMat = poolRenderer.sharedMaterial;
-                if (poolMat != null)
+                if (poolMat != null && amount > 0.01f)
                 {
-                    float poolPulse = reducedMotion ? 1f : 0.88f + 0.12f * Mathf.Sin(time * 2.2f);
-                    poolMat.SetColor("_Color", new Color(1.25f, 0.96f, 0.42f) * (amount * poolPulse));
+                    // A faint warm spot under the stem. The old disc covered the soil.
+                    float poolPulse = reducedMotion ? 1f : 0.90f + 0.10f * Mathf.Sin(time * breathHz);
+                    poolMat.SetColor("_Color", new Color(0.16f, 0.10f, 0.035f) * (amount * poolPulse));
                     poolMat.SetColor("_Color2", Color.black);
+                    if (poolMat.HasProperty("_Falloff")) poolMat.SetFloat("_Falloff", 2.8f);
+                    if (poolMat.HasProperty("_Focus")) poolMat.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.36f, 0f));
+                    if (poolMat.HasProperty("_Silhouette")) poolMat.SetFloat("_Silhouette", 0f);
                 }
             }
             if (contactRenderer != null)
@@ -789,6 +799,115 @@ namespace GardenVR.Sundial
             renderer.SetPropertyBlock(block);
         }
 
+        Texture2D HaloMask(Texture2D plant, Texture2D extra)
+        {
+            string key = plant != null ? plant.name : "";
+            if (extra != null) key = key + "+" + extra.name;
+            Texture2D cached;
+            if (_haloMasks.TryGetValue(key, out cached) && cached != null) return cached;
+            Texture2D made = BakeHaloMask(plant, extra);
+            _haloMasks[key] = made;
+            return made;
+        }
+
+        /// <summary>
+        /// Close the plant alpha (and the bloom, when it sticks out), then keep a thin
+        /// ring just outside that shape. R is the core, G is the short falloff.
+        /// </summary>
+        static Texture2D BakeHaloMask(Texture2D plant, Texture2D extra)
+        {
+            if (plant == null) throw new InvalidOperationException("halo plant texture is missing");
+            if (!plant.isReadable) throw new InvalidOperationException(plant.name + " is not readable");
+            int w = plant.width;
+            int h = plant.height;
+            Color32[] plantPx = plant.GetPixels32();
+            Color32[] extraPx = null;
+            if (extra != null && extra.isReadable && extra.width == w && extra.height == h)
+                extraPx = extra.GetPixels32();
+            var on = new bool[w * h];
+            for (int i = 0; i < on.Length; i++)
+            {
+                int a = plantPx[i].a;
+                if (extraPx != null && extraPx[i].a > a) a = extraPx[i].a;
+                on[i] = a >= 128;
+            }
+            // 12 px bridges neighbouring leaves. The ring then sits on that outer contour.
+            const int closePx = 12;
+            bool[] closed = CloseMask(on, w, h, closePx);
+            int[] dist = DistanceToOn(closed, w, h);
+            var pixels = new Color32[on.Length];
+            const float corePx = 2.6f;
+            const float glowPx = 5.4f;
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                if (closed[i]) continue;
+                float px = dist[i] / 3f;
+                if (px <= corePx)
+                    pixels[i] = new Color32(255, 0, 0, 255);
+                else if (px <= glowPx)
+                {
+                    float t = 1f - (px - corePx) / (glowPx - corePx);
+                    pixels[i] = new Color32(0, (byte)Mathf.RoundToInt(255f * t), 0, 255);
+                }
+            }
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false, true)
+            {
+                name = "HaloMask_" + plant.name,
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear
+            };
+            tex.SetPixels32(pixels);
+            tex.Apply(false, true);
+            return tex;
+        }
+
+        static bool[] CloseMask(bool[] on, int w, int h, int radiusPx)
+        {
+            int units = radiusPx * 3;
+            int[] toPlant = DistanceToOn(on, w, h);
+            var outside = new bool[on.Length];
+            for (int i = 0; i < on.Length; i++) outside[i] = toPlant[i] > units;
+            int[] toOutside = DistanceToOn(outside, w, h);
+            var closed = new bool[on.Length];
+            for (int i = 0; i < on.Length; i++) closed[i] = toOutside[i] >= units;
+            return closed;
+        }
+
+        /// <summary>Chamfer distance to the nearest true pixel. 3 is a step, 4 is a diagonal.</summary>
+        static int[] DistanceToOn(bool[] on, int w, int h)
+        {
+            const int inf = 1 << 20;
+            var d = new int[on.Length];
+            for (int i = 0; i < d.Length; i++) d[i] = on[i] ? 0 : inf;
+            for (int y = 0; y < h; y++)
+            {
+                for (int x = 0; x < w; x++)
+                {
+                    int i = y * w + x;
+                    int v = d[i];
+                    if (x > 0) v = Math.Min(v, d[i - 1] + 3);
+                    if (y > 0) v = Math.Min(v, d[i - w] + 3);
+                    if (x > 0 && y > 0) v = Math.Min(v, d[i - w - 1] + 4);
+                    if (x + 1 < w && y > 0) v = Math.Min(v, d[i - w + 1] + 4);
+                    d[i] = v;
+                }
+            }
+            for (int y = h - 1; y >= 0; y--)
+            {
+                for (int x = w - 1; x >= 0; x--)
+                {
+                    int i = y * w + x;
+                    int v = d[i];
+                    if (x + 1 < w) v = Math.Min(v, d[i + 1] + 3);
+                    if (y + 1 < h) v = Math.Min(v, d[i + w] + 3);
+                    if (x + 1 < w && y + 1 < h) v = Math.Min(v, d[i + w + 1] + 4);
+                    if (x > 0 && y + 1 < h) v = Math.Min(v, d[i + w - 1] + 4);
+                    d[i] = v;
+                }
+            }
+            return d;
+        }
+
         void PlaceHalo(int arc)
         {
             if (haloRenderer == null || uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
@@ -806,10 +925,10 @@ namespace GardenVR.Sundial
             if (poolRenderer == null) return;
             Transform pool = poolRenderer.transform;
             pool.localRotation = Quaternion.identity;
+            // The card pivot is the base of the plant. Keep the pool under that point.
             pool.localPosition = new Vector3(plant.localPosition.x, faceY + 0.009f, plant.localPosition.z);
-            float pulse = reducedMotion ? 1f : 0.94f + 0.06f * Mathf.Sin(time * 2.2f);
-            float w = Mathf.Max(0.10f, plantScale.x * 2.8f) * pulse;
-            pool.localScale = new Vector3(w, 1f, w * 0.78f);
+            float w = Mathf.Max(0.024f, plantScale.x * 0.42f);
+            pool.localScale = new Vector3(w, 1f, w * 0.46f);
         }
 
         Mesh BuildContactMesh()

@@ -29,9 +29,8 @@ Shader "Fidelity/Card"
         // Zero leaves every existing card unchanged. A positive power fades the card from _Focus.
         _Falloff ("Radial falloff (0 = off)", Float) = 0
         _Focus ("Focus uv xy, radius z", Vector) = (0.5, 0.5, 0.5, 0)
-        // Zero leaves every existing card unchanged. Above zero, the card is an additive
-        // silhouette glow: a dilated alpha outline (_Color) with a wider soft falloff (_Color2).
-        // _Fit above 1 insets the texture toward the bottom centre so the glow has a margin.
+        // Zero leaves every existing card unchanged. Above zero, _MainTex is a baked
+        // outline: R is the bright core, G is a short falloff. _Fit above 1 insets it.
         _Silhouette ("Silhouette glow px (0 = off)", Float) = 0
         _Fit ("Silhouette fit", Float) = 1
         // Zero leaves every existing card unchanged. A positive value shades a curved card from the window.
@@ -75,39 +74,16 @@ Shader "Fidelity/Card"
                 return o;
             }
             float h21(float2 p) { return frac(sin(dot(p, float2(127.1, 311.7))) * 43758.5453); }
-            float CardAlpha(float2 u)
-            {
-                if (u.x < 0.0 || u.y < 0.0 || u.x > 1.0 || u.y > 1.0) return 0.0;
-                return SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, u).a;
-            }
-            // One gold contour around the plant, not a ring on every leaf.
-            // A max close fills the gaps. The line and the softer bloom sit outside that mass.
+            // The sundial halo bakes this mask: R is the core, G is the short falloff.
+            // Sampling a mask keeps the dial untinted. A live dilate was a wide wash.
             half4 SilhouetteGlow(float2 uv)
             {
                 float fit = max(_Fit, 1.0);
                 float2 puv = float2((uv.x - 0.5) * fit + 0.5, uv.y * fit);
-                float2 px = max(fwidth(puv), float2(1e-5, 1e-5));
-                float rad = max(_Silhouette, 2.0);
-                float a = CardAlpha(puv);
-                float closed = a;
-                float strokeS = 0.0;
-                float skirt = 0.0;
-                [unroll]
-                for (int n = 0; n < 16; n++)
-                {
-                    float ang = n * 0.39269908;
-                    float2 d = float2(cos(ang), sin(ang));
-                    closed = max(closed, CardAlpha(puv + d * px * rad));
-                    closed = max(closed, CardAlpha(puv + d * px * rad * 0.5));
-                    strokeS += CardAlpha(puv + d * px * (rad + 1.6));
-                    skirt += CardAlpha(puv + d * px * (rad + 7.0));
-                }
-                float mass = smoothstep(0.10, 0.42, closed);
-                float stroke = smoothstep(0.06, 0.40, strokeS * (1.0 / 16.0)) * (1.0 - smoothstep(0.45, 0.88, mass));
-                float haze = smoothstep(0.015, 0.20, skirt * (1.0 / 16.0)) * (1.0 - smoothstep(0.18, 0.70, mass));
-                stroke *= (1.0 - smoothstep(0.55, 0.92, a));
-                haze *= (1.0 - smoothstep(0.35, 0.80, a));
-                half3 rgb = _Color.rgb * (half)stroke + _Color2.rgb * (half)haze;
+                if (puv.x < 0.0 || puv.y < 0.0 || puv.x > 1.0 || puv.y > 1.0)
+                    return half4(0, 0, 0, 1);
+                half4 m = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, puv);
+                half3 rgb = _Color.rgb * m.r + _Color2.rgb * m.g;
                 return half4(rgb, 1);
             }
             half4 frag (V i) : SV_Target
