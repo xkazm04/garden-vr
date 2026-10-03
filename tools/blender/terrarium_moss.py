@@ -148,17 +148,17 @@ def build_mound():
     """One low dome, plus small flat bumps. Separate spheres read as cobblestones."""
     rng = random.Random(11)
     # bmesh subdivisions=1 is the bare icosahedron. 4 is a smooth dome.
-    # Wide and low, sunk into the soil so the band is a rim and not a second ball.
-    specs = [(0.0, 0.0, 0.036, 0.20, 0.026, 1, 4)]
+    # Wide and low on the thin soil bed (top about 0.024). The carpet covers the bed; a rim of loam stays at the glass.
+    specs = [(0.0, 0.0, 0.040, 0.18, 0.022, 1, 4)]
     for i in range(22):
         ang = rng.random() * math.tau
-        rad = rng.uniform(0.0, 0.024) ** 0.8
-        specs.append((rad, ang, rng.uniform(0.0035, 0.0060), rng.uniform(0.16, 0.30), 0.034 + rng.uniform(0.0, 0.004), i + 2, 2))
+        rad = rng.uniform(0.0, 0.026) ** 0.8
+        specs.append((rad, ang, rng.uniform(0.0035, 0.0060), rng.uniform(0.16, 0.30), 0.023 + rng.uniform(0.0, 0.004), i + 2, 2))
     objs = []
     for rad, ang, radius, flat, z0, seed, subdiv in specs:
         cx = rad * math.cos(ang)
         cy = rad * math.sin(ang)
-        limit = 0.0405 - radius * 0.75
+        limit = 0.0430 - radius * 0.75
         dist = math.hypot(cx, cy)
         if dist > limit and dist > 1e-6:
             cx *= limit / dist
@@ -172,7 +172,7 @@ def build_mound():
     moss.name = "Moss"
     moss.data.name = "Moss"
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-    pull_inside(moss, 0.0405)
+    pull_inside(moss, 0.0430)
     consistent_normals(moss)
     return moss
 
@@ -229,8 +229,8 @@ def align_card(obj, loc, ang, tilt):
     obj.matrix_world = Matrix.Translation(Vector(loc)) @ rot
 
 
-# Glass shell is about 0.046 m. Cards stay inside it and outside the tapered soil neck.
-GLASS_INNER = 0.0415
+# Glass shell is about 0.046 m. Cards stay inside it and on the soil bed.
+GLASS_INNER = 0.0430
 
 
 def pull_inside(obj, limit):
@@ -256,8 +256,8 @@ def build_skirt():
         ang = rng.random() * math.tau
         # Flat overlapping patches on the mound. Tilted cards read as leaves on the soil.
         u = rng.random()
-        rad = (u ** 0.45) * 0.028
-        z = 0.030 + rng.uniform(0.0, 0.004)
+        rad = (u ** 0.45) * 0.032
+        z = 0.022 + rng.uniform(0.0, 0.006)
         tilt = rng.uniform(0.02, 0.28)
         cell = ((i * 3 + 1) % ATLAS, (i * 5 + 2) % ATLAS)
         card = grid_mesh(

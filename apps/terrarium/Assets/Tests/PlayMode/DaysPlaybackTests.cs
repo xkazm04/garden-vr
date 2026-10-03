@@ -38,7 +38,7 @@ namespace GardenVR.Terrarium.Tests
             float outerRadius = new Vector2(outer.x, outer.z).magnitude;
             float innerRadius = new Vector2(inner.x, inner.z).magnitude;
             Assert.Less(innerRadius, outerRadius);
-            Assert.AreEqual(0.041f, outer.y, 0.0001f);
+            Assert.AreEqual(0.031f, outer.y, 0.0001f);
             Assert.AreEqual(0f, JarView.LeanDegrees(1f), 0.0001f);
             Assert.AreEqual(6f, JarView.LeanDegrees(Garden.VitalityFloor), 0.0001f);
             Assert.LessOrEqual(JarView.LeanDegrees(0f), 6f);

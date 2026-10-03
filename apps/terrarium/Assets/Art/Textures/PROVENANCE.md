@@ -28,6 +28,6 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the names in t
 | petal.png | generated | T-TER-007 plate `petal_macro.png`. `compose_jar_detail.py` keeps the amber petal and fills the background so the glow cutoff can drop it. | bound on the first flower |
 | ring.png | painted-by-code | `paint_textures.py` analytic ring and pool, via `shared/assets/seed-textures/ring.png` | bound on the breath ring |
 | soil.png | generated | T-TER-013 `image_gen` + `terrarium_textures.py` | kept, not bound by JarView |
-| soil_band.png | generated | T-TER-017 Nano Banana potting soil `soil_nb.png`. `compose_nb.py` keeps the crumbs and perlite, pulls the mean down to a dark loam, and makes the tile seamless. Triplanar, with a gradient that darkens into the glass base. | bound on the soil |
+| soil_band.png | generated | T-TER-017 Nano Banana potting soil `soil_nb.png`, then `refine_soil.py` (T-TER-018) crushes the pale perlite and shifts the mean toward measured loam `#0D231D`. The tile stays seamless. Triplanar and fine, on a thin bed flush with the glass. | bound on the soil |
 | spore.png | painted-by-code | `paint_textures.py` radial sprite, via `shared/assets/seed-textures/spore.png` | bound on the spore particles |
 | fiddle_hairs.png | generated | T-TER-017 Nano Banana fiddlehead `fiddle_nb.png`. `compose_nb.py` turns the coloured stem into a repeating hair albedo for the crozier tube. | bound on the fiddlehead |

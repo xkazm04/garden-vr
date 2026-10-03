@@ -34,8 +34,11 @@ namespace GardenVR.Terrarium
         // T-TER-006 lean was 0.21 x 0.15 and 0.15 x 0.17. Those quads blanketed the jar.
         // The desk pool is wider than T-TER-007's pinprick and still sits under the glass,
         // so the fill it adds is the base of the jar, not the whole body.
-        public const float LeanSpillWidth = 0.155f;
+        // Wide enough to wash the desk under the hands. The hands live in the plate; this halo is what lights them.
+        public const float LeanSpillWidth = 0.34f;
         public const float LeanSpillHeight = 0.080f;
+        /// <summary>Frond roots on the low moss carpet. The soil bed tops out near 0.024 m.</summary>
+        public const float MossBedY = 0.031f;
         public const float LeanHaloWidth = 0.050f;
         public const float LeanHaloHeight = 0.036f;
         // One plume card. Wide at the cork, tucked into it, thinning as it rises.
@@ -43,11 +46,11 @@ namespace GardenVR.Terrarium
         public const float PlumeHeight = 0.132f;
         public const float PlumeCenterY = 0.188f;
 
-        static readonly Color FernEmission = new Color(0.045f, 0.12f, 0.07f);
-        static readonly Color FiddleEmission = new Color(0.07f, 0.16f, 0.06f);
-        static readonly Color FocusMint = new Color(0.34f, 0.68f, 0.42f, 1f);
-        static readonly Color FocusWarm = new Color(0.72f, 0.42f, 0.16f, 1f);
-        const float FocusRadius = 0.092f;
+        static readonly Color FernEmission = new Color(0.22f, 0.62f, 0.36f);
+        static readonly Color FiddleEmission = new Color(0.55f, 1.12f, 0.40f);
+        static readonly Color FocusMint = new Color(0.55f, 1.20f, 0.70f, 1f);
+        static readonly Color FocusWarm = new Color(0.90f, 0.50f, 0.18f, 1f);
+        const float FocusRadius = 0.12f;
 
         [Header("State")]
         [Range(0f, 1f)] public float breath = 0.5f;
@@ -158,7 +161,7 @@ namespace GardenVR.Terrarium
         static readonly Color RingMint = new Color(0.55f, 0.92f, 0.70f);
         static readonly Color RingAnswer = new Color(0.70f, 1.05f, 0.78f);
         static readonly Color RingGold = new Color(1.15f, 0.88f, 0.42f);
-        static readonly Color SpillMint = new Color(0.09f, 0.28f, 0.16f, 1f);
+        static readonly Color SpillMint = new Color(0.22f, 0.62f, 0.36f, 1f);
 
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
@@ -258,7 +261,7 @@ namespace GardenVR.Terrarium
             int n = inner ? index - Garden.FrondsBeforeInnerLayer : index;
             float yaw = (n * 137.50776f + (inner ? 11f : 0f)) * Mathf.Deg2Rad;
             float radius = inner ? 0.0125f : 0.027f;
-            return new Vector3(Mathf.Cos(yaw) * radius, 0.041f, Mathf.Sin(yaw) * radius);
+            return new Vector3(Mathf.Cos(yaw) * radius, MossBedY, Mathf.Sin(yaw) * radius);
         }
 
         public static float FrondSpread(int index)
@@ -306,17 +309,17 @@ namespace GardenVR.Terrarium
             float mossGlow = Mathf.Max(answering ? ripple : pulse, recoveredWave * 1.65f);
             if (mossMat != null)
             {
-                mossMat.SetColor("_Emission", new Color(0.012f, 0.034f, 0.018f) * (1f + 0.45f * mossGlow));
-                mossMat.SetColor("_Rim", new Color(0.16f, 0.36f, 0.20f) * (0.85f + 0.35f * mossGlow));
+                mossMat.SetColor("_Emission", new Color(0.035f, 0.090f, 0.048f) * (1f + 0.45f * mossGlow));
+                mossMat.SetColor("_Rim", new Color(0.28f, 0.62f, 0.36f) * (0.85f + 0.35f * mossGlow));
             }
             if (mossCardMat != null)
-                mossCardMat.SetColor("_Emission", new Color(0.016f, 0.045f, 0.024f) * (1f + 0.40f * mossGlow));
-            float coil = answer > 0f ? 0.55f + 0.25f * pulse : 0.75f + 0.15f * Mathf.Sin(breath * Mathf.PI);
-            if (_hasLook && _look.Gap) coil = 0.22f;
+                mossCardMat.SetColor("_Emission", new Color(0.040f, 0.100f, 0.055f) * (1f + 0.40f * mossGlow));
+            float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
+            if (_hasLook && _look.Gap) coil = 0.35f;
             if (coilHaloMat != null)
-                coilHaloMat.SetColor("_Color", new Color(0.18f, 0.48f, 0.28f) * coil);
+                coilHaloMat.SetColor("_Color", new Color(0.50f, 1.05f, 0.58f) * coil);
             if (jarHaloMat != null)
-                jarHaloMat.SetColor("_Color", new Color(0.06f, 0.18f, 0.11f) * (1f + 0.2f * pulse));
+                jarHaloMat.SetColor("_Color", new Color(0.16f, 0.48f, 0.30f) * (1f + 0.25f * pulse));
             if (fernMat != null) fernMat.SetColor("_Emission", FernEmission * life);
             if (newFrondMat != null)
             {
@@ -353,7 +356,9 @@ namespace GardenVR.Terrarium
             Vector3 pos = FocusPoint();
             SetLight(mossMat, pos, color);
             SetLight(mossCardMat, pos, color);
-            SetLight(soilMat, pos, color);
+            // Soil stays a dark bed. The crozier light is for the plants, not the loam.
+            if (soilMat != null && soilMat.HasProperty("_LightPos"))
+                soilMat.SetVector("_LightPos", Vector4.zero);
             SetLight(fernMat, pos, color);
             SetLight(newFrondMat, pos, color);
             SetLight(fiddleMat, pos, color);
@@ -361,9 +366,13 @@ namespace GardenVR.Terrarium
             SetLight(flowerMat, pos, color);
             SetLight(_quietFern, pos, color);
             if (day >= 7 && coilHaloMat != null)
-                coilHaloMat.SetColor("_Color", new Color(0.55f, 0.32f, 0.12f));
+                coilHaloMat.SetColor("_Color", new Color(0.85f, 0.48f, 0.18f));
             Transform coilCard = FindNamed("CoilHalo");
-            if (coilCard != null) coilCard.position = pos;
+            if (coilCard != null)
+            {
+                coilCard.position = pos;
+                coilCard.localScale = new Vector3(0.038f, 0.038f, 1f);
+            }
         }
 
         Vector3 FocusPoint()
@@ -453,19 +462,19 @@ namespace GardenVR.Terrarium
             foreach (var name in new[] { "Fiddle25", "Fiddle50", "Fiddle75", "Fiddle100" })
                 Require(mt, name).gameObject.SetActive(false);
             fid.localScale = Vector3.one * 0.9f;
-            fid.localPosition += new Vector3(0.004f, 0.004f, 0f);
+            fid.localPosition += new Vector3(0.004f, 0.001f, 0f);
 
             Transform seed = Require(mt, "Seedling");
             SetMat(seed, library.Seedling);
             Transform seedStem = Require(mt, "SeedStem");
             SetMat(seedStem, library.Fiddle);
-            seed.localPosition = new Vector3(-0.009f, 0.045f, -0.012f);
+            seed.localPosition = new Vector3(-0.009f, MossBedY + 0.004f, -0.012f);
             seedStem.localPosition = seed.localPosition;
             seed.localScale = Vector3.one * 0.55f;
             seedStem.localScale = Vector3.one * 0.55f;
             Transform seed2 = Instantiate(seed.gameObject, mt).transform;
             seed2.name = "SeedlingB";
-            seed2.localPosition = new Vector3(0.010f, 0.044f, -0.012f);
+            seed2.localPosition = new Vector3(0.010f, MossBedY + 0.003f, -0.012f);
             seed2.localRotation = Quaternion.Euler(0f, 70f, 0f) * seed.localRotation;
             seed2.localScale = Vector3.one * 0.45f;
 
@@ -481,12 +490,12 @@ namespace GardenVR.Terrarium
             v2.gameObject.SetActive(false);
             SetMat(frond, library.Fern);
             Quaternion axis = frond.localRotation;
-            frond.localPosition = new Vector3(-0.010f, 0.040f, 0.004f);
+            frond.localPosition = new Vector3(-0.010f, MossBedY, 0.004f);
             frond.localRotation = Quaternion.Euler(-8f, 0f, 29f) * axis;
             frond.localScale = Vector3.one * 0.74f;
             Transform frondR = Instantiate(frond.gameObject, mt).transform;
             frondR.name = "FrondRight";
-            frondR.localPosition = new Vector3(0.011f, 0.040f, 0.006f);
+            frondR.localPosition = new Vector3(0.011f, MossBedY, 0.006f);
             frondR.localRotation = Quaternion.Euler(-8f, 0f, -31f) * axis;
             frondR.localScale = new Vector3(-0.72f, 0.72f, 0.72f);
             Transform fnew = Instantiate(frond.gameObject, mt).transform;
@@ -495,7 +504,7 @@ namespace GardenVR.Terrarium
             _frondSlots = new[] { frond, frondR, fnew };
             _shownSeed = int.MinValue;
             ApplyFrondVariants();
-            fnew.localPosition = new Vector3(0.002f, 0.042f, -0.004f);
+            fnew.localPosition = new Vector3(0.002f, MossBedY + 0.002f, -0.004f);
             fnew.localRotation = Quaternion.Euler(-12f, 0f, 6f) * axis;
             fnew.localScale = Vector3.one * 0.95f;
             newFrond = fnew.GetComponent<Renderer>();
@@ -524,8 +533,8 @@ namespace GardenVR.Terrarium
             var bills = new List<Transform>();
             Card("BreathRing", library.Ring, new Vector3(0f, 0.0006f, 0f), new Vector2(0.152f, 0.152f), flat);
             Card("DeskSpill", library.Spill, new Vector3(0f, 0.0004f, 0.01f), new Vector2(LeanSpillWidth, LeanSpillHeight), flat);
-            bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.050f, 0f), new Vector2(0.062f, 0.048f), Quaternion.identity).transform);
-            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.006f, 0.078f, 0.002f), new Vector2(0.038f, 0.038f), Quaternion.identity).transform);
+            bills.Add(Card("JarHalo", library.JarHalo, new Vector3(0f, 0.050f, 0f), new Vector2(LeanHaloWidth, LeanHaloHeight), Quaternion.identity).transform);
+            bills.Add(Card("CoilHalo", library.CoilHalo, new Vector3(-0.006f, 0.072f, 0.002f), new Vector2(0.038f, 0.038f), Quaternion.identity).transform);
 
             // One flipbook card. The bottom sits inside the cork, so the plume leaves the lip.
             // Empty corners still count as a layer, so the card is only as wide as the soft base.
@@ -740,7 +749,7 @@ namespace GardenVR.Terrarium
         {
             float yaw = FlowerYaw(index) * Mathf.Deg2Rad;
             float radius = 0.012f + (index % 3) * 0.005f;
-            return new Vector3(Mathf.Cos(yaw) * radius, 0.050f, Mathf.Sin(yaw) * radius);
+            return new Vector3(Mathf.Cos(yaw) * radius, MossBedY + 0.012f, Mathf.Sin(yaw) * radius);
         }
 
         void DriveMist()
@@ -888,7 +897,7 @@ namespace GardenVR.Terrarium
                 if (slot == null) continue;
                 slot.gameObject.SetActive(true);
                 float scale = WeekScale[i];
-                slot.localPosition = new Vector3(WeekX[i], 0.042f, WeekZ[i]);
+                slot.localPosition = new Vector3(WeekX[i], MossBedY + 0.002f, WeekZ[i]);
                 slot.localRotation = Quaternion.Euler(-8f, 0f, WeekRoll[i]) * axis;
                 slot.localScale = new Vector3(WeekMirror[i] * scale, scale, scale);
                 Material material = fernMat;
@@ -957,7 +966,7 @@ namespace GardenVR.Terrarium
                 float boost = 0f;
                 if (answerTime >= 0f && answerTime <= 1f)
                     boost = Mathf.Sin(Mathf.Clamp01(answerTime) * Mathf.PI);
-                sporeMat.SetColor("_Color", SporeGold * (1.35f + 0.85f * boost));
+                sporeMat.SetColor("_Color", SporeGold * (1.85f + 0.9f * boost));
             }
             if (spores == null) return;
             var emission = spores.emission;
@@ -966,7 +975,7 @@ namespace GardenVR.Terrarium
             noise.enabled = !reducedMotion;
             var main = spores.main;
             main.maxParticles = reducedMotion ? 20 : 40;
-            main.startSize = new ParticleSystem.MinMaxCurve(reducedMotion ? 0.0014f : 0.0017f, reducedMotion ? 0.0024f : 0.0031f);
+            main.startSize = new ParticleSystem.MinMaxCurve(reducedMotion ? 0.0014f : 0.0018f, reducedMotion ? 0.0024f : 0.0034f);
         }
 
         void ApplyFlowers()
@@ -986,7 +995,7 @@ namespace GardenVR.Terrarium
                 // The bell opens on +Y. A negative pitch turns that opening toward the JarG1 eye.
                 // Positive pitch turns the opening away, so the frame sees outer petals rather than the throat.
                 // Steep pitch points the throat away from the eye. The frame sees the outer petals.
-                go.transform.localPosition = k == 0 ? new Vector3(0.014f, 0.050f, 0.002f) : FlowerPosition(k);
+                go.transform.localPosition = k == 0 ? new Vector3(0.014f, MossBedY + 0.012f, 0.002f) : FlowerPosition(k);
                 go.transform.localRotation = Quaternion.Euler(96f, -18f + k * 12f, 8f);
                 go.transform.localScale = Vector3.one * 0.42f;
                 go.AddComponent<MeshFilter>().sharedMesh = flowerMesh;
@@ -1092,7 +1101,7 @@ namespace GardenVR.Terrarium
             main.startLifetime = 8f;
             // Sphere emission is radial. Keep that tiny, and let the Y velocity be the 1-3 cm/s rise.
             main.startSpeed = 0.002f;
-            main.startSize = new ParticleSystem.MinMaxCurve(0.0017f, 0.0031f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.0018f, 0.0034f);
             main.startColor = Color.white;
             main.maxParticles = 40;
             main.simulationSpace = ParticleSystemSimulationSpace.Local;
@@ -1103,7 +1112,7 @@ namespace GardenVR.Terrarium
             shape.shapeType = ParticleSystemShapeType.Sphere;
             shape.radius = 0.038f;
             shape.radiusThickness = 0.55f;
-            shape.position = new Vector3(0f, 0.062f, 0f);
+            shape.position = new Vector3(0f, 0.050f, 0f);
             var noise = ps.noise;
             noise.enabled = true;
             noise.strength = 0.004f;
