@@ -29,3 +29,9 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   pre-task merge aborted cleanly and the host resolved it on main (the owner app's version was the superset). Rule:
   a cross-app change in a task's `touches` should be a request to the owning agent, or serialised behind that agent's
   current task. Target: agent-operations / fleet orchestration (shared-file ownership).
+- 2026-10-03 - **Iterative agent art passes plateau at the quality of their source textures.** Three successive Grok
+  passes per app (T-TER-006/007/015, T-SUN-006/007/014) moved the frames but every gate frame stayed at a blind Gemini
+  median of 2/5; both judge and host named materials (moss, soil, washes) as the gap, not geometry or the engine. A
+  single Nano Banana macro generated in 30 s exceeded every moss texture the passes produced. Rule: when a visual
+  metric stops moving across passes, change the input (asset source), not the number of passes. Target: game-production
+  / art pipeline; llm-observability / judge-calibration (a blind judge as the plateau detector).

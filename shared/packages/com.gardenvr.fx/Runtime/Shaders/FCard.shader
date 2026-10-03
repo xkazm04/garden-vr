@@ -25,6 +25,7 @@ Shader "Fidelity/Card"
         _ZWrite ("ZWrite", Float) = 0
         _Coverage ("Alpha to coverage", Float) = 0
         _Mask ("Halo mask (B line, G glow)", Float) = 0
+        _Sparkle ("Sparkle", Range(0, 1)) = 0
     }
     SubShader
     {
@@ -46,7 +47,7 @@ Shader "Fidelity/Card"
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color, _Color2;
-                half _Ring, _Fill, _Boil, _BoilPx, _BoilFps, _BoilTime, _T, _Src, _Dst, _ZTest, _ZWrite, _Coverage, _Mask;
+                half _Ring, _Fill, _Boil, _BoilPx, _BoilFps, _BoilTime, _T, _Src, _Dst, _ZTest, _ZWrite, _Coverage, _Mask, _Sparkle;
             CBUFFER_END
             struct A { float4 pos : POSITION; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_OUTPUT_STEREO };
@@ -102,6 +103,33 @@ Shader "Fidelity/Card"
                     half glow = t.g;
                     if (_Mask > 0.5) { stroke *= t.a; glow *= t.a; }
                     c = half4(_Color.rgb * stroke + _Color2.rgb * glow, 1);
+                }
+                // Pinch halo only. _Sparkle stays 0 everywhere else, so terrarium cards skip this.
+                // Sparks and the glow sit on the painted stroke. An empty band above the plant
+                // put the dots in the air.
+                if (_Sparkle > 0.001)
+                {
+                    float a = t.a;
+                    float2 px = max(fwidth(uv), float2(1e-4, 1e-4)) * 5.0;
+                    float neigh =
+                        SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(px.x, 0)).a +
+                        SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv - float2(px.x, 0)).a +
+                        SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(0, px.y)).a +
+                        SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv - float2(0, px.y)).a;
+                    float glow = saturate(neigh * 0.28) * (1.0 - saturate(a * 1.6));
+                    c.rgb += half3(1.0, 0.84, 0.42) * (half)glow * 0.7;
+                    c.a = max(c.a, (half)(glow * 0.55));
+
+                    float2 cell = floor(uv * float2(9.0, 14.0));
+                    float2 f = frac(uv * float2(9.0, 14.0)) - 0.5;
+                    float n = h21(cell + 3.1);
+                    float on = step(0.72, frac(n * 13.0 + k * 0.37));
+                    float dotp = smoothstep(0.22, 0.02, length(f));
+                    float edge = smoothstep(0.08, 0.28, a) * smoothstep(0.92, 0.45, a);
+                    float rim = saturate(neigh * 0.3) * (1.0 - saturate(a * 2.2));
+                    half spark = (half)(on * dotp * max(edge, rim * 0.85) * _Sparkle);
+                    c.rgb += half3(1.0, 0.92, 0.55) * spark * 1.8;
+                    c.a = max(c.a, spark);
                 }
                 return c * i.col;
             }

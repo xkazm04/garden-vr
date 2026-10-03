@@ -1,4 +1,4 @@
 asset: dial_face.png
-method: copied by tools/blender/sundial_dial.py from shared/assets/seed-textures/sundial-drawn
-note: painted by code (IWSDK seat SVG), interim
+method: apps/sundial/Art/Scripts/dial_face.mjs then compose_paint.py
+note: watercolour arcs, stippled soil, ink rim. Wash and soil grain from generated plates under Assets/Art/Source/paint. Not copied from the art reference.
 derived_from_art_reference: no
