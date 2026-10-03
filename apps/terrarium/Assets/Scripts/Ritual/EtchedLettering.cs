@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -97,6 +98,19 @@ namespace GardenVR.Terrarium
             var mesh = go.GetComponent<TextMesh>();
             if (mesh == null) mesh = go.GetComponentInChildren<TextMesh>(true);
             if (mesh != null) mesh.text = text ?? "";
+        }
+
+        /// <summary>Active etched lines in the open scene. Inactive pebbles stay out.</summary>
+        public static string[] VisibleLines()
+        {
+            TextMeshPro[] found = Object.FindObjectsByType<TextMeshPro>(FindObjectsInactive.Exclude);
+            var lines = new List<string>();
+            for (int i = 0; i < found.Length; i++)
+            {
+                if (found[i] == null || string.IsNullOrEmpty(found[i].text)) continue;
+                lines.Add(found[i].text);
+            }
+            return lines.ToArray();
         }
 
         public static string Read(GameObject go)

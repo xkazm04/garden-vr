@@ -9,11 +9,19 @@ namespace GardenVR.Terrarium
 {
     /// <summary>
     /// One pebble beside the jar opens the rest. Each stone carries one etched setting.
-    /// Pace, breaths, voice, night bed, motion, and hold. Poke cycles the value.
+    /// Mute, voice, night bed, and motion sit on the near arc. Pace, breaths, and hold sit behind them.
+    /// Poke cycles the value. The intents come from the hand provider.
     /// </summary>
     public sealed class SettingsPebbles : MonoBehaviour
     {
         public const string LeadId = "pebble.settings";
+        public const string MuteId = "pebble.set.mute";
+        public const string VoiceId = "pebble.set.voice";
+        public const string BedId = "pebble.set.bed";
+        public const string MotionId = "pebble.set.motion";
+        public const string PaceId = "pebble.set.pace";
+        public const string BreathsId = "pebble.set.breaths";
+        public const string HoldId = "pebble.set.hold";
 
         static readonly int[] Inhale = { 3, 4, 5 };
         static readonly int[] Exhale = { 5, 6, 7 };
@@ -49,13 +57,16 @@ namespace GardenVR.Terrarium
             BuildLead();
             _fan = new GameObject("Fan");
             _fan.transform.SetParent(transform, false);
-            _rows = new Row[6];
-            _rows[0] = BuildRow(_fan.transform, "pebble.set.pace", "pace", PaceText(settings), 0);
-            _rows[1] = BuildRow(_fan.transform, "pebble.set.breaths", "breaths", BreathText(settings), 1);
-            _rows[2] = BuildRow(_fan.transform, "pebble.set.voice", "voice", settings.VoiceGuide ? "Voice on" : "Voice off", 2);
-            _rows[3] = BuildRow(_fan.transform, "pebble.set.bed", "bed", settings.NightBed ? "Night bed on" : "Night bed off", 3);
-            _rows[4] = BuildRow(_fan.transform, "pebble.set.motion", "motion", settings.ReducedMotion ? "Quieter motion" : "Full motion", 4);
-            _rows[5] = BuildRow(_fan.transform, "pebble.set.hold", "hold", settings.HoldMode == "Toggle" ? "Toggle" : "Hold", 5);
+            const float Near = -0.052f;
+            const float Far = -0.102f;
+            _rows = new Row[7];
+            _rows[0] = BuildRow(_fan.transform, MuteId, "mute", MuteText(settings), -0.117f, Near);
+            _rows[1] = BuildRow(_fan.transform, VoiceId, "voice", settings.VoiceGuide ? "Voice on" : "Voice off", -0.039f, Near);
+            _rows[2] = BuildRow(_fan.transform, BedId, "bed", settings.NightBed ? "Night bed on" : "Night bed off", 0.039f, Near);
+            _rows[3] = BuildRow(_fan.transform, MotionId, "motion", settings.ReducedMotion ? "Quieter motion" : "Full motion", 0.117f, Near);
+            _rows[4] = BuildRow(_fan.transform, PaceId, "pace", PaceText(settings), -0.100f, Far);
+            _rows[5] = BuildRow(_fan.transform, BreathsId, "breaths", BreathText(settings), 0f, Far);
+            _rows[6] = BuildRow(_fan.transform, HoldId, "hold", settings.HoldMode == "Toggle" ? "Toggle" : "Hold", 0.100f, Far);
             _fan.SetActive(false);
             _open = false;
         }
@@ -77,6 +88,17 @@ namespace GardenVR.Terrarium
                 Tap();
                 return;
             }
+        }
+
+        public string Label(string id)
+        {
+            if (_rows == null || id == null) return null;
+            for (int i = 0; i < _rows.Length; i++)
+            {
+                if (_rows[i].Id != id || _rows[i].Words == null) continue;
+                return _rows[i].Words.text;
+            }
+            return null;
         }
 
         public void SetOpen(bool open)
@@ -119,6 +141,7 @@ namespace GardenVR.Terrarium
                 }
                 settings.Breaths = BreathChoices[(index + 1) % BreathChoices.Length];
             }
+            else if (kind == "mute") settings.Mute = !settings.Mute;
             else if (kind == "voice") settings.VoiceGuide = !settings.VoiceGuide;
             else if (kind == "bed") settings.NightBed = !settings.NightBed;
             else if (kind == "motion") settings.ReducedMotion = !settings.ReducedMotion;
@@ -136,6 +159,7 @@ namespace GardenVR.Terrarium
                 string text = _rows[i].Words.text;
                 if (_rows[i].Kind == "pace") text = PaceText(settings);
                 else if (_rows[i].Kind == "breaths") text = BreathText(settings);
+                else if (_rows[i].Kind == "mute") text = MuteText(settings);
                 else if (_rows[i].Kind == "voice") text = settings.VoiceGuide ? "Voice on" : "Voice off";
                 else if (_rows[i].Kind == "bed") text = settings.NightBed ? "Night bed on" : "Night bed off";
                 else if (_rows[i].Kind == "motion") text = settings.ReducedMotion ? "Quieter motion" : "Full motion";
@@ -178,14 +202,13 @@ namespace GardenVR.Terrarium
             target.PokeOnly = true;
         }
 
-        Row BuildRow(Transform parent, string id, string kind, string text, int index)
+        Row BuildRow(Transform parent, string id, string kind, string text, float x, float z)
         {
             var pivot = new GameObject("Pebble-" + kind);
             pivot.transform.SetParent(parent, false);
-            float x = -0.175f + index * 0.070f;
-            pivot.transform.localPosition = new Vector3(x, 0.008f, -0.064f);
+            pivot.transform.localPosition = new Vector3(x, 0.008f, z);
             StoneMesh(pivot.transform, 0.016f);
-            TextMeshPro words = EtchedLettering.Place(pivot.transform, "Words", text, new Vector3(0f, 0.016f, 0f), Quaternion.identity, 0.062f, 0.007f);
+            TextMeshPro words = EtchedLettering.Place(pivot.transform, "Words", text, new Vector3(0f, 0.016f, 0f), Quaternion.identity, 0.060f, 0.0065f);
             var box = pivot.AddComponent<BoxCollider>();
             box.size = new Vector3(0.042f, 0.032f, 0.024f);
             box.center = new Vector3(0f, 0.006f, 0f);
@@ -221,6 +244,11 @@ namespace GardenVR.Terrarium
         {
             for (int i = transform.childCount - 1; i >= 0; i--)
                 Object.DestroyImmediate(transform.GetChild(i).gameObject);
+        }
+
+        static string MuteText(RitualSettings settings)
+        {
+            return settings != null && settings.Mute ? "Muted" : "Sound on";
         }
 
         static string PaceText(RitualSettings settings)

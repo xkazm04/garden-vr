@@ -213,6 +213,26 @@ namespace GardenVR.Terrarium
             Persist();
         }
 
+        public bool RitualOpen
+        {
+            get { return _save != null && _save.RitualOpen; }
+        }
+
+        /// <summary>The breath has started and has not been answered. A later launch offers it back.</summary>
+        public void NoteRitualOpen()
+        {
+            if (_save == null || _readOnly || Outcome == LoadOutcome.Failed || _save.RitualOpen) return;
+            _save.RitualOpen = true;
+            Persist();
+        }
+
+        public void NoteRitualClosed()
+        {
+            if (_save == null || _readOnly || Outcome == LoadOutcome.Failed || !_save.RitualOpen) return;
+            _save.RitualOpen = false;
+            Persist();
+        }
+
         /// <summary>Writes the live garden. A failed or newer-schema load does not touch the file.</summary>
         public void Save()
         {
