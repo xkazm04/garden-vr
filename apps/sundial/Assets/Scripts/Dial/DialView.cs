@@ -61,6 +61,8 @@ namespace GardenVR.Sundial
             1, 2, 3, 1, 1, 3, 4,
             3, 1, 1, 2, 1, 3, 4
         };
+        /// <summary>Ink flood per tile, 0 at the nib to 1 full. Null means every tile is already full.</summary>
+        public float[] tileFill;
         public bool boil = true;
         public float time = 1f;
         [Range(0f, 1f)] public float waiting;
@@ -680,7 +682,10 @@ namespace GardenVR.Sundial
             {
                 int state = Mathf.Clamp(tiles[i], 0, 4);
                 int arc = i / TilesPerArc;
-                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), 0, 255);
+                float fill = 1f;
+                if (tileFill != null && i < tileFill.Length) fill = Mathf.Clamp01(tileFill[i]);
+                byte flood = (byte)Mathf.RoundToInt(fill * 255f);
+                pixels[i] = new Color32((byte)Mathf.RoundToInt(state / 4f * 255f), (byte)Mathf.RoundToInt(arc / 2f * 255f), flood, 255);
             }
             _stateTex.SetPixels32(pixels);
             _stateTex.Apply(false, false);

@@ -53,9 +53,7 @@ namespace GardenVR.Sundial
         float _swept;
 
         GameObject _undo;
-        GameObject _fill;
         Material _inkMat;
-        Texture2D _white;
         Texture2D _ring;
         Mesh _quad;
         GUIStyle _overlayStyle;
@@ -164,7 +162,6 @@ namespace GardenVR.Sundial
         {
             CommitEarly();
             if (_inkMat != null) Destroy(_inkMat);
-            if (_white != null) Destroy(_white);
             if (_ring != null) Destroy(_ring);
             if (_quad != null) Destroy(_quad);
         }
@@ -279,8 +276,6 @@ namespace GardenVR.Sundial
             _fillDone = _service.ReducedMotion;
             _filling = !_service.ReducedMotion;
             ShowUndo(arc);
-            if (_service.ReducedMotion) HideFill();
-            else ShowFill(arc, 0f);
         }
 
         void TryUndo(string arc)
@@ -306,7 +301,6 @@ namespace GardenVR.Sundial
             _pulsing = false;
             if (_view != null) _view.pulse = 0f;
             HideUndo();
-            HideFill();
         }
 
         void UpdatePulse(float dt)
@@ -327,13 +321,10 @@ namespace GardenVR.Sundial
         {
             if (!_filling) return;
             _fillT += dt;
-            float u = Mathf.Clamp01(_fillT / TileFillSeconds);
-            PlaceFill(u);
-            if (u >= 1f)
+            if (_fillT >= TileFillSeconds)
             {
                 _filling = false;
                 _fillDone = true;
-                HideFill();
             }
         }
 
@@ -379,7 +370,13 @@ namespace GardenVR.Sundial
             if (state == null) return;
             if (_view.tiles == null || _view.tiles.Length != DialView.TileCount)
                 _view.tiles = new int[DialView.TileCount];
-            for (int i = 0; i < _view.tiles.Length; i++) _view.tiles[i] = 0;
+            if (_view.tileFill == null || _view.tileFill.Length != DialView.TileCount)
+                _view.tileFill = new float[DialView.TileCount];
+            for (int i = 0; i < _view.tiles.Length; i++)
+            {
+                _view.tiles[i] = 0;
+                _view.tileFill[i] = 1f;
+            }
 
             int due = -1;
             if (_service.Save != null && _service.Save.Habits != null)
@@ -399,8 +396,13 @@ namespace GardenVR.Sundial
                     int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
                     for (int slot = 0; slot < count; slot++)
                         _view.tiles[arc * 7 + slot] = SundialArcs.TileDigit(plant.Window[slot]);
-                    if (_fillDone && _pendingArc != null && SundialArcs.Index(_pendingArc) == arc)
-                        _view.tiles[arc * 7 + 6] = SundialArcs.TileDigit(TileState.Kept);
+                    if (_pendingArc != null && SundialArcs.Index(_pendingArc) == arc && (_filling || _fillDone))
+                    {
+                        int today = arc * 7 + 6;
+                        _view.tiles[today] = SundialArcs.TileDigit(TileState.Kept);
+                        float flood = _service.ReducedMotion ? 1f : Mathf.Clamp01(_fillT / TileFillSeconds);
+                        _view.tileFill[today] = _fillDone ? 1f : flood;
+                    }
                     if (plant.DueNow) due = arc;
                 }
             }
@@ -434,28 +436,6 @@ namespace GardenVR.Sundial
             }
         }
 
-        void ShowFill(string arc, float amount)
-        {
-            HideFill();
-            Transform tile = FindNamed("tile." + arc + ".6");
-            _fill = MakeMark("ink." + arc, _white, Wash(arc), 0.001f);
-            if (tile != null)
-            {
-                _fill.transform.SetParent(tile, false);
-                _fill.transform.localRotation = Quaternion.identity;
-            }
-            PlaceFill(amount);
-        }
-
-        void PlaceFill(float amount)
-        {
-            if (_fill == null) return;
-            const float full = 0.012f;
-            float width = Mathf.Max(0.0004f, full * Mathf.Clamp01(amount));
-            _fill.transform.localPosition = new Vector3((-full + width) * 0.5f, 0.004f, 0f);
-            _fill.transform.localScale = new Vector3(width, 1f, 0.009f);
-        }
-
         GameObject MakeMark(string name, Texture2D texture, Color color, float size)
         {
             EnsureInk();
@@ -486,19 +466,8 @@ namespace GardenVR.Sundial
             _inkMat.SetFloat("_Ring", 0f);
             _inkMat.SetFloat("_Coverage", 0f);
             _inkMat.SetFloat("_Mask", 0f);
-            _white = Solid(Color.white);
             _ring = Ring();
             _quad = FlatQuad();
-        }
-
-        static Texture2D Solid(Color color)
-        {
-            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            var pixels = new Color[4];
-            for (int i = 0; i < pixels.Length; i++) pixels[i] = color;
-            tex.SetPixels(pixels);
-            tex.Apply(false, false);
-            return tex;
         }
 
         static Texture2D Ring()
@@ -542,27 +511,12 @@ namespace GardenVR.Sundial
             return mesh;
         }
 
-        static Color Wash(string arc)
-        {
-            if (arc == "morning") return new Color(0.886f, 0.722f, 0.400f, 1f);
-            if (arc == "winddown") return new Color(0.655f, 0.604f, 0.839f, 1f);
-            return new Color(0.890f, 0.612f, 0.510f, 1f);
-        }
-
         void HideUndo()
         {
             if (_undo == null) return;
             _undo.SetActive(false);
             Destroy(_undo);
             _undo = null;
-        }
-
-        void HideFill()
-        {
-            if (_fill == null) return;
-            _fill.SetActive(false);
-            Destroy(_fill);
-            _fill = null;
         }
 
         Transform FindNamed(string name)
