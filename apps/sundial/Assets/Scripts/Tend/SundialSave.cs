@@ -12,6 +12,8 @@ namespace GardenVR.Sundial
         public bool Beds;
         public bool ReducedMotion;
         public bool Boil = true;
+        /// <summary>Silences every bus. Off by default, so a fresh dial is quiet only when the user asks.</summary>
+        public bool Mute;
     }
 
     /// <summary>
@@ -116,6 +118,7 @@ namespace GardenVR.Sundial
             if (obj.Has("Beds")) settings.Beds = obj.Get("Beds").AsBool();
             if (obj.Has("ReducedMotion")) settings.ReducedMotion = obj.Get("ReducedMotion").AsBool();
             if (obj.Has("Boil")) settings.Boil = obj.Get("Boil").AsBool();
+            if (obj.Has("Mute")) settings.Mute = obj.Get("Mute").AsBool();
             return settings;
         }
 
@@ -127,6 +130,7 @@ namespace GardenVR.Sundial
             obj.Set("Beds", JsonValue.Bool(settings.Beds));
             obj.Set("ReducedMotion", JsonValue.Bool(settings.ReducedMotion));
             obj.Set("Boil", JsonValue.Bool(settings.Boil));
+            obj.Set("Mute", JsonValue.Bool(settings.Mute));
             return obj;
         }
 

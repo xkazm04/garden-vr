@@ -67,6 +67,8 @@ namespace GardenVR.Sundial
 
         public string Step { get { return _step; } }
         public bool Running { get { return _running; } }
+        /// <summary>Palm dismiss freezes the drawing. The step and the clocks stay where they were.</summary>
+        public bool Held;
         public bool RestoreVisible { get { return _restore != null && _restore.activeSelf; } }
         public float FirstTendAt { get { return _firstTendAt; } }
         public float RitualDoneAt { get { return _ritualDoneAt; } }
@@ -167,6 +169,7 @@ namespace GardenVR.Sundial
         void Update()
         {
             if (!Application.isPlaying || _service == null) return;
+            if (Held) return;
             float dt = Time.deltaTime;
             if (dt < 0f) dt = 0f;
             if (dt > 0.1f) dt = 0.1f;
@@ -236,6 +239,12 @@ namespace GardenVR.Sundial
             {
                 if (id == SeedCatalog.PacketId(pickArc))
                 {
+                    if (!_open && _controller != null)
+                    {
+                        int index = ArcIndex(pickArc);
+                        Transform at = index >= 0 && _packets[index] != null ? _packets[index].transform : transform;
+                        _controller.Play(SundialController.CuePacket, at);
+                    }
                     _open = true;
                     return;
                 }
@@ -300,8 +309,14 @@ namespace GardenVR.Sundial
             ClearChips();
             if (_service != null) _service.SetFirstRunStep(step);
             Debug.Log("[FirstRun] step=" + step + " t=" + _appTime.ToString("0.00", Inv));
+            if (step == FirstRunSteps.Appear && _controller != null)
+                _controller.NotifyDialAppear();
             if (step == FirstRunSteps.Sweep && _controller != null)
                 _controller.ReleaseSweep();
+            if (step == FirstRunSteps.Caption && _controller != null)
+                _controller.PlayFirstRunLine();
+            if (step == FirstRunSteps.Drop && _controller != null)
+                _controller.Play(SundialController.CueSeed, transform);
             if (step == FirstRunSteps.Done)
             {
                 _running = false;

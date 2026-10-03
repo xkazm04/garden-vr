@@ -66,6 +66,9 @@ namespace GardenVR.Sundial
         readonly List<Texture2D> _sparkles = new List<Texture2D>();
         readonly List<string> _cues = new List<string>();
         float _paintedFill = -1f;
+        SundialVoice _voice;
+        GameObject _caption;
+        TextMesh _captionMesh;
 
         static readonly Color Ink = new Color(0.165f, 0.149f, 0.133f, 1f);
         static readonly Color Paper = new Color(0.953f, 0.933f, 0.886f, 0.94f);
@@ -94,6 +97,12 @@ namespace GardenVR.Sundial
                 if (_cues[i] == id) count++;
             }
             return count;
+        }
+
+        /// <summary>Focus loss. The breath stays where it was. A fresh pinch continues it. It does not start over.</summary>
+        public void NotifyFocusLost()
+        {
+            LatchPause();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -151,6 +160,12 @@ namespace GardenVR.Sundial
             float dt = ClampStep(Time.deltaTime);
             _appTime += dt;
             _reduced = _sundial != null && _sundial.Service != null && _sundial.Service.ReducedMotion;
+            TouchVoice();
+            if (_voice != null)
+            {
+                if (_source != null) _voice.ObservePinching(_source.IsPinching);
+                _voice.Tick(dt);
+            }
 
             bool pinching = _source != null && _source.IsPinching;
             if (_needFreshPinch && !pinching) _sawOpen = true;
@@ -203,6 +218,7 @@ namespace GardenVR.Sundial
             PlaceCircle(plant);
             PlaceSparkle(plant);
             PlacePrompt(plant);
+            PlaceCaption(plant);
         }
 
         void OnIntent(HandIntent intent)
@@ -218,11 +234,19 @@ namespace GardenVR.Sundial
                 _pausedFor = 0f;
                 return;
             }
-            if (_active || _answered) return;
+
+            bool starting = !_active && !_answered && CueAllows(intent);
+            if (starting) Begin(intent.Kind == HandIntentKind.PinchHold);
+            if (_voice != null && _active && !_answered
+                && (intent.Kind == HandIntentKind.PinchHold || intent.Kind == HandIntentKind.Release))
+                _voice.OnIntent(intent, Breaths, BreathsRequired);
+        }
+
+        bool CueAllows(HandIntent intent)
+        {
             if (intent.Kind == HandIntentKind.PinchHold && intent.TargetId == PlantId && CueDue())
-                Begin();
-            else if (intent.TargetId == BreathPromptId && IsAcknowledge(intent.Kind) && !KeptToday())
-                Begin();
+                return true;
+            return intent.TargetId == BreathPromptId && IsAcknowledge(intent.Kind) && !KeptToday();
         }
 
         void OnSystemPause()
@@ -230,7 +254,7 @@ namespace GardenVR.Sundial
             LatchPause();
         }
 
-        void Begin()
+        void Begin(bool fromHold)
         {
             if (_active || _answered || KeptToday()) return;
             _config = new BreathConfig();
@@ -242,6 +266,8 @@ namespace GardenVR.Sundial
             CircleAmount = 0f;
             PlantState plant = WindPlant();
             _leafBefore = plant == null ? 0 : (int)plant.Stage;
+            TouchVoice();
+            if (_voice != null) _voice.OnRitualStart(fromHold);
         }
 
         void LatchPause()
@@ -269,6 +295,8 @@ namespace GardenVR.Sundial
                 if (result != null && result.Ok && !result.AlreadyKept)
                     PlayCue(CueChime);
             }
+            TouchVoice();
+            if (_voice != null) _voice.OnComplete();
         }
 
         void AdvanceAmount(float dt)
@@ -426,6 +454,32 @@ namespace GardenVR.Sundial
             PlaceLine(_continue, plant, -0.095f);
         }
 
+        void PlaceCaption(Transform plant)
+        {
+            if (_caption == null || !_caption.activeSelf) return;
+            PlaceLine(_caption, plant, 0.095f);
+        }
+
+        void SetCaption(string text)
+        {
+            if (!Application.isPlaying) return;
+            if (!_built) BuildChrome();
+            if (_caption == null) _caption = MakeCaption();
+            if (_caption == null) return;
+            bool show = !string.IsNullOrEmpty(text);
+            if (_caption.activeSelf != show) _caption.SetActive(show);
+            if (show && _captionMesh != null) _captionMesh.text = text;
+        }
+
+        void TouchVoice()
+        {
+            if (_sundial == null) _sundial = GetComponent<SundialController>();
+            if (_sundial == null) return;
+            if (_voice == null)
+                _voice = new SundialVoice(_sundial.Audio, id => _sundial.Play(id, null), SetCaption);
+            _voice.Enabled = _sundial.Service != null && _sundial.Service.Voice;
+        }
+
         void PlaceLine(GameObject line, Transform plant, float worldX)
         {
             if (line == null || plant == null) return;
@@ -558,6 +612,30 @@ namespace GardenVR.Sundial
             return go;
         }
 
+        GameObject MakeCaption()
+        {
+            var go = new GameObject("VoiceCaption");
+            go.transform.SetParent(transform, false);
+            _captionMesh = go.AddComponent<TextMesh>();
+            _captionMesh.text = "";
+            _captionMesh.anchor = TextAnchor.MiddleCenter;
+            _captionMesh.alignment = TextAlignment.Center;
+            _captionMesh.fontSize = 48;
+            _captionMesh.characterSize = 0.0032f;
+            _captionMesh.color = Ink;
+            Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font == null) font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            if (font != null) _captionMesh.font = font;
+            var textRenderer = _captionMesh.GetComponent<MeshRenderer>();
+            if (textRenderer != null)
+            {
+                textRenderer.shadowCastingMode = ShadowCastingMode.Off;
+                textRenderer.receiveShadows = false;
+            }
+            go.SetActive(false);
+            return go;
+        }
+
         void EnsureInk()
         {
             Shader shader = Shader.Find("Fidelity/Card");
@@ -660,7 +738,8 @@ namespace GardenVR.Sundial
         {
             if (string.IsNullOrEmpty(id)) return;
             _cues.Add(id);
-            Debug.Log("[Sundial] cue " + id);
+            if (_sundial != null) _sundial.Play(id, PlantTransform());
+            else Debug.Log("[Sundial] cue " + id);
         }
 
         void Subscribe()
