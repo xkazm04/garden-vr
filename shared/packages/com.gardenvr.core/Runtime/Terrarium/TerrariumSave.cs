@@ -23,6 +23,8 @@ namespace GardenVR.Core
         public bool ReducedMotion;
         public bool Mute;
         public string HoldMode = DefaultHoldMode;
+        /// <summary>Four equal sides of 4 s. Omitted from the save when false, which is the free pace.</summary>
+        public bool BoxPace;
     }
 
     /// <summary>
@@ -141,7 +143,7 @@ namespace GardenVR.Core
 
         static readonly string[] SettingKnown =
         {
-            "Breaths", "InhaleSec", "ExhaleSec", "AutoPace", "VoiceGuide", "NightBed", "ReducedMotion", "Mute", "HoldMode"
+            "Breaths", "InhaleSec", "ExhaleSec", "AutoPace", "VoiceGuide", "NightBed", "ReducedMotion", "Mute", "HoldMode", "BoxPace"
         };
 
         static readonly string[] HabitKnown =
@@ -173,6 +175,7 @@ namespace GardenVR.Core
             if (obj.Has("Mute")) settings.Mute = obj.Get("Mute").AsBool();
             if (obj.Has("HoldMode") && !obj.Get("HoldMode").IsNull)
                 settings.HoldMode = obj.Get("HoldMode").AsString();
+            if (obj.Has("BoxPace")) settings.BoxPace = obj.Get("BoxPace").AsBool();
             return settings;
         }
 
@@ -192,6 +195,7 @@ namespace GardenVR.Core
             if (settings.Mute) obj.Set("Mute", JsonValue.Bool(true));
             if (!string.IsNullOrEmpty(settings.HoldMode) && settings.HoldMode != RitualSettings.DefaultHoldMode)
                 obj.Set("HoldMode", JsonValue.String(settings.HoldMode));
+            if (settings.BoxPace) obj.Set("BoxPace", JsonValue.Bool(true));
             obj.Restore(extra);
             return obj;
         }
