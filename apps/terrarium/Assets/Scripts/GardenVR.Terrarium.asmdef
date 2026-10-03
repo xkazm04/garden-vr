@@ -6,7 +6,8 @@
         "GardenVR.Input",
         "GardenVR.Capture",
         "GardenVR.Room",
-        "GardenVR.Audio"
+        "GardenVR.Audio",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

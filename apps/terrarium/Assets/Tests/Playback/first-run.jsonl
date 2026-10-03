@@ -1,0 +1,16 @@
+{"t":0.2,"intent":"Look","target":"jar","dur":8.6}
+{"t":9.0,"intent":"PinchHold","target":"jar","dur":4}
+{"t":13.0,"intent":"Release","target":"jar"}
+{"t":18.0,"intent":"PinchHold","target":"jar","dur":4.2}
+{"t":22.2,"intent":"Release","target":"jar"}
+{"t":27.7,"intent":"PinchHold","target":"jar","dur":4.5}
+{"t":32.2,"intent":"Release","target":"jar"}
+{"t":38.2,"intent":"PinchHold","target":"jar","dur":4.1}
+{"t":42.3,"intent":"Release","target":"jar"}
+{"t":47.5,"intent":"PinchHold","target":"jar","dur":4.3}
+{"t":51.8,"intent":"Release","target":"jar"}
+{"t":57.6,"intent":"PinchHold","target":"jar","dur":4.4}
+{"t":62.0,"intent":"Release","target":"jar"}
+{"t":62.0,"intent":"Look","target":"jar","dur":18}
+{"t":72.0,"intent":"Poke","target":"seed.walk"}
+{"t":74.5,"intent":"Poke","target":"seed.water"}

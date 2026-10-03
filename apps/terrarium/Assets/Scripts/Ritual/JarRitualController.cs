@@ -70,10 +70,10 @@ namespace GardenVR.Terrarium
         Material _shellMat;
         bool _gapReturn;
         readonly Dictionary<string, int> _cues = new Dictionary<string, int>();
-        bool _cuedLand;
-        bool _cuedLid;
         bool _cuedMoss;
         bool _cuedDew;
+        FirstRunDirector _director;
+        bool _loggedInteractive;
 
         static readonly Color DotLit = new Color(0.45f, 1.15f, 0.72f);
         static readonly Color DotDim = new Color(0.015f, 0.04f, 0.028f);
@@ -86,6 +86,16 @@ namespace GardenVR.Terrarium
         public GrowthAnswer LastAnswer => _lastAnswer;
         public bool HasAnswer => _hasAnswer;
         public bool FirstRunStarted { get; private set; }
+        public FirstRunDirector Director { get { return _director; } }
+
+        public string HoldBinding
+        {
+            get
+            {
+                if (_source != null) return _source.BindingHint(HandIntentKind.PinchHold);
+                return "Space or mouse";
+            }
+        }
         public bool RestorePromptVisible => _restore != null && _restore.activeSelf;
         public JarView View => _view;
         public bool AutoPace => _autoPace;
@@ -143,6 +153,22 @@ namespace GardenVR.Terrarium
                 Play("seed.appear", _desk != null ? _desk.transform : null, 0f);
             }
             RefreshHabits();
+        }
+
+        public bool PlayCue(string id, Transform at)
+        {
+            return Play(id, at != null ? at : transform, 0f);
+        }
+
+        /// <summary>A ritual cut off by quitting is offered back. It does not start itself.</summary>
+        public void OfferRitualBack()
+        {
+            _awaitContinue = true;
+            _latchedPause = true;
+            _needFreshPinch = true;
+            _sawOpen = !LivePinch();
+            if (_prompt != null) _prompt.SetActive(true);
+            Log("RitualOffered");
         }
 
         public void HandleDev(DevCommand command)
@@ -264,6 +290,11 @@ namespace GardenVR.Terrarium
             _autoPace = _service.Settings.AutoPace;
             if (_view == null) _view = GetComponent<JarView>();
             if (_view != null) _view.reducedMotion = _service.Settings.ReducedMotion;
+            if (_service.Settings.ReducedMotion)
+            {
+                PcRoomPlate plate = FindAnyObjectByType<PcRoomPlate>();
+                if (plate != null) plate.FadeSeconds = 0f;
+            }
             EnsureAudio();
             LatchGap();
         }
@@ -286,6 +317,8 @@ namespace GardenVR.Terrarium
             Play("amb.room", null, 0f);
             SyncBed();
             Log("SessionStart");
+            _director = gameObject.AddComponent<FirstRunDirector>();
+            _director.Begin(this);
         }
 
         void OnEnable()
@@ -320,6 +353,12 @@ namespace GardenVR.Terrarium
         void Update()
         {
             if (!Application.isPlaying || _session == null || _view == null) return;
+            if (!_loggedInteractive)
+            {
+                _loggedInteractive = true;
+                Debug.Log("[Terrarium] interactive frame realtime="
+                    + Time.realtimeSinceStartup.ToString("0.000", CultureInfo.InvariantCulture));
+            }
             if (_service != null && _service.RestoreOffered)
             {
                 if (_restore != null && !_restore.activeSelf) _restore.SetActive(true);
@@ -330,7 +369,6 @@ namespace GardenVR.Terrarium
             float dt = Time.deltaTime;
             if (dt < 0f) dt = 0f;
             _appTime += dt;
-            TickFirstRunCues();
             if (_service != null) _service.StepHabits(dt);
             RefreshHabits();
 
@@ -416,6 +454,7 @@ namespace GardenVR.Terrarium
             }
             PaintDots(_session.Breaths);
             PushGarden();
+            if (_director != null) _director.Tick(dt);
         }
 
         void OnGUI()
@@ -524,6 +563,7 @@ namespace GardenVR.Terrarium
 
         void OnIntent(HandIntent intent)
         {
+            if (_director != null) _director.OnIntent(intent);
             if (intent.Kind == HandIntentKind.PalmOpen)
             {
                 if (_service != null) _service.FlushHabits();
@@ -892,21 +932,6 @@ namespace GardenVR.Terrarium
             bool on = _service != null && _service.Settings != null && _service.Settings.VoiceGuide;
             mesh.text = on ? "Voice guide on." : "A voice can follow your breath.";
             if (_shellMat != null) _shellMat.SetColor("_Emission", on ? DotLit : PaceMint);
-        }
-
-        void TickFirstRunCues()
-        {
-            if (!FirstRunStarted) return;
-            if (!_cuedLand && _appTime >= 4f)
-            {
-                _cuedLand = true;
-                Play("jar.land", JarAnchor(), 0f);
-            }
-            if (!_cuedLid && _appTime >= 6f)
-            {
-                _cuedLid = true;
-                Play("jar.lid", CorkAnchor(), 0f);
-            }
         }
 
         void TickAnswerCues()
