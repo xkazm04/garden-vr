@@ -80,62 +80,98 @@ def export(names, path):
 # =========================================================================== JAR
 reset()
 # Style bible (docs/art/terrarium-style.md): 14.0 cm with the cork, 8.7 cm across, cork 1.5 cm.
-# The body stays inside the +5% diameter band so the ferns still clear the wall.
-# A mason shoulder, a short neck, and a thick rounded heel. One outer shell plus a
-# short lip. An inner cylinder in front of the moss was dropped in T-TER-018: the
-# overdraw pass (Cull Off) counted those faces. The cork plug sits in the neck.
+# Body radius 4.50 cm is 9.0 cm across, inside the +5% band (max 9.14 cm), so the ferns
+# still clear the wall. The profile is a lathe: straight wall, a quarter-ellipse shoulder
+# (radius only decreases), a straight neck, then a 2 mm lip. No S-curve, so the neck
+# cannot pouch out on the way into the mouth. One outer shell plus a short inner lip.
+# An inner cylinder in front of the moss was dropped in T-TER-018.
 BODY_R = 0.0450
-NECK_R = 0.0314
+NECK_R = 0.0340
 LIP_TOP = 0.1250
 CORK_TOP = 0.1400
-
-
-def _smooth(t):
-    t = max(0.0, min(1.0, t))
-    return t * t * (3.0 - 2.0 * t)
+WALL_TOP = 0.0900
+SHOULDER_TOP = 0.1080
+NECK_TOP = 0.1180
 
 
 def mason_outer():
-    """(radius, height) up the outside, then a short lip folded into the mouth."""
-    pts = [(0.0, 0.0), (0.014, 0.0003), (0.022, 0.0010)]
-    # Thick heel: horizontal where it leaves the bottom, vertical where it joins the wall.
-    y0, y1 = 0.0010, 0.0200
-    r0 = 0.022
+    """(radius, height) up the outside, then a short lip folded into the mouth.
+
+    The shoulder is a quarter ellipse, so the tangent is vertical at the wall and
+    again at the neck, and the radius falls the whole way. The neck that follows
+    is a constant radius. The lip bead is 2.2 mm and returns to the neck.
+    """
+    pts = [(0.0, 0.0)]
+    corner = 0.0150
+    flat = BODY_R - corner
+    pts.append((flat * 0.55, 0.00025))
+    pts.append((flat, 0.0005))
     for i in range(1, 7):
-        t = i / 6.0
-        ang = t * math.pi * 0.5
-        r = r0 + (BODY_R - r0) * math.sin(ang)
-        y = y0 + (y1 - y0) * (1.0 - math.cos(ang))
+        ang = (i / 6.0) * math.pi * 0.5
+        r = flat + corner * math.sin(ang)
+        y = 0.0005 + corner * (1.0 - math.cos(ang))
         pts.append((r, y))
-    pts.append((BODY_R, 0.0860))
-    # Rounded shoulder. Vertical tangent at the body and again at the neck.
-    y0, y1 = 0.0860, 0.1100
-    for i in range(1, 8):
-        t = i / 7.0
-        s = _smooth(t)
-        r = BODY_R + (NECK_R - BODY_R) * s
-        y = y0 + (y1 - y0) * t
+    pts.append((BODY_R, WALL_TOP))
+    rx = BODY_R - NECK_R
+    ry = SHOULDER_TOP - WALL_TOP
+    for i in range(1, 9):
+        ang = (i / 8.0) * math.pi * 0.5
+        r = NECK_R + rx * math.cos(ang)
+        y = WALL_TOP + ry * math.sin(ang)
         pts.append((r, y))
-    # Short neck, then a lip bead the cork cap rests on.
+    # A sample on the neck so the straight run is a real row, not only its endpoints.
+    pts.append((NECK_R, (SHOULDER_TOP + NECK_TOP) * 0.5))
+    pts.append((NECK_R, NECK_TOP))
+    lip = NECK_R + 0.0022
     pts.extend([
-        (NECK_R - 0.0004, 0.1160),
-        (0.0322, 0.1182),
-        (0.0342, 0.1204),
-        (0.0352, 0.1222),
-        (0.0340, 0.1238),
-        (0.0322, LIP_TOP),
+        (NECK_R + 0.0008, 0.1194),
+        (lip, 0.1212),
+        (lip + 0.0003, 0.1228),
+        (lip - 0.0004, 0.1242),
+        (NECK_R + 0.0006, LIP_TOP),
     ])
-    # Inner face of the lip only. Not a second wall down the body.
+    # Short inner face so the lip has a thickness. It stops at the top of the neck.
     pts.extend([
-        (0.0300, 0.1236),
-        (0.0292, 0.1208),
-        (0.0298, 0.1180),
-        (0.0308, 0.1154),
+        (NECK_R - 0.0018, 0.1238),
+        (NECK_R - 0.0024, 0.1216),
+        (NECK_R - 0.0016, 0.1196),
     ])
     return pts
 
 
+def assert_profile(profile):
+    """The outer profile, before the lip folds inward, is a mason jar."""
+    fold = len(profile)
+    for i in range(1, len(profile)):
+        if profile[i][1] < profile[i - 1][1] - 1e-6:
+            fold = i
+            break
+    outer = profile[:fold]
+    # The straight run is one edge at BODY_R, from the heel up to the shoulder.
+    wall = [p for p in outer if abs(p[0] - BODY_R) <= 0.0002 and p[1] <= WALL_TOP + 1e-6]
+    if len(wall) < 2 or max(p[1] for p in wall) - min(p[1] for p in wall) < 0.05:
+        raise SystemExit("wall is not a straight run of at least 5 cm")
+    shoulder = [p for p in outer if WALL_TOP - 1e-6 <= p[1] <= SHOULDER_TOP + 1e-6]
+    if len(shoulder) < 4:
+        raise SystemExit("shoulder has too few points")
+    for i in range(1, len(shoulder)):
+        if shoulder[i][0] > shoulder[i - 1][0] + 1e-6:
+            raise SystemExit("shoulder radius increases (pouch) at y %.4f" % shoulder[i][1])
+    if shoulder[0][0] - shoulder[-1][0] < 0.008:
+        raise SystemExit("shoulder does not narrow into the neck")
+    neck = [p for p in outer if SHOULDER_TOP - 1e-6 <= p[1] <= NECK_TOP + 1e-6]
+    if len(neck) < 2 or any(abs(r - NECK_R) > 0.0004 for r, y in neck):
+        raise SystemExit("neck is not a short straight cylinder")
+    lip_pts = [p for p in outer if p[1] > NECK_TOP + 1e-6]
+    if not lip_pts or max(r for r, y in lip_pts) > NECK_R + 0.0035:
+        raise SystemExit("lip bead is wider than 3.5 mm")
+    print("[hero] profile wall %.4f from %.4f to %.4f shoulder %.4f..%.4f neck %.4f lip %.4f" % (
+        wall[0][0], min(p[1] for p in wall), max(p[1] for p in wall),
+        shoulder[0][1], shoulder[-1][1], neck[-1][0], max(r for r, y in lip_pts)))
+
+
 outer = mason_outer()
+assert_profile(outer)
 lathe("Jar", outer, 128)
 print("[hero] jar profile")
 for r, y in outer:
@@ -173,10 +209,11 @@ def drop_back_glass():
 
 drop_back_glass()
 # Cork cap is 1.5 cm above the lip. The plug continues down inside the neck.
+# Cap sits on the lip. The plug is inside the straight neck. Same UV scheme as before.
 cork = [
-    (0.0, CORK_TOP), (0.0240, CORK_TOP), (0.0308, 0.1393), (0.0334, 0.1380),
-    (0.0342, 0.1362), (0.0336, 0.1334), (0.0322, 0.1298), (0.0308, 0.1264),
-    (0.0288, 0.1244), (0.0288, 0.1168), (0.0302, 0.1148), (0.0302, 0.1100), (0.0, 0.1100),
+    (0.0, CORK_TOP), (0.0240, CORK_TOP), (0.0316, 0.1393), (0.0346, 0.1380),
+    (0.0355, 0.1362), (0.0348, 0.1334), (0.0334, 0.1298), (0.0322, 0.1264),
+    (0.0308, 0.1246), (0.0308, 0.1168), (0.0316, 0.1148), (0.0316, 0.1100), (0.0, 0.1100),
 ]
 lathe("Cork", cork, 96, uv_v=[1.0, 1.0, 0.96, 0.90, 0.78, 0.62, 0.42, 0.22, 0.10, 0.06, 0.02, 0.0, 0.0])
 
@@ -252,6 +289,28 @@ def assert_bible():
         raise SystemExit("neck {n:.4f} is not narrower than the body {b:.4f}".format(n=neck, b=jr))
     if cr > jr * 0.86:
         raise SystemExit("cork cap {c:.4f} is as wide as the body".format(c=cr))
+    assert_mirror("Jar")
+
+
+def assert_mirror(name, tol=2e-5):
+    """JarG1 looks along Blender -Y, so left-right is a mirror in X."""
+    buckets = {}
+    for vert in bpy.data.objects[name].data.vertices:
+        key = (round(vert.co.y, 5), round(vert.co.z, 5))
+        buckets.setdefault(key, []).append(vert.co.x)
+    missing = 0
+    worst = 0.0
+    for xs in buckets.values():
+        for x in xs:
+            best = min(abs(-x - other) for other in xs)
+            if best > worst:
+                worst = best
+            if best > tol:
+                missing += 1
+    print("[hero] mirror {n} worst {w:.6f} miss {m}".format(n=name, w=worst, m=missing))
+    if missing:
+        raise SystemExit("mesh {n} is not left-right symmetric ({m} verts, worst {w:.6f})".format(
+            n=name, m=missing, w=worst))
 
 
 assert_bible()

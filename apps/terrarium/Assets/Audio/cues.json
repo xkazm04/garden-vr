@@ -1,6 +1,7 @@
 {
  "app": "terrarium",
  "version": 1,
+ "masterGainDb": 2.0,
  "cues": [
   {
    "id": "amb.room",
