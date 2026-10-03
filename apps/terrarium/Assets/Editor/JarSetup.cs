@@ -150,15 +150,17 @@ namespace GardenVR.Terrarium.Editor
             library.Glass = Mat("Jar_Glass", "Fidelity/JarGlass", m =>
             {
                 m.SetTexture("_Cond", Tex("condensation"));
-                // Locked in Assets/Art/LOCKED.md. Low base alpha. Volume alpha is a wall tint, not a fill.
-                m.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
+                m.SetTexture("_Bead", Tex("droplet_normal"));
+                // Clear pane. Volume is edge absorption. See Assets/Art/LOCKED.md.
+                m.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.004f));
                 m.SetColor("_Rim", new Color(0.48f, 0.72f, 0.78f, 0.32f));
                 m.SetFloat("_RimPower", 2.40f);
                 m.SetColor("_Inner", new Color(0.34f, 0.86f, 0.48f, 1f));
                 m.SetVector("_InnerY", new Vector4(0.078f, 0.052f, 0f, 0f));
-                m.SetColor("_Volume", new Color(0.30f, 0.78f, 0.52f, 0.10f));
+                m.SetColor("_Volume", new Color(0.42f, 0.62f, 0.66f, 0.75f));
                 m.SetVector("_VolumeY", new Vector4(0.038f, 0.072f, 0f, 0f));
                 m.SetFloat("_Drops", 1.15f);
+                m.SetFloat("_Refract", 36f);
                 m.SetColor("_Streak", new Color(0.50f, 0.66f, 0.74f, 0.12f));
                 m.SetShaderPassEnabled("SRPDefaultUnlit", false);
             });

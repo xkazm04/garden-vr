@@ -207,8 +207,9 @@ namespace GardenVR.Terrarium
         static readonly Color FocusGold = new Color(0.46f, 0.40f, 0.16f, 1f);
         static readonly Color GlassRimWarm = new Color(0.62f, 0.64f, 0.48f, 0.32f);
         static readonly Color GlassInnerWarm = new Color(0.52f, 0.64f, 0.22f, 1f);
-        static readonly Color GlassVolumeCool = new Color(0.30f, 0.78f, 0.52f, 0.10f);
-        static readonly Color GlassVolumeWarm = new Color(0.50f, 0.68f, 0.30f, 0.10f);
+        // Edge absorption, not a fill. Alpha is how far the silhouette darkens.
+        static readonly Color GlassVolumeCool = new Color(0.42f, 0.62f, 0.66f, 0.75f);
+        static readonly Color GlassVolumeWarm = new Color(0.55f, 0.58f, 0.42f, 0.70f);
         static readonly Color GlassStreakCool = new Color(0.50f, 0.66f, 0.74f, 0.12f);
         static readonly Color GlassStreakWarm = new Color(0.64f, 0.62f, 0.42f, 0.12f);
         static readonly Color DewEmissionWarm = new Color(0.86f, 0.88f, 0.52f);
@@ -461,11 +462,13 @@ namespace GardenVR.Terrarium
             {
                 glassMat.SetFloat("_Fog", fog);
                 glassMat.SetFloat("_Drops", 1.15f);
-                // Clear pane. Apply owns these so a stale asset cannot put the mint fill back.
-                glassMat.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.018f));
+                glassMat.SetFloat("_Refract", 36f);
+                // Clear pane. The tint is a hair of glass, not a wash. Apply owns these.
+                glassMat.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.004f));
                 glassMat.SetColor("_Rim", SeasonColor(GlassRim, GlassRimWarm, seasonWarmth));
                 glassMat.SetFloat("_RimPower", GlassRimPower);
-                glassMat.SetColor("_Inner", SeasonColor(GlassInner, GlassInnerWarm, seasonWarmth));
+                Color inner = SeasonColor(GlassInner, GlassInnerWarm, seasonWarmth);
+                glassMat.SetColor("_Inner", inner);
                 // Full through the moss and the crozier, half-gone near the upper pane, out by the lip.
                 glassMat.SetVector("_InnerY", new Vector4(0.078f, 0.052f, 0f, 0f));
                 glassMat.SetColor("_Volume", SeasonColor(GlassVolumeCool, GlassVolumeWarm, seasonWarmth));
