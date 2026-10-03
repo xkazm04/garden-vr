@@ -11,12 +11,15 @@ namespace GardenVR.Core
         public readonly int Day;
         public readonly bool Kept;
         public readonly int Lit;
+        /// <summary>The evening word for this day, or null when the day has none.</summary>
+        public readonly string Word;
 
-        public LookFrame(int day, bool kept, int lit)
+        public LookFrame(int day, bool kept, int lit, string word = null)
         {
             Day = day;
             Kept = kept;
             Lit = lit;
+            Word = word;
         }
     }
 
@@ -31,6 +34,15 @@ namespace GardenVR.Core
         public const int WeekDays = 7;
 
         public static LookFrame[] Week(Garden garden, int today)
+        {
+            return Week(garden, today, null);
+        }
+
+        /// <summary>
+        /// The week, with each day's word when <paramref name="words"/> has one.
+        /// A missed day and a day with no word stay blank. Nothing is marked wrong.
+        /// </summary>
+        public static LookFrame[] Week(Garden garden, int today, IList<KeptWord> words)
         {
             if (garden == null || garden.FrondDays == null || garden.FrondDays.Count == 0)
                 return new LookFrame[0];
@@ -56,7 +68,7 @@ namespace GardenVR.Core
                     break;
                 }
                 if (kept) lit++;
-                frames.Add(new LookFrame(day, kept, lit));
+                frames.Add(new LookFrame(day, kept, lit, OneWord.On(words, day)));
             }
             return frames.ToArray();
         }

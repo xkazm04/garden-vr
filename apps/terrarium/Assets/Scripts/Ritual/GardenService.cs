@@ -225,6 +225,24 @@ namespace GardenVR.Terrarium
             return true;
         }
 
+        /// <summary>
+        /// Keeps today's word. The garden does not grow, and a day that already has a word stays as it was.
+        /// The ritual for today has to be done first.
+        /// </summary>
+        public bool TryKeepWord(OneWord session)
+        {
+            if (session == null) return false;
+            if (RestoreOffered)
+                throw new InvalidOperationException("the save needs a restore before the next ritual");
+            if (_readOnly)
+                throw new InvalidOperationException("this save was written by a newer version and is read-only");
+            if (_save == null || Garden == null) return false;
+            if (_save.DayWords == null) _save.DayWords = new List<KeptWord>();
+            if (!session.TryKeep(Garden, TodayIndex, _save.DayWords)) return false;
+            Persist();
+            return true;
+        }
+
         public void ApplySettings(RitualSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));

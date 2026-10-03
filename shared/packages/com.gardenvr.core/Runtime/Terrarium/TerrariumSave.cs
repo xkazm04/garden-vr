@@ -47,6 +47,8 @@ namespace GardenVR.Core
         public bool RitualOpen;
         /// <summary>The garden day three good things was finished. The three things are not stored.</summary>
         public int? GladDay;
+        /// <summary>Evening words, one stone a day. Empty days are simply absent. Omitted from the save when none are kept.</summary>
+        public List<KeptWord> DayWords = new List<KeptWord>();
         public Dictionary<string, JsonValue> Extra;
         public Dictionary<string, JsonValue> SettingsExtra;
         public Dictionary<string, Dictionary<string, JsonValue>> HabitExtra;
@@ -98,6 +100,9 @@ namespace GardenVR.Core
             if (obj.Has("RitualOpen")) save.RitualOpen = obj.Get("RitualOpen").AsBool();
             if (obj.Has("GladDay") && !obj.Get("GladDay").IsNull)
                 save.GladDay = obj.Get("GladDay").AsInt();
+            save.DayWords = new List<KeptWord>();
+            if (obj.Has("DayWords") && !obj.Get("DayWords").IsNull)
+                save.DayWords = ReadWords(obj.Get("DayWords").AsArray());
             return save;
         }
 
@@ -131,6 +136,8 @@ namespace GardenVR.Core
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
             if (save.RitualOpen) obj.Set("RitualOpen", JsonValue.Bool(true));
             if (save.GladDay.HasValue) obj.Set("GladDay", JsonValue.Number(save.GladDay.Value));
+            JsonArray dayWords = WriteWords(save.DayWords);
+            if (dayWords.Count > 0) obj.Set("DayWords", dayWords);
             obj.Restore(save.Extra);
             return obj;
         }
@@ -138,7 +145,7 @@ namespace GardenVR.Core
         static readonly string[] RootKnown =
         {
             "SchemaVersion", "FrondDays", "DewToday", "LastRitualDay", "Returns", "RitualsCompleted",
-            "Habits", "Tends", "Settings", "FirstRunStep", "RitualOpen", "GladDay"
+            "Habits", "Tends", "Settings", "FirstRunStep", "RitualOpen", "GladDay", "DayWords"
         };
 
         static readonly string[] SettingKnown =
@@ -198,6 +205,41 @@ namespace GardenVR.Core
             if (settings.BoxPace) obj.Set("BoxPace", JsonValue.Bool(true));
             obj.Restore(extra);
             return obj;
+        }
+
+        static List<KeptWord> ReadWords(JsonArray array)
+        {
+            var words = new List<KeptWord>();
+            if (array == null) return words;
+            for (int i = 0; i < array.Count; i++)
+            {
+                JsonObject row = array[i].AsObject();
+                int day = row.Has("Day") ? row.Get("Day").AsInt() : 0;
+                string raw = row.Has("Word") && !row.Get("Word").IsNull ? row.Get("Word").AsString() : null;
+                string word = OneWord.Canonical(raw);
+                if (word == null) continue;
+                if (OneWord.On(words, day) != null) continue;
+                words.Add(new KeptWord { Day = day, Word = word });
+            }
+            return words;
+        }
+
+        static JsonArray WriteWords(List<KeptWord> words)
+        {
+            var array = new JsonArray();
+            if (words == null) return array;
+            for (int i = 0; i < words.Count; i++)
+            {
+                KeptWord row = words[i];
+                if (row == null) continue;
+                string word = OneWord.Canonical(row.Word);
+                if (word == null) continue;
+                var obj = new JsonObject();
+                obj.Set("Day", JsonValue.Number(row.Day));
+                obj.Set("Word", JsonValue.String(word));
+                array.Add(obj);
+            }
+            return array;
         }
 
         static int[] ReadInts(JsonObject obj, string key)
