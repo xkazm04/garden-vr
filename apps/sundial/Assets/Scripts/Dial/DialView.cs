@@ -66,6 +66,10 @@ namespace GardenVR.Sundial
         public float[] tileFill;
         public bool boil = true;
         public float time = 1f;
+        /// <summary>0 is blank paper, 1 is the finished drawing. The player default is already drawn.</summary>
+        [Range(0f, 1f)] public float appear = 1f;
+        /// <summary>False hides the three plant cards. The first run turns this on when the seeds land.</summary>
+        public bool showPlants = true;
         [Range(0f, 1f)] public float waiting;
         public string waitingTarget = "midday";
         [Range(0f, 1f)] public float pulse;
@@ -221,7 +225,8 @@ namespace GardenVR.Sundial
                 }
             }
             if (contactRenderer != null)
-                contactRenderer.enabled = !stageStrip;
+                contactRenderer.enabled = !stageStrip && showPlants;
+            ApplyIntro();
 
             if (shadow != null)
             {
@@ -497,6 +502,81 @@ namespace GardenVR.Sundial
             }
         }
 
+        /// <summary>
+        /// Pencil, then ink, then washes. A finished dial (the default) is left alone so captures stay put.
+        /// </summary>
+        void ApplyIntro()
+        {
+            if (!Application.isPlaying) return;
+            if (appear >= 0.999f)
+            {
+                EnableNamed("DialTop", true);
+                EnableNamed("DialSide", true);
+                EnableNamed("Gnomon", true);
+                EnableNamed("Soil", true);
+                if (tileRenderer != null) tileRenderer.enabled = true;
+                if (shadow != null)
+                {
+                    Renderer drawn = shadow.GetComponent<Renderer>();
+                    if (drawn != null) drawn.enabled = true;
+                }
+                TintFace(false);
+                return;
+            }
+            bool ink = appear >= 1f / 3f;
+            bool wash = appear >= 2f / 3f;
+            EnableNamed("DialTop", ink);
+            EnableNamed("DialSide", ink);
+            EnableNamed("Gnomon", ink);
+            EnableNamed("Soil", wash);
+            if (tileRenderer != null) tileRenderer.enabled = wash;
+            if (shadow != null)
+            {
+                Renderer shadowRenderer = shadow.GetComponent<Renderer>();
+                if (shadowRenderer != null) shadowRenderer.enabled = false;
+            }
+            TintFace(ink && !wash);
+        }
+
+        void EnableNamed(string name, bool on)
+        {
+            Transform found = FindDeep(transform, name);
+            if (found == null) return;
+            Renderer renderer = found.GetComponent<Renderer>();
+            if (renderer != null && renderer.enabled != on) renderer.enabled = on;
+        }
+
+        void TintFace(bool pencil)
+        {
+            Transform top = FindDeep(transform, "DialTop");
+            if (top == null) return;
+            Renderer renderer = top.GetComponent<Renderer>();
+            if (renderer == null) return;
+            if (!pencil)
+            {
+                renderer.SetPropertyBlock(null);
+                return;
+            }
+            var block = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(block);
+            var gray = new Color(0.62f, 0.58f, 0.52f, 1f);
+            block.SetColor("_Lit", gray);
+            block.SetColor("_Shade", gray * 0.9f);
+            renderer.SetPropertyBlock(block);
+        }
+
+        static Transform FindDeep(Transform root, string name)
+        {
+            if (root == null) return null;
+            if (root.name == name) return root;
+            for (int i = 0; i < root.childCount; i++)
+            {
+                Transform found = FindDeep(root.GetChild(i), name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
         void ApplyPlant(int arc, int stage, float bloom)
         {
             if (uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
@@ -508,7 +588,7 @@ namespace GardenVR.Sundial
             Color tint = PlantTint(arc);
             if (renderer != null)
             {
-                renderer.enabled = !stageStrip;
+                renderer.enabled = !stageStrip && showPlants;
                 if (set != null && card < set.Length && set[card] != null)
                     SetMain(renderer, set[card], tint);
             }
@@ -519,7 +599,7 @@ namespace GardenVR.Sundial
             Renderer bloomRenderer = bloomRenderers[arc];
             int which = bloom < 0.5f ? -1 : bloom < 1.5f ? 0 : 1;
             int tex = arc * 2 + which;
-            bool show = !stageStrip && which >= 0 && bloomTextures != null && tex < bloomTextures.Length && bloomTextures[tex] != null;
+            bool show = !stageStrip && showPlants && which >= 0 && bloomTextures != null && tex < bloomTextures.Length && bloomTextures[tex] != null;
             bloomRenderer.enabled = show;
             Transform bloomTransform = bloomRenderer.transform;
             bloomTransform.localPosition = plant.localPosition + new Vector3(0f, 0.0015f, 0f);
