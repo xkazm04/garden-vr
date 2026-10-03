@@ -144,6 +144,51 @@ namespace GardenVR.Terrarium.Tests
         }
 
         [Test]
+        public void RestPitch_AimsTheEyeAtTheDesk()
+        {
+            SeatedRig rig = MakeRig(out _, out Transform pivot);
+            var deskGo = new GameObject("desk");
+            _owned.Add(deskGo);
+            deskGo.transform.SetParent(rig.transform, false);
+            var desk = deskGo.AddComponent<PcDeskAnchor>();
+            desk.Height = PcDeskAnchor.DefaultHeight;
+            desk.Distance = PcDeskAnchor.SundialDistance;
+
+            var anchorGo = new GameObject("RoomPlateAnchor");
+            _owned.Add(anchorGo);
+            anchorGo.transform.SetParent(rig.transform, false);
+            rig.SetPlateAnchor(anchorGo.transform);
+
+            float expect = Mathf.Atan2(PcDeskAnchor.BelowEye, PcDeskAnchor.SundialDistance) * Mathf.Rad2Deg;
+            Assert.AreEqual(expect, rig.RestPitchDegrees, 0.02f);
+            rig.ApplyPose();
+
+            Vector3 forward = pivot.rotation * Vector3.forward;
+            Vector3 toDesk = desk.transform.position - pivot.position;
+            Assert.Less(Vector3.Angle(forward, toDesk), 0.2f);
+            Assert.Less(Quaternion.Angle(anchorGo.transform.localRotation, Quaternion.Euler(expect, 0f, 0f)), 0.05f);
+            Assert.AreEqual(SeatedRig.DefaultEyeHeight, anchorGo.transform.localPosition.y, 0.0001f);
+        }
+
+        [Test]
+        public void SeatedCard_FillsTheCaptureFrustum()
+        {
+            Vector2 size = SeatedRig.SeatedCardSize(
+                SeatedRig.PlateDistance, SeatedRig.SeatedCaptureFov, SeatedRig.SeatedCaptureAspect);
+            Assert.AreEqual(8f, size.y, 0.0001f);
+            Assert.AreEqual(8f * (1824f / 1024f), size.x, 0.0001f);
+            float half = Mathf.Atan((size.y * 0.5f) / SeatedRig.PlateDistance) * Mathf.Rad2Deg;
+            Assert.AreEqual(SeatedRig.SeatedCaptureFov * 0.5f, half, 0.001f);
+
+            var card = new GameObject("card");
+            _owned.Add(card);
+            SeatedRig.PlaceSeatedCard(card.transform);
+            Assert.AreEqual(SeatedRig.PlateDistance, card.transform.localPosition.z, 0.0001f);
+            Assert.AreEqual(size.x * SeatedRig.SeatedCardMargin, card.transform.localScale.x, 0.0001f);
+            Assert.AreEqual(size.y * SeatedRig.SeatedCardMargin, card.transform.localScale.y, 0.0001f);
+        }
+
+        [Test]
         public void Eye_SitsAtSeatedHeightWithPcLens()
         {
             SeatedRig rig = MakeRig(out _, out Transform pivot);

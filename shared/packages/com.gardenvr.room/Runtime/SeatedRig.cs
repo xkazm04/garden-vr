@@ -6,10 +6,13 @@ namespace GardenVR.Room
     /// <summary>
     /// Seated eye for the PC stand-in. Position stays at eye height. Rotation comes only from
     /// <see cref="IHeadPoseSource"/>, then yaw and pitch are clamped. The source's rotation is an
-    /// offset on top of the seated pitch, so a right-drag looks around the desk instead of replacing the look-down.
+    /// offset on top of the rest pitch, which aims the eye at the desk anchor, so a right-drag looks
+    /// around the desk instead of replacing the look-down.
+    /// The room card is not a child of the camera. It stays on <see cref="PlateAnchor"/> at the rest pose.
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(200)]
+    [ExecuteAlways]
     public sealed class SeatedRig : MonoBehaviour
     {
         public const float DefaultEyeHeight = 1.05f;
@@ -17,6 +20,17 @@ namespace GardenVR.Room
         public const float DefaultPitchLimit = 25f;
         public const float DefaultFieldOfView = 60f;
         public const float DefaultNearClip = 0.02f;
+
+        /// <summary>Seated plate distance in front of the eye. The hero is well inside this.</summary>
+        public const float PlateDistance = 4f;
+
+        /// <summary>Capture <c>SeatedPOV</c> vertical field of view. The plate card is sized to fill it.</summary>
+        public const float SeatedCaptureFov = 90f;
+
+        public const float SeatedCaptureAspect = 1824f / 1024f;
+
+        /// <summary>A hair past the capture frustum so the clear colour cannot fringe the frame.</summary>
+        public const float SeatedCardMargin = 1.02f;
 
         [SerializeField] float _eyeHeight = DefaultEyeHeight;
         [SerializeField] float _yawLimit = DefaultYawLimit;
@@ -27,6 +41,7 @@ namespace GardenVR.Room
         [SerializeField] Transform _headPivot;
         [SerializeField] Camera _eye;
         [SerializeField] MonoBehaviour _headPoseBehaviour;
+        [SerializeField] Transform _plateAnchor;
 
         IHeadPoseSource _source;
         bool _subscribed;
@@ -46,11 +61,37 @@ namespace GardenVR.Room
         public float YawDegrees { get; private set; }
         public float PitchDegrees { get; private set; }
 
-        /// <summary>Look-down that puts the terrarium desk (0.30 m below the eye, 0.40 m ahead) in the centre of the view.</summary>
+        /// <summary>Terrarium look-down, used when the rig has no desk anchor. Live aim is <see cref="RestPitchDegrees"/>.</summary>
         public static float DefaultSeatedPitch =>
             Mathf.Atan2(PcDeskAnchor.BelowEye, PcDeskAnchor.TerrariumDistance) * Mathf.Rad2Deg;
 
         public static Quaternion SeatedPitchQuaternion => Quaternion.Euler(DefaultSeatedPitch, 0f, 0f);
+
+        /// <summary>Pitch that puts the desk anchor in the centre of the view. Positive looks down.</summary>
+        public float RestPitchDegrees { get; private set; } = DefaultSeatedPitch;
+
+        public Transform PlateAnchor => _plateAnchor;
+
+        /// <summary>Width and height of a card at <paramref name="distance"/> that fills <paramref name="verticalFovDegrees"/>.</summary>
+        public static Vector2 SeatedCardSize(float distance, float verticalFovDegrees, float aspect)
+        {
+            float height = 2f * distance * Mathf.Tan(verticalFovDegrees * 0.5f * Mathf.Deg2Rad);
+            return new Vector2(height * aspect, height);
+        }
+
+        /// <summary>Put a unit quad (XY, facing the eye) on the capture frustum. Parent it to the plate anchor.</summary>
+        public static void PlaceSeatedCard(Transform card)
+        {
+            Vector2 size = SeatedCardSize(PlateDistance, SeatedCaptureFov, SeatedCaptureAspect) * SeatedCardMargin;
+            card.localPosition = new Vector3(0f, 0f, PlateDistance);
+            card.localRotation = Quaternion.identity;
+            card.localScale = new Vector3(size.x, size.y, 1f);
+        }
+
+        public static float PitchAimingAt(float dropBelowEye, float distanceAhead)
+        {
+            return Mathf.Atan2(Mathf.Max(0f, dropBelowEye), Mathf.Max(0.05f, distanceAhead)) * Mathf.Rad2Deg;
+        }
 
         public void Bind(Transform headPivot, Camera eye, MonoBehaviour headPose)
         {
@@ -58,7 +99,14 @@ namespace GardenVR.Room
             _eye = eye;
             SetHeadSource(headPose);
             ApplyBody();
+            ApplyRest();
             ApplyPose();
+        }
+
+        public void SetPlateAnchor(Transform plateAnchor)
+        {
+            _plateAnchor = plateAnchor;
+            ApplyRest();
         }
 
         public void SetHeadSource(MonoBehaviour headPose)
@@ -79,6 +127,31 @@ namespace GardenVR.Room
             _eye.farClipPlane = _farClip;
         }
 
+        /// <summary>
+        /// Aim the rest pose at the desk anchor and park the room card on that pose.
+        /// Edit-mode captures do not run LateUpdate, so OnEnable calls this before the shot copies the eye.
+        /// </summary>
+        public void ApplyRest()
+        {
+            float pitch = DefaultSeatedPitch;
+            PcDeskAnchor desk = GetComponentInChildren<PcDeskAnchor>(true);
+            if (desk != null)
+                pitch = PitchAimingAt(_eyeHeight - desk.Height, desk.Distance);
+            RestPitchDegrees = pitch;
+            if (_plateAnchor == null)
+            {
+                Transform found = transform.Find("RoomPlateAnchor");
+                if (found != null) _plateAnchor = found;
+            }
+            if (_plateAnchor == null) return;
+            Vector3 position = new Vector3(0f, _eyeHeight, 0f);
+            Quaternion rotation = Quaternion.Euler(pitch, 0f, 0f);
+            if ((_plateAnchor.localPosition - position).sqrMagnitude > 1e-8f)
+                _plateAnchor.localPosition = position;
+            if (Quaternion.Angle(_plateAnchor.localRotation, rotation) > 0.01f)
+                _plateAnchor.localRotation = rotation;
+        }
+
         /// <summary>Read the head source, clamp yaw and pitch, and write the pivot. LateUpdate calls this.</summary>
         public void ApplyPose()
         {
@@ -87,8 +160,10 @@ namespace GardenVR.Room
             ExtractLook(clamped, out float yaw, out float pitch);
             YawDegrees = yaw;
             PitchDegrees = pitch;
-            if (_headPivot != null)
-                _headPivot.localRotation = SeatedPitchQuaternion * clamped;
+            if (_headPivot == null) return;
+            Quaternion next = Quaternion.Euler(RestPitchDegrees, 0f, 0f) * clamped;
+            if (Quaternion.Angle(_headPivot.localRotation, next) > 0.01f)
+                _headPivot.localRotation = next;
         }
 
         public void Recentre()
@@ -96,7 +171,7 @@ namespace GardenVR.Room
             YawDegrees = 0f;
             PitchDegrees = 0f;
             if (_headPivot != null)
-                _headPivot.localRotation = SeatedPitchQuaternion;
+                _headPivot.localRotation = Quaternion.Euler(RestPitchDegrees, 0f, 0f);
         }
 
         /// <summary>
@@ -122,13 +197,23 @@ namespace GardenVR.Room
         void Awake()
         {
             ResolveHead();
+            ApplyRest();
             ApplyBody();
         }
 
         void OnEnable()
         {
             ResolveHead();
+            ApplyRest();
             Subscribe();
+            if (!Application.isPlaying) ApplyPose();
+        }
+
+        void OnValidate()
+        {
+            if (!isActiveAndEnabled) return;
+            ApplyRest();
+            if (!Application.isPlaying) ApplyPose();
         }
 
         void OnDisable()
