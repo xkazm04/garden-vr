@@ -221,13 +221,14 @@ def depth_material():
     emit = nt.nodes.new("ShaderNodeEmission")
     cam = nt.nodes.new("ShaderNodeCameraData")
     span = nt.nodes.new("ShaderNodeMapRange")
-    # View Z is negative in front of the camera. The jar sits about 0.45 m away.
+    # Blender 4.2 names this output View Z Depth. It is camera-space Z,
+    # negative in front of the camera. The jar sits about 0.45 m away.
     span.inputs["From Min"].default_value = -0.55
     span.inputs["From Max"].default_value = -0.35
     span.inputs["To Min"].default_value = 0.0
     span.inputs["To Max"].default_value = 1.0
     span.clamp = True
-    nt.links.new(cam.outputs["View Z"], span.inputs["Value"])
+    nt.links.new(cam.outputs["View Z Depth"], span.inputs["Value"])
     nt.links.new(span.outputs["Result"], emit.inputs["Color"])
     nt.links.new(emit.outputs["Emission"], out.inputs["Surface"])
     return mat
