@@ -1,0 +1,7 @@
+﻿id: A/2-05-F2
+aspect: 16:9
+prompt: |
+  Style: hand-drawn animation linework placed into a real photographed room. Clean confident ink contours of varying weight, flat cel colours with a single soft shade step, loose watercolour washes inside the drawn object, pencil construction lines, slight paper grain only on the drawn object; the room stays a real photograph. First-person view from a seated person's eyes at a real desk in warm evening light. Floating within arm's reach, a plate-sized drawn sundial garden after one week: the three arcs full of inked plants of different sizes, the dusk plant in bloom drawn with lively animated petals, seven tiles per plant mostly coloured, one pale tile left quiet and unshamed, small hand-drawn motion lines showing the gnomon's shadow sweeping across the week. The person's real hand rests palm-up beside it. Warm, proud, legible at a glance.
+
+shared negative: text, letters, numbers, clock numerals, captions, watermark, logo, signature, UI panels, menus, frame border, extra fingers, six fingers, fused fingers, missing fingers, deformed hands, twisted wrists, game controller, VR headset visible, smartphone, screen, cluttered background, faces, blurry, low resolution, jpeg artifacts
+extra negative: 3D render, CGI, plastic, photorealistic plants, chibi characters, faces, speech bubbles, manga text, screen tones covering the room
