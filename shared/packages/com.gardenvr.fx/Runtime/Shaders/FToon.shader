@@ -205,9 +205,10 @@ Shader "Fidelity/Toon"
                 half3 alb = _TileMode > 0.5 ? TileAlbedo(i.uv, i.tile) : SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv).rgb;
                 // Screen-pixel ink on the dial face. The painted texture cannot hold 3 px
                 // after the 1024 import, so the ring is drawn here and the texture is paper.
-                // A derivative of the radius tracks magnification and came out about twice
-                // as wide on the near rim. This measures the same circle in pixels directly.
-                // Other Toon users leave _InkRingR at 0.
+                // ddx of a reconstructed NDC cancelled the magnification, so the near rim
+                // stayed about twice the far rim. A finite step through the projection
+                // matrix is pixels per object-radius, which is what the tilted DialG1 view needs.
+                // Other Toon users leave _InkRingR at 0, and this block stays off for them.
                 if (_InkRingR > 0.001)
                 {
                     // The imported dial is still Blender Z-up in object space. The disc
@@ -217,19 +218,18 @@ Shader "Fidelity/Toon"
                     float ang = atan2(xy.y, xy.x);
                     float wob = (h31(float3(ang * 2.0, 1.7, 4.0)) - 0.5) * 0.00025;
                     float rr = _InkRingR + wob;
-                    float3 ringObj = float3(xy.x / rad * rr, xy.y / rad * rr, i.op.z);
-                    float4 clipFrag = TransformWorldToHClip(i.wp);
-                    float4 clipRing = TransformWorldToHClip(TransformObjectToWorld(ringObj));
-                    float2 fragNdc = clipFrag.xy / clipFrag.w;
-                    float2 ringNdc = clipRing.xy / clipRing.w;
-                    // SV_POSITION is in pixels. Scale the NDC gap by how many pixels
-                    // one NDC unit covers in this quad, so the near rim is not thicker.
-                    float2 ndcPerPx = float2(
-                        length(float2(ddx(fragNdc.x), ddy(fragNdc.x))),
-                        length(float2(ddx(fragNdc.y), ddy(fragNdc.y))));
-                    float2 pxPerNdc = rcp(max(ndcPerPx, float2(1e-6, 1e-6)));
-                    float dpx = length((fragNdc - ringNdc) * pxPerNdc);
-                    half ring = 1.0 - smoothstep(1.35, 1.75, dpx);
+                    float stepObj = 0.001;
+                    float3 radialObj = float3(xy.x / rad, xy.y / rad, 0.0);
+                    float3 baseObj = float3(xy.x, xy.y, i.op.z);
+                    float4 c0 = TransformWorldToHClip(TransformObjectToWorld(baseObj));
+                    float4 c1 = TransformWorldToHClip(TransformObjectToWorld(baseObj + radialObj * stepObj));
+                    float2 n0 = c0.xy / max(c0.w, 1e-5);
+                    float2 n1 = c1.xy / max(c1.w, 1e-5);
+                    float pxPerStep = max(length((n1 - n0) * (_ScreenParams.xy * 0.5)), 1e-3);
+                    float dpx = abs(rad - rr) / stepObj * pxPerStep;
+                    // DialG1 measured the 1.05-1.45 ramp at median 2.0 px. This ramp is 1.5 times
+                    // that, so the half-height width lands near 3 px. The band is 2.5-3.5.
+                    half ring = 1.0 - smoothstep(1.60, 2.15, dpx);
                     alb = lerp(alb, _Ink.rgb, ring);
                 }
                 float3 n = normalize(i.wn) * (front ? 1 : -1);
