@@ -34,17 +34,17 @@ Material:
     - _BoilPx: 1
     - _BoilTime: 2.9
     - _Coverage: 0
-    - _Dst: 10
+    - _Dst: 1
     - _Fill: 1
     - _Mask: 0
     - _Ring: 0
-    - _Sparkle: 1
-    - _Src: 5
+    - _Sparkle: 0
+    - _Src: 1
     - _T: 2.9
     - _ZTest: 4
     - _ZWrite: 0
     m_Colors:
-    - _Color: {r: 0.81376487, g: 0.69751275, b: 0.5231346, a: 0.7265758}
-    - _Color2: {r: 0.81376487, g: 0.69751275, b: 0.5231346, a: 0.7265758}
+    - _Color: {r: 0.8248572, g: 0.6775613, b: 0.33878064, a: 0.73647964}
+    - _Color2: {r: 0.15024185, g: 0.11489083, b: 0.05302654, a: 0.14729594}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

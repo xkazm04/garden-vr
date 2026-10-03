@@ -32,62 +32,11 @@ def is_line(rgb):
 
 
 def main():
-    face_path = os.path.join(TEX, "dial_face.png")
-    base = np.asarray(Image.open(face_path).convert("RGB")).astype(np.float32)
-    if base.shape[0] != S or base.shape[1] != S:
-        raise SystemExit("dial_face.png is %s, expected %d" % (base.shape, S))
-    keep = is_line(base)
-
-    yy, xx = np.mgrid[0:S, 0:S]
-    dx = xx - C
-    dy = C - yy
-    ang = np.degrees(np.arctan2(dy, dx))
-    rad = np.hypot(dx, dy)
-
-    out = base.copy()
-    r0 = R * 0.20
-    r1 = R * 0.86
-    for _name, a0, a1, _pale, _wet, filename in WASHES:
-        span = (a0 - a1) % 360.0
-        frac = ((a0 - ang) % 360.0) / span
-        # Stay off the sector boundary so the SVG's soft edge remains.
-        inside = (frac >= 0.06) & (frac <= 0.94) & (rad >= r0) & (rad <= r1)
-        plate = np.asarray(
-            Image.open(os.path.join(SRC, filename)).convert("L").resize((512, 512), Image.Resampling.LANCZOS)
-        ).astype(np.float32)
-        h, w = plate.shape
-        t = np.clip((rad - r0) / (r1 - r0), 0.0, 1.0)
-        sx = np.clip((frac * (w - 1)).astype(np.int32), 0, w - 1)
-        sy = np.clip(((1.0 - t) * (h - 1)).astype(np.int32), 0, h - 1)
-        lum = plate[sy, sx]
-        lum_img = Image.fromarray(lum.astype(np.uint8), "L")
-        blur = np.asarray(lum_img.filter(ImageFilter.GaussianBlur(14))).astype(np.float32)
-        local = lum / np.maximum(blur, 1.0)
-        factor = np.clip(local, 0.8, 1.2)
-        paint = inside & ~keep
-        gained = np.clip(out * ((1.0 - 0.7) + 0.7 * factor[..., None]), 0, 255)
-        out[paint] = gained[paint]
-
-    # Soil plate: high-frequency grit only, graded so the bed stays near #A0836C.
-    soil = np.asarray(
-        Image.open(os.path.join(SRC, "soil.png")).convert("L").resize((S, S), Image.Resampling.LANCZOS)
-    ).astype(np.float32)
-    soil_blur = np.asarray(
-        Image.fromarray(soil.astype(np.uint8), "L").filter(ImageFilter.GaussianBlur(6))
-    ).astype(np.float32)
-    grit = np.clip(soil / np.maximum(soil_blur, 1.0), 0.86, 1.14)
-    sx0 = C
-    sy0 = C + R * 0.012
-    rx = R * 0.40
-    ry = R * 0.37
-    ellipse = ((xx - sx0) / rx) ** 2 + ((yy - sy0) / ry) ** 2 <= 1.0
-    bed = ellipse & ~keep
-    gained = np.clip(out * grit[..., None], 0, 255)
-    out[bed] = gained[bed]
-
-    Image.fromarray(out.astype(np.uint8), "RGB").save(face_path)
-    paint_shadow(os.path.join(TEX, "gnomon_shadow.png"))
-    print("composed", face_path)
+    # The Nano Banana plate is fitted by fit_notebook.py. This entry only
+    # refreshes the painted gnomon shadow, using that script's wash.
+    print("compose_paint: dial face is owned by fit_notebook.py; shadow only")
+    from fit_notebook import paint_shadow as paint
+    paint(os.path.join(TEX, "gnomon_shadow.png"))
 
 
 def paint_shadow(path):

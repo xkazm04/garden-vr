@@ -33,7 +33,7 @@ namespace GardenVR.Sundial.Editor
 
         static readonly string[] TextureNames =
         {
-            "dial_face", "soil", "dial_paper", "gnomon", "gnomon_shadow",
+            "dial_face", "soil", "soil_bed", "tiles_atlas", "dial_paper", "gnomon", "gnomon_shadow",
             "plant_sunrise_seed", "plant_sunrise_sprout", "plant_sunrise_young", "plant_sunrise_leafy", "plant_sunrise_full",
             "plant_midday_seed", "plant_midday_sprout", "plant_midday_young", "plant_midday_leafy", "plant_midday_full",
             "plant_dusk_seed", "plant_dusk_sprout", "plant_dusk_young", "plant_dusk_leafy", "plant_dusk_full",
@@ -213,11 +213,12 @@ namespace GardenVR.Sundial.Editor
                     || name.StartsWith("bloom_", StringComparison.Ordinal)
                     || name == "gnomon_shadow";
                 importer.textureType = TextureImporterType.Default;
-                importer.sRGBTexture = true;
+                // Halo R/G are linear masks for the additive card. Colour lives in the material.
+                importer.sRGBTexture = !name.StartsWith("halo_", StringComparison.Ordinal);
                 importer.alphaIsTransparency = alpha;
                 importer.mipmapEnabled = true;
                 importer.wrapMode = TextureWrapMode.Clamp;
-                importer.maxTextureSize = name == "dial_face" || name == "gnomon_shadow" ? 2048 : 1024;
+                importer.maxTextureSize = name == "dial_face" || name == "soil_bed" || name == "gnomon_shadow" ? 2048 : 1024;
                 importer.textureCompression = TextureImporterCompression.Uncompressed;
                 importer.npotScale = TextureImporterNPOTScale.None;
                 importer.SaveAndReimport();
@@ -322,17 +323,22 @@ namespace GardenVR.Sundial.Editor
             // The painted face already has its ink ring. Keep it one pass (_Outline 0 disables the hull count).
             // The face is one flat normal, so the wash stays in the lit step. The rim, soil mound
             // and gnomon carry the second step. A cool multiply was greying the watercolour.
-            library.Face = Toon("Dial_Face", Tex("dial_face"), false, 0f, -0.2f, 0.03f, new Color(1.02f, 0.98f, 0.93f), new Color(0.90f, 0.80f, 0.70f));
-            library.Rim = Toon("Dial_Rim", Tex("dial_paper"), true, 3.0f, 0.12f, 0.07f, Color.white, new Color(0.78f, 0.72f, 0.64f));
-            library.Soil = Toon("Dial_Soil", Tex("dial_face"), false, 0f, 0.08f, 0.04f, Color.white, new Color(0.84f, 0.76f, 0.66f));
-            // Shade stays near the style 0.78 so the ink body does not crush to a black spike.
-            // The gold collar is in the albedo. A dark shade multiply hid it.
-            library.Gnomon = Toon("Dial_Gnomon", Tex("gnomon"), true, 2.2f, 0.02f, 0.04f, new Color(1.04f, 0.98f, 0.90f), new Color(0.82f, 0.74f, 0.64f));
+            // Flat face, high-key. The shade step must not brown the paper.
+            library.Face = Toon("Dial_Face", Tex("dial_face"), false, 0f, -0.45f, 0.045f, new Color(1.03f, 1.00f, 0.97f), new Color(0.97f, 0.94f, 0.90f));
+            library.Rim = Toon("Dial_Rim", Tex("dial_paper"), true, 1.6f, 0.02f, 0.04f, new Color(1.02f, 0.99f, 0.96f), new Color(0.94f, 0.90f, 0.84f));
+            library.Soil = Toon("Dial_Soil", Tex("soil_bed"), false, 0f, -0.05f, 0.055f, new Color(1.02f, 0.98f, 0.94f), new Color(0.86f, 0.78f, 0.68f));
+            // Shade stays light enough that the gold collar and the nib both read.
+            library.Gnomon = Toon("Dial_Gnomon", Tex("gnomon"), true, 2.2f, 0.02f, 0.04f, new Color(1.04f, 0.98f, 0.90f), new Color(0.86f, 0.78f, 0.68f));
             library.Gnomon.SetColor("_Spec", new Color(0.35f, 0.28f, 0.12f, 1f));
             library.Gnomon.SetFloat("_SpecStep", 0.9f);
-            // Painted by the tile shader. A hull on a paper-thin card just blooms a dark blob.
-            library.Tiles = Toon("Dial_Tile", Texture2D.whiteTexture, false, 0f, 0.15f, 0.03f, Color.white, new Color(0.86f, 0.80f, 0.72f));
+            // Painted tiles. A hull on a paper-thin card just blooms a dark blob.
+            library.Tiles = Toon("Dial_Tile", Texture2D.whiteTexture, false, 0f, -0.1f, 0.02f, Color.white, new Color(0.96f, 0.93f, 0.88f));
             library.Tiles.SetFloat("_TileMode", 1f);
+            library.Tiles.SetFloat("_TilePaint", 1f);
+            library.Tiles.SetTexture("_TileTex", Tex("tiles_atlas"));
+            library.Tiles.SetColor("_WashMorning", new Color(0.965f, 0.871f, 0.718f, 1f));
+            library.Tiles.SetColor("_WashMidday", new Color(0.957f, 0.714f, 0.631f, 1f));
+            library.Tiles.SetColor("_WashDusk", new Color(0.792f, 0.690f, 0.773f, 1f));
             library.Tiles.SetFloat("_BoilPx", 0f);
 
             library.Morning = Plant("Dial_PlantMorning", library.MorningCards[4]);
@@ -343,11 +349,11 @@ namespace GardenVR.Sundial.Editor
             library.Halo = Mat("Dial_Halo", "Fidelity/Card", m =>
             {
                 m.SetTexture("_MainTex", library.Halos[9]);
-                m.SetColor("_Color", Color.white);
-                m.SetColor("_Color2", Color.white);
-                // SrcAlpha so the baked gold (t.rgb) shows. The breathe multiply stays white.
-                m.SetFloat("_Src", (float)BlendMode.SrcAlpha);
-                m.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
+                m.SetColor("_Color", new Color(1.22f, 0.94f, 0.48f, 1f));
+                m.SetColor("_Color2", new Color(1.08f, 0.68f, 0.28f, 1f));
+                // Additive. Texture R is the inked rim, G is the soft bloom. No post FX.
+                m.SetFloat("_Src", (float)BlendMode.One);
+                m.SetFloat("_Dst", (float)BlendMode.One);
                 m.SetFloat("_Boil", 0f);
                 m.SetFloat("_BoilPx", DialView.BoilPixels);
                 m.SetFloat("_ZWrite", 0f);
@@ -355,7 +361,9 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Coverage", 0f);
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
-                m.SetFloat("_Sparkle", 1f);
+                // FCard's sparkle block adds an unscaled neighbour bloom. Leave it off.
+                // The warm pool is the halo texture's G channel.
+                m.SetFloat("_Sparkle", 0f);
                 m.renderQueue = 3008;
             });
             library.Catcher = Mat("Dial_Catcher", "Fidelity/ShadowCatcher", m =>
@@ -524,12 +532,12 @@ namespace GardenVR.Sundial.Editor
         {
             return SaveMesh(ShadowPath, "DialShadow", mesh =>
             {
-                // Wedge: narrow at the gnomon, wide and soft at the far end of the wash.
+                // Painted wash across the soil (radius 0.068). It fades before the paper rim.
                 // Local +Z is the shadow direction. UV v grows away from the nib.
                 mesh.vertices = new[]
                 {
-                    new Vector3(-0.014f, 0.002f, 0.012f), new Vector3(0.014f, 0.002f, 0.012f),
-                    new Vector3(0.09f, 0.002f, 0.16f), new Vector3(-0.09f, 0.002f, 0.16f)
+                    new Vector3(-0.012f, 0.002f, 0.006f), new Vector3(0.012f, 0.002f, 0.006f),
+                    new Vector3(0.052f, 0.002f, 0.108f), new Vector3(-0.052f, 0.002f, 0.108f)
                 };
                 mesh.uv = new[] { new Vector2(0.38f, 0f), new Vector2(0.62f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
                 mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };

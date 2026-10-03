@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: Square image of one circular patch of hand-painted field-notebook soil, top-down orthographic, centered, on a pure flat black background. Light to mid warm brown earth around hex A0836C, dry-brush stipple, small painted pebbles in cream and gray, a few darker crumbs. Gouache illustration, not a photograph, not dark mud, not wet clay, not a swirl. Soft irregular painted edge. No plants, no text, no numbers, no shadows, even flat lighting.

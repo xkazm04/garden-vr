@@ -157,10 +157,12 @@ namespace GardenVR.Sundial
             Material haloMat = haloRenderer != null ? haloRenderer.sharedMaterial : null;
             if (haloMat != null)
             {
-                // Gold is baked into the halo texture. The warm multiply is the breathe.
-                var glow = new Color(1.12f, 0.96f, 0.72f) * amount;
-                haloMat.SetColor("_Color", glow);
-                haloMat.SetColor("_Color2", glow);
+                // Additive card. Texture R is the inked rim, G is the soft pool.
+                // Pale gold. A hotter pool plus FCard's sparkle bloom read as a flame.
+                var line = new Color(1.12f, 0.92f, 0.46f) * amount;
+                var pool = new Color(1.02f, 0.78f, 0.36f) * (amount * 0.20f);
+                haloMat.SetColor("_Color", line);
+                haloMat.SetColor("_Color2", pool);
             }
 
             if (shadow != null)
@@ -566,8 +568,10 @@ namespace GardenVR.Sundial
             haloTransform.localPosition = plant.localPosition;
             haloTransform.localRotation = plant.localRotation;
             Vector3 plantScale = plant.localScale;
-            // The halo texture is the plant silhouette. A large scale lifts the stroke off the ink.
-            haloTransform.localScale = new Vector3(plantScale.x * 1.12f, plantScale.y * 1.12f, plantScale.z * 1.06f);
+            // Same pivot as the plant (the base of the card). A larger scale grows upward
+            // and lifts the glow off the flowers.
+            const float haloScale = 1.02f;
+            haloTransform.localScale = new Vector3(plantScale.x * haloScale, plantScale.y * haloScale, plantScale.z * 1.06f);
         }
 
         void EnsureStateTexture()
