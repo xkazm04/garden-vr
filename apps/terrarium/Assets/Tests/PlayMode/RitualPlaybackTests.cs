@@ -41,6 +41,8 @@ namespace GardenVR.Terrarium.Tests
             string jsonl = File.ReadAllText(path);
             yield return RitualHarness.OpenMain();
             JarRitualController controller = RitualHarness.Controller();
+            bool mix = Environment.GetEnvironmentVariable("GARDEN_RITUAL_MIX") == "1";
+            if (mix) controller.UseVoiceAndBed();
             controller.Mark("SixBreaths");
             ScriptedIntentSource source = RitualHarness.Play(controller, jsonl);
             RitualHarness.FixedStep();
@@ -87,6 +89,21 @@ namespace GardenVR.Terrarium.Tests
             for (int i = 0; i < releases.Count; i++)
                 Assert.IsTrue(releases[i].Rose, "fog did not rise within 0.5 s of release " + i + " at t=" + releases[i].Time.ToString("0.00", CultureInfo.InvariantCulture));
             Assert.AreEqual(6, controller.FilledDots);
+            if (mix)
+            {
+                Assert.GreaterOrEqual(controller.CueCount("bed.night"), 1);
+                int spoken = controller.CueCount("vo.ter.open.01") + controller.CueCount("vo.ter.open.02")
+                    + controller.CueCount("vo.ter.in.01") + controller.CueCount("vo.ter.in.02") + controller.CueCount("vo.ter.in.03")
+                    + controller.CueCount("vo.ter.out.01") + controller.CueCount("vo.ter.mid.01")
+                    + controller.CueCount("vo.ter.last.01") + controller.CueCount("vo.ter.close.01");
+                Assert.Greater(spoken, 0, "voice guide did not speak during the mix ritual");
+            }
+            else
+            {
+                Assert.AreEqual(0, controller.CueCount("bed.night"));
+                Assert.AreEqual(0, controller.CueCount("vo.ter.open.01"));
+                Assert.AreEqual(0, controller.CueCount("vo.ter.in.01"));
+            }
         }
 
         [UnityTest]
