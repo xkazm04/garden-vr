@@ -38,6 +38,7 @@ Material:
     - _Fill: 1
     - _Mask: 0
     - _Ring: 0
+    - _Sparkle: 0
     - _Src: 5
     - _T: 0
     - _ZTest: 4

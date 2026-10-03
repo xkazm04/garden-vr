@@ -32,14 +32,15 @@ Material:
     - _Boil: 0
     - _BoilFps: 10
     - _BoilPx: 1
-    - _BoilTime: 1
+    - _BoilTime: 2.9
     - _Coverage: 1
     - _Dst: 0
     - _Fill: 1
     - _Mask: 0
     - _Ring: 0
+    - _Sparkle: 0
     - _Src: 1
-    - _T: 1
+    - _T: 2.9
     - _ZTest: 4
     - _ZWrite: 1
     m_Colors:

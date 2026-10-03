@@ -27,7 +27,7 @@ DEFAULT_OUT = os.path.join(ROOT, "apps", "sundial", "Assets", "Art", "Models")
 OUTER = 0.150
 FACE_R = 0.1472
 FACE_Y = 0.012
-SOIL_R = 0.086
+SOIL_R = 0.068
 GNOMON_L = 0.110
 TILE_L = 0.012
 TILE_W = 0.009
@@ -514,6 +514,10 @@ def build():
     print("[dial] tris TOTAL %d (dial %d + tile %d)" % (dial_total + tile_total, dial_total, tile_total))
     print("[dial] outer diameter %.3f m gnomon %.3f m tile %.0fx%.0fx%.0f mm" % (
         OUTER * 2.0, GNOMON_L, TILE_L * 1000, TILE_W * 1000, TILE_H * 1000))
+    args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+    if "--meshes-only" in args:
+        print("[dial] meshes only; left textures in place")
+        return
     tex_dir = os.path.join(ROOT, "apps", "sundial", "Assets", "Art", "Textures")
     os.makedirs(tex_dir, exist_ok=True)
     copy_interim(tex_dir)

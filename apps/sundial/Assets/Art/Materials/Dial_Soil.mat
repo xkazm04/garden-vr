@@ -18,7 +18,8 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - SRPDEFAULTUNLIT
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -35,20 +36,20 @@ Material:
     m_Floats:
     - _Boil: 0
     - _BoilPx: 1
-    - _BoilTime: 1
+    - _BoilTime: 2.9
     - _Feather: 0.04
-    - _Grain: 0.05
-    - _Outline: 0.001
-    - _OutlinePx: 2.8
+    - _Grain: 0.04
+    - _Outline: 0
+    - _OutlinePx: 0
     - _ShadowStrength: 0
     - _SpecStep: 0.93
-    - _Step: 0.05
-    - _T: 1
+    - _Step: 0.08
+    - _T: 2.9
     - _TileMode: 0
     m_Colors:
     - _Ink: {r: 0.165, g: 0.149, b: 0.133, a: 1}
     - _Lit: {r: 1, g: 1, b: 1, a: 1}
-    - _Shade: {r: 0.78, g: 0.72, b: 0.64, a: 1}
+    - _Shade: {r: 0.84, g: 0.76, b: 0.66, a: 1}
     - _Spec: {r: 0, g: 0, b: 0, a: 0}
     - _WashDusk: {r: 0.655, g: 0.6039999, b: 0.839, a: 1}
     - _WashMidday: {r: 0.89, g: 0.6119999, b: 0.50999993, a: 1}

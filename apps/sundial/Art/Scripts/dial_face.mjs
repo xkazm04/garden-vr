@@ -19,10 +19,14 @@ const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 const r2 = (n) => Math.round(n * 100) / 100;
 
 // Measured pales, intent mids, wet-edge pools. See sundial-style.md section 1.
+// Wider than the first SVG so each wash fills its sector. About 18 degrees of
+// bare paper stays at the near rim, between dusk at -100 and morning at 242.
 const WASHES = [
-  { id: 'sunrise', a0: 212, a1: 112, pale: '#F6DEB7', pale2: '#F0E0BE', mid: '#E2B866', wet: '#D9762A', deep: '#A85A1C' },
-  { id: 'midday', a0: 106, a1: 22, pale: '#F4B6A1', pale2: '#EFBC9B', mid: '#E39C82', wet: '#C9483F', deep: '#8E3028' },
-  { id: 'dusk', a0: 16, a1: -76, pale: '#CAB0C5', pale2: '#BFA1BC', mid: '#A79AD6', wet: '#6F55AD', deep: '#4A3480' },
+  // The near rim (about 250 deg) is the front of the plate. The two arcs meet there
+  // so the camera does not see a bare paper wedge. Tile spans stay narrower.
+  { id: 'sunrise', a0: 270, a1: 108, pale: '#F6DEB7', pale2: '#F0E0BE', mid: '#E2B866', wet: '#D9762A', deep: '#A85A1C' },
+  { id: 'midday', a0: 112, a1: 18, pale: '#F4B6A1', pale2: '#EFBC9B', mid: '#E39C82', wet: '#C9483F', deep: '#8E3028' },
+  { id: 'dusk', a0: 22, a1: -128, pale: '#CAB0C5', pale2: '#BFA1BC', mid: '#A79AD6', wet: '#6F55AD', deep: '#4A3480' },
 ];
 
 function face() {
@@ -92,75 +96,75 @@ function face() {
   constr += `<line x1="${r2(C - 28)}" y1="${r2(C)}" x2="${r2(C + 28)}" y2="${r2(C)}" stroke-width="1.4"/>`;
   constr += `<line x1="${r2(C)}" y1="${r2(C - 28)}" x2="${r2(C)}" y2="${r2(C + 28)}" stroke-width="1.4"/>`;
 
-  // Brush direction inside each arc: a handful of long strokes, not a flat fill.
+  // Brush direction across the whole sector, not a thin crescent at the rim.
   let brushes = '';
   seed = 23;
   for (const w of WASHES) {
     const span = ((w.a0 - w.a1) + 360) % 360;
-    for (let s = 0; s < 9; s++) {
-      const t = 0.08 + (s / 8) * 0.84;
-      const a0 = w.a0 - span * (0.04 + rnd() * 0.08);
-      const a1 = w.a0 - span * (0.55 + rnd() * 0.4);
-      const rr = R * (0.52 + t * 0.32);
-      brushes += `<path d="${arcStroke(rr, a0, a1)}" fill="none" stroke="${s % 2 ? w.mid : w.pale2}" stroke-width="${r2(18 + rnd() * 22)}" stroke-opacity="${r2(0.16 + rnd() * 0.12)}" stroke-linecap="round"/>`;
+    for (let s = 0; s < 16; s++) {
+      const t = s / 15;
+      const a0 = w.a0 - span * (0.02 + rnd() * 0.06);
+      const a1 = w.a0 - span * (0.62 + rnd() * 0.34);
+      const rr = R * (0.26 + t * 0.60);
+      const col = s % 3 === 0 ? w.wet : s % 3 === 1 ? w.mid : w.pale2;
+      brushes += `<path d="${arcStroke(rr, a0, a1)}" fill="none" stroke="${col}" stroke-width="${r2(26 + rnd() * 36)}" stroke-opacity="${r2(0.24 + rnd() * 0.22)}" stroke-linecap="round"/>`;
     }
   }
 
-  // Soil mound UV radius is about 0.59 of R. A solid ellipse covers that disc.
-  // A few low-frequency lobes spill past it onto the paper, toward the near rim.
-  // Mound UV radius is ~0.59 R. The covering ellipse stays inside that, plus a margin
-  // the soil filter can nibble. Spill lobes sit outside it, mostly toward the near rim.
+  // The mound mesh is about 0.46 of the face radius. Paint a lighter earth disc
+  // on that footprint, with stipple and pebbles, and let the washes fill outside it.
   seed = 41;
   const sx = C;
-  const sy = C;
+  const sy = C + R * 0.012;
+  const soilRx = R * 0.48;
+  const soilRy = R * 0.45;
 
   let stipple = '';
   seed = 77;
-  for (let i = 0; i < 5200; i++) {
+  for (let i = 0; i < 7400; i++) {
     const a = rnd() * Math.PI * 2;
-    const rr = Math.pow(rnd(), 0.72) * R * 0.70;
-    const x = sx + Math.cos(a) * rr;
-    const y = sy + Math.sin(a) * rr;
-    const rad = 0.7 + rnd() * rnd() * 3.4;
-    const dark = rnd() > 0.72;
-    stipple += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(rad)}" fill="${dark ? '#24180F' : '#3A291C'}" opacity="${r2(0.35 + rnd() * 0.5)}"/>`;
+    const u = Math.pow(rnd(), 0.62);
+    const x = sx + Math.cos(a) * soilRx * u;
+    const y = sy + Math.sin(a) * soilRy * u;
+    const rad = 0.55 + rnd() * rnd() * 2.6;
+    const pick = rnd();
+    const fill = pick > 0.86 ? '#E7D7C6' : pick > 0.55 ? '#5E4636' : '#8A6E58';
+    stipple += `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(rad)}" fill="${fill}" opacity="${r2(0.32 + rnd() * 0.5)}"/>`;
   }
   let pebbles = '';
   seed = 53;
-  for (let i = 0; i < 46; i++) {
+  for (let i = 0; i < 78; i++) {
     const a = rnd() * Math.PI * 2;
-    const rr = Math.sqrt(rnd()) * R * 0.58;
-    const x = sx + Math.cos(a) * rr;
-    const y = sy + Math.sin(a) * rr;
-    const s = 4 + rnd() * 14;
-    const fill = rnd() > 0.5 ? '#C4B5A4' : '#A89884';
-    pebbles += `<ellipse cx="${r2(x)}" cy="${r2(y)}" rx="${r2(s)}" ry="${r2(s * (0.55 + rnd() * 0.3))}" fill="${fill}" stroke="#3A3228" stroke-width="1.6" transform="rotate(${r2(rnd() * 180)} ${r2(x)} ${r2(y)})"/>`;
+    const u = Math.sqrt(rnd()) * 0.92;
+    const x = sx + Math.cos(a) * soilRx * u;
+    const y = sy + Math.sin(a) * soilRy * u;
+    const s = 7 + rnd() * 20;
+    const fill = rnd() > 0.35 ? '#E6D5C4' : '#CDBBA8';
+    pebbles += `<ellipse cx="${r2(x)}" cy="${r2(y)}" rx="${r2(s)}" ry="${r2(s * (0.5 + rnd() * 0.28))}" fill="${fill}" stroke="#3A3228" stroke-width="1.5" transform="rotate(${r2(rnd() * 180)} ${r2(x)} ${r2(y)})"/>`;
   }
 
-  const washDefs = WASHES.map((w) => `<radialGradient id="g-${w.id}" cx="${C}" cy="${C}" r="${r2(R * 0.90)}" gradientUnits="userSpaceOnUse">
-        <stop offset="0.42" stop-color="${w.wet}" stop-opacity="0.92"/>
-        <stop offset="0.58" stop-color="${w.mid}" stop-opacity="0.78"/>
-        <stop offset="0.74" stop-color="${w.pale2}" stop-opacity="0.72"/>
-        <stop offset="0.90" stop-color="${w.pale}" stop-opacity="0.55"/>
+  const washDefs = WASHES.map((w) => `<radialGradient id="g-${w.id}" cx="${C}" cy="${C}" r="${r2(R * 0.94)}" gradientUnits="userSpaceOnUse">
+        <stop offset="0.16" stop-color="${w.wet}" stop-opacity="0.96"/>
+        <stop offset="0.38" stop-color="${w.mid}" stop-opacity="0.92"/>
+        <stop offset="0.64" stop-color="${w.pale2}" stop-opacity="0.88"/>
+        <stop offset="0.90" stop-color="${w.pale}" stop-opacity="0.84"/>
       </radialGradient>`).join('');
 
   const washPaths = WASHES.map((w) => {
-    const band = arc(R * 0.46, R * 0.875, w.a0, w.a1);
-    const inner = arcStroke(R * 0.66, w.a0, w.a1);
+    const band = arc(R * 0.16, R * 0.905, w.a0, w.a1);
     const side0 = (() => {
-      const [x0, y0] = pol(R * 0.46, w.a0), [x1, y1] = pol(R * 0.875, w.a0);
+      const [x0, y0] = pol(R * 0.20, w.a0), [x1, y1] = pol(R * 0.90, w.a0);
       return `M${r2(x0)},${r2(y0)} L${r2(x1)},${r2(y1)}`;
     })();
     const side1 = (() => {
-      const [x0, y0] = pol(R * 0.46, w.a1), [x1, y1] = pol(R * 0.875, w.a1);
+      const [x0, y0] = pol(R * 0.20, w.a1), [x1, y1] = pol(R * 0.90, w.a1);
       return `M${r2(x0)},${r2(y0)} L${r2(x1)},${r2(y1)}`;
     })();
     return `<g>
         <path d="${band}" fill="url(#g-${w.id})" filter="url(#wc)"/>
         <path d="${band}" fill="${w.mid}" opacity="0.18" filter="url(#gran)"/>
-        <path d="${inner}" fill="none" stroke="${w.deep}" stroke-width="28" stroke-opacity="0.62" stroke-linecap="round" filter="url(#wcEdge)"/>
-        <path d="${side0}" fill="none" stroke="${w.wet}" stroke-width="16" stroke-opacity="0.35" filter="url(#wcEdge)"/>
-        <path d="${side1}" fill="none" stroke="${w.wet}" stroke-width="16" stroke-opacity="0.35" filter="url(#wcEdge)"/>
+        <path d="${side0}" fill="none" stroke="${w.wet}" stroke-width="10" stroke-opacity="0.18" filter="url(#wcEdge)"/>
+        <path d="${side1}" fill="none" stroke="${w.wet}" stroke-width="10" stroke-opacity="0.18" filter="url(#wcEdge)"/>
       </g>`;
   }).join('');
 
@@ -217,13 +221,13 @@ function face() {
     <rect width="2048" height="2048" filter="url(#fibres)" opacity="0.22"/>
     <circle cx="${C}" cy="${C}" r="${r2(R * 0.97)}" fill="none" stroke="#DAC9B9" stroke-width="46" opacity="0.85"/>
     ${washPaths}
-    <g filter="url(#wc)" opacity="0.9">${brushes}</g>
-    <ellipse cx="${C}" cy="${C}" rx="${r2(R * 0.62)}" ry="${r2(R * 0.60)}" fill="#4A3324" filter="url(#soil)"/>
-    <ellipse cx="${C}" cy="${C + R * 0.03}" rx="${r2(R * 0.34)}" ry="${r2(R * 0.30)}" fill="#3A281C" opacity="0.45"/>
+    <g filter="url(#wc)" opacity="0.95">${brushes}</g>
+    <ellipse cx="${sx}" cy="${sy}" rx="${r2(soilRx)}" ry="${r2(soilRy)}" fill="#A0836C" filter="url(#soil)"/>
+    <ellipse cx="${sx}" cy="${sy + R * 0.02}" rx="${r2(soilRx * 0.42)}" ry="${r2(soilRy * 0.36)}" fill="#7A624E" opacity="0.22"/>
     <g>${stipple}</g>
     <g filter="url(#ink)">${pebbles}</g>
-    <rect width="2048" height="2048" filter="url(#paper)" opacity="0.28"/>
-    <g stroke="#6A6158" stroke-opacity="0.62" fill="none" stroke-linecap="round" filter="url(#pencil)">${constr}</g>
+    <rect width="2048" height="2048" filter="url(#paper)" opacity="0.12"/>
+    <g stroke="#6A6158" stroke-opacity="0.34" fill="none" stroke-linecap="round" filter="url(#pencil)">${constr}</g>
     <g stroke="#3A332C" stroke-opacity="0.92" filter="url(#pencil)">${ticks}</g>
     <g fill="none" stroke="#2A2622" stroke-linecap="round" filter="url(#ink)">${rim}</g>
   </g>
@@ -253,11 +257,12 @@ function gnomon() {
     </filter>
   </defs>
   <rect width="256" height="1024" fill="url(#inkBody)"/>
-  <rect y="230" width="256" height="150" fill="url(#gold)"/>
-  <rect y="226" width="256" height="8" fill="#2A2622"/>
-  <rect y="374" width="256" height="8" fill="#2A2622"/>
-  <rect y="900" width="256" height="124" fill="#4A433C"/>
-  <polygon points="108,900 148,900 128,1020" fill="#1A1613"/>
+  <!-- Image top is UV v=1 (the nib). The wide collar is mesh v 0.22..0.42, image y 594..799. -->
+  <polygon points="108,8 148,8 128,150" fill="#1A1613"/>
+  <rect y="594" width="256" height="205" fill="url(#gold)"/>
+  <rect y="590" width="256" height="8" fill="#2A2622"/>
+  <rect y="794" width="256" height="8" fill="#2A2622"/>
+  <rect y="900" width="256" height="124" fill="#3A342C"/>
   <rect width="256" height="1024" filter="url(#grain)" opacity="0.45"/>
 </svg>`;
 }
@@ -267,12 +272,12 @@ function shadow() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
     <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1A100C" stop-opacity="0.88"/>
-      <stop offset="0.45" stop-color="#2A1A12" stop-opacity="0.62"/>
-      <stop offset="1" stop-color="#2A1A12" stop-opacity="0"/>
+      <stop offset="0" stop-color="#6B5344" stop-opacity="0.42"/>
+      <stop offset="0.42" stop-color="#8A7362" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#A08B78" stop-opacity="0"/>
     </linearGradient>
-    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="18"/>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="22"/>
     </filter>
     <filter id="speck" x="-8%" y="-8%" width="116%" height="116%">
       <feTurbulence type="fractalNoise" baseFrequency="0.45" numOctaves="2" seed="3" result="n"/>
@@ -281,10 +286,10 @@ function shadow() {
     </filter>
   </defs>
   <g filter="url(#soft)">
-    <polygon points="470,70 554,70 820,900 204,900" fill="url(#fade)"/>
-    <polygon points="496,120 528,120 700,780 324,780" fill="#140E0A" opacity="0.45"/>
+    <polygon points="455,40 569,40 860,960 164,960" fill="url(#fade)"/>
+    <polygon points="492,90 532,90 690,820 334,820" fill="#7A6556" opacity="0.28"/>
   </g>
-  <polygon points="500,180 524,180 640,700 384,700" fill="#5A4538" filter="url(#speck)" opacity="0.55"/>
+  <polygon points="500,150 524,150 620,740 404,740" fill="#C4A890" filter="url(#speck)" opacity="0.35"/>
 </svg>`;
 }
 
