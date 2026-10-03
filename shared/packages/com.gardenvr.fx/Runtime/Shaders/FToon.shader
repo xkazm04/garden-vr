@@ -137,6 +137,21 @@ Shader "Fidelity/Toon"
                     float dash = step(0.5, frac((uv.x + uv.y) * 5.0));
                     col = lerp(ink, paper, lerp(dash, 1.0, edge));
                 }
+                // Hand-painted tile: wet edge, granulation, a wobbly ink outline. Not a flat square.
+                float2 q = uv - 0.5;
+                float wob = (h31(float3(uv.y * 13.0, tile + 1.7, uv.x * 9.0)) - 0.5) * 0.055;
+                float box = max(abs(q.x) + wob, abs(q.y) - wob * 0.6);
+                float rim = smoothstep(0.43, 0.49, box);
+                float grain = h31(float3(floor(uv * 22.0), tile * 1.3));
+                if (state == 1)
+                {
+                    half3 wet = arc <= 0 ? half3(0.851, 0.463, 0.165) : (arc == 1 ? half3(0.788, 0.282, 0.247) : half3(0.435, 0.333, 0.678));
+                    col = lerp(col, wet, smoothstep(0.16, 0.40, box) * 0.72);
+                    col *= lerp(0.86, 1.08, grain);
+                }
+                else if (state == 2)
+                    col *= lerp(0.9, 1.05, grain);
+                col = lerp(col, ink, rim * 0.82);
                 return col;
             }
             half4 frag (V i, bool front : SV_IsFrontFace) : SV_Target

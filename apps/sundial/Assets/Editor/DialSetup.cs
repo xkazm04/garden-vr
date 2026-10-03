@@ -34,10 +34,15 @@ namespace GardenVR.Sundial.Editor
         static readonly string[] TextureNames =
         {
             "dial_face", "soil", "dial_paper", "gnomon", "gnomon_shadow",
-            "plant_sunrise_0", "plant_sunrise_1", "plant_sunrise_2",
-            "plant_midday_0", "plant_midday_1", "plant_midday_2",
-            "plant_dusk_0", "plant_dusk_1", "plant_dusk_2",
-            "halo_sunrise", "halo_midday", "halo_dusk"
+            "plant_sunrise_seed", "plant_sunrise_sprout", "plant_sunrise_young", "plant_sunrise_leafy", "plant_sunrise_full",
+            "plant_midday_seed", "plant_midday_sprout", "plant_midday_young", "plant_midday_leafy", "plant_midday_full",
+            "plant_dusk_seed", "plant_dusk_sprout", "plant_dusk_young", "plant_dusk_leafy", "plant_dusk_full",
+            "bloom_sunrise_bud", "bloom_sunrise_open",
+            "bloom_midday_bud", "bloom_midday_open",
+            "bloom_dusk_bud", "bloom_dusk_open",
+            "halo_sunrise_seed", "halo_sunrise_sprout", "halo_sunrise_young", "halo_sunrise_leafy", "halo_sunrise_full",
+            "halo_midday_seed", "halo_midday_sprout", "halo_midday_young", "halo_midday_leafy", "halo_midday_full",
+            "halo_dusk_seed", "halo_dusk_sprout", "halo_dusk_young", "halo_dusk_leafy", "halo_dusk_full"
         };
 
         [MenuItem("Garden VR/Sundial/Build Dial")]
@@ -58,6 +63,7 @@ namespace GardenVR.Sundial.Editor
                 LogMesh(tileMesh, "Tile");
                 BuildPrefab(modelPrefab, tileMesh, library);
                 PlaceUnderDialRoot();
+                SceneSetup.FixSeatedView();
                 AssetDatabase.SaveAssets();
                 Debug.Log("[DialSetup] done prefab=" + PrefabPath + " scene=" + SceneSetup.ScenePath);
             }
@@ -66,6 +72,81 @@ namespace GardenVR.Sundial.Editor
                 Debug.LogError("[DialSetup] FAIL " + e);
                 EditorApplication.Exit(1);
             }
+        }
+
+        /// <summary>
+        /// Reimports one full card as ASTC 6x6, writes a framing-size preview next to the source, then puts the
+        /// importer back to uncompressed. The dial ships uncompressed so the ink stays sharp.
+        /// </summary>
+        [MenuItem("Garden VR/Sundial/ASTC Ink Check")]
+        public static void AstcInkCheck()
+        {
+            const string rel = "Assets/Art/Textures/plant_midday_full.png";
+            var importer = AssetImporter.GetAtPath(rel) as TextureImporter;
+            if (importer == null) throw new InvalidOperationException("texture missing: " + rel);
+            try
+            {
+                ShaderUtil.allowAsyncCompilation = false;
+                string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "orchestration", "runs", "sundial", "T-SUN-007"));
+                Directory.CreateDirectory(dir);
+                SaveFraming(rel, Path.Combine(dir, "astc-source.png"));
+
+                var platform = importer.GetPlatformTextureSettings("Standalone");
+                platform.overridden = true;
+                platform.format = TextureImporterFormat.ASTC_6x6;
+                platform.maxTextureSize = 512;
+                platform.textureCompression = TextureImporterCompression.Compressed;
+                importer.SetPlatformTextureSettings(platform);
+                importer.SaveAndReimport();
+                SaveFraming(rel, Path.Combine(dir, "astc-preview.png"));
+                Debug.Log("[DialSetup] astc preview " + Path.Combine(dir, "astc-preview.png"));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[DialSetup] FAIL " + e);
+                EditorApplication.Exit(1);
+            }
+            finally
+            {
+                var platform = importer.GetPlatformTextureSettings("Standalone");
+                platform.overridden = false;
+                platform.format = TextureImporterFormat.Automatic;
+                platform.textureCompression = TextureImporterCompression.Uncompressed;
+                importer.SetPlatformTextureSettings(platform);
+                importer.textureCompression = TextureImporterCompression.Uncompressed;
+                importer.SaveAndReimport();
+            }
+        }
+
+        static void SaveFraming(string rel, string path)
+        {
+            var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(rel);
+            if (tex == null) throw new InvalidOperationException("texture not loaded: " + rel);
+            var rt = RenderTexture.GetTemporary(tex.width, tex.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+            Graphics.Blit(tex, rt);
+            var prev = RenderTexture.active;
+            RenderTexture.active = rt;
+            var read = new Texture2D(tex.width, tex.height, TextureFormat.RGBA32, false, false);
+            read.ReadPixels(new Rect(0f, 0f, tex.width, tex.height), 0, 0);
+            read.Apply(false, false);
+            RenderTexture.active = prev;
+            RenderTexture.ReleaseTemporary(rt);
+            const int tall = 200;
+            int wide = Mathf.Max(1, Mathf.RoundToInt(tall * (tex.width / (float)tex.height)));
+            var scaled = new Texture2D(wide, tall, TextureFormat.RGBA32, false, false);
+            for (int y = 0; y < tall; y++)
+            {
+                for (int x = 0; x < wide; x++)
+                {
+                    float u = (x + 0.5f) / wide;
+                    float v = (y + 0.5f) / tall;
+                    scaled.SetPixel(x, y, read.GetPixelBilinear(u, v));
+                }
+            }
+            scaled.Apply(false, false);
+            File.WriteAllBytes(path, scaled.EncodeToPNG());
+            UnityEngine.Object.DestroyImmediate(read);
+            UnityEngine.Object.DestroyImmediate(scaled);
         }
 
         /// <summary>30 frames at DialG1, 10 fps, three seconds. Writes boil/f0000.png .. f0029.png.</summary>
@@ -127,13 +208,14 @@ namespace GardenVR.Sundial.Editor
                 if (importer == null) throw new InvalidOperationException("texture missing: " + path);
                 bool alpha = name.StartsWith("plant_", StringComparison.Ordinal)
                     || name.StartsWith("halo_", StringComparison.Ordinal)
+                    || name.StartsWith("bloom_", StringComparison.Ordinal)
                     || name == "gnomon_shadow";
                 importer.textureType = TextureImporterType.Default;
                 importer.sRGBTexture = true;
                 importer.alphaIsTransparency = alpha;
                 importer.mipmapEnabled = true;
                 importer.wrapMode = TextureWrapMode.Clamp;
-                importer.maxTextureSize = 1024;
+                importer.maxTextureSize = name == "dial_face" || name == "gnomon_shadow" ? 2048 : 1024;
                 importer.textureCompression = TextureImporterCompression.Uncompressed;
                 importer.npotScale = TextureImporterNPOTScale.None;
                 importer.SaveAndReimport();
@@ -223,10 +305,16 @@ namespace GardenVR.Sundial.Editor
                 Card = SaveCard(),
                 ShadowMesh = SaveShadow(),
                 CatcherQuad = SaveCatcher(),
-                MorningCards = new[] { Tex("plant_sunrise_0"), Tex("plant_sunrise_1"), Tex("plant_sunrise_2") },
-                MiddayCards = new[] { Tex("plant_midday_0"), Tex("plant_midday_1"), Tex("plant_midday_2") },
-                WindDownCards = new[] { Tex("plant_dusk_0"), Tex("plant_dusk_1"), Tex("plant_dusk_2") },
-                Halos = new[] { Tex("halo_sunrise"), Tex("halo_midday"), Tex("halo_dusk") }
+                MorningCards = StageCards("sunrise"),
+                MiddayCards = StageCards("midday"),
+                WindDownCards = StageCards("dusk"),
+                BloomCards = new[]
+                {
+                    Tex("bloom_sunrise_bud"), Tex("bloom_sunrise_open"),
+                    Tex("bloom_midday_bud"), Tex("bloom_midday_open"),
+                    Tex("bloom_dusk_bud"), Tex("bloom_dusk_open")
+                },
+                Halos = HaloCards()
             };
 
             // The painted face already has its ink ring. Keep it one pass (_Outline 0 disables the hull count).
@@ -240,22 +328,25 @@ namespace GardenVR.Sundial.Editor
             library.Tiles.SetFloat("_TileMode", 1f);
             library.Tiles.SetFloat("_BoilPx", 0.8f);
 
-            library.Morning = Plant("Dial_PlantMorning", library.MorningCards[2]);
-            library.Midday = Plant("Dial_PlantMidday", library.MiddayCards[2]);
-            library.WindDown = Plant("Dial_PlantWindDown", library.WindDownCards[1]);
+            library.Morning = Plant("Dial_PlantMorning", library.MorningCards[4]);
+            library.Midday = Plant("Dial_PlantMidday", library.MiddayCards[4]);
+            library.WindDown = Plant("Dial_PlantWindDown", library.WindDownCards[4]);
+            library.Bloom = Plant("Dial_PlantBloom", library.BloomCards[3]);
+            library.Bloom.renderQueue = 2460;
             library.Halo = Mat("Dial_Halo", "Fidelity/Card", m =>
             {
-                m.SetTexture("_MainTex", library.Halos[1]);
-                m.SetColor("_Color", new Color(1.6f, 1.25f, 0.55f));
-                m.SetColor("_Color2", new Color(0.85f, 0.62f, 0.28f));
-                m.SetFloat("_Src", (float)BlendMode.One);
-                m.SetFloat("_Dst", (float)BlendMode.One);
+                m.SetTexture("_MainTex", library.Halos[9]);
+                m.SetColor("_Color", Color.white);
+                m.SetColor("_Color2", Color.white);
+                // SrcAlpha so the baked gold (t.rgb) shows. The breathe multiply stays white.
+                m.SetFloat("_Src", (float)BlendMode.SrcAlpha);
+                m.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
                 m.SetFloat("_Boil", 0f);
                 m.SetFloat("_BoilPx", DialView.BoilPixels);
                 m.SetFloat("_ZWrite", 0f);
                 m.SetFloat("_ZTest", (float)CompareFunction.LessEqual);
                 m.SetFloat("_Coverage", 0f);
-                m.SetFloat("_Mask", 1f);
+                m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
                 m.renderQueue = 3008;
             });
@@ -270,20 +361,53 @@ namespace GardenVR.Sundial.Editor
             library.Shadow = Mat("Dial_GnomonShadow", "Fidelity/Card", m =>
             {
                 m.SetTexture("_MainTex", Tex("gnomon_shadow"));
-                m.SetColor("_Color", new Color(0.22f, 0.16f, 0.12f, 0.80f));
+                // Colour and falloff live in the SVG. A dark multiply here hid the wash on the soil.
+                m.SetColor("_Color", Color.white);
                 m.SetColor("_Color2", Color.black);
                 m.SetFloat("_Src", (float)BlendMode.SrcAlpha);
                 m.SetFloat("_Dst", (float)BlendMode.OneMinusSrcAlpha);
                 m.SetFloat("_Boil", 0f);
                 m.SetFloat("_BoilPx", 0f);
                 m.SetFloat("_ZWrite", 0f);
+                // Transparent queue. 2440 sat in the opaque range and the depth prepass dropped the wash.
                 m.SetFloat("_ZTest", (float)CompareFunction.LessEqual);
                 m.SetFloat("_Coverage", 0f);
                 m.SetFloat("_Mask", 0f);
                 m.SetFloat("_Ring", 0f);
-                m.renderQueue = 2440;
+                m.renderQueue = 3000;
             });
             return library;
+        }
+
+        static Texture2D[] StageCards(string arc)
+        {
+            return new[]
+            {
+                TexNamed("plant_" + arc + "_seed"),
+                TexNamed("plant_" + arc + "_sprout"),
+                TexNamed("plant_" + arc + "_young"),
+                TexNamed("plant_" + arc + "_leafy"),
+                TexNamed("plant_" + arc + "_full")
+            };
+        }
+
+        static Texture2D[] HaloCards()
+        {
+            string[] arcs = { "sunrise", "midday", "dusk" };
+            string[] stages = { "seed", "sprout", "young", "leafy", "full" };
+            var textures = new Texture2D[arcs.Length * stages.Length];
+            int n = 0;
+            for (int a = 0; a < arcs.Length; a++)
+                for (int s = 0; s < stages.Length; s++)
+                    textures[n++] = TexNamed("halo_" + arcs[a] + "_" + stages[s]);
+            return textures;
+        }
+
+        static Texture2D TexNamed(string name)
+        {
+            var tex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Art/Textures/" + name + ".png");
+            if (tex == null) throw new InvalidOperationException("texture not loaded: " + name);
+            return tex;
         }
 
         static Material Toon(string name, Texture tex, bool hull, float outlinePx, float step, float grain, Color lit, Color shade)
@@ -392,16 +516,16 @@ namespace GardenVR.Sundial.Editor
         {
             return SaveMesh(ShadowPath, "DialShadow", mesh =>
             {
-                const float half = 0.045f;
-                const float length = 0.125f;
+                // Wedge: narrow at the gnomon, wide and soft at the far end of the wash.
+                // Local +Z is the shadow direction. UV v grows away from the nib.
                 mesh.vertices = new[]
                 {
-                    new Vector3(-half, 0f, 0f), new Vector3(half, 0f, 0f),
-                    new Vector3(half, 0f, length), new Vector3(-half, 0f, length)
+                    new Vector3(-0.02f, 0.002f, 0.01f), new Vector3(0.02f, 0.002f, 0.01f),
+                    new Vector3(0.11f, 0.002f, 0.20f), new Vector3(-0.11f, 0.002f, 0.20f)
                 };
-                mesh.uv = new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
+                mesh.uv = new[] { new Vector2(0.38f, 0f), new Vector2(0.62f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) };
                 mesh.colors = new[] { Color.white, Color.white, Color.white, Color.white };
-                mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+                mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
             });

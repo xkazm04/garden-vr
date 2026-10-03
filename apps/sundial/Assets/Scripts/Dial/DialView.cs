@@ -15,8 +15,9 @@ namespace GardenVR.Sundial
     public sealed class DialLibrary
     {
         public Material Face, Rim, Soil, Gnomon, Tiles, Catcher, Shadow, Halo;
-        public Material Morning, Midday, WindDown;
+        public Material Morning, Midday, WindDown, Bloom;
         public Texture2D[] MorningCards, MiddayCards, WindDownCards;
+        public Texture2D[] BloomCards;
         public Texture2D[] Halos;
         public Mesh Card, ShadowMesh, CatcherQuad;
     }
@@ -24,7 +25,7 @@ namespace GardenVR.Sundial
     /// <summary>
     /// The drawn dial on the desk. Look comes only from state: halo, which arc it sits on,
     /// gnomon angle, plant stage and bloom, the 21 tiles, boil, and time.
-    /// Interim plant cards are the three IWSDK drawings (stage 0..2).
+    /// Each species has five cards (seed, sprout, young, leafy, full). Bloom is an overlay.
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteAlways]
@@ -47,12 +48,13 @@ namespace GardenVR.Sundial
         [Range(0f, 1f)] public float halo = 1f;
         public string haloTarget = "midday";
         public float gnomonDeg = 105f;
-        public int stageMorning = 2;
-        public int stageMidday = 2;
-        public int stageWinddown = 1;
+        public int stageMorning = 4;
+        public int stageMidday = 4;
+        public int stageWinddown = 4;
         public float bloomMorning;
-        public float bloomMidday;
-        public float bloomWinddown;
+        public float bloomMidday = 2f;
+        public float bloomWinddown = 2f;
+        public bool stageStrip;
         public int[] tiles =
         {
             1, 1, 3, 1, 2, 1, 1,
@@ -74,7 +76,12 @@ namespace GardenVR.Sundial
         public Texture2D[] middayCards;
         public Texture2D[] windDownCards;
         public Texture2D[] haloTextures;
+        public Texture2D[] bloomTextures;
+        public Renderer[] bloomRenderers;
+        public Renderer[] stripRenderers;
         public MeshRenderer tileRenderer;
+
+        int _haloArc = 1;
 
         Texture2D _stateTex;
         bool _hooked;
@@ -119,33 +126,41 @@ namespace GardenVR.Sundial
             }
 
             int haloArc = ArcIndex(haloTarget);
+            _haloArc = haloArc;
             ApplyPlant(0, stageMorning, bloomMorning);
             ApplyPlant(1, stageMidday, bloomMidday);
             ApplyPlant(2, stageWinddown, bloomWinddown);
+            ApplyStrip();
 
             float breathe = 0.85f + 0.15f * Mathf.Sin(time * 4f);
             float amount = Mathf.Clamp01(halo) * breathe;
+            int haloStage = haloArc == 0 ? stageMorning : haloArc == 1 ? stageMidday : stageWinddown;
+            int haloIndex = haloArc * 5 + Mathf.Clamp(haloStage, 0, 4);
             if (haloRenderer != null)
             {
-                haloRenderer.enabled = amount > 0.01f;
-                if (haloTextures != null && haloArc >= 0 && haloArc < haloTextures.Length && haloTextures[haloArc] != null)
+                haloRenderer.enabled = !stageStrip && amount > 0.01f;
+                if (haloTextures != null && haloIndex >= 0 && haloIndex < haloTextures.Length && haloTextures[haloIndex] != null)
                 {
-                    var mat = haloRenderer.sharedMaterial;
-                    if (mat != null) mat.SetTexture("_MainTex", haloTextures[haloArc]);
+                    var block = new MaterialPropertyBlock();
+                    haloRenderer.GetPropertyBlock(block);
+                    block.SetTexture("_MainTex", haloTextures[haloIndex]);
+                    haloRenderer.SetPropertyBlock(block);
                 }
             }
             Material haloMat = haloRenderer != null ? haloRenderer.sharedMaterial : null;
             if (haloMat != null)
             {
-                haloMat.SetColor("_Color", new Color(1.6f, 1.25f, 0.55f) * amount);
-                haloMat.SetColor("_Color2", new Color(0.85f, 0.62f, 0.28f) * amount);
+                // Gold is baked into the halo texture. This multiply is only the breathe.
+                haloMat.SetColor("_Color", Color.white * amount);
+                haloMat.SetColor("_Color2", Color.white * amount);
             }
 
             if (shadow != null)
             {
-                float deg = 180f - gnomonDeg;
-                float rad = deg * Mathf.Deg2Rad;
-                var dir = new Vector3(Mathf.Cos(rad), 0f, Mathf.Sin(rad));
+                // 0 is image-right, 90 is image-far. The painted wash falls toward the near rim
+                // (ref-1 at about 13:00), so +Z in the shadow mesh points at (cos, -sin).
+                float rad = gnomonDeg * Mathf.Deg2Rad;
+                var dir = new Vector3(Mathf.Cos(rad), 0f, -Mathf.Sin(rad));
                 if (dir.sqrMagnitude < 1e-8f) dir = Vector3.forward;
                 shadow.localRotation = Quaternion.LookRotation(dir, Vector3.up);
                 // Clear the soil mound (peak is about 8 mm above the paper) or the wash is buried.
@@ -204,6 +219,7 @@ namespace GardenVR.Sundial
             middayCards = library.MiddayCards;
             windDownCards = library.WindDownCards;
             haloTextures = library.Halos;
+            bloomTextures = library.BloomCards;
             plantMats = new[] { library.Morning, library.Midday, library.WindDown };
 
             var cards = new List<Transform>();
@@ -221,10 +237,23 @@ namespace GardenVR.Sundial
                 cards.Add(card.transform);
             }
 
+            var blooms = new Renderer[3];
+            for (int arc = 0; arc < 3; arc++)
+            {
+                Vector2 spot = PlantSpot[arc];
+                Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.0055f, spot.y * faceRadius);
+                var bloomGo = Card(transform, "bloom." + ArcIds[arc], library.Bloom, pos, PlantSize[arc], library.Card);
+                var bloomRenderer = bloomGo.GetComponent<Renderer>();
+                bloomRenderer.enabled = false;
+                blooms[arc] = bloomRenderer;
+            }
+            bloomRenderers = blooms;
+
             var haloGo = Card(transform, "PinchHalo", library.Halo, Vector3.zero, Vector2.one, library.Card);
             haloRenderer = haloGo.GetComponent<Renderer>();
             cards.Add(haloGo.transform);
             uprightCards = cards.ToArray();
+            BuildStrip(library);
 
             Mesh placed = CombineTiles(tileMesh);
             var tilesGo = new GameObject("Tiles");
@@ -272,7 +301,7 @@ namespace GardenVR.Sundial
             boilMats = new[]
             {
                 library.Rim, library.Soil, library.Gnomon, library.Tiles,
-                library.Morning, library.Midday, library.WindDown, library.Halo
+                library.Morning, library.Midday, library.WindDown, library.Bloom, library.Halo
             };
         }
 
@@ -292,6 +321,28 @@ namespace GardenVR.Sundial
                 if (boil && i < 3)
                     sway = Mathf.Sin(time * (Mathf.PI * 2f / 4f) + i * 1.7f) * 2f;
                 card.rotation = Quaternion.LookRotation(toCam, Vector3.up) * Quaternion.Euler(sway, 0f, 0f);
+            }
+            if (bloomRenderers != null)
+            {
+                for (int i = 0; i < bloomRenderers.Length && i < 3; i++)
+                {
+                    if (bloomRenderers[i] == null || uprightCards[i] == null) continue;
+                    bloomRenderers[i].transform.rotation = uprightCards[i].rotation;
+                }
+            }
+            if (haloRenderer != null && _haloArc >= 0 && _haloArc < 3 && uprightCards[_haloArc] != null)
+                haloRenderer.transform.rotation = uprightCards[_haloArc].rotation;
+            if (stageStrip && stripRenderers != null)
+            {
+                for (int i = 0; i < stripRenderers.Length; i++)
+                {
+                    Renderer strip = stripRenderers[i];
+                    if (strip == null) continue;
+                    Vector3 to = cam.transform.position - strip.transform.position;
+                    to.y = 0f;
+                    if (to.sqrMagnitude < 1e-8f) continue;
+                    strip.transform.rotation = Quaternion.LookRotation(to, Vector3.up);
+                }
             }
         }
 
@@ -340,6 +391,7 @@ namespace GardenVR.Sundial
                 case "tiles.midday": WriteTileDigits(7, value); break;
                 case "tiles.winddown": WriteTileDigits(14, value); break;
                 case "tiles": WriteTileDigits(0, value); break;
+                case "stages": stageStrip = string.Equals(value, "strip", StringComparison.OrdinalIgnoreCase); break;
                 default:
                     throw new FormatException("DialView has no state field '" + key + "'");
             }
@@ -347,18 +399,95 @@ namespace GardenVR.Sundial
 
         void ApplyPlant(int arc, int stage, float bloom)
         {
-            if (plantMats == null || arc >= plantMats.Length || plantMats[arc] == null) return;
-            int card = Mathf.Clamp(stage, 0, 2);
-            if (bloom >= 0.5f) card = 2;
+            if (uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
+            Transform plant = uprightCards[arc];
+            int card = Mathf.Clamp(stage, 0, 4);
             Texture2D[] set = arc == 0 ? morningCards : arc == 1 ? middayCards : windDownCards;
-            if (set != null && card < set.Length && set[card] != null)
-                plantMats[arc].SetTexture("_MainTex", set[card]);
-            if (uprightCards == null || arc >= uprightCards.Length || uprightCards[arc] == null) return;
+            Renderer renderer = plant.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                renderer.enabled = !stageStrip;
+                if (set != null && card < set.Length && set[card] != null)
+                    SetMain(renderer, set[card]);
+            }
             Vector2 size = PlantSize[arc];
-            float growth = 0.62f + 0.19f * Mathf.Clamp(stage, 0, 2);
-            if (bloom >= 0.5f) growth *= 1.08f;
-            // Z matches the height so the 3 cm bow on the 1 m card stays a slight curl.
-            uprightCards[arc].localScale = new Vector3(size.x * growth, size.y * growth, size.y * growth);
+            // The drawing already grows on the shared canvas. The quad stays one size.
+            plant.localScale = new Vector3(size.x, size.y, size.y);
+            if (bloomRenderers == null || arc >= bloomRenderers.Length || bloomRenderers[arc] == null) return;
+            Renderer bloomRenderer = bloomRenderers[arc];
+            int which = bloom < 0.5f ? -1 : bloom < 1.5f ? 0 : 1;
+            int tex = arc * 2 + which;
+            bool show = !stageStrip && which >= 0 && bloomTextures != null && tex < bloomTextures.Length && bloomTextures[tex] != null;
+            bloomRenderer.enabled = show;
+            Transform bloomTransform = bloomRenderer.transform;
+            bloomTransform.localPosition = plant.localPosition + new Vector3(0f, 0.0015f, 0f);
+            bloomTransform.localScale = plant.localScale;
+            if (show) SetMain(bloomRenderer, bloomTextures[tex]);
+        }
+
+        void ApplyStrip()
+        {
+            if (stripRenderers == null) return;
+            Texture2D[][] rows = { morningCards, middayCards, windDownCards };
+            int n = 0;
+            for (int row = 0; row < 3; row++)
+            {
+                for (int col = 0; col < 7; col++)
+                {
+                    if (n >= stripRenderers.Length) return;
+                    Renderer plant = stripRenderers[n++];
+                    if (plant != null)
+                    {
+                        plant.enabled = stageStrip;
+                        int stage = col >= 5 ? 4 : col;
+                        if (rows[row] != null && stage < rows[row].Length && rows[row][stage] != null)
+                            SetMain(plant, rows[row][stage]);
+                    }
+                    if (col < 5) continue;
+                    if (n >= stripRenderers.Length) return;
+                    Renderer bloom = stripRenderers[n++];
+                    if (bloom == null) continue;
+                    bloom.enabled = stageStrip;
+                    int tex = row * 2 + (col - 5);
+                    if (bloomTextures != null && tex < bloomTextures.Length && bloomTextures[tex] != null)
+                        SetMain(bloom, bloomTextures[tex]);
+                }
+            }
+        }
+
+        void BuildStrip(DialLibrary library)
+        {
+            var list = new List<Renderer>();
+            // Near half of the soil, in front of the pen, so the seven columns stay in frame.
+            // The soil is a disc. Keep every column inside it and left of the pinch.
+            float spanX = 0.020f;
+            float spanZ = 0.022f;
+            var size = new Vector2(0.018f, 0.038f);
+            for (int row = 0; row < 3; row++)
+            {
+                for (int col = 0; col < 7; col++)
+                {
+                    var pos = new Vector3(-0.030f + (col - 3) * spanX, faceY + 0.006f, -0.022f - row * spanZ);
+                    var go = Card(transform, "strip." + row + "." + col, plantMats[row], pos, size, library.Card);
+                    var renderer = go.GetComponent<Renderer>();
+                    renderer.enabled = false;
+                    list.Add(renderer);
+                    if (col < 5) continue;
+                    var bloomGo = Card(transform, "strip." + row + "." + col + ".bloom", library.Bloom, pos + new Vector3(0f, 0.0015f, 0f), size, library.Card);
+                    var bloomRenderer = bloomGo.GetComponent<Renderer>();
+                    bloomRenderer.enabled = false;
+                    list.Add(bloomRenderer);
+                }
+            }
+            stripRenderers = list.ToArray();
+        }
+
+        static void SetMain(Renderer renderer, Texture2D texture)
+        {
+            var block = new MaterialPropertyBlock();
+            renderer.GetPropertyBlock(block);
+            block.SetTexture("_MainTex", texture);
+            renderer.SetPropertyBlock(block);
         }
 
         void PlaceHalo(int arc)
@@ -366,10 +495,9 @@ namespace GardenVR.Sundial
             if (haloRenderer == null || uprightCards == null || arc < 0 || arc >= 3 || uprightCards[arc] == null) return;
             Transform plant = uprightCards[arc];
             Transform haloTransform = haloRenderer.transform;
-            float extra = 1.14f;
-            haloTransform.localPosition = plant.localPosition + new Vector3(0f, -0.004f, 0f);
+            haloTransform.localPosition = plant.localPosition;
             haloTransform.localRotation = plant.localRotation;
-            haloTransform.localScale = plant.localScale * extra;
+            haloTransform.localScale = plant.localScale;
         }
 
         void EnsureStateTexture()
@@ -571,7 +699,7 @@ namespace GardenVR.Sundial
         static int ParseStage(string text)
         {
             float value = ParseFloat("stage", text);
-            return Mathf.Clamp(Mathf.RoundToInt(value), 0, 2);
+            return Mathf.Clamp(Mathf.RoundToInt(value), 0, 4);
         }
 
         static bool ParseBool(string text)
