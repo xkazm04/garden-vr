@@ -53,3 +53,6 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
   enforces a credit reserve; never call the API another way. Keep prompts subtle: soft, quiet, natural.
 - Image generation: your built-in `image_gen` / `image_edit`. Save every generated image you keep under the app's
   `Art/Source/` with a sidecar `.prompt.txt`.
+- **When `image_gen` is rate-limited or out of quota (HTTP 429, quota, limit), do not stop and do not fake it:** use
+  `bash tools/agy/image.sh "<prompt>" <out.png> [<image to edit>]` (Gemini / Nano Banana via the Antigravity CLI,
+  ~30 s per image, high quality). It writes the provenance sidecar for you. Run it in the foreground.
