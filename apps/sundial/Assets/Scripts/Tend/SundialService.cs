@@ -214,6 +214,30 @@ namespace GardenVR.Sundial
             return null;
         }
 
+        /// <summary>
+        /// Yesterday can be logged once, before today's boundary. The flag on the plant does not
+        /// see the clock, so the boundary is checked here, the same instant <see cref="SundialRules.Backfill"/> uses.
+        /// </summary>
+        public bool BackfillOffered(HabitDef habit)
+        {
+            if (habit == null) return false;
+            PlantState plant = PlantFor(habit);
+            if (plant == null || !plant.CanBackfillYesterday) return false;
+            GardenDay today = Today();
+            TimeZoneInfo zone = _clock.Zone ?? TimeZoneInfo.Utc;
+            return _clock.Now < today.EndsAt(zone, GardenDay.DefaultBoundary);
+        }
+
+        /// <summary>Logs yesterday late, once, with the clock's real timestamp. A refusal writes nothing.</summary>
+        public TendResult BackfillYesterday(HabitDef habit)
+        {
+            if (habit == null) throw new ArgumentNullException(nameof(habit));
+            TendResult result = SundialRules.Backfill(habit, _ledger, Today(), _clock);
+            if (result != null && result.Ok) Persist();
+            Recompute();
+            return result;
+        }
+
         public int LiveCount(string habitId)
         {
             int count = 0;
