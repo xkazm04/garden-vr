@@ -1,0 +1,7 @@
+name: sprig-glow
+tool: image_gen
+aspect_ratio: 1:1
+date: 2026-10-03
+derived_from_art_reference: no
+prompt: A single small botanical sprig, front view, centered, like a specimen card for a hand-animated film. One slender stem with five to seven small simple leaves, each leaf a soft card shape with a visible midrib. The leaf tips glow gently mint green (#8FF0C8), the stems are deep warm ink, paper is dark. Isolated on a pure black background, no pot, no jar, no text, no watermark. Soft bloom only on the tips, never neon, never pure white. Quiet and small.
+note: Paper keyed to alpha. Kept PNG is sprig_glow.png. Raw generation is sprig-glow.raw.jpg. Tint token glow.mint.
