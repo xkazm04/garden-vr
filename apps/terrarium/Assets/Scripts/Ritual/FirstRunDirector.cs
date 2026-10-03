@@ -48,6 +48,7 @@ namespace GardenVR.Terrarium
         bool _ghostGone;
         bool _wordsFaded;
         bool _arrivalMoved;
+        int _answerLine;
         int _events;
         int _ghostFrame;
         float _idle;
@@ -138,6 +139,7 @@ namespace GardenVR.Terrarium
 
             DrainBreaths();
             TickIdle(dt);
+            TickAnswerWords();
             TickWords(dt);
             TickGhost(dt);
             TickAfterAnswer();
@@ -237,6 +239,22 @@ namespace GardenVR.Terrarium
             Show(HoldLine() + "\n" + EtchContrast.ReleaseLine, 1f);
         }
 
+        void TickAnswerWords()
+        {
+            if (_controller == null || !_controller.HasAnswer) return;
+            bool quiet = _controller.AnswerTime < QuietSeconds;
+            if (quiet)
+            {
+                if (_answerLine == 1) return;
+                _answerLine = 1;
+                Show(EtchContrast.AnswerLine, 1f);
+                return;
+            }
+            if (_answerLine != 1) return;
+            _answerLine = 2;
+            _alphaTarget = 0f;
+        }
+
         void TickWords(float dt)
         {
             if (_reduced) _alpha = _alphaTarget;
@@ -247,11 +265,23 @@ namespace GardenVR.Terrarium
             }
             WordsVisible = _alpha > 0.04f;
             if (_words == null) return;
-            Color color = EtchContrast.Ink;
-            color.a = EtchContrast.Ink.a * _alpha;
+            Color color = EtchContrast.SceneInk;
+            color.a = _alpha * BreathLight();
             _words.color = color;
             if (_words.gameObject.activeSelf != WordsVisible)
                 _words.gameObject.SetActive(WordsVisible);
+        }
+
+        /// <summary>The etch brightens while the breath is held and eases off as it leaves.</summary>
+        float BreathLight()
+        {
+            if (_reduced || _controller == null || _controller.Session == null) return 1f;
+            BreathSession session = _controller.Session;
+            if (session.Phase == BreathPhase.Inhaling)
+                return 0.55f + 0.45f * Mathf.Clamp01(session.Uncoil);
+            if (session.Phase == BreathPhase.Exhaling)
+                return 0.42f + 0.40f * (1f - Mathf.Clamp01(session.Fog));
+            return 0.72f;
         }
 
         void TickGhost(float dt)
@@ -305,7 +335,11 @@ namespace GardenVR.Terrarium
         {
             WordsText = text;
             _alphaTarget = target;
-            if (_words != null) _words.text = text;
+            if (_words == null) return;
+            bool was = _words.gameObject.activeSelf;
+            _words.gameObject.SetActive(true);
+            EtchedLettering.Fit(_words, text, EtchedLettering.WordsWidth, EtchedLettering.WordsCap);
+            if (!was) _words.gameObject.SetActive(false);
         }
 
         string HoldLine()
@@ -331,28 +365,9 @@ namespace GardenVR.Terrarium
 
         void BuildWords()
         {
-            var go = new GameObject("EtchedWords");
-            go.transform.SetParent(transform, false);
-            go.transform.localPosition = new Vector3(0f, 0.078f, -0.052f);
-            go.transform.localRotation = Quaternion.identity;
-            go.transform.localScale = Vector3.one * 0.018f;
-            _words = go.AddComponent<TextMeshPro>();
-            TMP_FontAsset font = EtchContrast.Font();
-            if (font != null) _words.font = font;
-            _words.alignment = TextAlignmentOptions.Center;
-            _words.fontSize = 3.2f;
-            _words.textWrappingMode = TextWrappingModes.Normal;
-            _words.overflowMode = TextOverflowModes.Overflow;
-            _words.rectTransform.sizeDelta = new Vector2(7.2f, 2.6f);
-            _words.color = EtchContrast.Ink;
-            _words.text = WordsText ?? "";
-            var renderer = _words.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                renderer.shadowCastingMode = ShadowCastingMode.Off;
-                renderer.receiveShadows = false;
-            }
-            go.SetActive(false);
+            _words = EtchedLettering.Place(transform, "EtchedWords", WordsText ?? "",
+                EtchedLettering.GlassPos, Quaternion.identity, EtchedLettering.WordsWidth, EtchedLettering.WordsCap);
+            _words.gameObject.SetActive(false);
         }
 
         void BuildGhost()

@@ -178,12 +178,18 @@ namespace GardenVR.Terrarium
             int capCompanions = 0;
             int capLeaves = 0;
             bool sawHabits = false;
+            string etch = null;
             foreach (var pair in state)
             {
                 if (pair.Key == "journey")
                 {
                     ApplyJourney(pair.Value);
                     sawJourney = true;
+                    continue;
+                }
+                if (pair.Key == "etch")
+                {
+                    etch = pair.Value;
                     continue;
                 }
                 float value = Parse(pair.Key, pair.Value);
@@ -223,6 +229,8 @@ namespace GardenVR.Terrarium
                 : new List<CompanionGarden.Shot>();
             HookCamera();
             Apply();
+            if (!string.IsNullOrEmpty(etch))
+                EtchedLettering.Present(transform, etch);
         }
 
         /// <summary>One cork mist swell. Reduced motion leaves the plume still.</summary>

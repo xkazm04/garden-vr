@@ -133,7 +133,7 @@ namespace GardenVR.Terrarium.Tests
             GameObject prompt = GameObject.Find("ContinuePrompt");
             Assert.IsNotNull(prompt);
             Assert.IsTrue(prompt.activeInHierarchy);
-            Assert.AreEqual("Continue breathing?", prompt.GetComponent<TextMesh>().text);
+            Assert.AreEqual("Continue breathing?", EtchedLettering.Read(prompt));
             Assert.IsFalse(controller.RestorePromptVisible);
 
             int breaths = controller.Session.Breaths;
