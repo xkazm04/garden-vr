@@ -1,0 +1,4 @@
+asset: sparkle_ring_1.png
+method: generated
+note: Prompt apps/sundial/Art/Source/sparkle/sparkle_ring_1.prompt.txt. Paper keyed to alpha. Not copied from the art reference.
+derived_from_art_reference: no

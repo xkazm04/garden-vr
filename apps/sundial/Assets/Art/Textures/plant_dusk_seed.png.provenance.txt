@@ -1,0 +1,4 @@
+asset: plant_dusk_seed.png
+method: generated, then keyed by apps/sundial/Art/Scripts/plants_key.py
+note: Prompt apps/sundial/Art/Source/plants/src_dusk_seed.prompt.txt. Not copied from the art reference.
+derived_from_art_reference: no

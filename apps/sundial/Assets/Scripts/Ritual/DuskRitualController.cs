@@ -432,9 +432,10 @@ namespace GardenVR.Sundial
             if (!_reduced && _sparkles.Count > 1)
                 frame = Mathf.FloorToInt(_sparkleT * 8f) % _sparkles.Count;
             SetTexture(_sparkle, _sparkles[frame]);
-            float fade = _sparkleT > SparkleSeconds - 0.6f
-                ? Mathf.Clamp01((SparkleSeconds - _sparkleT) / 0.6f)
-                : 1f;
+            // Reduced motion holds the ring at full strength. It does not fade or cycle frames.
+            float fade = 1f;
+            if (!_reduced && _sparkleT > SparkleSeconds - 0.6f)
+                fade = Mathf.Clamp01((SparkleSeconds - _sparkleT) / 0.6f);
             Fit(plant, _sparkle.transform, 0.12f, 0.12f, 0.55f, 0.06f);
             if (_sparkleMat != null)
             {

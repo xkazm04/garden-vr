@@ -12,7 +12,7 @@ namespace GardenVR.Sundial
     /// <summary>
     /// The first launch. The dial draws itself, the shadow sweeps, three packets open onto one habit each,
     /// the due plant is tended, and the dusk ritual is offered. Steps advance on a finished drawing or on
-    /// a real pinch. A quit resumes at the saved step. A failed load shows the restore prompt and never starts.
+    /// a real pinch. A quit resumes at the saved step. An unreadable load shows the restore prompt and never starts.
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(30)]

@@ -1,0 +1,4 @@
+asset: bloom_sunrise_open.png
+method: generated overlay
+note: Prompt apps/sundial/Art/Source/plants/src_sunrise_open.prompt.txt. Overlay only. Not copied from the art reference.
+derived_from_art_reference: no

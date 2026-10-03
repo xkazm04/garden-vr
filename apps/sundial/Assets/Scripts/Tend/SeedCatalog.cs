@@ -18,7 +18,7 @@ namespace GardenVR.Sundial
     }
 
     /// <summary>
-    /// Every first-run string lives here. Hyphens only. Nothing about streaks or health outcomes.
+    /// Every first-run string lives here. Hyphens only. Nothing about counters or health outcomes.
     /// </summary>
     public static class SeedCatalog
     {
