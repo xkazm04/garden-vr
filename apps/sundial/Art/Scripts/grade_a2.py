@@ -215,6 +215,37 @@ def thin_rim_ink(rgb, measured_px=RIM_MEASURED_PX, keep_px=RIM_KEEP_PX):
     return img
 
 
+def clear_rim_specks(rgb):
+    """The shader owns the ink circle. A few dark texels survived the median
+    thin, and on the near rim those texels are several screen pixels wide."""
+    img = np.asarray(rgb, dtype=np.float32).copy()
+    world_x, world_z = world_of(img)
+    rad = np.hypot(world_x, world_z)
+    # The old stroke wobbles, so a single-radius median reads as paper while
+    # tens of thousands of ink texels (luma near 40, low chroma) remain.
+    # The dusk wash in this annulus is near luma 177 and is left alone.
+    band = (rad >= 0.1248) & (rad <= 0.1292)
+    lum = luma(img)
+    chroma = img.max(axis=2) - img.min(axis=2)
+    dark = band & (lum < 90.0) & (chroma < 40.0)
+    n = int(dark.sum())
+    if n < 8:
+        print("rim specks already clear", n)
+        return img
+    print("rim specks", n, "mean", np.round(img[dark].mean(axis=0), 1))
+    r_in = 0.1215
+    cos_a = np.divide(world_x, np.maximum(rad, 1e-6))
+    sin_a = np.divide(world_z, np.maximum(rad, 1e-6))
+    s = img.shape[0]
+    u = 0.5 - (cos_a * r_in) / (2.0 * FACE_R)
+    v_top = 1.0 - ((sin_a * r_in) / (2.0 * FACE_R) + 0.5)
+    xi = np.clip(np.rint(u * (s - 1)).astype(int), 0, s - 1)
+    yi = np.clip(np.rint(v_top * (s - 1)).astype(int), 0, s - 1)
+    img[dark] = img[yi[dark], xi[dark]]
+    print("rim specks cleared", n)
+    return img
+
+
 def grade_atlas_dusk(rgb):
     """The dusk column of the painted atlas, same gain as the face. Ink borders stay."""
     img = np.asarray(rgb, dtype=np.float32).copy()
@@ -251,6 +282,7 @@ def main():
     face = np.asarray(Image.open(face_path).convert("RGB")).astype(np.float32)
     face = grade_dusk_wash(face)
     face = thin_rim_ink(face)
+    face = clear_rim_specks(face)
     save_rgb(face_path, face)
     print("face", face_path)
 

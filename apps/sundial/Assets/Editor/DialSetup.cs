@@ -413,7 +413,7 @@ namespace GardenVR.Sundial.Editor
             {
                 m.SetTexture("_MainTex", library.MiddayCards[4]);
                 m.SetColor("_Color", new Color(1.15f, 0.86f, 0.32f, 1f));
-                m.SetColor("_Color2", new Color(0.40f, 0.26f, 0.08f, 1f));
+                m.SetColor("_Color2", new Color(0.58f, 0.38f, 0.12f, 1f));
                 // Additive. The shader draws a few pixels of gold just outside the plant alpha.
                 m.SetFloat("_Src", (float)BlendMode.One);
                 m.SetFloat("_Dst", (float)BlendMode.One);
@@ -426,7 +426,7 @@ namespace GardenVR.Sundial.Editor
                 m.SetFloat("_Ring", 0f);
                 m.SetFloat("_Sparkle", 0f);
                 m.SetFloat("_Silhouette", 2.15f);
-                m.SetFloat("_Fit", 1.18f);
+                m.SetFloat("_Fit", DialView.HaloFit);
                 m.SetFloat("_Falloff", 0f);
                 m.renderQueue = 3012;
             });
