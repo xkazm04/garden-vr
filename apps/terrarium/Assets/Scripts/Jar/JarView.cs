@@ -148,6 +148,7 @@ namespace GardenVR.Terrarium
         /// s4h, and the thick shell if no s2 variant was named.
         /// </summary>
         bool _s6;
+        bool _sprint;
         [Header("Spike S6 (variant s6). Unused unless the variant is on.")]
         public Mesh s6JarMesh, s6JarFullMesh, s6CorkMesh, s6SoilMesh, s6MossMesh, s6ShellMesh, s6SprigMesh;
         public MeshFilter corkFilter, s3SoilFilter, s3MossFilter, s3SprigFilter;
@@ -276,6 +277,12 @@ namespace GardenVR.Terrarium
         {
             get
             {
+                if (_sprint)
+                {
+                    // The composite names itself. Only a glass tier other than the PC best is spelled out (sprint+s2b1 is the Quest path).
+                    if (_s2Mode == 3) return "sprint";
+                    return "sprint+" + (_s2Mode == 1 ? "s2b0" : "s2b1");
+                }
                 string name = string.IsNullOrEmpty(_variant) ? "" : _variant;
                 if (_s3 && !_s6) name = name == "" ? "s3" : name + "+s3";
                 if (_s2Mode != 0)
@@ -292,6 +299,8 @@ namespace GardenVR.Terrarium
             }
         }
         public bool StructuredGlass { get { return _variant == "s1" || _s2Mode != 0 || _s5; } }
+        /// <summary>True while variant sprint shows the stacked spike winners (T-TER-047).</summary>
+        public bool SprintComposite { get { return _sprint; } }
         /// <summary>True while variant s6 shows the reference-proportioned jar, the flat cork and the dense moss mound.</summary>
         public bool SilhouettePass { get { return _s6; } }
         /// <summary>True while variant s5 shows the chord haze, the steam puffs, the stretched spores, the desk streak and the contact line.</summary>
@@ -371,6 +380,8 @@ namespace GardenVR.Terrarium
             _s2Mode = 0;
             _s5 = false;
             _s6 = false;
+            _sprint = false;
+            SprintMossClear = SprintMossClearDefault;
             _s5Haze = S5HazeDefault;
             _s5Steam = _s5Spore = _s5Desk = _s5Cork = 1f;
             _s5Sigma = S5Sigma;
@@ -406,8 +417,9 @@ namespace GardenVR.Terrarium
                     foreach (string part in name.Split('+'))
                     {
                         if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h"
-                            && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5" && part != "s6")
-                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h, s5 or s6, joined with +: " + name);
+                            && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5" && part != "s6" && part != "sprint")
+                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h, s5, s6 or sprint, joined with +: " + name);
+                        if (part == "sprint") _sprint = true;
                         if (part == "s5") _s5 = true;
                         if (part == "s6") _s6 = true;
                         if (part == "s2b0") _s2Mode = 1;
@@ -453,6 +465,8 @@ namespace GardenVR.Terrarium
                     case "s5spore": _s5Spore = Mathf.Clamp01(value); break;
                     case "s5desk": _s5Desk = Mathf.Clamp01(value); break;
                     case "s5cork": _s5Cork = Mathf.Clamp01(value); break;
+                    // Sprint knob: moss clearance height of the haze, in centimetres. 0 puts the S6 haze back.
+                    case "sprintclear": SprintMossClear = Mathf.Max(0f, value) * 0.01f; break;
                     case "s2off": _s2Offset = Mathf.Max(0f, value) * 0.001f; break;
                     case "s2disp": _s2Disp = Mathf.Clamp(value, 0f, 0.5f); break;
                     case "s2mix": _s2Mix = Mathf.Clamp01(value); break;
@@ -475,6 +489,15 @@ namespace GardenVR.Terrarium
                     default:
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
+            }
+            if (_sprint)
+            {
+                // The sprint composite: S1 pane and restored inner glow (s5 haze), S2 thick glass with Opaque Texture refraction
+                // unless a lower tier is named (sprint+s2b1 is the Quest path), S3 moss, S4 fiddlehead only, S5 atmosphere, S6 silhouette.
+                _s5 = true;
+                _s6 = true;
+                if (_s2Mode == 0) _s2Mode = 3;
+                _s4Fronds = false;
             }
             if (_s6)
             {
@@ -849,9 +872,9 @@ namespace GardenVR.Terrarium
                 // Spike S5: the reference cork. Mid brown with the grain still readable, a warm lit rim on the cap edge,
                 // the lower body in shade. _s5Cork blends from the locked tan (0) to this (1).
                 float k = _s5Cork;
-                cork.SetColor("_Tint", Color.Lerp(Color.white, _s6 ? S6CorkTint : S5CorkTint, k));
+                cork.SetColor("_Tint", Color.Lerp(Color.white, _sprint ? SprintCorkTint : (_s6 ? S6CorkTint : S5CorkTint), k));
                 cork.SetColor("_Emission", Color.black);
-                cork.SetColor("_Rim", Color.Lerp(Color.black, _s6 ? S6CorkRim : S5CorkRim, k));
+                cork.SetColor("_Rim", Color.Lerp(Color.black, _sprint ? S5CorkRim : (_s6 ? S6CorkRim : S5CorkRim), k));
                 cork.SetFloat("_RimPower", Mathf.Lerp(4f, 2.1f, k));
                 cork.SetFloat("_GradBottom", Mathf.Lerp(1.12f, 0.80f, k));
                 cork.SetFloat("_GradTop", Mathf.Lerp(0.84f, 1.10f, k));
@@ -896,6 +919,8 @@ namespace GardenVR.Terrarium
             if (corkFilter.sharedMesh != want) corkFilter.sharedMesh = want;
         }
 
+        // Sprint: the host asked for a mid-brown with a lit rim. The S6 plug tint is darker than the reference's grain; the S5 value is lighter.
+        static readonly Color SprintCorkTint = new Color(0.34f, 0.265f, 0.225f, 1f);
         static readonly Color S5CorkTint = new Color(0.40f, 0.32f, 0.28f, 1f);
         static readonly Color S5CorkRim = new Color(0.40f, 0.29f, 0.17f, 1f);
         // Chord haze constants (spike S5). Sigma is per metre of chord, tuned on the JarG1 frame.
@@ -918,15 +943,17 @@ namespace GardenVR.Terrarium
         /// </summary>
         void ApplyAtmosphere()
         {
+            // Sprint: the haze no longer veils the moss (it fades below the moss clearance), so the inner glow can run stronger.
+            float hazeK = _s5Haze * (_sprint ? SprintHazeGain : 1f);
             bool haze = _s5 && _s5Haze > 0f;
             if (glassMat != null)
             {
                 SetKeywordIfKnown(glassMat, S5Keyword, haze);
                 float radius = _s6 ? S6Cavity : (_s2Mode != 0 ? S5CavityS2 : S5CavityA);
                 float gain = _s6 ? S6TopGain : S5TopGain;
-                glassMat.SetVector("_S5Haze", haze ? new Vector4(_s5Sigma, S5Strength * _s5Haze * (_s2Mode != 0 ? S5ThickScale : 1f), gain, S5Noise) : Vector4.zero);
+                glassMat.SetVector("_S5Haze", haze ? new Vector4(_s5Sigma, S5Strength * hazeK * (_s2Mode != 0 ? S5ThickScale : 1f), gain, S5Noise) : Vector4.zero);
                 glassMat.SetVector("_S5Cyl", new Vector4(radius, _s6 ? S6HazeBottom : S5HazeBottom, _s6 ? S6HazeTop : S5HazeTop, reducedMotion ? 0f : time));
-                glassMat.SetVector("_S6Bed", haze && _s6 ? new Vector4(S6Bed.x * _s5Haze, S6Bed.y, S6Bed.z, 0f) : Vector4.zero);
+                glassMat.SetVector("_S6Bed", haze && _s6 ? new Vector4(S6Bed.x * hazeK, S6Bed.y, S6Bed.z, _sprint ? SprintMossClear : 0f) : Vector4.zero);
             }
             bool steamOn = _s5 && _s5Steam > 0f && steam != null;
             if (steam != null && steam.gameObject.activeSelf != steamOn) steam.gameObject.SetActive(steamOn);
@@ -957,6 +984,10 @@ namespace GardenVR.Terrarium
             }
         }
 
+        // Sprint: the haze fades below this chord height (m) so it does not veil the moss (T-TER-047).
+        const float SprintHazeGain = 1.6f;
+        const float SprintMossClearDefault = 0.050f;
+        float SprintMossClear = SprintMossClearDefault;
         const float S5HaloScale = 0.35f;
         // The thick shell has a wider cavity and the refraction layer under it, so the same haze reads stronger.
         const float S5ThickScale = 0.75f;

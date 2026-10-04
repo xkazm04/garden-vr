@@ -31,7 +31,8 @@ CBUFFER_START(UnityPerMaterial)
     // S5 chord haze: _S5Haze = (sigma per metre, colour strength, density gain toward the top, alpha weight);
     // _S5Cyl = (cavity radius m, bottom y m, top y m, clock s).
     float4 _S5Haze, _S5Cyl;
-    // S6 bed glow (T-TER-049, backward compatible: zero is off): x strength, y height of the glow centre in m, z falloff in m.
+    // S6 bed glow (T-TER-049, backward compatible: zero is off): x strength, y height of the glow centre in m, z falloff in m,
+    // w (T-TER-047, 0 keeps the old look) moss clearance height in m: the haze fades below it and the bed glow keeps no centre floor.
     float4 _S6Bed;
 CBUFFER_END
 
@@ -328,6 +329,10 @@ half4 S5Haze(float3 wp, half cavityMask)
     half3 tint = lerp(low, high, hy);
     // Brightest just above the moss (the reference glows from the bed), thinning to a paler haze toward the neck.
     half w = haze * _S5Haze.y * lerp(2.0, 0.85, hy);
+    // T-TER-047 (backward compatible: _S6Bed.w is 0 elsewhere): chords whose midpoint is below this height (m) are looking at the
+    // moss, so the haze fades there and the moss keeps its contrast. The wall glow below is not faded.
+    if (_S6Bed.w > 0.0)
+        w *= (half)smoothstep(_S6Bed.w, _S6Bed.w + 0.030, yLo + ch.y * (yHi - yLo));
     // Alpha takes a little red out of what is behind, so the interior reads teal and not lifted.
     half3 rgb = tint * w;
     half a = w * 0.50;
@@ -337,7 +342,7 @@ half4 S5Haze(float3 wp, half cavityMask)
         // short chords at the silhouette so the glow lines the wall and does not veil the moss.
         float g = (yLo + ch.y * (yHi - yLo) - _S6Bed.y) / max(_S6Bed.z, 1e-4);
         half edge = 1.0 - saturate(ch.x / (2.0 * R));
-        half bed = (half)(_S6Bed.x * exp(-g * g)) * lerp(0.2, 1.0, edge * edge);
+        half bed = (half)(_S6Bed.x * exp(-g * g)) * lerp(_S6Bed.w > 0.0 ? 0.0 : 0.2, 1.0, edge * edge);
         rgb += half3(0.04, 0.84, 0.52) * bed;
         a += bed * 0.30;
     }
