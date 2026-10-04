@@ -2,7 +2,9 @@
 
 Everything the spike makes outside Unity is made here, from the generated parts sheet.
 
-  python apps/sundial/Art/Scripts/leafplant_s3.py slice        sheet -> atlas png + parts json in Assets/Resources/LeafPlant
+  python apps/sundial/Art/Scripts/leafplant_s3.py slice [--species midday|morning|evening|all] [--debug out.png]
+                                                           sheet -> atlas png + parts json in Assets/Resources/LeafPlant
+                                                           (T-SUN-049: one sheet per species, veins as a separate lighter pencil layer)
   python apps/sundial/Art/Scripts/leafplant_s3.py flip a.png b.png out.gif
   python apps/sundial/Art/Scripts/leafplant_s3.py grey a.png b.png out.png
   python apps/sundial/Art/Scripts/leafplant_s3.py orbit out.gif f1.png f2.png ...
@@ -22,17 +24,53 @@ from scipy import ndimage as ndi
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", "..", "..", ".."))
-SHEET = os.path.join(REPO, "apps", "sundial", "Art", "Source", "plants", "leafplant", "parts-sheet-v1.png")
+SRC = os.path.join(REPO, "apps", "sundial", "Art", "Source", "plants", "leafplant")
+SHEET = os.path.join(SRC, "parts-sheet-v1.png")
 RES = os.path.join(REPO, "apps", "sundial", "Assets", "Resources", "LeafPlant")
 
 # Palette the atlas is graded to. Sage leaf, coral-pink petal and ink are the house values of the plant cards.
 SAGE = np.array([126.0, 140.0, 90.0])
 PETAL = np.array([226.0, 150.0, 164.0])
 INK = np.array([52.0, 40.0, 26.0])
+# T-SUN-049. Ink the sheet draws as the outline of a piece (within OUTLINE_BAND px of the matte edge) is grown for G1.
+# Ink further in (veins, petal creases) is a separate pencil layer: not grown, and only PENCIL_MIX of the way to a
+# lighter graphite brown, so at G1 it is a faint line and not a second outline.
+PENCIL = np.array([104.0, 92.0, 70.0])
+PENCIL_MIX = 0.50
+OUTLINE_BAND = 5.5
 GRADE_STRENGTH_LEAF = 0.85
 GRADE_STRENGTH_PETAL = 0.75
-INK_GROW_PX = 1.5
+INK_GROW_PX = 1.2
+# Stems and tufts are thin on screen: their ink is left as drawn, or the whole piece goes black.
+INK_GROW_THIN_PX = 0.0
 PAD = 6
+
+FLOWER_KINDS = ("flower", "flowerside", "bud")
+
+
+def petal_midday(rgb):
+    return (rgb[..., 0] - rgb[..., 1]) > 30
+
+
+def petal_morning(rgb):
+    return ((rgb[..., 0] - rgb[..., 2]) > 70) & ((rgb[..., 1] - rgb[..., 2]) > 45)
+
+
+def petal_evening(rgb):
+    return ((rgb[..., 2] - rgb[..., 1]) > 18) & ((rgb[..., 2] - rgb[..., 0]) > -10)
+
+
+# Per species: the sheet, the palette the pieces are pulled to, and which pixels are petal.
+SPECIES = {
+    "midday": dict(sheet="parts-sheet-v1.png", petal_fn=petal_midday, leaf=SAGE, petal=PETAL, bud=PETAL,
+                   what="coral-pink phlox-like herb"),
+    "morning": dict(sheet="morning-parts-sheet-v1.png", petal_fn=petal_morning,
+                    leaf=np.array([130.0, 150.0, 92.0]), petal=np.array([238.0, 200.0, 96.0]),
+                    bud=np.array([226.0, 164.0, 56.0]), what="sage-like herb with buttercup-yellow flowers"),
+    "evening": dict(sheet="evening-parts-sheet-v1.png", petal_fn=petal_evening,
+                    leaf=np.array([150.0, 166.0, 140.0]), petal=np.array([158.0, 118.0, 196.0]),
+                    bud=np.array([112.0, 82.0, 164.0]), what="lavender"),
+}
 
 
 def load_matte(path):
@@ -48,29 +86,61 @@ def load_matte(path):
     return rgb, alpha.astype(np.float32), fg
 
 
-def classify(lab, idx, rgb, sl):
+def features(lab, idx, rgb, sl, petal_fn):
     m = (lab[sl] == idx)
     h = sl[0].stop - sl[0].start
     w = sl[1].stop - sl[1].start
     area = int(m.sum())
     px = rgb[sl][m]
-    pink = float(((px[:, 0] - px[:, 1]) > 30).mean())
+    petal = petal_fn(px[None, ...])[0]
+    pink = float(petal.mean())
     green = float(((px[:, 1] - px[:, 0]) > 8).mean())
     fill = area / float(w * h)
-    kind = None
-    if pink > 0.8 and 0.88 <= w / float(h) <= 1.15 and fill > 0.6:
-        kind = "flower"
-    elif pink > 0.7 and w > 130:
-        kind = "flowerside"
-    elif 0.3 < pink < 0.75 and w < 75:
-        kind = "bud"
-    elif green > 0.3 and fill < 0.3 and h > 250:
-        kind = "stem"
-    elif green > 0.25 and h < 150 and fill < 0.45:
-        kind = "tuft"
-    elif green > 0.4 and fill >= 0.5:
-        kind = "leaf"
-    return kind, sl, m, (w, h, area, fill, pink, green)
+    return m, dict(w=w, h=h, area=area, fill=fill, pink=pink, green=green, mw=area / float(h))
+
+
+def classify(species, f):
+    """Kind of one cut piece from its colour and shape. None when it fits no kind (it is listed as skipped)."""
+    w, h, fill, pink, green = f["w"], f["h"], f["fill"], f["pink"], f["green"]
+    if species == "midday":
+        if pink > 0.8 and 0.88 <= w / float(h) <= 1.15 and fill > 0.6:
+            return "flower"
+        if pink > 0.7 and w > 130:
+            return "flowerside"
+        if 0.3 < pink < 0.75 and w < 75:
+            return "bud"
+        if green > 0.3 and fill < 0.3 and h > 250:
+            return "stem"
+        if green > 0.25 and h < 150 and fill < 0.45:
+            return "tuft"
+        if green > 0.4 and fill >= 0.5:
+            return "leaf"
+        return None
+    if species == "morning":
+        if pink > 0.55 and 0.85 <= w / float(h) <= 1.2 and fill > 0.5:
+            return "flower"
+        if 0.25 < pink < 0.85 and h > w and h < 140:
+            return "bud"
+        if pink > 0.3 and w > 1.2 * h:
+            return "flowerside"
+        if ((fill < 0.45 and h / float(w) > 3.0) or (fill < 0.3 and h / float(w) > 2.0)) and h > 110 and pink < 0.2:
+            return "stem"
+        if w / float(h) >= 1.0 and h < 140 and pink < 0.2:
+            return "tuft"
+        if fill >= 0.45 and pink < 0.25:
+            return "leaf"
+        return None
+    if species == "evening":
+        if pink > 0.35:
+            return "flowerside" if h > 220 else "bud"
+        if h > 200 and (fill < 0.3 or f["mw"] < 12):
+            return "stem"
+        if w / float(h) >= 0.85 and h < 190 and fill < 0.6:
+            return "tuft"
+        if fill >= 0.4 and h / float(w) > 2.2:
+            return "leaf"
+        return None
+    raise ValueError(species)
 
 
 def pivot_for(kind, m, sl):
@@ -85,35 +155,82 @@ def pivot_for(kind, m, sl):
     return [float(xs.mean() + sl[1].start), float(sl[0].start + rows[-1])]
 
 
-def grade(rgb, alpha, fg):
-    """Pull leaf green and petal pink to the house palette. Ink is left alone, then thickened."""
-    out = rgb.copy()
-    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
-    ink = (rgb.sum(axis=2) < 330) & fg
-    leaf = ((g - r) > 6) & ((g - b) > 10) & ~ink & fg
-    petal = ((r - g) > 30) & ~ink & fg
-    for mask, target, k in ((leaf, SAGE, GRADE_STRENGTH_LEAF), (petal, PETAL, GRADE_STRENGTH_PETAL)):
-        mean = rgb[mask].mean(axis=0)
-        gain = target / mean
-        gain = 1.0 + (gain - 1.0) * k
-        out[mask] = np.clip(rgb[mask] * gain, 0, 255)
-    return out, ink
+def bare_run(m, sl):
+    """The longest run of rows whose width is close to the shaft width: the part of a stem piece with no leaf nubs.
+    Returns [y_top, y_bottom, half_width_px] in sheet pixels (y down)."""
+    rows = np.where(m.any(axis=1))[0]
+    widths = np.array([np.ptp(np.nonzero(m[r])[0]) + 1 for r in rows], dtype=np.float32)
+    shaft = float(np.percentile(widths, 25))
+    ok = widths <= shaft * 1.5 + 2.0
+    best, cur, start, best_span = 0, 0, 0, (0, 0)
+    for i, flag in enumerate(ok):
+        if flag:
+            if cur == 0:
+                start = i
+            cur += 1
+            if cur > best:
+                best, best_span = cur, (start, i)
+        else:
+            cur = 0
+    r0, r1 = rows[best_span[0]], rows[best_span[1]]
+    return [int(sl[0].start + r0), int(sl[0].start + r1), round(shaft * 0.5, 1)]
 
 
-def thicken_ink(rgb, alpha, ink):
-    """Ink lines are 3 px on the sheet. At G1 a leaf is about a fifth of its sheet size, so the stroke needs to grow
-    or it is a half pixel stroke that crawls. Grow the dark mask and the alpha by the same radius."""
-    r = INK_GROW_PX
-    k = int(np.ceil(r))
-    yy, xx = np.mgrid[-k:k + 1, -k:k + 1]
-    disc = (xx * xx + yy * yy) <= r * r + 0.25
-    grown = ndi.binary_dilation(ink, structure=disc)
+KIND_CODE = {"leaf": 1, "flower": 2, "flowerside": 3, "bud": 4, "stem": 5, "tuft": 6}
+
+
+def grade(rgb, kindmap, fg, ink, spec):
+    """Pull leaf green and petal colour to the species palette. Ink is left alone here (see compose_ink)."""
     out = rgb.copy()
+    petal = spec["petal_fn"](rgb) & ~ink & fg
+    rest = fg & ~ink & ~petal
+    leaf_kinds = np.isin(kindmap, [KIND_CODE[k] for k in ("leaf", "stem", "tuft")])
+    base = rest & leaf_kinds
+    if base.sum() == 0:
+        base = rest
+    gain = spec["leaf"] / rgb[base].mean(axis=0)
+    gain = 1.0 + (gain - 1.0) * GRADE_STRENGTH_LEAF
+    out[rest] = np.clip(rgb[rest] * gain, 0, 255)
+    for name, kinds in (("petal", ("flower", "flowerside")), ("bud", ("bud",))):
+        sel = petal & np.isin(kindmap, [KIND_CODE[k] for k in kinds])
+        if sel.sum() == 0:
+            continue
+        g = spec[name] / rgb[sel].mean(axis=0)
+        g = 1.0 + (g - 1.0) * GRADE_STRENGTH_PETAL
+        out[sel] = np.clip(rgb[sel] * g, 0, 255)
+    return out
+
+
+def split_ink(rgb, fg):
+    """Ink pixels, and which of them are the outline of the piece (near the matte edge) and which are inside it."""
+    # dark and not saturated: the dark indigo petals of the lavender buds are dark too, and are not ink
+    chroma = rgb.max(axis=2) - rgb.min(axis=2)
+    ink = (rgb.sum(axis=2) < 330) & (chroma < 50) & fg
+    inside = ndi.distance_transform_edt(fg)
+    outline = ink & (inside <= OUTLINE_BAND)
+    return ink, outline, ink & ~outline
+
+
+def compose_ink(graded, alpha, ink, outline, veins, thin):
+    """Outline ink grown for G1 and set to the house ink. Inside ink becomes the pencil layer: the colour under it
+    pulled PENCIL_MIX of the way to graphite, one sheet pixel wide as drawn, never grown."""
+    # colour of the surrounding fill under every ink pixel (nearest non-ink graded colour)
+    idx = ndi.distance_transform_edt(ink, return_distances=False, return_indices=True)
+    under = graded[idx[0], idx[1]]
+    out = graded.copy()
+    out[ink] = under[ink]
+    out[veins] = under[veins] * (1.0 - PENCIL_MIX) + PENCIL * PENCIL_MIX
+    grown = np.zeros_like(outline)
+    for sel, r in ((outline & ~thin, INK_GROW_PX), (outline & thin, INK_GROW_THIN_PX)):
+        k = max(1, int(np.ceil(r)))
+        yy, xx = np.mgrid[-k:k + 1, -k:k + 1]
+        disc = (xx * xx + yy * yy) <= r * r + 0.25
+        grown |= ndi.binary_dilation(sel, structure=disc)
     out[grown] = INK
     # the grown ink may sit just outside the old matte: let alpha follow it, with a soft outer edge
     soft = np.clip(ndi.gaussian_filter(grown.astype(np.float32), 0.7) * 1.4, 0, 1)
     a = np.maximum(alpha, np.where(ndi.binary_dilation(grown, iterations=1), soft, 0.0))
-    return out, np.clip(a, 0, 1)
+    return out, np.clip(a, 0, 1), grown
 
 
 def bleed(rgb, alpha):
@@ -123,29 +240,37 @@ def bleed(rgb, alpha):
     return rgb[idx[0], idx[1]]
 
 
-def cmd_slice(args):
-    rgb, alpha, fg = load_matte(args.sheet)
+def slice_species(name, debug=None, sheet=None, layers_dir=None):
+    spec = SPECIES[name]
+    path = sheet or os.path.join(SRC, spec["sheet"])
+    rgb, alpha, fg = load_matte(path)
     lab, n = ndi.label(fg, structure=np.ones((3, 3)))
     parts = []
     skipped = []
     objs = ndi.find_objects(lab)
+    kindmap = np.zeros(lab.shape, dtype=np.uint8)
     for i in range(1, n + 1):
         area = int((lab[objs[i - 1]] == i).sum())
         if area < 150:
             continue
-        kind, sl, m, feat = classify(lab, i, rgb, objs[i - 1])
+        m, feat = features(lab, i, rgb, objs[i - 1], spec["petal_fn"])
+        kind = classify(name, feat)
         if kind is None:
-            skipped.append({"component": i, "features": [float(x) for x in feat]})
+            skipped.append({"component": i, "features": {k: round(float(v), 3) for k, v in feat.items()}})
             continue
-        parts.append((kind, sl, m, feat, i))
-    graded, ink = grade(rgb, alpha, fg)
-    graded, alpha2 = thicken_ink(graded, alpha, ink)
+        sub = kindmap[objs[i - 1]]
+        sub[m] = KIND_CODE[kind]
+        parts.append((kind, objs[i - 1], m, feat, i))
+    ink, outline, veins = split_ink(rgb, fg)
+    graded = grade(rgb, kindmap, fg, ink, spec)
+    thin = np.isin(kindmap, [KIND_CODE["stem"], KIND_CODE["tuft"]])
+    graded, alpha2, grown = compose_ink(graded, alpha, ink, outline, veins, thin)
     graded = bleed(graded, alpha2)
     atlas = np.dstack([np.clip(graded, 0, 255), alpha2 * 255.0]).astype(np.uint8)
 
     H, W = alpha.shape
     order = {"leaf": 0, "flower": 1, "flowerside": 2, "bud": 3, "stem": 4, "tuft": 5}
-    parts.sort(key=lambda p: (order[p[0]], -p[3][2]))
+    parts.sort(key=lambda p: (order[p[0]], -p[3]["area"]))
     counts = {}
     out_parts = []
     for kind, sl, m, feat, i in parts:
@@ -165,23 +290,39 @@ def cmd_slice(args):
             ys, xs = np.nonzero(m)
             top = ys.argmin()
             entry["tip"] = [round(float(xs[top] + sl[1].start), 1), round(float(ys[top] + sl[0].start), 1)]
+            entry["bare"] = bare_run(m, sl)
         counts[kind] = counts.get(kind, 0) + 1
         out_parts.append(entry)
     os.makedirs(RES, exist_ok=True)
-    png = os.path.join(RES, "midday-parts.png")
+    png = os.path.join(RES, name + "-parts.png")
     Image.fromarray(atlas, "RGBA").save(png)
-    meta = {"atlas": "midday-parts", "size": [W, H], "counts": counts, "skipped": skipped, "parts": out_parts}
-    with open(os.path.join(RES, "midday-parts.json"), "w") as f:
+    meta = {"atlas": name + "-parts", "species": name, "size": [W, H], "counts": counts, "skipped": skipped, "parts": out_parts,
+            "ink": {"outline_px": int(grown.sum()), "pencil_px": int(veins.sum()), "outline_band": OUTLINE_BAND,
+                    "grow_px": INK_GROW_PX, "pencil_mix": PENCIL_MIX}}
+    with open(os.path.join(RES, name + "-parts.json"), "w") as f:
         json.dump(meta, f, indent=1)
     with open(png + ".provenance.txt", "w") as f:
         f.write(
             "generator: agy (Antigravity CLI image tool) parts sheet, sliced and graded by apps/sundial/Art/Scripts/leafplant_s3.py\n"
-            "source: apps/sundial/Art/Source/plants/leafplant/parts-sheet-v1.png (prompt only, no reference image)\n"
+            "source: apps/sundial/Art/Source/plants/leafplant/%s (prompt only, no reference image)\n"
             "derived_from_art_reference: no\n"
-            "grade: leaf green, petal pink and ink pulled to the house palette hexes in the script (sage 7E8C5A, petal E296A4)\n"
+            "grade: leaf and petal colour pulled to the species palette in the script; outline ink grown, interior ink "
+            "(veins) kept thin as a separate lighter pencil layer\n" % os.path.basename(path)
         )
-    print("parts", counts, "skipped", len(skipped), "->", png)
-    if args.debug:
+    if layers_dir:
+        os.makedirs(layers_dir, exist_ok=True)
+        ol = np.zeros(atlas.shape, np.uint8)
+        ol[..., :3] = INK.astype(np.uint8)
+        ol[..., 3] = (grown * 255).astype(np.uint8)
+        Image.fromarray(ol, "RGBA").save(os.path.join(layers_dir, name + "-layer-outline.png"))
+        pl = np.zeros(atlas.shape, np.uint8)
+        pl[..., :3] = PENCIL.astype(np.uint8)
+        pl[..., 3] = (veins * 255 * PENCIL_MIX).astype(np.uint8)
+        Image.fromarray(pl, "RGBA").save(os.path.join(layers_dir, name + "-layer-pencil.png"))
+    print(name, "parts", counts, "skipped", len(skipped), "outline px", int(grown.sum()), "pencil px", int(veins.sum()), "->", png)
+    for sk in skipped:
+        print("  skipped", sk)
+    if debug:
         dbg = Image.fromarray(atlas, "RGBA")
         bgc = Image.new("RGBA", dbg.size, (200, 200, 205, 255))
         bgc.alpha_composite(dbg)
@@ -193,8 +334,19 @@ def cmd_slice(args):
             d.text((x + 2, y + 2), "%s%d" % (p["kind"][:2], p["index"]), fill=(0, 0, 0, 255))
             px, py = p["pivot"]
             d.ellipse([px - 3, py - 3, px + 3, py + 3], outline=(0, 0, 255, 255))
-        bgc.convert("RGB").save(args.debug)
-        print("debug", args.debug)
+        bgc.convert("RGB").save(debug)
+        print("debug", debug)
+    return out_parts
+
+
+def cmd_slice(args):
+    names = list(SPECIES) if args.species == "all" else [args.species]
+    for name in names:
+        debug = None
+        if args.debug:
+            root, ext = os.path.splitext(args.debug)
+            debug = args.debug if len(names) == 1 else "%s-%s%s" % (root, name, ext)
+        slice_species(name, debug, args.sheet, args.layers)
 
 
 def load_rgb(path):
@@ -292,7 +444,9 @@ def main(argv):
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("slice")
-    s.add_argument("--sheet", default=SHEET)
+    s.add_argument("--species", default="all", choices=list(SPECIES) + ["all"])
+    s.add_argument("--sheet", default=None)
+    s.add_argument("--layers", default=None, help="write the outline and pencil layers here")
     s.add_argument("--debug", default=None)
     s.set_defaults(fn=cmd_slice)
     s = sub.add_parser("flip")

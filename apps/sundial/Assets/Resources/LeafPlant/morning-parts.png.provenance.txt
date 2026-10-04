@@ -1,4 +1,4 @@
 generator: agy (Antigravity CLI image tool) parts sheet, sliced and graded by apps/sundial/Art/Scripts/leafplant_s3.py
-source: apps/sundial/Art/Source/plants/leafplant/parts-sheet-v1.png (prompt only, no reference image)
+source: apps/sundial/Art/Source/plants/leafplant/morning-parts-sheet-v1.png (prompt only, no reference image)
 derived_from_art_reference: no
 grade: leaf and petal colour pulled to the species palette in the script; outline ink grown, interior ink (veins) kept thin as a separate lighter pencil layer
