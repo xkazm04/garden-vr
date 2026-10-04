@@ -89,3 +89,9 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   holding only the neutrally named images, inlining the schema and a "last message is one JSON object" contract, and taking the
   last JSON object with a verdict key gave 0 unparseable in 193 calls. Also a leak risk closed. Domain: llm-observability /
   judge-contract-design.
+
+- **2026-10-04 (T-TER-040..045) Surface spikes do not fix shape.** Five fidelity spikes (glass, thick glass, moss, fronds,
+  atmosphere) each won their pairwise vs A, yet the rubric stayed at level 2 throughout. Side by side with the reference, the
+  remaining gap was silhouette and mass: jar proportions, cork shape, moss as a mound. Region-scoped spikes and region
+  criteria never own the outline. Measure silhouette IoU against the reference first, before surface work.
+  Domain: game-production / art direction pipeline.
