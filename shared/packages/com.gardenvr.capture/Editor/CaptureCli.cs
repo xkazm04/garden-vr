@@ -14,12 +14,13 @@ namespace GardenVR.Capture.Editor
     /// Batchmode entry points. Each logs "[Capture] &lt;entry&gt; OK &lt;out&gt;" or "[Capture] &lt;entry&gt; FAIL &lt;reason&gt;"
     /// and exits non-zero on failure.
     /// </summary>
-    public static class CaptureCli
+    public static partial class CaptureCli
     {
         public static void Shot() { Guard("Shot", DoShot); }
         public static void Crops() { Guard("Crops", DoCrops); }
         public static void Diff() { Guard("Diff", DoDiff); }
         public static void Measure() { Guard("Measure", DoMeasure); }
+        public static void Sweep() { Guard("Sweep", DoSweep); }
 
         static void Guard(string entry, Func<string> body)
         {
