@@ -20,6 +20,16 @@
       "plate": null,
       "width": 1824,
       "height": 1024
+    },
+    {
+      "name": "PlantClose",
+      "eye": [0.0236, 0.15, -0.2],
+      "lookAt": [0.0236, 0.05, 0.0265],
+      "fov": 26,
+      "lensShift": [0, 0],
+      "plate": null,
+      "width": 1024,
+      "height": 1024
     }
   ]
 }

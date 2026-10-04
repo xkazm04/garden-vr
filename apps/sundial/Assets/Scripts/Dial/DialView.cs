@@ -110,6 +110,18 @@ namespace GardenVR.Sundial
         /// </summary>
         public Texture2D roomCookie;
         public Material roomShadow;
+        // Spike S3. variant=leafplant draws the midday hero as a drawn-leaf assembly (one mesh of cards cut from one
+        // parts sheet) instead of the camera-facing card. Resources/LeafPlant holds the material, atlas and parts json.
+        // Only the full stage has an assembly. Every other stage, and every other plant, keeps the card.
+        const int LeafSlot = 3;
+        LeafPlant _leaf;
+        bool _leafActive;
+        Mesh _contactDefault;
+        Mesh _contactNoMidday;
+        Vector3 _viewForward = new Vector3(0f, -0.60f, 0.80f);
+        Texture2D _leafSilhouette;
+        string _leafSilhouetteKey;
+        public LeafPlant LeafAssembly { get { return _leaf; } }
         const string VariantDefault = "a";
         string _variant = VariantDefault;
         Material _faceDefault;
@@ -234,6 +246,7 @@ namespace GardenVR.Sundial
             int haloArc = ArcIndex(haloTarget);
             _haloArc = haloArc;
             ApplyPlants();
+            ApplyLeafPlant();
             ApplyStrip();
             ApplyPulse();
             ApplyBloomFold();
@@ -255,6 +268,12 @@ namespace GardenVR.Sundial
             if (bloomCard >= 0 && bloomTextures != null && bloomTex < bloomTextures.Length)
                 bloomTex2d = bloomTextures[bloomTex];
             Texture2D haloCard = CardTex(haloPlantSlot, stageCard);
+            if (_leafActive && haloPlantSlot == LeafSlot)
+            {
+                // The assembly already has its heads. The halo traces the plant that is drawn, from the camera that draws it.
+                haloCard = LeafSilhouette(haloCard);
+                bloomTex2d = null;
+            }
             if (haloRenderer != null)
             {
                 haloRenderer.enabled = !stageStrip && amount > 0.01f;
@@ -349,11 +368,121 @@ namespace GardenVR.Sundial
             return n == "watercolour" || n == "watercolor" || n == "s1" || n == "b";
         }
 
+        static bool IsLeafPlantVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            string n = name.Trim().ToLowerInvariant();
+            return n == "leafplant" || n == "leaf-plant" || n == "leaf" || n == "drawnleaf" || n == "s3";
+        }
+
         static bool IsKnownVariant(string name)
         {
             if (string.IsNullOrEmpty(name)) return true;
             string n = name.Trim().ToLowerInvariant();
-            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n);
+            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n);
+        }
+
+        /// <summary>
+        /// Look A leaves all of this off and the card draws. variant=leafplant hides the midday hero card and its bloom
+        /// overlay and draws the assembly in their place: one mesh, one draw, one soft contact quad.
+        /// </summary>
+        void ApplyLeafPlant()
+        {
+            _leafActive = false;
+            if (!IsLeafPlantVariant(_variant))
+            {
+                RestoreLeafPlant();
+                return;
+            }
+            Transform plant = PlantTransform(LeafSlot);
+            if (plant == null) return;
+            EnsureLeafPlant();
+            int stage = plantStage != null && LeafSlot < plantStage.Length ? Mathf.Clamp(plantStage[LeafSlot], 0, 4) : 4;
+            bool on = SlotOn(LeafSlot) && showPlants && !stageStrip && !weekPage && stage == 4;
+            _leaf.SetActive(on);
+            SwapMiddayContact(on);
+            if (!on) return;
+            _leafActive = true;
+            Renderer card = plant.GetComponent<Renderer>();
+            if (card != null) card.enabled = false;
+            if (bloomRenderers != null && bloomRenderers.Length > 1 && bloomRenderers[1] != null) bloomRenderers[1].enabled = false;
+            int shown = ShownBloomCard(1);
+            _leaf.Rebuild(shown < 0 ? LeafBloom.None : shown == 0 ? LeafBloom.Bud : LeafBloom.Open);
+            float scale = PlantSize[1].y > 1e-4f ? plant.localScale.y / PlantSize[1].y : 1f;
+            _leaf.SetPose(plant.localPosition, scale);
+            _leaf.SetLook(time, PlantTint(LeafSlot));
+        }
+
+        void EnsureLeafPlant()
+        {
+            if (_leaf != null) return;
+            var material = Resources.Load<Material>(LeafPlant.ResourceMaterial);
+            var parts = Resources.Load<TextAsset>(LeafPlant.ResourceParts);
+            if (material == null || parts == null)
+                throw new InvalidOperationException("variant=leafplant needs Resources/LeafPlant/Leaf_Midday.mat and midday-parts.json (run LeafPlantSetup.Run)");
+            Material contact = contactRenderer != null ? contactRenderer.sharedMaterial : null;
+            _leaf = new LeafPlant(transform, material, parts, contact);
+        }
+
+        /// <summary>The halo mask follows the camera that draws the assembly, because the silhouette depends on the view.</summary>
+        void RefreshLeafHalo()
+        {
+            if (_leaf == null || haloRenderer == null || plantStage == null) return;
+            int slot = haloSlot >= 0 ? haloSlot : _haloArc * RowsPerArc;
+            if (slot != LeafSlot) return;
+            Texture2D like = CardTex(slot, Mathf.Clamp(plantStage[slot], 0, 4));
+            var block = new MaterialPropertyBlock();
+            haloRenderer.GetPropertyBlock(block);
+            block.SetTexture("_MainTex", HaloMask(LeafSilhouette(like), null, 0));
+            haloRenderer.SetPropertyBlock(block);
+        }
+
+        void RestoreLeafPlant()
+        {
+            if (_leaf != null) _leaf.SetActive(false);
+            SwapMiddayContact(false);
+        }
+
+        /// <summary>The assembly brings its own contact shadow. The old disc under the midday plant steps aside while it is drawn.</summary>
+        void SwapMiddayContact(bool assemblyOn)
+        {
+            if (contactRenderer == null) return;
+            var filter = contactRenderer.GetComponent<MeshFilter>();
+            if (filter == null) return;
+            if (_contactDefault == null) _contactDefault = filter.sharedMesh;
+            if (assemblyOn)
+            {
+                if (_contactNoMidday == null)
+                {
+                    _contactNoMidday = BuildContactMesh(true);
+                    _contactNoMidday.hideFlags = HideFlags.DontSave;
+                }
+                if (filter.sharedMesh != _contactNoMidday) filter.sharedMesh = _contactNoMidday;
+            }
+            else if (_contactDefault != null && filter.sharedMesh != _contactDefault)
+            {
+                filter.sharedMesh = _contactDefault;
+            }
+        }
+
+        /// <summary>The assembly seen from the camera on an upright card, the size of the card texture it stands in for.</summary>
+        Texture2D LeafSilhouette(Texture2D like)
+        {
+            Vector3 local = transform.InverseTransformDirection(_viewForward);
+            int shown = ShownBloomCard(1);
+            // Quantise the view so the bake is not repeated every frame the camera drifts a hair.
+            string key = Mathf.RoundToInt(local.x * 40f) + "," + Mathf.RoundToInt(local.y * 40f) + "," + Mathf.RoundToInt(local.z * 40f)
+                         + "," + shown + "," + _leaf.Triangles;
+            if (_leafSilhouette != null && key == _leafSilhouetteKey) return _leafSilhouette;
+            if (_leafSilhouette != null) DestroyObject(_leafSilhouette);
+            Transform plant = PlantTransform(LeafSlot);
+            float scale = PlantSize[1].y > 1e-4f && plant != null ? plant.localScale.y / PlantSize[1].y : 1f;
+            int w = like != null ? like.width : 256;
+            int h = like != null ? like.height : 512;
+            _leafSilhouette = _leaf.BakeSilhouette(local, PlantSize[1] * scale, w, h, scale);
+            _leafSilhouette.name = "LeafPlantSilhouette." + key;
+            _leafSilhouetteKey = key;
+            return _leafSilhouette;
         }
 
         /// <summary>
@@ -710,6 +839,10 @@ namespace GardenVR.Sundial
         public void Face(Camera cam)
         {
             if (cam == null || uprightCards == null) return;
+            Vector3 view = cam.transform.forward;
+            bool moved = (view - _viewForward).sqrMagnitude > 1e-4f;
+            _viewForward = view;
+            if (moved && _leafActive) RefreshLeafHalo();
             for (int i = 0; i < uprightCards.Length; i++)
             {
                 Transform card = uprightCards[i];
@@ -776,6 +909,13 @@ namespace GardenVR.Sundial
             Apply();
         }
 
+        void OnDestroy()
+        {
+            if (_leaf != null) _leaf.Destroy();
+            if (_contactNoMidday != null) DestroyObject(_contactNoMidday);
+            if (_leafSilhouette != null) DestroyObject(_leafSilhouette);
+        }
+
         void OnDisable()
         {
             if (IsRoomLightVariant(_variant)) RoomLightGlobals.Clear();
@@ -829,7 +969,7 @@ namespace GardenVR.Sundial
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
                 case "variant":
                     if (!IsKnownVariant(value))
-                        throw new FormatException("DialView variant is not a, watercolour or roomlight: " + value);
+                        throw new FormatException("DialView variant is not a, watercolour, roomlight or leafplant: " + value);
                     _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
                     break;
                 default:
@@ -1307,12 +1447,18 @@ namespace GardenVR.Sundial
 
         Mesh BuildContactMesh()
         {
+            return BuildContactMesh(false);
+        }
+
+        Mesh BuildContactMesh(bool skipMidday)
+        {
             var verts = new List<Vector3>(12);
             var uv = new List<Vector2>(12);
             var colors = new List<Color>(12);
             var tris = new List<int>(18);
             for (int arc = 0; arc < 3; arc++)
             {
+                if (skipMidday && arc == 1) continue;
                 Vector2 spot = PlantSpot[arc];
                 Vector3 center = new Vector3(spot.x * faceRadius, faceY + 0.008f, spot.y * faceRadius);
                 float rx = PlantSize[arc].x * 1.15f;
