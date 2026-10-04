@@ -141,16 +141,17 @@ def wash_alpha(n=512):
     yy, xx = np.mgrid[0:n, 0:n].astype(np.float64)
     v = 1.0 - (yy + 0.5) / n
     u = (xx + 0.5) / n - 0.5
-    half = 0.035 + 0.40 * v
+    half = 0.04 + 0.30 * v
     edge = (half - np.abs(u)) * n
-    soft = 1.0 / (1.0 + np.exp(-edge / 5.0))
-    rim = np.exp(-np.maximum(edge, 0.0) / 11.0)
-    body = 0.30 + 0.30 * rim
-    fade = np.clip(1.0 - (v - 0.62) / 0.38, 0.0, 1.0) ** 1.3
+    soft = 1.0 / (1.0 + np.exp(-edge / 30.0))
+    rim = np.exp(-np.maximum(edge, 0.0) / 26.0)
+    body = 0.78 + 0.22 * rim
+    t = np.clip((v - 0.30) / 0.70, 0.0, 1.0)
+    fade = 1.0 - t * t * (3.0 - 2.0 * t)
     near = np.clip(v / 0.06, 0.0, 1.0)
     noise = ndimage.gaussian_filter(rng.standard_normal((n, n)), 26.0, mode="wrap")
     noise = noise / (np.abs(noise).max() + 1e-6)
-    alpha = soft * body * (0.55 + 0.45 * fade) * near * (1.0 + 0.16 * noise)
+    alpha = soft * body * fade * near * (1.0 + 0.16 * noise)
     return np.clip(alpha, 0.0, 1.0)
 
 

@@ -121,6 +121,8 @@ namespace GardenVR.Sundial
         /// <summary>Direction the key light travels on the table plane (x right, z away). The window is upper left and behind.</summary>
         static readonly Vector2 RoomKeyTravel = new Vector2(0.45f, -0.64f).normalized;
         const float ContactAwayFromWindow = 0.012f;
+        /// <summary>Plain flags on purpose. Any DontSave flag keeps the wedges out of FindObjectsByType, so out of the budget count.</summary>
+        const HideFlags RuntimeOnly = HideFlags.None;
 
         [Header("Wired by Build")]
         public float faceY = 0.012f;
@@ -434,7 +436,7 @@ namespace GardenVR.Sundial
             Quaternion aim = Quaternion.LookRotation(dir, Vector3.up);
 
             _gnomonWedge.localRotation = aim;
-            _gnomonWedge.localPosition = new Vector3(0f, faceY + 0.011f, 0f) + dir.normalized * 0.004f;
+            _gnomonWedge.localPosition = new Vector3(0f, faceY + 0.0145f, 0f) + dir.normalized * 0.004f;
             _gnomonWedge.localScale = new Vector3(0.115f, 1f, 0.115f);
             _gnomonWedge.gameObject.SetActive(gnomonVisible && !stageStrip);
 
@@ -448,7 +450,7 @@ namespace GardenVR.Sundial
                 if (!on) continue;
                 Vector3 baseLocal = slot.localPosition;
                 wedge.localRotation = aim;
-                wedge.localPosition = new Vector3(baseLocal.x, faceY + 0.010f, baseLocal.z);
+                wedge.localPosition = new Vector3(baseLocal.x, faceY + 0.0125f, baseLocal.z);
                 // One short wash. Length follows the plant's height, width its card.
                 wedge.localScale = new Vector3(slot.localScale.x * 0.62f, 1f, slot.localScale.y * 0.36f);
             }
@@ -457,7 +459,7 @@ namespace GardenVR.Sundial
         void EnsureRoomShadows()
         {
             if (_roomShadowRoot != null) return;
-            var root = new GameObject("RoomLightShadows") { hideFlags = HideFlags.DontSave };
+            var root = new GameObject("RoomLightShadows") { hideFlags = RuntimeOnly };
             root.transform.SetParent(transform, false);
             _roomShadowRoot = root.transform;
             _wedgeMesh = new Mesh { name = "RoomShadowWedge", hideFlags = HideFlags.DontSave };
@@ -479,7 +481,7 @@ namespace GardenVR.Sundial
 
         Transform NewWedge(string name)
         {
-            var go = new GameObject(name) { hideFlags = HideFlags.DontSave };
+            var go = new GameObject(name) { hideFlags = RuntimeOnly };
             go.transform.SetParent(_roomShadowRoot, false);
             go.AddComponent<MeshFilter>().sharedMesh = _wedgeMesh;
             var renderer = go.AddComponent<MeshRenderer>();

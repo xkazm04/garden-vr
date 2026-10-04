@@ -45,6 +45,12 @@ namespace GardenVR.Sundial
         public const float CookieSize = 0.40f;
         /// <summary>The cap from the dossier: +-15 percent luma.</summary>
         public const float Amplitude = 0.15f;
+        /// <summary>
+        /// The cookie is a lit-fraction map. Cream paper cannot brighten, so the gain is
+        /// 1 + Amplitude * clamp(d * Contrast + Bias): the lit side holds near 1 and the shade side falls toward 0.85.
+        /// </summary>
+        public const float Contrast = 1.3f;
+        public const float Bias = -0.5f;
 
         static readonly int CookieId = Shader.PropertyToID("_GvrRoomCookie");
         static readonly int WorldToCookieId = Shader.PropertyToID("_GvrRoomW2C");
@@ -57,7 +63,7 @@ namespace GardenVR.Sundial
         {
             Shader.SetGlobalTexture(CookieId, cookie);
             Shader.SetGlobalMatrix(WorldToCookieId, worldToDial);
-            Shader.SetGlobalVector(ParamsId, new Vector4(CookieSize, Mathf.Clamp(amplitude, 0f, Amplitude), 0f, 0f));
+            Shader.SetGlobalVector(ParamsId, new Vector4(CookieSize, Mathf.Clamp(amplitude, 0f, Amplitude), Contrast, Bias));
             Shader.EnableKeyword(Keyword);
         }
 

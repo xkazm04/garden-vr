@@ -131,7 +131,7 @@ Shader "Fidelity/Card"
                         float3 lp = mul(_GvrRoomW2C, float4(i.wp.x, TransformObjectToWorld(float3(0, 0, 0)).y, i.wp.z, 1.0)).xyz;
                         float2 cuv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
                         float cd = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, cuv).r * 2.0 - 1.0;
-                        half cg = (half)(1.0 + _GvrRoomParams.y * cd);
+                        half cg = (half)pow(1.0 + _GvrRoomParams.y * clamp(cd * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
                         half cpeak = max(max(c.r, c.g), max(c.b, 1e-3));
                         c.rgb *= min(cg, max((half)1.0, (half)(0.985 / cpeak)));
                     }

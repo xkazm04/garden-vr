@@ -7,7 +7,8 @@
 // (R = state/4, G = arc/2, B = ink flood 0-1 from the nib at uv.x = 0, A = 0 hides the tile).
 // _TileMode 0 leaves the ramp path unchanged. Indices 0-20 still read the same pixels they always did.
 // _GVR_ROOMLIGHT (global keyword, off by default) multiplies the lit colour by a room-light cookie (Spike S2).
-// The cookie is a table-plane texture in dial space: R is 0.5 + 0.5 * d, and the gain is 1 + _GvrRoomParams.y * d.
+// The cookie is a table-plane texture in dial space: R is 0.5 + 0.5 * d. _GvrRoomParams: x cookie size (m), y amplitude,
+// z contrast, w bias. The gain is 1 + y * clamp(d * z + w, -1, 1), so the lit side can hold at 1 while the shade side falls.
 // Darkening is free. Brightening stops where a channel would pass 0.985, so paper stays cream.
 Shader "Fidelity/Toon"
 {
@@ -100,7 +101,8 @@ Shader "Fidelity/Toon"
             float3 lp = mul(_GvrRoomW2C, float4(wp, 1.0)).xyz;
             float2 uv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
             float d = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, uv).r * 2.0 - 1.0;
-            return 1.0 + _GvrRoomParams.y * d;
+            // The cap is on the encoded (display) luma, so the linear multiply is that gain to the 2.2.
+            return pow(1.0 + _GvrRoomParams.y * clamp(d * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
         }
         float BoilClock()
         {
