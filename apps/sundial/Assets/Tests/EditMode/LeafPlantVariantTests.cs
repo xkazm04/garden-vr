@@ -84,6 +84,29 @@ namespace GardenVR.Sundial.Tests.EditMode
         }
 
         [Test]
+        public void TheAssemblyStaysNearTheOldCardBoxAndHasDepth()
+        {
+            GameObject root = NewDial(out DialView view, out _, out _);
+            try
+            {
+                view.ApplyCaptureState(new Dictionary<string, string> { { "variant", "leafplant" }, { "bloom.midday", "2" } });
+                LeafPlant plant = view.LeafAssembly;
+                Bounds b = plant.Root.GetComponent<MeshFilter>().sharedMesh.bounds;
+                TestContext.WriteLine("S3 assembly: cards " + plant.Cards + ", verts " + plant.Vertices + ", tris " + plant.Triangles
+                                      + ", size (m) " + b.size.x.ToString("0.0000") + " x " + b.size.y.ToString("0.0000") + " x " + b.size.z.ToString("0.0000"));
+                // The old card is 0.072 x 0.112 with the plant inside its lower three quarters. The assembly is its size, and it has depth.
+                Assert.Less(b.size.x, 0.10f);
+                Assert.Greater(b.size.y, 0.06f);
+                Assert.Less(b.size.y, 0.10f);
+                Assert.Greater(b.size.z, 0.03f, "a drawn-leaf plant has real depth; a billboard card has none");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
         public void NormalsComeFromOneEllipsoid_UpOnTopDownUnderneathOutwardAtTheSides()
         {
             Assert.Greater(LeafPlant.EllipsoidNormal(new Vector3(0f, 0.09f, 0f)).y, 0.99f);

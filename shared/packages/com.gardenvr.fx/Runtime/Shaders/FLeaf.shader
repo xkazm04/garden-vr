@@ -26,7 +26,7 @@ Shader "Fidelity/Leaf"
     }
     SubShader
     {
-        Tags { "RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest+50" "RenderType"="TransparentCutout" }
+        Tags { "RenderPipeline"="UniversalPipeline" "Queue"="AlphaTest+5" "RenderType"="TransparentCutout" }
         Pass
         {
             Tags { "LightMode"="UniversalForward" }
