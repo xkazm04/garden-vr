@@ -1,0 +1,16 @@
+{
+  "1": {"class_type": "LoadImage", "inputs": {"image": "__IMAGE__"}},
+  "2": {"class_type": "Trellis2RemoveBackground", "inputs": {"image": ["1", 0], "low_vram": true}},
+  "3": {"class_type": "LoadTrellis2Models", "inputs": {"resolution": "__RES__", "precision": "auto", "attn_backend": "auto"}},
+  "4": {"class_type": "Trellis2GetConditioning", "inputs": {"model_config": ["3", 0], "image": ["2", 0], "mask": ["2", 1], "background_color": "black"}},
+  "5": {"class_type": "Trellis2ImageToShape", "inputs": {"model_config": ["3", 0], "conditioning": ["4", 0], "seed": "__SEED__",
+        "ss_guidance_strength": 6.5, "ss_guidance_rescale": 0.05, "ss_sampling_steps": 12,
+        "shape_guidance_strength": 6.5, "shape_guidance_rescale": 0.05, "shape_sampling_steps": 12, "max_tokens": 262144}},
+  "6": {"class_type": "Trellis2ShapeToTexturedMesh", "inputs": {"model_config": ["3", 0], "conditioning": ["4", 0], "shape_slat": ["5", 1], "subs": ["5", 2],
+        "seed": "__SEED__", "tex_guidance_strength": 3.0, "tex_guidance_rescale": 0.2, "tex_sampling_steps": 12}},
+  "7": {"class_type": "Trellis2ProcessMesh", "inputs": {"trimesh": ["5", 0], "remesh": "on", "remesh.remesh_band": 1.0, "remesh.remove_inner_faces": false,
+        "target_face_count": 500000, "floater_threshold": 0.001, "weld_vertices": true, "weld_digits": 4,
+        "chart_cone_angle": 90.0, "chart_refine_iterations": 1, "chart_global_iterations": 1, "chart_smooth_strength": 1}},
+  "8": {"class_type": "Trellis2RasterizePBR", "inputs": {"trimesh": ["7", 0], "voxelgrid": ["6", 0], "original_mesh": ["5", 0], "texture_size": 2048}},
+  "9": {"class_type": "Trellis2ExportTrimesh", "inputs": {"trimesh": ["8", 0], "filename_prefix": "__PREFIX__", "file_format": "glb"}}
+}

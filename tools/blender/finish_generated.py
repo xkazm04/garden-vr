@@ -25,6 +25,7 @@ import traceback
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import bmesh
 import bpy
 
 import f4_lib
@@ -141,6 +142,47 @@ def quadriflow_then_fit(obj, target_tris, tol):
     return report
 
 
+def voxel_clean(obj, size_m, divisions=140):
+    """Rebuild the low as one watertight skin with a Remesh modifier (voxel mode).
+
+    Generator meshes carry non-manifold sheets (T-TER-046: 97 components, 3845 bad edges on a clean-looking
+    mushroom). Edge collapse on that tears the surface into shards and stalls near 2k tris. A voxel skin is
+    manifold, so the collapse afterwards can reach the budget. The high keeps the detail for the bake.
+    """
+    f4_lib.activate(obj)
+    mod = obj.modifiers.new("VoxelClean", "REMESH")
+    mod.mode = "VOXEL"
+    mod.voxel_size = size_m / divisions
+    mod.use_smooth_shade = False
+    before = len(obj.data.polygons)
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    # The skin keeps hundreds of speck shells from inner geometry. Drop them now, or the dust pass after the
+    # collapse deletes most of the budget (T-TER-046: 381 islands, 1342 tris -> 568).
+    dust = f4_lib.delete_floaters(obj, 0.005)
+    # Voxelising an open generator shell can leave the skin inside out, and the selected-to-active bake then
+    # misses the high (mushroom albedo came out as thin rings). Make the winding outward.
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))
+    bm.to_mesh(obj.data)
+    bm.free()
+    obj.data.update()
+    return {"method": "voxel", "voxel_size_m": size_m / divisions, "faces_before": before, "faces_after": len(obj.data.polygons), "dust": dust}
+
+
+def scaled_collapse(obj, target, tol, size_m, factor=100.0):
+    """collapse_clean at x100 scale, then back. Edge lengths of 1e-4 m make the quadric collapse tear shards."""
+    for vert in obj.data.vertices:
+        vert.co *= factor
+    obj.data.update()
+    result = f4_lib.collapse_clean(obj, target, tol, size_m * factor)
+    for vert in obj.data.vertices:
+        vert.co /= factor
+    obj.data.update()
+    result["scaled_by"] = factor
+    return result
+
+
 def finish(obj, args, out):
     asset_class = flag(args, "--class", "prop")
     target = int(flag(args, "--tris", "1200"))
@@ -151,6 +193,12 @@ def finish(obj, args, out):
     device = f4_lib.set_cycles_device("OPTIX")
     say("[finish] device %s" % json.dumps(device))
     f4_lib.apply_transforms(obj)
+    # A glTF import splits every UV seam into coincident vertices, so one generator mesh is thousands of "islands" and
+    # collapse cannot reduce it. Weld the splits first (T-TER-046: TRELLIS.2 mushroom, 10125 islands, tris stalled at 5411
+    # and the dust pass then deleted every face). Welding keeps loop UVs, so the albedo bake still reads the texture.
+    diag = max(f4_lib.world_bounds(obj)["size"])
+    seam_weld = f4_lib.weld_cracks(obj, max(diag, 1e-6) * 1e-5)
+    say("[finish] seam weld %s" % json.dumps(seam_weld))
     floater = f4_lib.delete_floaters(obj, 0.01)
     say("[finish] floaters %s" % json.dumps(floater))
     # Join nothing else: floaters were faces on this mesh.
@@ -168,6 +216,13 @@ def finish(obj, args, out):
     size_m = size_cm / 100.0
     if remesh == "quadriflow":
         decimate = quadriflow_then_fit(low, target, tol)
+    elif remesh == "voxel":
+        voxel = voxel_clean(low, size_m)
+        say("[finish] voxel %s" % json.dumps(voxel))
+        decimate = scaled_collapse(low, target, tol, size_m)
+        decimate["voxel"] = voxel
+    elif remesh == "scaled":
+        decimate = scaled_collapse(low, target, tol, size_m)
     else:
         decimate = f4_lib.collapse_clean(low, target, tol, size_m)
     # Decimate can push a vertex outside the normalised box. The low has to
