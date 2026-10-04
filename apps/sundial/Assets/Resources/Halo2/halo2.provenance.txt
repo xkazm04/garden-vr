@@ -1,0 +1,3 @@
+asset: halo2 masks (one png per plant card, plus the bloom overlay on the three hero plants)
+method: apps/sundial/Art/Scripts/halo_s5.py bake, computed from the plant card alpha: closing, ground ellipse union, smoothed hull, core and falloff profile (R core, G falloff)
+derived_from_art_reference: no
