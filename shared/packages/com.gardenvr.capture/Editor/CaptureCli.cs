@@ -60,6 +60,12 @@ namespace GardenVR.Capture.Editor
             if (!string.IsNullOrEmpty(framing.Plate)) DisableWorldPlates();
 
             Camera cam = CreateCamera(framing, target, width, height);
+            // Optional, off by default: -orbit=<deg> turns the eye about the vertical axis through the look-at point,
+            // -eyeShift=<m> moves it along the camera's right and re-aims at the look-at point (one eye of a stereo pair),
+            // -orbits=<deg,deg,...> also writes <out>.o<deg>.png for each angle after the main frame.
+            float orbitDeg = args.Has("orbit") ? args.Float("orbit") : 0f;
+            float eyeShift = args.Has("eyeShift") ? args.Float("eyeShift") : 0f;
+            if (orbitDeg != 0f || eyeShift != 0f) PlaceCamera(cam, framing, target, orbitDeg, eyeShift);
             Texture2D plate = null;
             if (!string.IsNullOrEmpty(framing.Plate))
             {
@@ -96,6 +102,22 @@ namespace GardenVR.Capture.Editor
             File.WriteAllBytes(outPath, png);
             ImageStats stats = ImageCheck.Analyze(pixels, width, height, png);
             File.WriteAllText(outPath + ".check.json", ImageCheck.ToJson(stats));
+
+            string orbitsRaw = args.Optional("orbits");
+            if (!string.IsNullOrEmpty(orbitsRaw) && orbitsRaw != "true")
+            {
+                foreach (string piece in orbitsRaw.Split(','))
+                {
+                    float deg;
+                    if (!float.TryParse(piece, NumberStyles.Float, CultureInfo.InvariantCulture, out deg))
+                        throw new InvalidOperationException("bad -orbits angle: " + piece);
+                    PlaceCamera(cam, framing, target, deg, eyeShift);
+                    Texture2D turn = FrameGrab.RenderToTexture(cam, width, height, msaa);
+                    string turnPath = Stem(outPath, ".o" + deg.ToString("0.#", CultureInfo.InvariantCulture) + ".png");
+                    File.WriteAllBytes(turnPath, turn.EncodeToPNG());
+                    UnityEngine.Object.DestroyImmediate(turn);
+                }
+            }
 
             string referenceArg = args.Optional("reference");
             if (!string.IsNullOrEmpty(referenceArg))
@@ -231,6 +253,27 @@ namespace GardenVR.Capture.Editor
             }
             DisableOtherCameras(cam);
             return cam;
+        }
+
+        /// <summary>
+        /// The framing's pose, then an orbit about the vertical axis through the look-at point, then an eye shift along the
+        /// camera's right with the camera re-aimed at the look-at point. Same rotation formula as <see cref="CreateCamera"/>.
+        /// Needs a target (the framing is in the target's space). Does nothing for a scene-eye framing.
+        /// </summary>
+        static void PlaceCamera(Camera cam, Framing framing, Transform target, float orbitDeg, float eyeShift)
+        {
+            if (target == null) throw new InvalidOperationException("-orbit and -eyeShift need a -target");
+            Vector3 eyePos = target.TransformPoint(framing.Eye);
+            Vector3 look = target.TransformPoint(framing.LookAt);
+            eyePos = look + Quaternion.AngleAxis(orbitDeg, Vector3.up) * (eyePos - look);
+            Quaternion lens = Quaternion.Euler(-framing.LensShift.y, framing.LensShift.x, 0f);
+            Quaternion rot = Quaternion.LookRotation(look - eyePos, Vector3.up) * lens;
+            if (eyeShift != 0f)
+            {
+                eyePos += rot * Vector3.right * eyeShift;
+                rot = Quaternion.LookRotation(look - eyePos, Vector3.up) * lens;
+            }
+            cam.transform.SetPositionAndRotation(eyePos, rot);
         }
 
         static void AttachPlate(Camera cam, Texture2D plate, float fovDeg, int pixelWidth, int pixelHeight)
@@ -513,6 +556,14 @@ namespace GardenVR.Capture.Editor
                 string value = Optional(key);
                 if (string.IsNullOrEmpty(value) || value == "true") throw new InvalidOperationException("missing -" + key);
                 return value;
+            }
+
+            public float Float(string key)
+            {
+                float number;
+                if (!float.TryParse(Optional(key), NumberStyles.Float, CultureInfo.InvariantCulture, out number))
+                    throw new InvalidOperationException("expected a number for -" + key);
+                return number;
             }
 
             public int Int(string key)
