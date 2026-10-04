@@ -1,7 +1,7 @@
-# Fidelity lab (F1 metrics, F2 judge)
+# Fidelity lab (F1 metrics, F2 judge, F3 sweep and sheet)
 
 Offline metrics for the JarG1 and DialG1 gates. The tool refuses to print a
-distance that has no ladder. Sweep and sheet are later tasks.
+distance that has no ladder.
 
 ## Setup
 
@@ -37,6 +37,31 @@ fid.cmd metrics --bare
 `--self-test` checks the Sharma CIEDE2000 pair, the locked dial wash numbers,
 the jar spec-anchor windows, the inversion rule, and a GPU hue-shift / 2 px
 shift pair.
+
+## Sweep and sheet (F3)
+
+```
+fid.cmd sweep sweeps/jar-moss.json --out <dir>
+fid.cmd metrics <dir> --frame JarG1
+fid.cmd judge --pairwise --frame JarG1 --player id=path ... --out <dir>/judge.json   (optional)
+fid.cmd sheet <dir> --frame JarG1 [--judge <dir>/judge.json] [--region <name>] [--out <png>]
+```
+
+`sweep` runs `CaptureCli.Sweep` once (spec format in `shared/packages/com.gardenvr.capture/README.md`), then fails
+unless the log has `[Capture] Sweep OK`, base-first vs base-last FLIP is under the ladder's frame noise band
+(`alignedNoise.flip.frame.band`), and `git status` shows no new change under the app's `Assets/`. It writes
+`sweep.check.json`. Unity rewrites a few `ProjectSettings/*.asset` files when it opens a project; that is not an
+asset change and is not checked (`git checkout -- apps/<app>/ProjectSettings` afterwards).
+
+`sheet` reads `sweep.json` and `metrics.json` and writes `sheet-<frame>.png` and `sheet.json` in the sweep folder.
+Reference and the locked frame (the sweep base) on top; one tile per variant with its axis label, rank-average,
+BT score and disqualifiers (when `--judge` is given), and three bars per look region (look, palette, structure
+ladder position; white tick is the locked frame); then 1:1 crop strips of the weakest region (lowest look
+position on the locked frame) and of the spec's `focusRegion`. Ordering is the average of the three family ranks
+(never a weighted sum), or Bradley-Terry when judged. A variant is `pruned` when any region/family median
+position is below the locked frame by more than that cell's noise band (floor 0.02). `sheet.json` leaves
+`chosen_by` null for the owner and sets `auto_picked` only from a judge file whose top player beats `locked`.
+Region crops larger than 456 x 320 are centre-cropped (marked on the sheet). No `sheet.html`.
 
 ## Judge
 

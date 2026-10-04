@@ -6,6 +6,10 @@
 // _TileMode draws one combined tile mesh: UV3.x is the tile index, _StateTex is a 63-wide point texture
 // (R = state/4, G = arc/2, B = ink flood 0-1 from the nib at uv.x = 0, A = 0 hides the tile).
 // _TileMode 0 leaves the ramp path unchanged. Indices 0-20 still read the same pixels they always did.
+// _GVR_ROOMLIGHT (global keyword, off by default) multiplies the lit colour by a room-light cookie (Spike S2).
+// The cookie is a table-plane texture in dial space: R is 0.5 + 0.5 * d. _GvrRoomParams: x cookie size (m), y amplitude,
+// z contrast, w bias. The gain is 1 + y * clamp(d * z + w, -1, 1), so the lit side can hold at 1 while the shade side falls.
+// Darkening is free. Brightening stops where a channel would pass 0.985, so paper stays cream.
 Shader "Fidelity/Toon"
 {
     Properties
@@ -60,6 +64,10 @@ Shader "Fidelity/Toon"
         TEXTURE2D(_TileTex); SAMPLER(sampler_TileTex);
         TEXTURE2D(_ControlTex); SAMPLER(sampler_ControlTex);
         TEXTURE2D(_PaperH); SAMPLER(sampler_PaperH);
+        // Spike S2 globals, set by DialView. Outside the material CBUFFER so the SRP batcher is unchanged.
+        TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
+        float4x4 _GvrRoomW2C;
+        float4 _GvrRoomParams;
         CBUFFER_START(UnityPerMaterial)
             float4 _MainTex_ST;
             float4 _TileTex_ST;
@@ -87,6 +95,15 @@ Shader "Fidelity/Toon"
             float b = SAMPLE_TEXTURE2D(_PaperH, sampler_PaperH, frac(uv2 + hB)).r;
             return lerp(a, b, Hash22(cell + float2(2.2, 8.4)).x);
         }
+        // d in -1..1 from the room-light cookie at a world point. params: x = cookie size (m), y = amplitude.
+        float RoomLightGain(float3 wp)
+        {
+            float3 lp = mul(_GvrRoomW2C, float4(wp, 1.0)).xyz;
+            float2 uv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
+            float d = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, uv).r * 2.0 - 1.0;
+            // The cap is on the encoded (display) luma, so the linear multiply is that gain to the 2.2.
+            return pow(1.0 + _GvrRoomParams.y * clamp(d * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
+        }
         float BoilClock()
         {
             float t = _BoilTime >= 0 ? _BoilTime : _T;
@@ -113,6 +130,7 @@ Shader "Fidelity/Toon"
             #pragma vertex vert
             #pragma fragment frag
             #pragma shader_feature_local_fragment _ _GVR_WATERCOLOUR
+            #pragma multi_compile_fragment _ _GVR_ROOMLIGHT
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_instancing
@@ -333,7 +351,17 @@ Shader "Fidelity/Toon"
                 half spec = smoothstep(_SpecStep - 0.01, _SpecStep + 0.01, dot(n, h)) * lit;
                 // Object space, so the grain is stuck to the paper and does not swim when the dial is moved.
                 half grain = (h31(floor(i.op * 2400)) - 0.5) * _Grain;
-                return half4(alb * ramp * L.color * (1 + grain) + _Spec.rgb * spec, 1);
+                half3 diffuse = alb * ramp * L.color * (1 + grain);
+                #if defined(_GVR_ROOMLIGHT)
+                {
+                    // One sample. The highlight is added after, so the room does not dim the nib's shine.
+                    half g = (half)RoomLightGain(i.wp);
+                    half peak = max(max(diffuse.r, diffuse.g), max(diffuse.b, 1e-3));
+                    g = min(g, max((half)1.0, (half)(0.985 / peak)));
+                    diffuse *= g;
+                }
+                #endif
+                return half4(diffuse + _Spec.rgb * spec, 1);
             }
             ENDHLSL
         }
