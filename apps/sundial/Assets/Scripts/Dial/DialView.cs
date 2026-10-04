@@ -169,6 +169,7 @@ namespace GardenVR.Sundial
         Vector3 _layoutBaseScale = Vector3.one;
         Vector3 _layoutBasePos;
         Material _faceLayout;
+        Material _faceLayoutWatercolour;
         Mesh _tilesDefault;
         Mesh _tilesLayout;
         Mesh _contactLayout;
@@ -728,7 +729,44 @@ namespace GardenVR.Sundial
         {
             if (string.IsNullOrEmpty(name)) return false;
             string n = name.Trim().ToLowerInvariant();
-            return n == "leafplant" || n == "leaf-plant" || n == "leaf" || n == "drawnleaf" || n == "s3";
+            return n == "leafplant" || n == "leaf-plant" || n == "leaf" || n == "drawnleaf" || n == "s3" || n == SprintLeafToken;
+        }
+
+        /// <summary>The leafplant token that is not the T-SUN-049 one: every hero plant but the morning one (see <see cref="SprintLeafArcs"/>).</summary>
+        const string SprintLeafToken = "sprintleaf";
+        /// <summary>
+        /// T-SUN-050. <c>variant=sprint</c> is the sprint composite: the winners of the five spikes plus the layout pass, stacked.
+        /// It expands to <see cref="SprintParts"/>. Anything joined to it is added on top (sprint+halo2 puts halo v2 in to compare).
+        /// </summary>
+        public const string SprintToken = "sprint";
+        /// <summary>
+        /// S1 watercolour and paper (with the layout face, see <see cref="ApplyFaceVariant"/>), S2 room light, S4 soil mound, S6 layout,
+        /// S3b drawn leaves for the midday and evening plants. S5 halo v2 is not in the stack: it has no mask for a drawn-leaf plant,
+        /// and the layout's closed halo stroke covers every plant, card or assembly.
+        /// </summary>
+        public static readonly string[] SprintParts = { "layout", "watercolour", "roomlight", "soilmound", SprintLeafToken };
+        /// <summary>Arcs drawn as assemblies under the sprint. The morning plant stays a card: its assembly lost to the card (T-SUN-049, 2 of 6).</summary>
+        public static readonly bool[] SprintLeafArcs = { false, true, true };
+
+        static bool IsSprintVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            return name.Trim().ToLowerInvariant() == SprintToken;
+        }
+
+        /// <summary>The arc's hero plant is drawn as an assembly by the active variant. The plain leafplant token draws all three.</summary>
+        bool LeafArcWanted(int arc)
+        {
+            bool all = false;
+            bool sprint = false;
+            foreach (string token in VariantTokens(_variant))
+            {
+                string n = token.Trim().ToLowerInvariant();
+                if (n == SprintLeafToken) sprint = true;
+                else if (IsLeafPlantVariant(n)) all = true;
+            }
+            if (all) return true;
+            return sprint && arc >= 0 && arc < SprintLeafArcs.Length && SprintLeafArcs[arc];
         }
 
         static bool IsLayoutVariant(string name)
@@ -740,15 +778,21 @@ namespace GardenVR.Sundial
 
         static bool IsKnownToken(string n)
         {
-            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n)
+            return n == VariantDefault || IsSprintVariant(n) || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n)
                    || IsHalo2Variant(n) || IsLayoutVariant(n);
         }
 
-        /// <summary>A variant is one name or several joined with + (layout+soilmound+leafplant). Look A is the empty set.</summary>
+        /// <summary>A variant is one name or several joined with + (layout+soilmound+leafplant). Look A is the empty set. <c>sprint</c> stands for <see cref="SprintParts"/>.</summary>
         static string[] VariantTokens(string variant)
         {
             if (string.IsNullOrEmpty(variant)) return new string[0];
-            return variant.Split(new[] { '+', ' ', ',', '|' }, StringSplitOptions.RemoveEmptyEntries);
+            var tokens = new List<string>();
+            foreach (string raw in variant.Split(new[] { '+', ' ', ',', '|' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (IsSprintVariant(raw)) tokens.AddRange(SprintParts);
+                else tokens.Add(raw);
+            }
+            return tokens.ToArray();
         }
 
         static bool IsKnownVariant(string name)
@@ -787,6 +831,11 @@ namespace GardenVR.Sundial
                 if (plant == null) continue;
                 // The assembly is drawn from the species the arc hero plant shows by default.
                 if (SpeciesOf(slot) != arc) continue;
+                if (!LeafArcWanted(arc))
+                {
+                    if (_leaves[arc] != null) _leaves[arc].SetActive(false);
+                    continue;
+                }
                 LeafPlant leaf = EnsureLeafPlant(arc);
                 int stage = plantStage != null && slot < plantStage.Length ? Mathf.Clamp(plantStage[slot], 0, 4) : 4;
                 bool on = SlotOn(slot) && showPlants && !stageStrip && !weekPage && stage == 4;
@@ -916,24 +965,31 @@ namespace GardenVR.Sundial
             if (renderer == null) return;
             if (_faceDefault == null)
                 _faceDefault = renderer.sharedMaterial;
-            if (!HasVariant(IsWatercolourVariant))
+            bool watercolour = HasVariant(IsWatercolourVariant);
+            Material want = _faceDefault;
+            if (watercolour && _layoutOn)
             {
-                Material want = _faceDefault;
-                if (_layoutOn)
-                {
-                    if (_faceLayout == null) _faceLayout = Resources.Load<Material>(DialLayout.FaceResource);
-                    if (_faceLayout == null)
-                        throw new InvalidOperationException("variant=layout needs Resources/" + DialLayout.FaceResource + ".mat (run LayoutSetup.Run)");
-                    want = _faceLayout;
-                }
-                if (want != null && renderer.sharedMaterial != want)
-                    renderer.sharedMaterial = want;
-                return;
+                // The sprint face: the S1 paper, wash grain and pencil on the layout's remapped disc and band (T-SUN-050).
+                if (_faceLayoutWatercolour == null) _faceLayoutWatercolour = Resources.Load<Material>(DialLayout.FaceWatercolourResource);
+                if (_faceLayoutWatercolour == null)
+                    throw new InvalidOperationException("variant=layout+watercolour needs Resources/" + DialLayout.FaceWatercolourResource + ".mat (run LayoutSetup.Run)");
+                want = _faceLayoutWatercolour;
             }
-            if (faceWatercolour == null)
-                throw new InvalidOperationException("variant=watercolour needs DialView.faceWatercolour");
-            if (renderer.sharedMaterial != faceWatercolour)
-                renderer.sharedMaterial = faceWatercolour;
+            else if (watercolour)
+            {
+                if (faceWatercolour == null)
+                    throw new InvalidOperationException("variant=watercolour needs DialView.faceWatercolour");
+                want = faceWatercolour;
+            }
+            else if (_layoutOn)
+            {
+                if (_faceLayout == null) _faceLayout = Resources.Load<Material>(DialLayout.FaceResource);
+                if (_faceLayout == null)
+                    throw new InvalidOperationException("variant=layout needs Resources/" + DialLayout.FaceResource + ".mat (run LayoutSetup.Run)");
+                want = _faceLayout;
+            }
+            if (want != null && renderer.sharedMaterial != want)
+                renderer.sharedMaterial = want;
         }
 
         /// <summary>
@@ -963,7 +1019,7 @@ namespace GardenVR.Sundial
             }
             if (roomCookie == null || roomShadow == null)
                 throw new InvalidOperationException("variant=roomlight needs DialView.roomCookie and DialView.roomShadow");
-            RoomLightGlobals.Apply(roomCookie, transform.worldToLocalMatrix, RoomLightGlobals.Amplitude);
+            RoomLightGlobals.Apply(roomCookie, CookieWorldToDial(), RoomLightGlobals.Amplitude);
             _roomLightApplied = true;
 
             if (catcherRenderer != null)
@@ -1001,7 +1057,9 @@ namespace GardenVR.Sundial
                 Transform wedge = _plantWedges[i];
                 Transform slot = plantSlots != null && i < plantSlots.Length ? plantSlots[i] : null;
                 Renderer card = slot != null ? slot.GetComponent<Renderer>() : null;
-                bool on = card != null && card.enabled && showPlants && !stageStrip && !weekPage;
+                // A hero plant drawn as an assembly has its card hidden, but it still stands there and still throws its wash.
+                bool standing = (card != null && card.enabled) || LeafAt(i) != null;
+                bool on = standing && showPlants && !stageStrip && !weekPage;
                 wedge.gameObject.SetActive(on);
                 if (!on) continue;
                 Vector3 baseLocal = slot.localPosition;
@@ -1010,6 +1068,19 @@ namespace GardenVR.Sundial
                 // One short wash. Length follows the plant's height, width its card.
                 wedge.localScale = new Vector3(slot.localScale.x * 0.62f, 1f, slot.localScale.y * 0.36f);
             }
+        }
+
+        /// <summary>
+        /// The cookie is a pattern on the table, authored for the dial at its look A size. The layout scales the dial about its centre,
+        /// so the cookie is read through the dial's look A transform (its layout-free scale and position), not the scaled one:
+        /// otherwise the room's light and shade would stretch by 1 / <see cref="DialLayout.Scale"/> against the plate (T-SUN-050).
+        /// </summary>
+        Matrix4x4 CookieWorldToDial()
+        {
+            if (!_layoutOn || !_layoutBaseKnown) return transform.worldToLocalMatrix;
+            Matrix4x4 parent = transform.parent != null ? transform.parent.localToWorldMatrix : Matrix4x4.identity;
+            Matrix4x4 lookA = parent * Matrix4x4.TRS(_layoutBasePos, transform.localRotation, _layoutBaseScale);
+            return lookA.inverse;
         }
 
         void EnsureRoomShadows()
@@ -1414,7 +1485,7 @@ namespace GardenVR.Sundial
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
                 case "variant":
                     if (!IsKnownVariant(value))
-                        throw new FormatException("DialView variant is not a, watercolour, roomlight, leafplant, soilmound, halo2 or layout (join with +): " + value);
+                        throw new FormatException("DialView variant is not a, sprint, watercolour, roomlight, leafplant, soilmound, halo2 or layout (join with +): " + value);
                     _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
                     break;
                 default:

@@ -11,6 +11,8 @@ namespace GardenVR.Sundial
     public static class DialLayout
     {
         public const string FaceResource = "Layout/Dial_Face_Layout";
+        /// <summary>T-SUN-050. The same remap applied to the S1 face and its control map, so the watercolour paper and the layout stack.</summary>
+        public const string FaceWatercolourResource = "Layout/Dial_Face_Layout_S1";
 
         /// <summary>
         /// Uniform scale of the whole dial about its centre. The DialG1 major axis of the silhouette is 1148.9 px at 1.0 and the

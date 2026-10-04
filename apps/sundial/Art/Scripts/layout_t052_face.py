@@ -3,6 +3,8 @@
 # pencil-shaded outer edge. The painted wash colours are untouched (a radial stretch only), so the T-SUN-028 wash grades hold.
 #   python apps/sundial/Art/Scripts/layout_t052_face.py            # writes Assets/Resources/Layout/dial_face_layout.png
 #   python apps/sundial/Art/Scripts/layout_t052_face.py --profile  # prints the radii of the source and the result
+#   python apps/sundial/Art/Scripts/layout_t052_face.py --s1       # T-SUN-050: the same remap on dial_face_s1.png and the S1 control
+#                                                                    map, so variant=sprint has the watercolour paper on the layout face
 import json
 import math
 import os
@@ -31,8 +33,14 @@ WARM = np.array([0.88, 0.79, 0.66], np.float32)   # multiplied into the outer fa
 HATCH_FROM = 0.925   # hatching starts here and runs to the edge
 
 
-def remap():
-    img = cv2.imread(SRC, cv2.IMREAD_COLOR)
+SRC_S1 = os.path.join(os.path.dirname(SRC), "dial_face_s1.png")
+SRC_CONTROL = os.path.join(os.path.dirname(SRC), "dial_control.png")
+OUT_S1 = os.path.join(OUT_DIR, "dial_face_layout_s1.png")
+OUT_CONTROL = os.path.join(OUT_DIR, "dial_control_layout.png")
+
+
+def remap(path=SRC, flags=cv2.IMREAD_COLOR, interp=cv2.INTER_CUBIC):
+    img = cv2.imread(path, flags)
     h, w = img.shape[:2]
     c = (w - 1) / 2.0
     R = (w - 1) / 2.0
@@ -47,7 +55,7 @@ def remap():
     rho_src = np.where(inside, CORE_FROM + (CORE - rho_out) * CORE_FILL, rho_src).astype(np.float32)
     mx = (c + np.cos(theta) * rho_src * R).astype(np.float32)
     my = (c + np.sin(theta) * rho_src * R).astype(np.float32)
-    out = cv2.remap(img, mx, my, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    out = cv2.remap(img, mx, my, interp, borderMode=cv2.BORDER_REPLICATE)
     return out, rho_out, theta
 
 
@@ -103,6 +111,31 @@ def build():
     print("wrote", OUT)
 
 
+def build_s1():
+    """The S1 face (watercolour, repaired dusk arc) and its control map through the same polar remap as the layout face.
+
+    The face gets the same tick softening, warm band and hatch as dial_face_layout.png. The control map (R arc SDF, G density,
+    B pencil, A wash id) is only stretched, bilinearly, so the ids keep their shader thresholds (0.16, 0.50, 0.83) and the
+    washes get their grain, edge and pencil on the wider disc; the mirrored core carries the control of the wash it mirrors.
+    """
+    out, rho_out, theta = remap(SRC_S1)
+    f = warm_and_hatch(soften_ticks(out, rho_out), rho_out, theta)
+    os.makedirs(OUT_DIR, exist_ok=True)
+    cv2.imwrite(OUT_S1, np.clip(f, 0, 255).astype(np.uint8))
+    ctrl, _r, _t = remap(SRC_CONTROL, cv2.IMREAD_UNCHANGED, cv2.INTER_LINEAR)
+    # The SDF is metres to the edge of the wash: the radial stretch of the outer edge (0.731 -> 0.82) scales it by about 1.12.
+    k = (INNER - CORE) / (SRC_WASH - CORE)
+    ctrl = ctrl.copy()
+    ctrl[..., 2] = np.clip(ctrl[..., 2].astype(np.float32) * k, 0, 255).astype(np.uint8)   # BGRA: index 2 is R, the SDF
+    cv2.imwrite(OUT_CONTROL, ctrl)
+    note = ("method: polar remap of {src} by apps/sundial/Art/Scripts/layout_t052_face.py --s1 (the same knots as dial_face_layout.png)\n"
+            "derived_from_art_reference: no (only the layout ratios were measured from it)\n")
+    for out_path, src in ((OUT_S1, "dial_face_s1.png"), (OUT_CONTROL, "dial_control.png")):
+        with open(out_path + ".provenance.txt", "w", newline="\n") as fh:
+            fh.write("asset: %s\n" % os.path.basename(out_path) + note.format(src=src))
+    print("wrote", OUT_S1, OUT_CONTROL)
+
+
 def profile(path):
     img = cv2.imread(path, cv2.IMREAD_GRAYSCALE).astype(np.float32)
     h, w = img.shape
@@ -119,7 +152,9 @@ def profile(path):
 
 
 if __name__ == "__main__":
-    if "--profile" in sys.argv:
+    if "--s1" in sys.argv:
+        build_s1()
+    elif "--profile" in sys.argv:
         print("source", profile(SRC))
         if os.path.exists(OUT):
             print("layout", profile(OUT))
