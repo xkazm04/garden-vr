@@ -7,6 +7,9 @@
 //   4. Stepped sway. The tip moves on a held clock (_SwayFps) from object space and the vertex phase, never from the
 //      eye or the screen, so both eyes agree. Vertex colour R is the sway weight (0 at the root), G is a per-card phase.
 //   5. Stepped boil off. The card edge holds still. The ink is already a drawing.
+//   6. _GVR_ROOMLIGHT (the S2 global keyword, off by default) multiplies the plant by the room-light cookie, read once at the
+//      plant's base point in the vertex stage, so the whole plant takes one value as the plant cards do (Fidelity/Card). Off, the
+//      shader compiles to the code above. The cap is +-15 percent and cream cannot brighten past 0.985, as in Fidelity/Toon.
 // _T is written by the dial (the held clock), so captures are deterministic.
 Shader "Fidelity/Leaf"
 {
@@ -39,8 +42,13 @@ Shader "Fidelity/Leaf"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
+            #pragma multi_compile _ _GVR_ROOMLIGHT
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
+            // Global, set by RoomLightGlobals. Outside the material CBUFFER on purpose.
+            TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
+            float4x4 _GvrRoomW2C;
+            float4 _GvrRoomParams;
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color, _Lit, _Shade;
@@ -49,7 +57,7 @@ Shader "Fidelity/Leaf"
                 float _SwayAmp, _SwayFps, _T;
             CBUFFER_END
             struct A { float4 pos : POSITION; float3 n : NORMAL; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; UNITY_VERTEX_OUTPUT_STEREO };
+            struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; half room : TEXCOORD2; UNITY_VERTEX_OUTPUT_STEREO };
             V vert (A i)
             {
                 V o;
@@ -65,6 +73,16 @@ Shader "Fidelity/Leaf"
                 o.pos = TransformObjectToHClip(p);
                 o.uv = TRANSFORM_TEX(i.uv, _MainTex);
                 o.wn = TransformObjectToWorldNormal(i.n);
+                o.room = 1;
+                #if defined(_GVR_ROOMLIGHT)
+                {
+                    // The plant's base point (the object origin), so the cookie does not smear up the plant.
+                    float3 lp = mul(_GvrRoomW2C, float4(TransformObjectToWorld(float3(0, 0, 0)), 1.0)).xyz;
+                    float2 cuv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
+                    float cd = SAMPLE_TEXTURE2D_LOD(_GvrRoomCookie, sampler_GvrRoomCookie, cuv, 0).r * 2.0 - 1.0;
+                    o.room = (half)pow(1.0 + _GvrRoomParams.y * clamp(cd * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
+                }
+                #endif
                 return o;
             }
             half4 frag (V i) : SV_Target
@@ -77,6 +95,12 @@ Shader "Fidelity/Leaf"
                 float ndl = dot(normalize(i.wn), L);
                 half lit = smoothstep(_Step - _Soft, _Step + _Soft, ndl);
                 half3 rgb = t.rgb * _Color.rgb * lerp(_Shade.rgb, _Lit.rgb, lit);
+                #if defined(_GVR_ROOMLIGHT)
+                {
+                    half peak = max(max(rgb.r, rgb.g), max(rgb.b, 1e-3));
+                    rgb *= min(i.room, max((half)1.0, (half)(0.985 / peak)));
+                }
+                #endif
                 return half4(rgb, a);
             }
             ENDHLSL
