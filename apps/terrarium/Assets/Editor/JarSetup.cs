@@ -21,6 +21,7 @@ namespace GardenVR.Terrarium.Editor
         public const string FlowerModelPath = "Assets/Art/Models/flower.fbx";
         public const string S3ModelPath = "Assets/Art/Models/s3_moss.fbx";
         public const string S4ModelPath = "Assets/Art/Models/s4_fiddle.fbx";
+        public const string S2ModelPath = "Assets/Art/Models/s2_jar.fbx";
         public const string PrefabPath = "Assets/Prefabs/Jar.prefab";
         public const string QuadPath = "Assets/Art/Models/CardQuad.asset";
         public const string LiveFiddlePath = "Assets/Art/Models/FiddleLive.asset";
@@ -29,7 +30,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "fiddle_hairs", "halo", "mist",
-            "s1_drops", "s1_studio", "s3_strata", "s3_strand", "s4_frond_albedo", "s4_frond_thick",
+            "s1_drops", "s1_studio", "s2_refract_strip", "s3_strata", "s3_strand", "s4_frond_albedo", "s4_frond_thick",
             "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_macro_b", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
         };
 
@@ -42,6 +43,7 @@ namespace GardenVR.Terrarium.Editor
                 ConfigureModel();
                 ConfigureS3Model();
                 ConfigureS4Model();
+                ConfigureS2Model();
                 var library = CreateLibrary();
                 var modelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
                 if (modelPrefab == null) throw new InvalidOperationException("model not imported: " + ModelPath);
@@ -90,8 +92,9 @@ namespace GardenVR.Terrarium.Editor
                     importer.wrapModeU = TextureWrapMode.Repeat;
                     importer.wrapModeV = TextureWrapMode.Clamp;
                 }
-                if (name == "s1_studio")
+                if (name == "s1_studio" || name == "s2_refract_strip")
                     importer.mipmapEnabled = false;
+                if (name == "s2_refract_strip") importer.filterMode = FilterMode.Bilinear;
                 if (name == "s3_strata")
                 {
                     importer.wrapModeU = TextureWrapMode.Repeat;
@@ -158,6 +161,36 @@ namespace GardenVR.Terrarium.Editor
             importer.optimizeMeshPolygons = false;
             importer.optimizeMeshVertices = false;
             importer.SaveAndReimport();
+        }
+
+        static void ConfigureS2Model()
+        {
+            var importer = AssetImporter.GetAtPath(S2ModelPath) as ModelImporter;
+            if (importer == null) throw new InvalidOperationException("model missing: " + S2ModelPath);
+            importer.importBlendShapes = false;
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.globalScale = 1f;
+            importer.useFileScale = true;
+            importer.bakeAxisConversion = true;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.weldVertices = false;
+            importer.isReadable = false;
+            importer.optimizeMeshPolygons = false;
+            importer.optimizeMeshVertices = false;
+            importer.SaveAndReimport();
+        }
+
+        static Mesh LoadS2Jar()
+        {
+            foreach (UnityEngine.Object asset in AssetDatabase.LoadAllAssetsAtPath(S2ModelPath))
+            {
+                var mesh = asset as Mesh;
+                if (mesh != null && mesh.name == "JarS2") return mesh;
+            }
+            throw new InvalidOperationException("s2 jar mesh missing: JarS2 in " + S2ModelPath);
         }
 
         static void ConfigureS4Model()
@@ -253,6 +286,8 @@ namespace GardenVR.Terrarium.Editor
                 m.SetTexture("_Bead", Tex("droplet_normal"));
                 m.SetTexture("_Studio", Tex("s1_studio"));
                 m.SetTexture("_DropN", Tex("s1_drops"));
+                m.SetTexture("_RefractStrip", Tex("s2_refract_strip"));
+                m.SetVector("_S2Cfg", new Vector4(0.010f, 0.06f, 1f, 0.25f));
                 // Clear pane. Volume is edge absorption. See Assets/Art/LOCKED.md.
                 m.SetColor("_Tint", new Color(0.75f, 0.94f, 0.84f, 0.004f));
                 m.SetColor("_Rim", new Color(0.48f, 0.72f, 0.78f, 0.32f));
@@ -461,6 +496,7 @@ namespace GardenVR.Terrarium.Editor
             library.S4FrondAlbedo = Tex("s4_frond_albedo");
             library.S4FrondThick = Tex("s4_frond_thick");
             library.FernAlbedoA = Tex("fern_albedo");
+            library.S2Jar = LoadS2Jar();
             library.S4FiddleStates = LoadS4FiddleStates();
             library.S4Fiddle = Mat("Jar_FiddleS4", "Fidelity/FiddleFuzz", m =>
             {

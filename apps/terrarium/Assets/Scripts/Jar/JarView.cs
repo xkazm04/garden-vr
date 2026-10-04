@@ -24,6 +24,8 @@ namespace GardenVR.Terrarium
         public Texture S4FrondAlbedo, S4FrondThick, FernAlbedoA;
         public Mesh[] S4FiddleStates;
         public Material S4Fiddle;
+        /// <summary>Spike S2 (variants s2b0, s2b1, s2b2): the thick-glass shell with a real inner wall.</summary>
+        public Mesh S2Jar;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         public Mesh Quad;
         public Mesh FlowerMesh;
@@ -120,6 +122,17 @@ namespace GardenVR.Terrarium
         Mesh[] _s4Stacked;
         Mesh[] _aFiddleStates;
         Material _aFiddleMat;
+        /// <summary>
+        /// The thick-glass spike (S2). 0 is off. 1 (s2b0) is the structured pane on the thick shell, 2 (s2b1) adds the baked
+        /// refraction strip (the Quest path), 3 (s2b2) adds the Opaque Texture refraction with dispersion (the PC path).
+        /// Every S2 variant also turns on the structured pane (S1 shading), not the S1 cork.
+        /// </summary>
+        int _s2Mode;
+        float _s2Offset = S2OffsetDefault, _s2Disp = S2DispDefault, _s2Mix = S2MixDefault, _s2Proxy = S2ProxyDefault;
+        const float S2OffsetDefault = 0.010f, S2DispDefault = 0.06f, S2MixDefault = 1f, S2ProxyDefault = 0.25f;
+        MeshFilter _glassFilter;
+        Mesh _aGlassMesh;
+        Mesh s2JarMesh;
         // Variant A frond values, written back when the spike is off.
         static readonly Color FernTintA = new Color(0.72f, 0.92f, 0.68f);
         // The re-graded albedo is already pale mint, so the tint only trims it.
@@ -230,12 +243,19 @@ namespace GardenVR.Terrarium
             {
                 string name = string.IsNullOrEmpty(_variant) ? "" : _variant;
                 if (_s3) name = name == "" ? "s3" : name + "+s3";
+                if (_s2Mode != 0)
+                {
+                    string s2 = _s2Mode == 1 ? "s2b0" : (_s2Mode == 2 ? "s2b1" : "s2b2");
+                    name = name == "" ? s2 : name + "+" + s2;
+                }
                 string s4 = _s4Fronds && _s4Fiddle ? "s4" : (_s4Fronds ? "s4f" : (_s4Fiddle ? "s4h" : ""));
                 if (s4 != "") name = name == "" ? s4 : name + "+" + s4;
                 return name == "" ? "a" : name;
             }
         }
-        public bool StructuredGlass { get { return _variant == "s1"; } }
+        public bool StructuredGlass { get { return _variant == "s1" || _s2Mode != 0; } }
+        /// <summary>0 locked glass mesh, 1 thick shell, 2 thick shell with the baked refraction strip, 3 thick shell with Opaque Texture refraction.</summary>
+        public int ThickGlassMode { get { return _s2Mode; } }
         /// <summary>True while a variant shows the pale backlit frond material.</summary>
         public bool BacklitFronds { get { return _s4Fronds; } }
         /// <summary>True while a variant shows the thick fuzzy fiddlehead.</summary>
@@ -306,6 +326,11 @@ namespace GardenVR.Terrarium
             _s4Fronds = false;
             _s4Fiddle = false;
             _s4Shells = S4Fiddle.PcShells;
+            _s2Mode = 0;
+            _s2Offset = S2OffsetDefault;
+            _s2Disp = S2DispDefault;
+            _s2Mix = S2MixDefault;
+            _s2Proxy = S2ProxyDefault;
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
             int capCompanions = 0;
@@ -332,8 +357,12 @@ namespace GardenVR.Terrarium
                     string name = pair.Value ?? "";
                     foreach (string part in name.Split('+'))
                     {
-                        if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h")
-                            throw new FormatException("JarView variant must be a, s1, s3, s4, s4f or s4h, joined with +: " + name);
+                        if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h"
+                            && part != "s2b0" && part != "s2b1" && part != "s2b2")
+                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f or s4h, joined with +: " + name);
+                        if (part == "s2b0") _s2Mode = 1;
+                        if (part == "s2b1") _s2Mode = 2;
+                        if (part == "s2b2") _s2Mode = 3;
                         if (part == "s1") _variant = "s1";
                         if (part == "s3") _s3 = true;
                         if (part == "s4" || part == "s4f") _s4Fronds = true;
@@ -365,6 +394,11 @@ namespace GardenVR.Terrarium
                     case "shells": _s3Shells = Mathf.Clamp((int)value, 1, 64); break;
                     case "a2c": _s3Alpha2Coverage = value > 0.5f ? 1f : 0f; break;
                     // Spike S4 knob. Fuzz shells on the fiddlehead: 2 on PC, 0 is the Quest fallback.
+                    // Spike S2 knobs: wall offset (millimetres, OPAQUE), dispersion, refraction mix, cube proxy (centimetres).
+                    case "s2off": _s2Offset = Mathf.Max(0f, value) * 0.001f; break;
+                    case "s2disp": _s2Disp = Mathf.Clamp(value, 0f, 0.5f); break;
+                    case "s2mix": _s2Mix = Mathf.Clamp01(value); break;
+                    case "s2proxy": _s2Proxy = Mathf.Max(0.01f, value) * 0.01f; break;
                     case "fuzz": _s4Shells = Mathf.Clamp((int)value, 0, S4Fiddle.MaxShells); break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
@@ -683,6 +717,44 @@ namespace GardenVR.Terrarium
             return null;
         }
 
+        static readonly string[] ThickKeywords = { "", "_S2_B0", "_S2_CUBE", "_S2_OPAQUE" };
+
+        /// <summary>One of the three S2 keywords on, or none. A keyword the shader does not know is left off.</summary>
+        static void SetThickKeywords(Material material, int mode)
+        {
+            if (material == null || material.shader == null) return;
+            for (int i = 1; i < ThickKeywords.Length; i++)
+            {
+                var keyword = new LocalKeyword(material.shader, ThickKeywords[i]);
+                if (keyword.isValid) material.SetKeyword(keyword, i == mode);
+            }
+        }
+
+        /// <summary>
+        /// Variants s2b0 to s2b2 swap the glass mesh for the thick shell (a real inner wall 2.5 mm in, a 7.5 mm foot, a
+        /// rolled lip). Variant A puts the saved mesh back. The collider keeps the A mesh, so picking is unchanged.
+        /// </summary>
+        void ApplyThickShell()
+        {
+            if (_glassFilter == null) return;
+            if (_aGlassMesh == null) _aGlassMesh = _glassFilter.sharedMesh;
+            Mesh want = _s2Mode != 0 && s2JarMesh != null ? s2JarMesh : _aGlassMesh;
+            if (_glassFilter.sharedMesh != want) _glassFilter.sharedMesh = want;
+        }
+
+        /// <summary>Triangles in the glass mesh now on the jar (the locked mesh, or the S2 thick shell).</summary>
+        public int GlassTriangles
+        {
+            get
+            {
+                Mesh mesh = _glassFilter != null ? _glassFilter.sharedMesh : null;
+                if (mesh == null) return 0;
+                long indices = 0;
+                for (int i = 0; i < mesh.subMeshCount; i++) indices += mesh.GetIndexCount(i);
+                return (int)(indices / 3);
+            }
+        }
+
         /// <summary>
         /// Variant A restores the locked tan cork. Variant s1 is the reference value:
         /// dark brown in shade, with a cool lit rim on the cap edge.
@@ -760,8 +832,11 @@ namespace GardenVR.Terrarium
                 // A near-white streak at 0.46 was a hard column in the pane. Keep the stroke, under the cap.
                 glassMat.SetColor("_Streak", SeasonColor(GlassStreakCool, GlassStreakWarm, seasonWarmth));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
-                SetStructuredKeyword(glassMat, _variant == "s1");
+                SetStructuredKeyword(glassMat, _variant == "s1" || _s2Mode != 0);
+                SetThickKeywords(glassMat, _s2Mode);
+                glassMat.SetVector("_S2Cfg", new Vector4(_s2Offset, _s2Disp, _s2Mix, _s2Proxy));
             }
+            ApplyThickShell();
             ApplyCork(_variant == "s1");
             float recoveredWave = 0f;
             if (_hasLook && _look.Recovered && recoveredTime >= 0f && recoveredTime <= 2.5f)
@@ -942,6 +1017,7 @@ namespace GardenVR.Terrarium
             s4FrondAlbedo = library.S4FrondAlbedo;
             s4FrondThick = library.S4FrondThick;
             fernAlbedoA = library.FernAlbedoA;
+            s2JarMesh = library.S2Jar;
             s4FiddleStates = library.S4FiddleStates;
             s4FiddleMat = library.S4Fiddle;
             _s4FiddleOn = false;
@@ -958,7 +1034,10 @@ namespace GardenVR.Terrarium
             flowerMat = library.Flower;
 
             Transform mt = model.transform;
-            SetMat(Require(mt, "Jar"), library.Glass);
+            Transform jarGlass = Require(mt, "Jar");
+            SetMat(jarGlass, library.Glass);
+            _glassFilter = jarGlass.GetComponent<MeshFilter>();
+            _aGlassMesh = _glassFilter.sharedMesh;
             SetMat(Require(mt, "Moss"), library.Moss);
             Transform skirt = Require(mt, "MossSkirt");
             SetMat(skirt, library.MossCard);

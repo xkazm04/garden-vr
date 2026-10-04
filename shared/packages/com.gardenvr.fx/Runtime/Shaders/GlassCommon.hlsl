@@ -8,6 +8,9 @@
 // Beads are an alpha-cut normal map in the upper third. _Fog lifts the clear line.
 // _S1_ON is the T-TER-040 spike. It is compiled only when the pass defines that keyword
 // (Fidelity/JarGlass). It does not sample the opaque copy. Fidelity/Glass leaves it off.
+// _S2_B0, _S2_CUBE and _S2_OPAQUE are the T-TER-044 spike (they ride on _S1_ON, and are compiled only by
+// Fidelity/JarGlass). B0 is the structured pane on the thick-glass mesh. CUBE adds one baked refraction lookup
+// (no resolve, the Quest path). OPAQUE adds the Opaque Texture refraction with 3-tap dispersion (the PC path).
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
 
@@ -15,10 +18,13 @@ TEXTURE2D(_Cond); SAMPLER(sampler_Cond);
 TEXTURE2D(_Bead); SAMPLER(sampler_Bead);
 TEXTURE2D(_Studio); SAMPLER(sampler_Studio);
 TEXTURE2D(_DropN); SAMPLER(sampler_DropN);
+TEXTURE2D(_RefractStrip); SAMPLER(sampler_RefractStrip);
 CBUFFER_START(UnityPerMaterial)
     half4 _Tint, _Rim, _Inner, _Streak, _Volume;
     half _RimPower, _Fog, _Drops, _Refract;
     float4 _InnerY, _VolumeY;
+    // S2: x wall offset in metres (OPAQUE), y dispersion, z refraction mix, w cube proxy distance in metres (CUBE).
+    float4 _S2Cfg;
 CBUFFER_END
 
 struct A { float4 pos : POSITION; float3 n : NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
@@ -207,11 +213,9 @@ half4 GlassThick(V i, half backWall)
 }
 
 // Six faces in a horizontal strip: +X, -X, +Y, -Y, +Z, -Z. One sample. No resolve.
-half3 SampleStudio(float3 dir)
+void StripFace(float3 dir, out float face, out float2 uv)
 {
     float3 a = abs(dir);
-    float face;
-    float2 uv;
     if (a.x >= a.y && a.x >= a.z)
     {
         if (dir.x >= 0.0) { face = 0.0; uv = float2(-dir.z, dir.y) / max(a.x, 1e-4); }
@@ -228,9 +232,35 @@ half3 SampleStudio(float3 dir)
         else { face = 5.0; uv = float2(-dir.x, dir.y) / max(a.z, 1e-4); }
     }
     uv = uv * 0.5 + 0.5;
+}
+
+half3 SampleStudio(float3 dir)
+{
+    float face;
+    float2 uv;
+    StripFace(dir, face, uv);
     uv = clamp(uv, 1.0 / 256.0, 1.0 - 1.0 / 256.0);
     return SAMPLE_TEXTURE2D(_Studio, sampler_Studio, float2((face + uv.x) * (1.0 / 6.0), uv.y)).rgb;
 }
+
+// The S2 baked refraction strip: six 160 px faces, same layout. Bilinear, so the clamp is half a texel.
+half3 SampleRefractStrip(float3 dir)
+{
+    float face;
+    float2 uv;
+    StripFace(dir, face, uv);
+    uv = clamp(uv, 0.5 / 160.0, 1.0 - 0.5 / 160.0);
+    return SAMPLE_TEXTURE2D(_RefractStrip, sampler_RefractStrip, float2((face + uv.x) * (1.0 / 6.0), uv.y)).rgb;
+}
+
+#if defined(_S2_B0) || defined(_S2_CUBE) || defined(_S2_OPAQUE)
+#define S2_GEOM 1
+#endif
+#if defined(_S2_CUBE) || defined(_S2_OPAQUE)
+#define S2_REFR 1
+#endif
+// The bake and the shader agree on this point: the centre of the cavity, 6 cm above the jar origin.
+static const float3 S2_PROBE = float3(0.0, 0.06, 0.0);
 
 #if defined(_S1_ON)
 // Structured clear glass. No veil, no air light, no opaque-copy sample.
@@ -251,6 +281,10 @@ half4 GlassStructured(V i, half backWall)
     half outer = 1.0 - smoothstep(0.0, 0.040, ndv);
     half dark = smoothstep(0.025, 0.070, ndv) * (1.0 - smoothstep(0.15, 0.26, ndv));
     half innerLine = smoothstep(0.18, 0.25, ndv) * (1.0 - smoothstep(0.32, 0.42, ndv));
+#if defined(S2_GEOM)
+    // The thick-glass mesh draws the inner wall itself, so the painted inner line is a trace of its old self.
+    innerLine *= 0.15;
+#endif
 
     float3 r = reflect(-v, n);
     half3 env = min(SampleStudio(r), cap);
@@ -259,7 +293,12 @@ half4 GlassStructured(V i, half backWall)
     float y = i.op.y;
     float rad = length(i.op.xz);
     // The glow sits on the outer heel, not across the whole base.
+#if defined(S2_GEOM)
+    // The foot is a 7.5 mm glass block now, so the light pipe fills it.
+    half foot = (1.0 - smoothstep(0.004, 0.0135, y)) * smoothstep(0.030, 0.045, rad);
+#else
     half foot = (1.0 - smoothstep(0.001, 0.011, y)) * smoothstep(0.034, 0.045, rad);
+#endif
     half footEdge = foot * lerp(0.65, 1.0, saturate(1.0 - ndv));
     half3 footCol = min(_Inner.rgb, cap);
 
@@ -310,7 +349,39 @@ half4 GlassStructured(V i, half backWall)
         + footCol * footEdge * 0.85
         + dropRgb
         + body;
+#if defined(S2_REFR)
+    // The refracted background sits under the structured layer: weight 0 across the pane, rising to 1 at the wall.
+    // The result is the S1 layer over (refracted copy times w), in premultiplied form.
     c = min(c, cap);
+    half fe = saturate(1.0 - ndv);
+    half w = saturate(_S2Cfg.z * pow(fe, 2.2));
+    half3 refr;
+#if defined(_S2_OPAQUE)
+    float3 posV = mul(UNITY_MATRIX_V, float4(i.wp, 1.0)).xyz;
+    float3 radialW = float3(-i.op.x, 0.0, -i.op.z);
+    float2 inward = mul((float3x3)UNITY_MATRIX_V, radialW).xy;
+    inward /= max(length(inward), 1e-4);
+    // Metres of wall shift to pixels at this depth: the projection scale m11 is cot(fov/2).
+    float px = _S2Cfg.x * abs(UNITY_MATRIX_P._m11) / max(-posV.z, 1e-3) * 0.5 * _ScaledScreenParams.y * pow(fe, 1.5);
+    float2 suv = GetNormalizedScreenSpaceUV(i.pos.xy);
+    float2 duv = inward * px / _ScaledScreenParams.xy;
+    refr.r = SampleSceneColor(suv + duv * (1.0 - _S2Cfg.y)).r;
+    refr.g = SampleSceneColor(suv + duv).g;
+    refr.b = SampleSceneColor(suv + duv * (1.0 + _S2Cfg.y)).b;
+#else
+    float3 nv = dot(n, v) >= 0.0 ? n : -n;
+    float3 rd = refract(-v, nv, 1.0 / 1.5);
+    float3 probe = TransformObjectToWorld(S2_PROBE);
+    refr = SampleRefractStrip(normalize((i.wp - probe) + rd * _S2Cfg.w));
+#endif
+    // Soda-lime absorption: a little teal toward the grazing path.
+    refr *= lerp(half3(0.96, 1.0, 0.98), half3(0.70, 0.92, 0.86), fe);
+    c += (1.0 - a) * refr * w;
+    a = a + (1.0 - a) * w;
+    c = min(c, half3(1.0, 1.0, 1.0));
+#else
+    c = min(c, cap);
+#endif
     if (backWall > 0.5) { c *= 0.40; a *= 0.40; }
     return half4(c, a);
 }

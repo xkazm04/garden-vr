@@ -36,6 +36,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: c8f2d5b30a1e4d7f9b4c6e8a2f0d1b53, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RefractStrip:
+        m_Texture: {fileID: 2800000, guid: f5cf0cea1a108b242afc50a99d378339, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Studio:
         m_Texture: {fileID: 2800000, guid: b7e1c4a29f0d4c6e8a3b5d7f1e9c0a42, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -50,6 +54,7 @@ Material:
     - _Inner: {r: 0.34, g: 0.86, b: 0.48, a: 1}
     - _InnerY: {r: 0.078, g: 0.052, b: 0, a: 0}
     - _Rim: {r: 0.48, g: 0.72, b: 0.78, a: 0.32}
+    - _S2Cfg: {r: 0.01, g: 0.06, b: 1, a: 0.25}
     - _Streak: {r: 0.5, g: 0.66, b: 0.74, a: 0.12}
     - _Tint: {r: 0.75, g: 0.94, b: 0.84, a: 0.004}
     - _Volume: {r: 0.42, g: 0.62, b: 0.66, a: 0.75}
