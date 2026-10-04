@@ -1,0 +1,13 @@
+{
+  "app": "apps/sundial",
+  "scene": "Assets/Scenes/Main.unity",
+  "framing": "DialG1",
+  "target": "dial",
+  "state": "halo=0,waiting=0,gnomonDeg=105,time=1,variant=a",
+  "base": "dial-base",
+  "focusRegion": "washes",
+  "variants": [
+    { "id": "dial-variant-a-explicit", "axis": "variant", "value": "a (control, same as base)", "state": "variant=a" },
+    { "id": "dial-variant-watercolour", "axis": "variant", "value": "watercolour (S1)", "state": "variant=watercolour" }
+  ]
+}
