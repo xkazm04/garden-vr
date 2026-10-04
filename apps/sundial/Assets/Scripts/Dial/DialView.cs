@@ -151,12 +151,32 @@ namespace GardenVR.Sundial
         public float halo2Spill = 1f;
         /// <summary>Capture only. Draws the pinch halo alone (every other renderer in the scene off), so its light can be read on black.</summary>
         public bool isolateHalo;
+        /// <summary>Capture only. Draws the dial and nothing else (every renderer outside this object off), so its silhouette is read on black.</summary>
+        public bool isolateDial;
+        /// <summary>Capture only. Draws the soil (the bed, or the old disc) and nothing else, to read its area on black.</summary>
+        public bool isolateSoil;
         /// <summary>Capture only. 0 to 2 draws that arc's plants and no others; -1 draws them all.</summary>
         int plantsOnlyArc = -1;
         Texture2D _halo2Plant;
         Texture2D _halo2Bloom;
         public Halo2 Halo2Kit { get { return _halo2; } }
         public SoilMound Mound { get { return _mound; } }
+        // T-SUN-052. variant=layout (combines with soilmound, leafplant, halo2 as layout+soilmound+...) scales the dial to the reference's
+        // size against the hand, moves the plants and tiles, swaps the face for the remapped one (wider wash disc, narrower rim band),
+        // and grows the soil bed over the face. The habit record (tiles, arcs, slots) is untouched. Look A keeps every one of these.
+        bool _layoutOn;
+        bool _layoutBaseKnown;
+        Vector3 _layoutBaseScale = Vector3.one;
+        Vector3 _layoutBasePos;
+        Material _faceLayout;
+        Mesh _tilesDefault;
+        Mesh _tilesLayout;
+        Mesh _contactLayout;
+        bool _moundLayout;
+        bool _soilBaseKnown;
+        Vector3 _soilBaseScale;
+        Vector3 _soilBasePos;
+        public bool LayoutOn { get { return _layoutOn; } }
         const string VariantDefault = "a";
         string _variant = VariantDefault;
         Material _faceDefault;
@@ -222,6 +242,17 @@ namespace GardenVR.Sundial
             new Vector2(0.0593f, 0.0935f)
         };
 
+        /// <summary>The spot of an arc's card in face radii: look A's, or the layout's when variant=layout is on.</summary>
+        Vector2 Spot(int arc)
+        {
+            return _layoutOn ? DialLayout.PlantSpot[arc] : PlantSpot[arc];
+        }
+
+        float TileRadiusFor(int row, float lookARadius)
+        {
+            return _layoutOn ? DialLayout.TileRowRadius[Mathf.Clamp(row, 0, 2)] : lookARadius;
+        }
+
         public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
         {
             if (state != null)
@@ -265,6 +296,7 @@ namespace GardenVR.Sundial
             }
             _bloomClock = time;
 
+            ApplyLayout();
             EnsureTiles();
             EnsurePlantArrays();
             EnsureStateTexture();
@@ -399,9 +431,153 @@ namespace GardenVR.Sundial
             return value == "1" || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// variant=layout (T-SUN-052). Look A leaves all of this off. On: the dial scales about its centre, the tiles and the plant
+        /// contact discs move to the layout radii and spots, and the old soil disc (when the mound is not drawn) becomes the bed.
+        /// The face material, the mound and the plant cards read <see cref="_layoutOn"/> in their own Apply steps.
+        /// </summary>
+        void ApplyLayout()
+        {
+            bool want = HasVariant(IsLayoutVariant);
+            if (!_layoutBaseKnown)
+            {
+                _layoutBaseScale = transform.localScale;
+                _layoutBasePos = transform.localPosition;
+                _layoutBaseKnown = true;
+            }
+            if (want != _layoutOn)
+            {
+                _layoutOn = want;
+                transform.localScale = want ? _layoutBaseScale * DialLayout.Scale : _layoutBaseScale;
+                transform.localPosition = want ? _layoutBasePos + DialLayout.Offset : _layoutBasePos;
+                RebuildTilesForLayout();
+                RebuildContactsForLayout();
+            }
+            ApplyOldSoilLayout();
+        }
+
+        void RebuildTilesForLayout()
+        {
+            if (tileRenderer == null) return;
+            var filter = tileRenderer.GetComponent<MeshFilter>();
+            if (filter == null) return;
+            if (_tilesDefault == null) _tilesDefault = filter.sharedMesh;
+            if (_tilesLayout != null) { DestroyObject(_tilesLayout); _tilesLayout = null; }
+            if (_layoutOn)
+            {
+                _tilesLayout = CombineTiles(_tilesDefault);
+                _tilesLayout.name = "TilesPlaced.Layout";
+                _tilesLayout.hideFlags = HideFlags.DontSave;
+                filter.sharedMesh = _tilesLayout;
+            }
+            else if (_tilesDefault != null)
+            {
+                filter.sharedMesh = _tilesDefault;
+            }
+            // The tile colliders are children named tile.*. They follow the same radii.
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Transform child = transform.GetChild(i);
+                int index;
+                if (!TryTileName(child.name, out index)) continue;
+                int arc = index / TilesPerArc;
+                int within = index % TilesPerArc;
+                int row = within / DaysPerRow;
+                float radius, t0, t1, halfL, halfW;
+                RowLayout(row, out radius, out t0, out t1, out halfL, out halfW);
+                float deg = RowSlot(arc, row, within % DaysPerRow);
+                child.localPosition = OnFace(deg, faceRadius * TileRadiusFor(row, radius), faceY + 0.001f);
+            }
+        }
+
+        void RebuildContactsForLayout()
+        {
+            if (contactRenderer == null) return;
+            var filter = contactRenderer.GetComponent<MeshFilter>();
+            if (filter == null) return;
+            if (_contactDefault == null) _contactDefault = filter.sharedMesh;
+            if (_contactLayout != null) { DestroyObject(_contactLayout); _contactLayout = null; }
+            _contactSwappedMask = -1;
+            if (_layoutOn)
+            {
+                _contactLayout = BuildContactMesh(0);
+                _contactLayout.hideFlags = HideFlags.DontSave;
+                filter.sharedMesh = _contactLayout;
+            }
+            else if (_contactDefault != null)
+            {
+                filter.sharedMesh = _contactDefault;
+            }
+        }
+
+        /// <summary>Without the mound, the flat soil disc takes the bed's footprint (a squashed, shifted copy of itself).</summary>
+        void ApplyOldSoilLayout()
+        {
+            Transform soil = FindDeep(transform, "Soil");
+            if (soil == null) return;
+            var filter = soil.GetComponent<MeshFilter>();
+            if (filter == null || filter.sharedMesh == null) return;
+            if (!_soilBaseKnown)
+            {
+                _soilBaseScale = soil.localScale;
+                _soilBasePos = soil.localPosition;
+                _soilBaseKnown = true;
+            }
+            bool bed = _layoutOn && !HasVariant(IsSoilMoundVariant) && filter.sharedMesh.bounds.size.sqrMagnitude > 1e-8f;
+            if (!bed)
+            {
+                soil.localScale = _soilBaseScale;
+                soil.localPosition = _soilBasePos;
+                return;
+            }
+            // The disc's mesh lies in whichever local plane the importer left it in. Work in the parent's axes: which local axis
+            // runs along the dial's x and which along its z, then stretch those two.
+            Bounds b = filter.sharedMesh.bounds;
+            Quaternion rot = soil.localRotation;
+            Vector3[] dir = { rot * Vector3.right, rot * Vector3.up, rot * Vector3.forward };
+            float[] ext = { b.extents.x * _soilBaseScale.x, b.extents.y * _soilBaseScale.y, b.extents.z * _soilBaseScale.z };
+            float halfX = 0f;
+            float halfZ = 0f;
+            for (int i = 0; i < 3; i++)
+            {
+                halfX += Mathf.Abs(dir[i].x) * ext[i];
+                halfZ += Mathf.Abs(dir[i].z) * ext[i];
+            }
+            halfX = Mathf.Max(halfX, 1e-4f);
+            halfZ = Mathf.Max(halfZ, 1e-4f);
+            float kx = DialLayout.BedHalfX * faceRadius / halfX;
+            float kz = DialLayout.BedHalfZ * faceRadius / halfZ;
+            var k = new float[3];
+            for (int i = 0; i < 3; i++)
+                k[i] = Mathf.Abs(dir[i].x) > 0.5f ? kx : Mathf.Abs(dir[i].z) > 0.5f ? kz : 1f;
+            Vector3 scale = new Vector3(_soilBaseScale.x * k[0], _soilBaseScale.y * k[1], _soilBaseScale.z * k[2]);
+            soil.localScale = scale;
+            Vector3 centreNow = rot * Vector3.Scale(b.center, scale);
+            Vector3 centreBase = _soilBasePos + rot * Vector3.Scale(b.center, _soilBaseScale);
+            var target = new Vector3(0f, centreBase.y, DialLayout.BedCentreZ * faceRadius);
+            soil.localPosition = target - centreNow;
+        }
+
         /// <summary>The halo and nothing else, for the metrics (the gold clips on the bright paper, so it is read on black).</summary>
         void ApplyIsolate()
         {
+            if (isolateSoil)
+            {
+                foreach (Renderer r in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                {
+                    bool soil = r.name == "Soil" || r.name == "SoilMound";
+                    if (!soil) r.enabled = false;
+                }
+                return;
+            }
+            if (isolateDial)
+            {
+                foreach (Renderer r in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                {
+                    if (!r.transform.IsChildOf(transform)) r.enabled = false;
+                }
+                return;
+            }
             if (!isolateHalo || haloRenderer == null) return;
             foreach (Renderer r in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
             {
@@ -424,7 +600,7 @@ namespace GardenVR.Sundial
         /// </summary>
         void ApplyHalo2(float amount)
         {
-            if (!IsHalo2Variant(_variant))
+            if (!HasVariant(IsHalo2Variant))
             {
                 if (_halo2 != null) _halo2.SetActive(false);
                 ClearSpill();
@@ -505,7 +681,7 @@ namespace GardenVR.Sundial
         void ApplySoilMound()
         {
             bool visible = !weekPage && (!Application.isPlaying || appear >= 2f / 3f);
-            if (!IsSoilMoundVariant(_variant))
+            if (!HasVariant(IsSoilMoundVariant))
             {
                 if (_moundApplied)
                 {
@@ -515,13 +691,19 @@ namespace GardenVR.Sundial
                 }
                 return;
             }
+            if (_mound != null && _moundLayout != _layoutOn)
+            {
+                _mound.Destroy();
+                _mound = null;
+            }
             if (_mound == null)
             {
                 var material = Resources.Load<Material>(SoilMound.ResourceMaterial);
                 var data = Resources.Load<TextAsset>(SoilMound.ResourceData);
                 if (material == null || data == null)
                     throw new InvalidOperationException("variant=soilmound needs Resources/SoilMound/Soil_Mound.mat and soil-mound.json (run SoilMoundSetup.Run)");
-                _mound = new SoilMound(transform, material, data, faceY);
+                _mound = new SoilMound(transform, material, data, faceY, _layoutOn ? new SoilBed(faceRadius) : null);
+                _moundLayout = _layoutOn;
             }
             _mound.SetActive(visible);
             EnableNamed("Soil", false);
@@ -549,11 +731,40 @@ namespace GardenVR.Sundial
             return n == "leafplant" || n == "leaf-plant" || n == "leaf" || n == "drawnleaf" || n == "s3";
         }
 
+        static bool IsLayoutVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            string n = name.Trim().ToLowerInvariant();
+            return n == "layout" || n == "s6" || n == "proportions";
+        }
+
+        static bool IsKnownToken(string n)
+        {
+            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n)
+                   || IsHalo2Variant(n) || IsLayoutVariant(n);
+        }
+
+        /// <summary>A variant is one name or several joined with + (layout+soilmound+leafplant). Look A is the empty set.</summary>
+        static string[] VariantTokens(string variant)
+        {
+            if (string.IsNullOrEmpty(variant)) return new string[0];
+            return variant.Split(new[] { '+', ' ', ',', '|' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
         static bool IsKnownVariant(string name)
         {
             if (string.IsNullOrEmpty(name)) return true;
-            string n = name.Trim().ToLowerInvariant();
-            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n) || IsHalo2Variant(n);
+            foreach (string token in VariantTokens(name))
+                if (!IsKnownToken(token.Trim().ToLowerInvariant())) return false;
+            return true;
+        }
+
+        /// <summary>True when any token of the active variant is the kind <paramref name="is"/> names.</summary>
+        bool HasVariant(Func<string, bool> @is)
+        {
+            foreach (string token in VariantTokens(_variant))
+                if (@is(token)) return true;
+            return false;
         }
 
         /// <summary>
@@ -563,7 +774,7 @@ namespace GardenVR.Sundial
         void ApplyLeafPlant()
         {
             for (int i = 0; i < _leafOn.Length; i++) _leafOn[i] = false;
-            if (!IsLeafPlantVariant(_variant))
+            if (!HasVariant(IsLeafPlantVariant))
             {
                 RestoreLeafPlant();
                 return;
@@ -642,6 +853,7 @@ namespace GardenVR.Sundial
             var filter = contactRenderer.GetComponent<MeshFilter>();
             if (filter == null) return;
             if (_contactDefault == null) _contactDefault = filter.sharedMesh;
+            Mesh plain = _layoutOn && _contactLayout != null ? _contactLayout : _contactDefault;
             if (skipMask != 0)
             {
                 if (_contactSwapped == null || _contactSwappedMask != skipMask)
@@ -653,9 +865,9 @@ namespace GardenVR.Sundial
                 }
                 if (filter.sharedMesh != _contactSwapped) filter.sharedMesh = _contactSwapped;
             }
-            else if (_contactDefault != null && filter.sharedMesh != _contactDefault)
+            else if (plain != null && filter.sharedMesh != plain)
             {
-                filter.sharedMesh = _contactDefault;
+                filter.sharedMesh = plain;
             }
         }
 
@@ -668,14 +880,25 @@ namespace GardenVR.Sundial
             int shown = ShownBloomCard(arc);
             // Quantise the view so the bake is not repeated every frame the camera drifts a hair.
             string key = arc + ":" + Mathf.RoundToInt(local.x * 40f) + "," + Mathf.RoundToInt(local.y * 40f) + "," + Mathf.RoundToInt(local.z * 40f)
-                         + "," + shown + "," + leaf.Triangles;
+                         + "," + shown + "," + leaf.Triangles + (_layoutOn ? ",L" : "");
             if (_leafSilhouette != null && key == _leafSilhouetteKey) return _leafSilhouette;
             if (_leafSilhouette != null) DestroyObject(_leafSilhouette);
             Transform plant = PlantTransform(slot);
             float scale = PlantSize[arc].y > 1e-4f && plant != null ? plant.localScale.y / PlantSize[arc].y : 1f;
             int w = like != null ? like.width : 256;
             int h = like != null ? like.height : 512;
-            _leafSilhouette = leaf.BakeSilhouette(local, PlantSize[arc] * scale, w, h, scale);
+            if (_layoutOn)
+            {
+                // A bigger canvas, so the plant is not cut by its card, with the soil patch it stands in.
+                Vector4 c = DialLayout.HaloCanvas;
+                w = Mathf.RoundToInt(w * (c.z - c.x));
+                h = Mathf.RoundToInt(h * (c.w - c.y));
+                _leafSilhouette = leaf.BakeSilhouette(local, PlantSize[arc] * scale, w, h, scale, c, DialLayout.HaloBaseDisc);
+            }
+            else
+            {
+                _leafSilhouette = leaf.BakeSilhouette(local, PlantSize[arc] * scale, w, h, scale);
+            }
             _leafSilhouette.name = "LeafPlantSilhouette." + key;
             _leafSilhouetteKey = key;
             return _leafSilhouette;
@@ -693,10 +916,18 @@ namespace GardenVR.Sundial
             if (renderer == null) return;
             if (_faceDefault == null)
                 _faceDefault = renderer.sharedMaterial;
-            if (!IsWatercolourVariant(_variant))
+            if (!HasVariant(IsWatercolourVariant))
             {
-                if (_faceDefault != null && renderer.sharedMaterial != _faceDefault)
-                    renderer.sharedMaterial = _faceDefault;
+                Material want = _faceDefault;
+                if (_layoutOn)
+                {
+                    if (_faceLayout == null) _faceLayout = Resources.Load<Material>(DialLayout.FaceResource);
+                    if (_faceLayout == null)
+                        throw new InvalidOperationException("variant=layout needs Resources/" + DialLayout.FaceResource + ".mat (run LayoutSetup.Run)");
+                    want = _faceLayout;
+                }
+                if (want != null && renderer.sharedMaterial != want)
+                    renderer.sharedMaterial = want;
                 return;
             }
             if (faceWatercolour == null)
@@ -713,7 +944,7 @@ namespace GardenVR.Sundial
         {
             Transform catcher = FindDeep(transform, "TableShadowCatcher");
             Renderer catcherRenderer = catcher != null ? catcher.GetComponent<Renderer>() : null;
-            if (!IsRoomLightVariant(_variant))
+            if (!HasVariant(IsRoomLightVariant))
             {
                 RoomLightGlobals.Clear();
                 if (catcherRenderer != null) catcherRenderer.SetPropertyBlock(null);
@@ -903,7 +1134,7 @@ namespace GardenVR.Sundial
             plantSlots = new Transform[ArcCount * RowsPerArc];
             for (int arc = 0; arc < ArcCount; arc++)
             {
-                Vector2 spot = PlantSpot[arc];
+                Vector2 spot = Spot(arc);
                 Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.004f, spot.y * faceRadius);
                 var card = Card(transform, ArcIds[arc], plantMats[arc], pos, PlantSize[arc], library.Cross);
                 card.name = "plant." + ArcIds[arc];
@@ -919,7 +1150,7 @@ namespace GardenVR.Sundial
             {
                 for (int row = 1; row < RowsPerArc; row++)
                 {
-                    Vector2 spot = PlantSpot[arc];
+                    Vector2 spot = Spot(arc);
                     Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.004f, spot.y * faceRadius);
                     string id = "plant." + ArcIds[arc] + ".r" + row;
                     var card = Card(transform, id, plantMats[arc], pos, PlantSize[arc] * 0.62f, library.Cross);
@@ -939,7 +1170,7 @@ namespace GardenVR.Sundial
             var blooms = new Renderer[3];
             for (int arc = 0; arc < 3; arc++)
             {
-                Vector2 spot = PlantSpot[arc];
+                Vector2 spot = Spot(arc);
                 Vector3 pos = new Vector3(spot.x * faceRadius, faceY + 0.0055f, spot.y * faceRadius);
                 var bloomGo = Card(transform, "bloom." + ArcIds[arc], library.Bloom, pos, PlantSize[arc], library.Cross);
                 var bloomRenderer = bloomGo.GetComponent<Renderer>();
@@ -989,6 +1220,7 @@ namespace GardenVR.Sundial
                 float halfL;
                 float halfW;
                 RowLayout(row, out radius, out t0, out t1, out halfL, out halfW);
+                radius = TileRadiusFor(row, radius);
                 Vector3 pos = OnFace(deg, faceRadius * radius, faceY + 0.001f);
                 string id = row == 0
                     ? "tile." + ArcIds[arc] + "." + day
@@ -1113,11 +1345,13 @@ namespace GardenVR.Sundial
             if (_halo2 != null) _halo2.Destroy();
             if (_contactSwapped != null) DestroyObject(_contactSwapped);
             if (_leafSilhouette != null) DestroyObject(_leafSilhouette);
+            if (_tilesLayout != null) DestroyObject(_tilesLayout);
+            if (_contactLayout != null) DestroyObject(_contactLayout);
         }
 
         void OnDisable()
         {
-            if (IsRoomLightVariant(_variant)) RoomLightGlobals.Clear();
+            if (HasVariant(IsRoomLightVariant)) RoomLightGlobals.Clear();
             if (!_hooked) return;
             RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
             _hooked = false;
@@ -1149,7 +1383,11 @@ namespace GardenVR.Sundial
                     else { showPlants = ParseBool(value); plantsOnlyArc = -1; }
                     break;
                 case "spill": halo2Spill = ParseFloat(key, value); break;
-                case "isolate": isolateHalo = string.Equals(value, "halo", StringComparison.OrdinalIgnoreCase) || ParseBoolLoose(value); break;
+                case "isolate":
+                    isolateDial = string.Equals(value, "dial", StringComparison.OrdinalIgnoreCase);
+                    isolateSoil = string.Equals(value, "soil", StringComparison.OrdinalIgnoreCase);
+                    isolateHalo = string.Equals(value, "halo", StringComparison.OrdinalIgnoreCase) || (!isolateDial && !isolateSoil && ParseBoolLoose(value));
+                    break;
                 case "haloTarget": haloTarget = string.IsNullOrEmpty(value) ? "midday" : value; break;
                 case "gnomonDeg": gnomonDeg = ParseFloat(key, value); break;
                 case "time": time = ParseFloat(key, value); break;
@@ -1176,7 +1414,7 @@ namespace GardenVR.Sundial
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
                 case "variant":
                     if (!IsKnownVariant(value))
-                        throw new FormatException("DialView variant is not a, watercolour, roomlight, leafplant, soilmound or halo2: " + value);
+                        throw new FormatException("DialView variant is not a, watercolour, roomlight, leafplant, soilmound, halo2 or layout (join with +): " + value);
                     _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
                     break;
                 default:
@@ -1512,9 +1750,12 @@ namespace GardenVR.Sundial
         {
             string key = plant != null ? plant.name : "";
             if (extra != null) key = key + "+" + extra.name + "@" + bloomLiftPx;
+            // The layout closes the plant's gaps with a wider brush, so the line hugs the plant as one outline (look A: HaloClosePx).
+            int closePx = _layoutOn ? DialLayout.HaloClosePx : Mathf.RoundToInt(HaloClosePx);
+            if (closePx != Mathf.RoundToInt(HaloClosePx)) key = key + "#c" + closePx;
             Texture2D cached;
             if (_haloMasks.TryGetValue(key, out cached) && cached != null) return cached;
-            Texture2D made = BakeHaloMask(plant, extra, bloomLiftPx);
+            Texture2D made = BakeHaloMask(plant, extra, bloomLiftPx, closePx);
             _haloMasks[key] = made;
             return made;
         }
@@ -1523,7 +1764,7 @@ namespace GardenVR.Sundial
         /// Close the plant alpha (and the bloom, lifted to where that card is drawn),
         /// then keep a thin ring just outside that shape. R is the core, G is the short falloff.
         /// </summary>
-        static Texture2D BakeHaloMask(Texture2D plant, Texture2D extra, int bloomLiftPx)
+        static Texture2D BakeHaloMask(Texture2D plant, Texture2D extra, int bloomLiftPx, int closePx)
         {
             if (plant == null) throw new InvalidOperationException("halo plant texture is missing");
             if (!plant.isReadable) throw new InvalidOperationException(plant.name + " is not readable");
@@ -1552,7 +1793,6 @@ namespace GardenVR.Sundial
             }
             // A short close bridges a hairline gap. A wide close turned the flowering plant
             // into one blob, and the outline stopped reading as a stroke around the leaves.
-            int closePx = Mathf.RoundToInt(HaloClosePx);
             bool[] closed = CloseMask(on, w, h, closePx);
             int[] dist = DistanceToOn(closed, w, h);
             var pixels = new Color32[on.Length];
@@ -1643,6 +1883,13 @@ namespace GardenVR.Sundial
             haloTransform.localPosition = plant.localPosition + face * HaloPush + Vector3.up * 0.001f;
             Vector3 plantScale = plant.localScale;
             haloTransform.localScale = new Vector3(plantScale.x * HaloFit, plantScale.y * HaloFit, plantScale.z * HaloFit);
+            if (_layoutOn && LeafAt(haloSlot >= 0 ? haloSlot : arc * RowsPerArc) != null)
+            {
+                // The canvas is bigger than the card; the quad grows to match and the base stays where the plant's base is.
+                Vector4 c = DialLayout.HaloCanvas;
+                haloTransform.localScale = new Vector3(plantScale.x * HaloFit * (c.z - c.x), plantScale.y * HaloFit * (c.w - c.y), plantScale.z * HaloFit);
+                haloTransform.localPosition += Vector3.up * (c.y * plantScale.y * HaloFit);
+            }
             if (poolRenderer == null) return;
             Transform pool = poolRenderer.transform;
             pool.localRotation = Quaternion.identity;
@@ -1667,7 +1914,7 @@ namespace GardenVR.Sundial
             for (int arc = 0; arc < 3; arc++)
             {
                 if ((skipMask & (1 << arc)) != 0) continue;
-                Vector2 spot = PlantSpot[arc];
+                Vector2 spot = Spot(arc);
                 Vector3 center = new Vector3(spot.x * faceRadius, faceY + 0.008f, spot.y * faceRadius);
                 float rx = PlantSize[arc].x * 1.15f;
                 float rz = PlantSize[arc].x * 0.72f;
@@ -1734,12 +1981,17 @@ namespace GardenVR.Sundial
 
         Mesh CombineTiles(Mesh source)
         {
+            if (source == null || !source.isReadable) throw new InvalidOperationException("tile mesh is not readable");
+            return PlaceTiles();
+        }
+
+        Mesh PlaceTiles()
+        {
             // One combined mesh, one draw. Each tile lies flat on the rim: 12 x 9 mm,
             // top 2 mm above the paper, 1.8 mm of solid thickness (the bottom clears the
             // face by 0.2 mm). Sides are marked with UV3.y = 0 so the tile shader inks them.
             // Vertex order per tile is 4 top corners, then 4 sides of 4. The A2 measure reads that.
             // The source mesh only has to exist; the bevelled cube stood on edge.
-            if (source == null || !source.isReadable) throw new InvalidOperationException("tile mesh is not readable");
             const float topRaise = 0.002f;
             const float clear = 0.0002f;
             const int vertsPerTile = 20;
@@ -1764,6 +2016,7 @@ namespace GardenVR.Sundial
                 float halfL;
                 float halfW;
                 RowLayout(row, out radius, out t0, out t1, out halfL, out halfW);
+                radius = TileRadiusFor(row, radius);
                 float deg = RowSlot(arc, row, within % DaysPerRow);
                 float rad = deg * Mathf.Deg2Rad;
                 float topY = faceY + topRaise;
@@ -2220,7 +2473,7 @@ namespace GardenVR.Sundial
             int row = slot % RowsPerArc;
             if (arc < 0 || arc >= PlantSpot.Length) return;
             bool crowded = SlotOn(arc * RowsPerArc + 1) || SlotOn(arc * RowsPerArc + 2);
-            Vector2 spot = PlantSpot[arc];
+            Vector2 spot = Spot(arc);
             float len = spot.magnitude;
             Vector2 radial = len > 1e-4f ? spot / len : new Vector2(0f, 1f);
             Vector2 tangent = new Vector2(radial.y, -radial.x);

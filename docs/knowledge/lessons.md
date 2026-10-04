@@ -95,3 +95,12 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   remaining gap was silhouette and mass: jar proportions, cork shape, moss as a mound. Region-scoped spikes and region
   criteria never own the outline. Measure silhouette IoU against the reference first, before surface work.
   Domain: game-production / art direction pipeline.
+
+- **2026-10-04 (T-TER-046) Task-template boilerplate is a context channel - it was gated by slug.** The Tripo key location and
+  credit rules lived in a "spike protocol" block appended only to tasks whose slug contained `spike`; the one task that needed
+  them was a `tool-` task, so the agent searched the wrong `.env` files and reported the arm blocked. Put resource locations in
+  the agent instructions file every task reads, not in conditional template blocks. Domain: software-engineering /
+  agent-instruction-files.
+- **2026-10-04 (T-TER-046) TRELLIS.2 (MIT ComfyUI port) at 1024_cascade runs on a 24 GB 4090 for compact props.** Hard-surface
+  and simple organic props (mushroom, stacked pebbles) come out clean; fuzzy mass (moss clump) faceted on decimation; colour can
+  drift (one pebble turned orange). Domain: game-production / generated assets.
