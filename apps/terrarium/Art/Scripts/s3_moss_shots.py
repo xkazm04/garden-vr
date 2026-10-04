@@ -46,7 +46,7 @@ def unity(args, log):
     return subprocess.run(cmd, cwd=REPO).returncode
 
 
-def shot(out_dir, name, framing, target, state, msaa, sbs):
+def shot(out_dir, name, framing, target, state, msaa, sbs, size=None):
     out = os.path.join(out_dir, name + ".png")
     log = os.path.join(out_dir, name + ".log")
     args = ["-executeMethod", "GardenVR.Capture.Editor.CaptureCli.Shot", "-scene", SCENE, "-framing", framing,
@@ -55,6 +55,8 @@ def shot(out_dir, name, framing, target, state, msaa, sbs):
         args += ["-target", target]
     if msaa:
         args += ["-msaa", str(msaa)]
+    if size:
+        args += ["-w", str(size), "-h", str(size)]
     if sbs:
         args += ["-reference", REF]
     print("shot", name, flush=True)
@@ -102,6 +104,9 @@ def main(argv):
             if names and name not in names:
                 continue
             shot(out_dir, "b-" + name, "MossClose", "jar", G1 + B + ",a2c=%d" % a, m, False)
+        if not names or "supersample" in names:
+            # Reference for the sweep: 2048 square at 8x, box-filtered to 1024 by s3_moss_metrics.py.
+            shot(out_dir, "b-msaa-supersample", "MossClose", "jar", G1 + B + ",a2c=1", 8, False, size=2048)
     else:
         raise SystemExit("mode must be shots, measure or msaa")
 
