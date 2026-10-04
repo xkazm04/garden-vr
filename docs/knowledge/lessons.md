@@ -64,3 +64,12 @@ software-engineering). Each line: date, what happened (measured), the rule it su
 - 2026-10-04 - **Pairwise A/B against the reference moves where an absolute rubric does not.** After 30 tasks of "every
   frame scores 2", the first research-driven glass spike won 6 of 6 pairwise draws on the glass region. Target:
   llm-observability / judge-contract-design.
+- 2026-10-04 - **An unattended night needs its own keep-awake, and Windows timers do not kill process trees.** The
+  machine slept from about 03:10 to 10:30; the hourly host checks did not fire, and a 150-minute task timeout fired 8.7 h
+  late on wake, while `child.kill('SIGTERM')` left the agent's children alive. Rule: start a keep-awake that outlasts the
+  run every time the operator leaves, and kill with `taskkill /T /F`. Target: agent-operations / unattended-build-loop.
+- 2026-10-04 - **A fallback engine must be smoke-tested in the exact headless mode it will run in.** The Gemini fallback
+  (`agy -p`) reported SUCCESS on three tasks while every `write_file` was auto-denied (headless cannot prompt), and it ended
+  turns "waiting for Unity" like Grok had. Fix: `--dangerously-skip-permissions` and the same same-session continuation
+  (`--conversation <id>`). Also: a 402 "balance exhausted" is not a rate limit; it will not clear by waiting. Target:
+  agent-operations / unattended-build-loop.

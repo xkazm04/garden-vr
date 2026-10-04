@@ -20,6 +20,8 @@ const argv = process.argv.slice(2);
 const opt = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
 const app = opt('app'); const wt = opt('worktree'); const model = opt('model', 'grok-4.7');
 const effort = opt('effort', 'high'); const timeoutMin = Number(opt('timeout-min', 150));
+const agyModel = opt('agy-model', 'gemini-3.8-flash-high');
+const engineState = { primary: opt('engine', 'grok') }; // grok | agy
 if (!app || !wt) { console.error('need --app and --worktree'); process.exit(1); }
 
 const O = (...p) => path.join(main, 'orchestration', ...p);
@@ -59,53 +61,57 @@ async function runGrok(task) {
     `Finish by writing ${wt}/orchestration/runs/${app}/${id}/REPORT.md with the evidence the task asks for, and commit it.`,
     `If you are blocked, still write REPORT.md explaining exactly what blocked you, with the error output.`,
   ].join('\n');
-  const flags = ['-m', model, '--reasoning-effort', effort, '--output-format', 'json',
-    '--always-approve', '--permission-mode', 'bypassPermissions', '--cwd', wt];
-  const once = (args, tag) => new Promise((resolve) => {
-    const child = spawn('grok', args, { cwd: wt, env: { ...process.env, GROK_AGENT_DASHBOARD: '0' }, shell: false, windowsHide: true });
-    const out = fs.createWriteStream(path.join(runDir, `grok${tag}.json`));
-    const err = fs.createWriteStream(path.join(runDir, `grok${tag}.stderr.log`));
-    child.stdout.pipe(out); child.stderr.pipe(err);
-    const timer = setTimeout(() => { log(`${id}: timeout after ${timeoutMin} min, killing`); child.kill('SIGTERM'); }, timeoutMin * 60000);
+  const report = path.join(wt, 'orchestration', 'runs', app, id, 'REPORT.md');
+  const AGY = process.env.AGY || path.join(process.env.LOCALAPPDATA, 'agy', 'bin', 'agy.exe');
+  const extra = 'Run every long process (Unity, Blender) in the FOREGROUND and read its log before you continue. Do not end your turn while a process runs.';
+  // One engine call. grok: Grok Build CLI. agy: Antigravity CLI (Gemini), which must skip permissions headless or every
+  // write_file is auto-denied (measured 2026-10-04: T-TER-042/043 "SUCCESS" with denied write_file and no output).
+  const once = (eng, text, resumeId, tag) => new Promise((resolve) => {
+    const args = eng === 'agy'
+      ? ['-p', text, '--model', agyModel, '--output-format', 'json', '--dangerously-skip-permissions', ...(resumeId ? ['--conversation', resumeId] : [])]
+      : [...(resumeId ? ['-r', resumeId] : []), '-p', text, '-m', model, '--reasoning-effort', effort, '--output-format', 'json',
+         '--always-approve', '--permission-mode', 'bypassPermissions', '--cwd', wt];
+    const bin = eng === 'agy' ? AGY : 'grok';
+    const child = spawn(bin, args, { cwd: wt, env: { ...process.env, GROK_AGENT_DASHBOARD: '0' }, shell: false, windowsHide: true });
+    child.stdout.pipe(fs.createWriteStream(path.join(runDir, `${eng}${tag}.json`)));
+    child.stderr.pipe(fs.createWriteStream(path.join(runDir, `${eng}${tag}.stderr.log`)));
+    // SIGTERM does not reach the process tree on Windows (measured: a 150-min timeout fired 8.7 h late and left children);
+    // taskkill /T /F does.
+    const timer = setTimeout(() => { log(`${id}: timeout after ${timeoutMin} min, killing tree`); spawn('taskkill', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true }); }, timeoutMin * 60000);
     child.on('close', (code) => { clearTimeout(timer); resolve(code); });
     child.on('error', (e) => { clearTimeout(timer); log(`${id}: spawn error ${e.message}`); resolve(-1); });
   });
-  const sessionOf = (tag) => { try { const t = fs.readFileSync(path.join(runDir, `grok${tag}.json`), 'utf8'); return JSON.parse(t.slice(t.indexOf('{'))).sessionId; } catch { return null; } };
-  const report = path.join(wt, 'orchestration', 'runs', app, id, 'REPORT.md');
+  const sessionOf = (eng, tag) => { try { const s = fs.readFileSync(path.join(runDir, `${eng}${tag}.json`), 'utf8'); const d = JSON.parse(s.slice(s.indexOf('{'))); return d.sessionId || d.conversation_id || null; } catch { return null; } };
+  const limited = (eng) => { const b = ['', '.cont1', '.cont2'].map((tag) => { try { return fs.readFileSync(path.join(runDir, `${eng}${tag}.json`), 'utf8') + fs.readFileSync(path.join(runDir, `${eng}${tag}.stderr.log`), 'utf8'); } catch { return ''; } }).join(' '); return /rate.?limit|quota|usage limit|429|402|insufficient|exhausted|too many requests|balance/i.test(b); };
   const t0 = Date.now();
-  let code = await once(['-p', prompt, ...flags], '');
-  // Headless Grok ends its run whenever it ends a turn, including "I'll read the log when Unity finishes" (measured
-  // twice: T-SUN-001, T-TER-005). A clean exit with no REPORT.md is resumed in the same session, at most twice.
-  let session = sessionOf('');
-  for (let n = 1; n <= 2 && code === 0 && !fs.existsSync(report) && session; n++) {
-    log(`${id}: exited without REPORT.md, resuming session (continuation ${n})`);
-    code = await once(['-r', session, '-p', [
-      'Continue the task. Your previous turn ended while you were waiting on a process (likely Unity), so nothing after that ran.',
-      'Check whether that process finished (read its log; if it is still running, wait for it in the FOREGROUND, e.g. poll in one blocking command).',
-      'Then finish the remaining steps, verify, commit, and write the REPORT.md. Do not end your turn until REPORT.md is committed.',
-    ].join('\n'), ...flags], `.cont${n}`);
-    session = sessionOf(`.cont${n}`) || session;
-  }
-  // Grok out of quota or rate-limited: hand the same task to Gemini 3.8 through the Antigravity CLI (owner-approved).
-  if (!fs.existsSync(report)) {
-    const blob = ['', '.cont1', '.cont2'].map((tag) => { try { return fs.readFileSync(path.join(runDir, `grok${tag}.json`), 'utf8') + fs.readFileSync(path.join(runDir, `grok${tag}.stderr.log`), 'utf8'); } catch { return ''; } }).join(String.fromCharCode(10));
-    if (/rate.?limit|quota|usage limit|429|insufficient|exhausted|too many requests/i.test(blob)) {
-      log(`${id}: Grok hit a usage limit, falling back to agy gemini-3.8-flash-high`);
-      const agy = process.env.AGY || path.join(process.env.LOCALAPPDATA, 'agy', 'bin', 'agy.exe');
-      code = await new Promise((resolve) => {
-        const c = spawn(agy, ['-p', prompt + String.fromCharCode(10) + 'Run every long process (Unity, Blender) in the foreground and read its log before you continue.',
-          '--model', 'gemini-3.8-flash-high', '--output-format', 'json'], { cwd: wt, windowsHide: true });
-        c.stdout.pipe(fs.createWriteStream(path.join(runDir, 'agy.json'))); c.stderr.pipe(fs.createWriteStream(path.join(runDir, 'agy.stderr.log')));
-        const timer = setTimeout(() => c.kill('SIGTERM'), timeoutMin * 60000);
-        c.on('close', (k) => { clearTimeout(timer); resolve(k); }); c.on('error', () => { clearTimeout(timer); resolve(-1); });
-      });
+  // Run one engine with up to two same-session continuations when it exits without REPORT.md (headless agents end their
+  // run when they end a turn, e.g. while "waiting" for Unity: measured on both Grok and Gemini).
+  const attempt = async (eng) => {
+    let code = await once(eng, prompt + '\n' + extra, null, '');
+    let sid = sessionOf(eng, '');
+    for (let n = 1; n <= 2 && code === 0 && !fs.existsSync(report) && sid && !limited(eng); n++) {
+      log(`${id}: ${eng} exited without REPORT.md, resuming (continuation ${n})`);
+      code = await once(eng, 'Continue the task. Your previous turn ended while you were waiting on a process (likely Unity), so nothing after that ran. Check whether it finished (read its log; if still running, wait in the FOREGROUND), then finish the remaining steps, verify, commit, and write REPORT.md. Do not end your turn until REPORT.md is committed.', sid, `.cont${n}`);
+      sid = sessionOf(eng, `.cont${n}`) || sid;
     }
+    return code;
+  };
+  let code;
+  if (engineState.primary === 'grok') {
+    code = await attempt('grok');
+    if (!fs.existsSync(report) && limited('grok')) {
+      engineState.primary = 'agy';
+      log(`${id}: Grok usage limit/balance hit - switching this loop to agy ${agyModel}`);
+      code = await attempt('agy');
+    }
+  } else {
+    code = await attempt('agy');
   }
   return { id, code, wallS: Math.round((Date.now() - t0) / 1000) };
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-log(`loop start: model=${model} effort=${effort} worktree=${wt}`);
+log(`loop start: engine=${engineState.primary} grok=${model} agy=${agyModel} effort=${effort} worktree=${wt}`);
 while (true) {
   if (fs.existsSync(O('STOP-' + app))) { log('STOP file present, exiting'); break; }
   const task = nextTask();
