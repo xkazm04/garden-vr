@@ -126,6 +126,19 @@ namespace GardenVR.Sundial
         // painting, a ragged feathered edge and a few pebbles: one mesh, one draw. Resources/SoilMound holds the rest.
         SoilMound _mound;
         bool _moundApplied;
+        // Spike S5. variant=halo2 draws the pinch halo as one smooth closed curve around the plant plus a ground ellipse, from
+        // masks baked offline (Resources/Halo2), on one mesh in place of the card-sized halo. Look A keeps the card halo.
+        Halo2 _halo2;
+        bool _spillBlock;
+        /// <summary>Strength of the warm spill on the soil under variant=halo2. 0 draws the ring alone (a capture reads the stroke without it).</summary>
+        public float halo2Spill = 1f;
+        /// <summary>Capture only. Draws the pinch halo alone (every other renderer in the scene off), so its light can be read on black.</summary>
+        public bool isolateHalo;
+        /// <summary>Capture only. 0 to 2 draws that arc's plants and no others; -1 draws them all.</summary>
+        int plantsOnlyArc = -1;
+        Texture2D _halo2Plant;
+        Texture2D _halo2Bloom;
+        public Halo2 Halo2Kit { get { return _halo2; } }
         public SoilMound Mound { get { return _mound; } }
         const string VariantDefault = "a";
         string _variant = VariantDefault;
@@ -279,6 +292,8 @@ namespace GardenVR.Sundial
                 haloCard = LeafSilhouette(haloCard);
                 bloomTex2d = null;
             }
+            _halo2Plant = haloCard;
+            _halo2Bloom = bloomTex2d;
             if (haloRenderer != null)
             {
                 haloRenderer.enabled = !stageStrip && amount > 0.01f;
@@ -358,6 +373,105 @@ namespace GardenVR.Sundial
             ApplyFaceVariant();
             ApplyRoomLight();
             ApplySoilMound();
+            ApplyHalo2(amount);
+            ApplyIsolate();
+        }
+
+        static bool ParseBoolLoose(string value)
+        {
+            return value == "1" || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>The halo and nothing else, for the metrics (the gold clips on the bright paper, so it is read on black).</summary>
+        void ApplyIsolate()
+        {
+            if (!isolateHalo || haloRenderer == null) return;
+            foreach (Renderer r in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+            {
+                bool keep = r == haloRenderer || (_halo2 != null && r == _halo2.Renderer);
+                if (!keep) r.enabled = false;
+            }
+        }
+
+        static bool IsHalo2Variant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            string n = name.Trim().ToLowerInvariant();
+            return n == "halo2" || n == "halo-v2" || n == "halov2" || n == "s5";
+        }
+
+        /// <summary>
+        /// Look A leaves the card halo alone. variant=halo2 turns it off and draws the baked hull ring and ground ellipse in
+        /// its place, with a warm spill on the soil inside the ellipse. When the plant has no baked mask, or is the drawn-leaf
+        /// assembly (whose analytic hull is a stub, see <see cref="HaloSphereUnion"/>), look A's halo stays.
+        /// </summary>
+        void ApplyHalo2(float amount)
+        {
+            if (!IsHalo2Variant(_variant))
+            {
+                if (_halo2 != null) _halo2.SetActive(false);
+                ClearSpill();
+                return;
+            }
+            if (haloRenderer == null) return;
+            if (_halo2 == null)
+            {
+                var data = Resources.Load<TextAsset>(Halo2.ResourceJson);
+                if (data == null)
+                    throw new InvalidOperationException("variant=halo2 needs Resources/Halo2/halo2.json (run apps/sundial/Art/Scripts/halo_s5.py bake)");
+                _halo2 = new Halo2(haloRenderer.transform, haloRenderer.sharedMaterial, data);
+            }
+            _halo2.Fit(haloRenderer.transform.localScale.y);
+            bool wanted = haloRenderer.enabled;
+            int slot = haloSlot >= 0 ? haloSlot : _haloArc * RowsPerArc;
+            bool leaf = _leafActive && slot == LeafSlot;
+            bool shown = false;
+            Halo2MaskInfo info = null;
+            if (wanted && !leaf)
+            {
+                string key = Halo2.KeyFor(_halo2Plant, _halo2Bloom);
+                Texture2D mask;
+                if (!_halo2.TryMask(key, out mask, out info) && _halo2Bloom != null)
+                {
+                    _halo2.Warn("no mask for " + key + ", the card without its bloom is used");
+                    key = Halo2.KeyFor(_halo2Plant, null);
+                }
+                shown = _halo2.Show(key) && _halo2.TryMask(key, out mask, out info);
+                if (!shown) _halo2.Warn("no baked halo for " + key + ", look A's halo is drawn");
+            }
+            _halo2.SetActive(shown);
+            if (shown) haloRenderer.enabled = false;
+            if (shown && poolRenderer != null && amount > 0.01f && halo2Spill > 0.001f) SpillOnSoil(info, amount * Mathf.Clamp01(halo2Spill));
+            else ClearSpill();
+        }
+
+        /// <summary>The warm spot under the plant becomes a soft disc the size of the ground ellipse, on the soil.</summary>
+        void SpillOnSoil(Halo2MaskInfo info, float amount)
+        {
+            Transform halo = haloRenderer.transform;
+            Vector3 world = halo.TransformPoint(_halo2.GroundCentreLocal(info));
+            Transform pool = poolRenderer.transform;
+            pool.localRotation = Quaternion.identity;
+            Vector3 local = transform.InverseTransformPoint(world);
+            pool.localPosition = new Vector3(local.x, local.y - 0.0004f, local.z);
+            float radius = _halo2.RadiusCardUnits(info) * halo.lossyScale.x * 0.92f;
+            pool.localScale = new Vector3(radius * 2f, 1f, radius * 2f);
+            // A property block, not the material: the asset stays look A's and switching back needs one clear.
+            float pulse = reducedMotion ? 1f : 0.90f + 0.10f * Mathf.Sin(time * (Mathf.PI * 2f / 2.6f));
+            var block = new MaterialPropertyBlock();
+            poolRenderer.GetPropertyBlock(block);
+            block.SetColor("_Color", new Color(0.70f, 0.43f, 0.15f) * (amount * pulse));
+            block.SetFloat("_Falloff", 1.1f);
+            block.SetVector("_Focus", new Vector4(0.5f, 0.5f, 0.5f, 0f));
+            poolRenderer.SetPropertyBlock(block);
+            _spillBlock = true;
+        }
+
+        void ClearSpill()
+        {
+            if (!_spillBlock || poolRenderer == null) return;
+            poolRenderer.SetPropertyBlock(null);
+            _spillBlock = false;
         }
 
         static bool IsSoilMoundVariant(string name)
@@ -422,7 +536,7 @@ namespace GardenVR.Sundial
         {
             if (string.IsNullOrEmpty(name)) return true;
             string n = name.Trim().ToLowerInvariant();
-            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n);
+            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n) || IsHalo2Variant(n);
         }
 
         /// <summary>
@@ -956,6 +1070,7 @@ namespace GardenVR.Sundial
         {
             if (_leaf != null) _leaf.Destroy();
             if (_mound != null) _mound.Destroy();
+            if (_halo2 != null) _halo2.Destroy();
             if (_contactNoMidday != null) DestroyObject(_contactNoMidday);
             if (_leafSilhouette != null) DestroyObject(_leafSilhouette);
         }
@@ -987,6 +1102,14 @@ namespace GardenVR.Sundial
             switch (key)
             {
                 case "halo": halo = ParseFloat(key, value); break;
+                // Off hides the three hero plant cards (and their contact shadows), so a capture can read where the plants are.
+                case "plants":
+                    // 0 hides the plants, 1 shows them, an arc name shows that arc's plants alone (a capture reads one plant's outline).
+                    if (TryArcIndex(value) >= 0) { showPlants = true; plantsOnlyArc = TryArcIndex(value); }
+                    else { showPlants = ParseBool(value); plantsOnlyArc = -1; }
+                    break;
+                case "spill": halo2Spill = ParseFloat(key, value); break;
+                case "isolate": isolateHalo = string.Equals(value, "halo", StringComparison.OrdinalIgnoreCase) || ParseBoolLoose(value); break;
                 case "haloTarget": haloTarget = string.IsNullOrEmpty(value) ? "midday" : value; break;
                 case "gnomonDeg": gnomonDeg = ParseFloat(key, value); break;
                 case "time": time = ParseFloat(key, value); break;
@@ -1013,7 +1136,7 @@ namespace GardenVR.Sundial
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
                 case "variant":
                     if (!IsKnownVariant(value))
-                        throw new FormatException("DialView variant is not a, watercolour, roomlight, leafplant or soilmound: " + value);
+                        throw new FormatException("DialView variant is not a, watercolour, roomlight, leafplant, soilmound or halo2: " + value);
                     _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
                     break;
                 default:
@@ -2017,6 +2140,7 @@ namespace GardenVR.Sundial
         bool SlotOn(int slot)
         {
             if (stageStrip || !showPlants) return false;
+            if (plantsOnlyArc >= 0 && slot / RowsPerArc != plantsOnlyArc) return false;
             int row = slot % RowsPerArc;
             if (plantOn == null || plantOn.Length != 9) return row == 0;
             return slot >= 0 && slot < plantOn.Length && plantOn[slot];
