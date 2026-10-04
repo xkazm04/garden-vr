@@ -985,7 +985,7 @@ namespace GardenVR.Terrarium
         }
 
         // Sprint: the haze fades below this chord height (m) so it does not veil the moss (T-TER-047).
-        const float SprintHazeGain = 1.6f;
+        const float SprintHazeGain = 1.25f;
         const float SprintMossClearDefault = 0.050f;
         float SprintMossClear = SprintMossClearDefault;
         const float S5HaloScale = 0.35f;
