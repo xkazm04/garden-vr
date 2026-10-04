@@ -4797,6 +4797,18 @@ MonoBehaviour:
   answerTime: -1
   recoveredTime: -1
   sporeStep: -1
+  glowShader: {fileID: 4800000, guid: 88fd645f85b6421448a0135ed11607d4, type: 3}
+  s4FrondShader: {fileID: 4800000, guid: e5454a4e564c8a54ba917d45e55102d2, type: 3}
+  s4FrondAlbedo: {fileID: 2800000, guid: d6f3c9f14e2203d48a8bb0b2e80218e9, type: 3}
+  s4FrondThick: {fileID: 2800000, guid: 073631ecc6a540b4680bb60bb992565f, type: 3}
+  fernAlbedoA: {fileID: 2800000, guid: be7d1efdb3257744f89c3c429bd27a45, type: 3}
+  s4FiddleStates:
+  - {fileID: -8046380032723812058, guid: f2b76f83e47687049be1be315c60d1ff, type: 3}
+  - {fileID: -6049096678902981292, guid: f2b76f83e47687049be1be315c60d1ff, type: 3}
+  - {fileID: -8117363742139347245, guid: f2b76f83e47687049be1be315c60d1ff, type: 3}
+  - {fileID: -5049857619040342331, guid: f2b76f83e47687049be1be315c60d1ff, type: 3}
+  - {fileID: -7052710170336158636, guid: f2b76f83e47687049be1be315c60d1ff, type: 3}
+  s4FiddleMat: {fileID: 2100000, guid: a0bfa55cf2d294f499edf96780cf5193, type: 2}
   fiddle: {fileID: 1888068132633452101}
   fiddleStates:
   - {fileID: -1989966531160563535, guid: 3c733602d994481489db76113f3222b8, type: 3}

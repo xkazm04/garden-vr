@@ -20,6 +20,7 @@ namespace GardenVR.Terrarium.Editor
         public const string ModelPath = "Assets/Art/Models/night_jar.fbx";
         public const string FlowerModelPath = "Assets/Art/Models/flower.fbx";
         public const string S3ModelPath = "Assets/Art/Models/s3_moss.fbx";
+        public const string S4ModelPath = "Assets/Art/Models/s4_fiddle.fbx";
         public const string PrefabPath = "Assets/Prefabs/Jar.prefab";
         public const string QuadPath = "Assets/Art/Models/CardQuad.asset";
         public const string LiveFiddlePath = "Assets/Art/Models/FiddleLive.asset";
@@ -28,7 +29,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "fiddle_hairs", "halo", "mist",
-            "s1_drops", "s1_studio", "s3_strata", "s3_strand",
+            "s1_drops", "s1_studio", "s3_strata", "s3_strand", "s4_frond_albedo", "s4_frond_thick",
             "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_macro_b", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
         };
 
@@ -40,6 +41,7 @@ namespace GardenVR.Terrarium.Editor
                 ConfigureTextures();
                 ConfigureModel();
                 ConfigureS3Model();
+                ConfigureS4Model();
                 var library = CreateLibrary();
                 var modelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
                 if (modelPrefab == null) throw new InvalidOperationException("model not imported: " + ModelPath);
@@ -64,8 +66,8 @@ namespace GardenVR.Terrarium.Editor
                 string path = "Assets/Art/Textures/" + name + ".png";
                 var importer = AssetImporter.GetAtPath(path) as TextureImporter;
                 if (importer == null) throw new InvalidOperationException("texture missing: " + path);
-                bool alpha = name == "fern_albedo" || name == "moss_card" || name == "moss_fuzz" || name == "mist" || name == "petal";
-                bool linear = name == "condensation" || name == "ring" || name == "fern_emission" || name == "s1_drops" || name == "s3_strand";
+                bool alpha = name == "fern_albedo" || name == "s4_frond_albedo" || name == "moss_card" || name == "moss_fuzz" || name == "mist" || name == "petal";
+                bool linear = name == "condensation" || name == "ring" || name == "fern_emission" || name == "s1_drops" || name == "s3_strand" || name == "s4_frond_thick";
                 bool repeat = name.IndexOf("band", StringComparison.Ordinal) >= 0
                     || name.IndexOf("side", StringComparison.Ordinal) >= 0
                     || name == "condensation"
@@ -156,6 +158,50 @@ namespace GardenVR.Terrarium.Editor
             importer.optimizeMeshPolygons = false;
             importer.optimizeMeshVertices = false;
             importer.SaveAndReimport();
+        }
+
+        static void ConfigureS4Model()
+        {
+            var importer = AssetImporter.GetAtPath(S4ModelPath) as ModelImporter;
+            if (importer == null) throw new InvalidOperationException("model missing: " + S4ModelPath);
+            importer.importBlendShapes = false;
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.globalScale = 1f;
+            importer.useFileScale = true;
+            importer.bakeAxisConversion = true;
+            // The fuzz shells push out along these normals, and the vertex colour carries the core weight.
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.weldVertices = false;
+            importer.isReadable = true;
+            importer.optimizeMeshPolygons = false;
+            importer.optimizeMeshVertices = false;
+            importer.SaveAndReimport();
+        }
+
+        /// <summary>The five fuzzy fiddlehead states, in uncoil order, as the meshes of the imported model.</summary>
+        static Mesh[] LoadS4FiddleStates()
+        {
+            string[] names = { "FiddleS4_0", "FiddleS4_25", "FiddleS4_50", "FiddleS4_75", "FiddleS4_100" };
+            var found = new Mesh[names.Length];
+            foreach (UnityEngine.Object asset in AssetDatabase.LoadAllAssetsAtPath(S4ModelPath))
+            {
+                var mesh = asset as Mesh;
+                if (mesh == null) continue;
+                int index = Array.IndexOf(names, mesh.name);
+                if (index >= 0) found[index] = mesh;
+            }
+            for (int i = 0; i < found.Length; i++)
+            {
+                if (found[i] == null) throw new InvalidOperationException("s4 fiddle mesh missing: " + names[i]);
+                if (!found[i].isReadable) throw new InvalidOperationException("s4 fiddle mesh is not readable: " + names[i]);
+                if (found[i].vertexCount != found[0].vertexCount)
+                    throw new InvalidOperationException("s4 fiddle meshes do not share topology: " + names[i]);
+            }
+            Debug.Log("[JarSetup] s4 fiddle states verts=" + found[0].vertexCount + " tris=" + found[0].triangles.Length / 3);
+            return found;
         }
 
         static GameObject InstantiateS3()
@@ -407,6 +453,41 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_GradBottom", 0.75f);
                 m.SetFloat("_GradTop", 1.12f);
                 m.SetVector("_GradY", new Vector4(0.032f, 0.100f, 0f, 0f));
+            });
+            // Spike S4. The A fiddle and the A fronds are untouched. These are the inputs of variants s4, s4f and s4h.
+            library.GlowShader = Shader.Find("Fidelity/Glow");
+            library.S4FrondShader = Shader.Find("Fidelity/FrondBacklit");
+            if (library.GlowShader == null || library.S4FrondShader == null) throw new InvalidOperationException("s4 frond shaders not found");
+            library.S4FrondAlbedo = Tex("s4_frond_albedo");
+            library.S4FrondThick = Tex("s4_frond_thick");
+            library.FernAlbedoA = Tex("fern_albedo");
+            library.S4FiddleStates = LoadS4FiddleStates();
+            library.S4Fiddle = Mat("Jar_FiddleS4", "Fidelity/FiddleFuzz", m =>
+            {
+                // Same colours as Jar_Fiddle, so the glow equation and the emission values are shared. JarView rewrites
+                // emission, rim and the tip window on every Apply. The hair texture runs along the tube.
+                m.SetTexture("_MainTex", Tex("fiddle_hairs"));
+                m.SetTextureScale("_MainTex", new Vector2(1.2f, 0.46f));
+                m.SetTexture("_EmissionTex", Tex("fiddle_hairs"));
+                m.SetColor("_Tint", new Color(0.48f, 0.70f, 0.18f));
+                m.SetFloat("_Flat", 0.85f);
+                m.SetFloat("_EmScale", 0.75f);
+                m.SetColor("_Emission", new Color(0.46f, 0.95f, 0.55f));
+                m.SetColor("_Rim", new Color(0.48f, 0.70f, 0.52f));
+                m.SetFloat("_RimPower", 1.15f);
+                m.SetFloat("_Trans", 0.45f);
+                m.SetFloat("_GradBottom", 0.75f);
+                m.SetFloat("_GradTop", 1.12f);
+                m.SetVector("_GradY", new Vector4(0.032f, 0.100f, 0f, 0f));
+                m.SetTexture("_StrandTex", Tex("s3_strand"));
+                m.SetVector("_StrandTile", new Vector4(2f, 1f, 0f, 0f));
+                m.SetFloat("_FurLen", 0.0016f);
+                m.SetFloat("_AoBase", 0.55f);
+                m.SetColor("_FuzzTint", new Color(1.35f, 1.40f, 1.15f));
+                m.SetColor("_CoreColor", new Color(0.50f, 0.62f, 0.10f));
+                m.SetFloat("_CoreBoost", 2.0f);
+                m.SetFloat("_CorePower", 1.4f);
+                m.SetFloat("_AlphaToMask", 1f);
             });
             library.Seedling = Mat("Jar_Seedling", "Fidelity/Glow", m =>
             {
