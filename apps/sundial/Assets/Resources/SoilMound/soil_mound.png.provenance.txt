@@ -1,0 +1,3 @@
+asset: soil_mound.png
+method: apps/sundial/Art/Source/soil/gen-1.png (tools/agy/image.sh, structure-locked edit of template.png), fitted, regraded and feathered by apps/sundial/Art/Scripts/soilmound_s4.py build
+derived_from_art_reference: no

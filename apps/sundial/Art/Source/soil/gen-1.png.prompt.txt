@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: apps/sundial/Art/Source/soil/template.png
+prompt: Repaint this flat template as a hand-painted TOP-DOWN bed of garden earth in watercolour and coloured pencil, like a botanical field notebook. Keep the ragged disc outline, its size and its position EXACTLY as in the template and keep the cream paper outside it untouched. Inside: dark umber and burnt sienna soil with many small stippled crumbs, speckles, a few small pale lit pebbles each with a dark underside, grey-ochre dry patches, fine pencil flecks. The centre is a little paler and drier, the rim darker. Strictly orthographic top view: no perspective, no cast shadows, no plants, no hands, no text. Square image
