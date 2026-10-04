@@ -197,6 +197,18 @@ def build():
         json.dump(out, f, separators=(",", ":"))
     prev = col * alpha[..., None] + PAPER * (1 - alpha[..., None])
     Image.fromarray(prev.clip(0, 255).astype(np.uint8)).save(os.path.join(SRC, "preview.png"))
+    # Edge shape, top-down and untilted: radius of the alpha 0.5 contour per degree. Look A is a circle (std 0).
+    ang = np.arctan2(gy, gx)
+    rad = np.hypot(gx, gy)
+    edge = alpha >= 0.5
+    bins = np.floor((ang + math.pi) / (2 * math.pi) * 360).astype(int).clip(0, 359)
+    rmax = np.array([rad[edge & (bins == k)].max() if (edge & (bins == k)).any() else np.nan for k in range(360)])
+    rmax = rmax[~np.isnan(rmax)]
+    edge_stats = {"radiusMeanMm": round(float(rmax.mean() * 1000), 2), "radiusStdMm": round(float(rmax.std() * 1000), 2),
+                  "stdOverMeanPct": round(float(100 * rmax.std() / rmax.mean()), 2), "lookAStdMm": 0.0, "lookARadiusMm": 68.0}
+    with open(os.path.join(SRC, "edge.json"), "w", newline="\n") as f:
+        json.dump(edge_stats, f, indent=2)
+    print(json.dumps(edge_stats))
     print(json.dumps({
         "equivalentRadiusM": round(math.sqrt(float(inside.sum()) / math.pi) * mpp, 5),
         "pebbles": len(peb),
