@@ -201,8 +201,14 @@ def load_rgb(path):
     return Image.open(path).convert("RGB")
 
 
+def shrink(im, scale):
+    if scale >= 0.999:
+        return im
+    return im.resize((max(1, int(im.width * scale)), max(1, int(im.height * scale))), Image.LANCZOS)
+
+
 def cmd_flip(args):
-    a, b = load_rgb(args.a), load_rgb(args.b)
+    a, b = shrink(load_rgb(args.a), args.scale), shrink(load_rgb(args.b), args.scale)
     frames = [a, b]
     frames[0].save(args.out, save_all=True, append_images=frames[1:], duration=700, loop=0, optimize=True)
     print("flip", args.out)
@@ -220,7 +226,7 @@ def cmd_grey(args):
 
 
 def cmd_orbit(args):
-    frames = [load_rgb(f) for f in args.frames]
+    frames = [shrink(load_rgb(f), args.scale) for f in args.frames]
     seq = frames + frames[-2:0:-1]
     seq[0].save(args.out, save_all=True, append_images=seq[1:], duration=140, loop=0, optimize=True)
     print("orbit", args.out, len(seq), "frames")
@@ -241,26 +247,40 @@ def cmd_stereo(args):
 
 
 def cmd_contour(args):
-    """Median half-max ink stroke width inside a box, same idea as the T-SUN-028 contour measure: for dark ink pixels
-    on the plant, the thickness of the dark run perpendicular to the stroke. Here: thickness = twice the distance to
-    the nearest non-ink pixel, taken along the medial axis."""
+    """Median ink stroke width in pixels inside a box. The crop is upsampled 4x (bicubic) so the cut at mean-channel 130
+    lands between pixels, then width = twice the distance to the nearest non-ink pixel along the medial axis.
+    With --other, only pixels that differ from that frame count, so the room, the wash and the soil drop out and the
+    stroke is the plant's own (use the same state with the other variant)."""
+    import cv2
     img = np.asarray(load_rgb(args.frame)).astype(np.float32)
     x0, y0, x1, y1 = args.box
     crop = img[y0:y1, x0:x1]
-    luma = crop @ np.array([0.2126, 0.7152, 0.0722])
-    ink = luma < args.threshold
+    keep = np.ones(crop.shape[:2], dtype=bool)
+    if args.other:
+        oth = np.asarray(load_rgb(args.other)).astype(np.float32)[y0:y1, x0:x1]
+        keep = np.abs(crop - oth).max(axis=2) > args.diff
+        keep = ndi.binary_dilation(keep, iterations=1)
+    up = cv2.resize(crop, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+    keep_up = cv2.resize(keep.astype(np.uint8), None, fx=4, fy=4, interpolation=cv2.INTER_NEAREST) > 0
+    # Mean of the channels, the same cut as plants_key.ink_width and the T-SUN-028 contour gate (luma < 130).
+    luma = up.mean(axis=2)
+    ink = (luma < args.threshold) & keep_up
     dist = ndi.distance_transform_edt(ink)
-    # medial axis: local maxima of the distance map
     mx = ndi.maximum_filter(dist, size=3)
-    axis = (dist >= mx - 1e-6) & (dist > 0.5)
-    widths = dist[axis] * 2.0
+    axis = (dist >= mx - 1e-6) & (dist > 1.0)
+    widths = dist[axis] * 2.0 / 4.0
+    widths = widths[widths <= args.max_width]
+    hist, edges = np.histogram(widths, bins=np.arange(0, args.max_width + 0.5, 0.5))
+    modal = float(hist.max() / max(hist.sum(), 1))
     stats = {
+        "frame": os.path.basename(args.frame),
         "box": args.box,
-        "ink_px": int(ink.sum()),
-        "axis_px": int(axis.sum()),
-        "median_width": float(np.median(widths)) if len(widths) else None,
-        "p25": float(np.percentile(widths, 25)) if len(widths) else None,
-        "p75": float(np.percentile(widths, 75)) if len(widths) else None,
+        "ink_px": int(ink.sum() / 16),
+        "axis_samples": int(len(widths)),
+        "median_width_px": round(float(np.median(widths)), 3) if len(widths) else None,
+        "p25": round(float(np.percentile(widths, 25)), 3) if len(widths) else None,
+        "p75": round(float(np.percentile(widths, 75)), 3) if len(widths) else None,
+        "modal_0p5_bin_share": round(modal, 3),
     }
     print(json.dumps(stats))
     if args.out:
@@ -279,6 +299,7 @@ def main(argv):
     s.add_argument("a")
     s.add_argument("b")
     s.add_argument("out")
+    s.add_argument("--scale", type=float, default=1.0)
     s.set_defaults(fn=cmd_flip)
     s = sub.add_parser("grey")
     s.add_argument("a")
@@ -287,6 +308,7 @@ def main(argv):
     s.set_defaults(fn=cmd_grey)
     s = sub.add_parser("orbit")
     s.add_argument("out")
+    s.add_argument("--scale", type=float, default=1.0)
     s.add_argument("frames", nargs="+")
     s.set_defaults(fn=cmd_orbit)
     s = sub.add_parser("stereo")
@@ -298,7 +320,10 @@ def main(argv):
     s = sub.add_parser("contour")
     s.add_argument("frame")
     s.add_argument("--box", nargs=4, type=int, required=True)
-    s.add_argument("--threshold", type=float, default=95.0)
+    s.add_argument("--threshold", type=float, default=130.0)
+    s.add_argument("--other", default=None)
+    s.add_argument("--diff", type=float, default=24.0)
+    s.add_argument("--max-width", type=float, default=8.0)
     s.add_argument("--out", default=None)
     s.set_defaults(fn=cmd_contour)
     args = p.parse_args(argv)
