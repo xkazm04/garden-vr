@@ -1,3 +1,3 @@
 asset: soil_mound.png
-method: apps/sundial/Art/Source/soil/gen-1.png (tools/agy/image.sh, structure-locked edit of template.png), fitted, regraded and feathered by apps/sundial/Art/Scripts/soilmound_s4.py build
+method: apps/sundial/Art/Source/soil/gen-2.png (tools/agy/image.sh, edit of the zoned crescent template-2.png; the model fills the interior only), regraded; the bed edge (shape, feather) is drawn by apps/sundial/Art/Scripts/soilmound_s4b.py build and the wash enters it in the shader from the face texture. Alpha is the edge parameter (0 wash, 1 earth), not coverage.
 derived_from_art_reference: no

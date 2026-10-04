@@ -709,6 +709,64 @@ namespace GardenVR.Sundial
             _mound.SetActive(visible);
             EnableNamed("Soil", false);
             _moundApplied = true;
+            ApplyMoundWash();
+        }
+
+        // T-SUN-051. The face texture the bed's edge bleeds into, and the plane map from the dial's x and z to its uv, fitted once from
+        // the DialTop mesh (its UV is not the plain planar one: it is mirrored in x, see T-SUN-015) by least squares.
+        Texture _washTex;
+        Vector3 _washU, _washV;
+        bool _washFitted;
+
+        void ApplyMoundWash()
+        {
+            if (_mound == null) return;
+            Transform top = FindDeep(transform, "DialTop");
+            Renderer renderer = top != null ? top.GetComponent<Renderer>() : null;
+            Texture tex = renderer != null && renderer.sharedMaterial != null ? renderer.sharedMaterial.mainTexture : null;
+            if (!_washFitted && top != null)
+            {
+                var filter = top.GetComponent<MeshFilter>();
+                Mesh mesh = filter != null ? filter.sharedMesh : null;
+                if (mesh != null && mesh.vertexCount >= 8 && mesh.isReadable)
+                {
+                    Vector3[] v = mesh.vertices;
+                    Vector2[] uv = mesh.uv;
+                    var pts = new Vector2[v.Length];
+                    for (int i = 0; i < v.Length; i++)
+                    {
+                        Vector3 local = transform.InverseTransformPoint(top.TransformPoint(v[i]));
+                        pts[i] = new Vector2(local.x, local.z);
+                    }
+                    _washFitted = FitPlane(pts, uv, 0, out _washU) && FitPlane(pts, uv, 1, out _washV);
+                }
+            }
+            bool on = _washFitted && tex != null;
+            if (tex != _washTex || !on)
+            {
+                _washTex = tex;
+                _mound.SetWash(on ? tex : null, _washU, _washV);
+            }
+        }
+
+        /// <summary>Least squares for value = a x + b z + c over the points. Returns false when the points do not span a plane.</summary>
+        static bool FitPlane(Vector2[] pts, Vector2[] uv, int channel, out Vector3 abc)
+        {
+            double sxx = 0, sxz = 0, szz = 0, sx = 0, sz = 0, n = pts.Length, sxv = 0, szv = 0, sv = 0;
+            for (int i = 0; i < pts.Length; i++)
+            {
+                double x = pts[i].x, z = pts[i].y, val = channel == 0 ? uv[i].x : uv[i].y;
+                sxx += x * x; sxz += x * z; szz += z * z; sx += x; sz += z;
+                sxv += x * val; szv += z * val; sv += val;
+            }
+            double det = sxx * (szz * n - sz * sz) - sxz * (sxz * n - sz * sx) + sx * (sxz * sz - szz * sx);
+            abc = Vector3.zero;
+            if (Math.Abs(det) < 1e-12) return false;
+            double a = (sxv * (szz * n - sz * sz) - sxz * (szv * n - sz * sv) + sx * (szv * sz - szz * sv)) / det;
+            double b = (sxx * (szv * n - sv * sz) - sxv * (sxz * n - sz * sx) + sx * (sxz * sv - szv * sx)) / det;
+            double c = (sxx * (szz * sv - sz * szv) - sxz * (sxz * sv - szv * sx) + sxv * (sxz * sz - szz * sx)) / det;
+            abc = new Vector3((float)a, (float)b, (float)c);
+            return true;
         }
 
         static bool IsRoomLightVariant(string name)

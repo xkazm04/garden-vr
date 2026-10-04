@@ -66,13 +66,69 @@ namespace GardenVR.Sundial.Tests.EditMode
                 {
                     top = Mathf.Max(top, p.y);
                     if (p.x * p.x + p.z * p.z < 0.01f * 0.01f) centre = Mathf.Max(centre, p.y);
-                    if (p.x * p.x + p.z * p.z > 0.075f * 0.075f) rim = Mathf.Min(rim, p.y);
+                    if (p.x * p.x + p.z * p.z > 0.105f * 0.105f) rim = Mathf.Min(rim, p.y);
                 }
-                // 8 to 12 mm in the dossier. The nib clears it (shadow wash sits at 11 mm) and the plants keep their bases in view.
-                Assert.GreaterOrEqual(top, 0.0075f);
-                Assert.LessOrEqual(top, 0.0105f);
-                Assert.Greater(centre, rim + 0.005f, "the crown is higher than the rim, so it is a mound and not a bowl");
+                // T-SUN-051: a lower crown than S4's 7.5 to 10.5 mm. Still clear of the paper, still under the shadow wash at 11 mm.
+                Assert.GreaterOrEqual(top, 0.0040f);
+                Assert.LessOrEqual(top, 0.0065f);
+                Assert.Greater(centre, rim + 0.003f, "the crown is higher than the rim, so it is a bed and not a bowl");
                 Assert.Less(rim, 0.0015f, "the lip comes down to the paper");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
+        public void TheBedIsAWideCrescentAlongTheNearRimNotACompactHeap()
+        {
+            GameObject root = NewDial(out DialView view, out _);
+            try
+            {
+                view.ApplyCaptureState(new Dictionary<string, string> { { "variant", "soilmound" } });
+                Mesh mesh = view.Mound.Renderer.GetComponent<MeshFilter>().sharedMesh;
+                float x0 = float.MaxValue, x1 = float.MinValue, z0 = float.MaxValue, z1 = float.MinValue;
+                foreach (Vector3 p in mesh.vertices)
+                {
+                    x0 = Mathf.Min(x0, p.x); x1 = Mathf.Max(x1, p.x);
+                    z0 = Mathf.Min(z0, p.z); z1 = Mathf.Max(z1, p.z);
+                }
+                TestContext.WriteLine("S4b bed box (mm): x " + (x0 * 1000f).ToString("0") + " to " + (x1 * 1000f).ToString("0") + ", z " + (z0 * 1000f).ToString("0") + " to " + (z1 * 1000f).ToString("0"));
+                Assert.Greater(x1 - x0, 0.20f, "wider than the S4 heap (0.17 m)");
+                Assert.Less(z0, -0.100f, "reaches the near rim");
+                Assert.Less(z1, 0.06f, "the far half of the dial stays wash");
+                Assert.Greater(z1, 0.03f, "the base of the midday plant (z 0.0265) is on the bed");
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
+        public void TheLayoutMapsTheBedBoxOntoItsEllipseBox()
+        {
+            float r = 0.1472f;
+            DialLayout.BedBoxMap(r, 0.113f, -0.113f, 0.040f, out float sx, out float sz, out float oz);
+            Assert.AreEqual(DialLayout.BedHalfX * r, 0.113f * sx, 1e-5f);
+            Assert.AreEqual((DialLayout.BedCentreZ - DialLayout.BedHalfZ) * r, -0.113f * sz + oz, 1e-5f);
+            Assert.AreEqual((DialLayout.BedCentreZ + DialLayout.BedHalfZ) * r, 0.040f * sz + oz, 1e-5f);
+        }
+
+        [Test]
+        public void TheWashBleedIsOffWithoutAFaceTextureAndSwitchesOnWithOne()
+        {
+            GameObject root = NewDial(out DialView view, out _);
+            try
+            {
+                view.ApplyCaptureState(new Dictionary<string, string> { { "variant", "soilmound" } });
+                Assert.AreEqual(0f, view.Mound.Renderer.sharedMaterial.GetFloat("_WashOn"));
+                view.Mound.SetWash(Texture2D.whiteTexture, new Vector3(1f, 0f, 0f), new Vector3(0f, 1f, 0f));
+                Assert.AreEqual(1f, view.Mound.Renderer.sharedMaterial.GetFloat("_WashOn"));
+                Assert.AreSame(Texture2D.whiteTexture, view.Mound.Renderer.sharedMaterial.GetTexture("_WashTex"));
+                view.Mound.SetWash(null, Vector3.zero, Vector3.zero);
+                Assert.AreEqual(0f, view.Mound.Renderer.sharedMaterial.GetFloat("_WashOn"));
             }
             finally
             {
@@ -110,11 +166,15 @@ namespace GardenVR.Sundial.Tests.EditMode
                 Mesh mesh = view.Mound.Renderer.GetComponent<MeshFilter>().sharedMesh;
                 Vector3[] v = mesh.vertices;
                 Vector2[] uv = mesh.uv;
+                var box = JsonUtility.FromJson<Box>(Resources.Load<TextAsset>(SoilMound.ResourceData).text);
+                int checkedPoints = 0;
                 for (int i = 0; i < v.Length; i += 7)
                 {
-                    Assert.AreEqual((v[i].x + 0.085f) / 0.17f, uv[i].x, 1e-4f);
-                    Assert.AreEqual((v[i].z + 0.085f) / 0.17f, uv[i].y, 1e-4f);
+                    Assert.AreEqual((v[i].x + box.span) / (2f * box.span), uv[i].x, 1e-4f);
+                    Assert.AreEqual((v[i].z - box.zMin) / (box.zMax - box.zMin), uv[i].y, 1e-4f);
+                    checkedPoints++;
                 }
+                Assert.Greater(checkedPoints, 100);
             }
             finally
             {
@@ -128,11 +188,14 @@ namespace GardenVR.Sundial.Tests.EditMode
             string fx = Path.GetFullPath(Path.Combine(
                 Application.dataPath, "..", "..", "..", "shared", "packages", "com.gardenvr.fx", "Runtime", "Shaders"));
             string src = File.ReadAllText(Path.Combine(fx, "FSoilMound.shader"));
-            StringAssert.Contains("AlphaToMask On", src);
+            // T-SUN-051: the edge is a smooth wash bleed. No alpha to coverage, no dither, no blend: opaque.
+            StringAssert.DoesNotContain("AlphaToMask On", src);
+            StringAssert.DoesNotContain("dither", src);
             StringAssert.Contains("UNITY_VERTEX_OUTPUT_STEREO", src);
             StringAssert.Contains("Blend One Zero", src);
-            // The dither cell lives in object space, so both eyes and every frame agree.
-            StringAssert.Contains("floor(i.op.xz", src);
+            // The wash is the face's own texture, read at the object-space dial position, so both eyes and every frame agree.
+            StringAssert.Contains("_WashTex", src);
+            StringAssert.Contains("i.op.x, i.op.z", src);
             StringAssert.DoesNotContain("_ScreenParams", src);
             StringAssert.DoesNotContain("ComputeScreenPos", src);
             StringAssert.DoesNotContain("unity_StereoEyeIndex", src);
@@ -149,6 +212,9 @@ namespace GardenVR.Sundial.Tests.EditMode
             Assert.IsNotNull(material.mainTexture);
             Assert.IsNotNull(material.GetTexture("_PaperH"), "the earth shares the face's paper height map");
         }
+
+        [System.Serializable]
+        class Box { public float span, zMin, zMax; }
 
         static GameObject NewDial(out DialView view, out MeshRenderer disc)
         {

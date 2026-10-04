@@ -17,6 +17,11 @@ namespace GardenVR.Sundial
     {
         public float span;
         public int grid;
+        // T-SUN-051. Optional, for a painting that is not square: gridZ cells over zMin..zMax (default: grid cells over -span..span).
+        public int gridZ;
+        public float zMin, zMax;
+        // Optional bed box in baked metres (half width, near and far z). The layout maps it onto its bed ellipse's box.
+        public float bedX, bedZ0, bedZ1;
         public float moundRadius;
         public float peak;
         public float[] heights;
@@ -65,7 +70,9 @@ namespace GardenVR.Sundial
             if (template == null) throw new InvalidOperationException("SoilMound needs the Fidelity/SoilMound material");
             if (data == null) throw new InvalidOperationException("SoilMound needs the heightfield json");
             SoilMoundFile file = JsonUtility.FromJson<SoilMoundFile>(data.text);
-            if (file == null || file.heights == null || file.grid < 8 || file.heights.Length != (file.grid + 1) * (file.grid + 1))
+            if (file != null && file.gridZ <= 0) file.gridZ = file.grid;
+            if (file != null && file.zMax <= file.zMin) { file.zMin = -file.span; file.zMax = file.span; }
+            if (file == null || file.heights == null || file.grid < 8 || file.gridZ < 8 || file.heights.Length != (file.grid + 1) * (file.gridZ + 1))
                 throw new InvalidOperationException("soil-mound.json is malformed");
 
             var go = new GameObject("SoilMound");
@@ -80,6 +87,29 @@ namespace GardenVR.Sundial
             _renderer.sharedMaterial = _material;
             _renderer.shadowCastingMode = ShadowCastingMode.Off;
             _renderer.receiveShadows = true;
+        }
+
+        static readonly int WashTex = Shader.PropertyToID("_WashTex");
+        static readonly int WashU = Shader.PropertyToID("_WashU");
+        static readonly int WashV = Shader.PropertyToID("_WashV");
+        static readonly int WashOn = Shader.PropertyToID("_WashOn");
+
+        /// <summary>
+        /// T-SUN-051. The wash the bed's edge bleeds into is the face's own texture, read in the shader at the dial position:
+        /// face u = a x + b z + c and v = d x + e z + f (dial-local metres, the mound root shares the dial's x and z). A null texture
+        /// turns the bleed off and the edge fades to the fallback cream.
+        /// </summary>
+        public void SetWash(Texture texture, Vector3 u, Vector3 v)
+        {
+            if (_material == null) return;
+            bool on = texture != null;
+            _material.SetFloat(WashOn, on ? 1f : 0f);
+            if (on)
+            {
+                _material.SetTexture(WashTex, texture);
+                _material.SetVector(WashU, new Vector4(u.x, u.y, u.z, 0f));
+                _material.SetVector(WashV, new Vector4(v.x, v.y, v.z, 0f));
+            }
         }
 
         public void SetActive(bool on)
@@ -99,23 +129,26 @@ namespace GardenVR.Sundial
             float sx = 1f, sz = 1f, oz = 0f, pebbleScale = 1f;
             if (bed != null)
             {
-                DialLayout.BedMap(bed.FaceRadius, f.moundRadius, out sx, out sz, out oz);
+                if (f.bedX > 0f && f.bedZ1 > f.bedZ0) DialLayout.BedBoxMap(bed.FaceRadius, f.bedX, f.bedZ0, f.bedZ1, out sx, out sz, out oz);
+                else DialLayout.BedMap(bed.FaceRadius, f.moundRadius, out sx, out sz, out oz);
                 pebbleScale = DialLayout.PebbleScale;
             }
             int n = f.grid;
+            int nz = f.gridZ;
             int w = n + 1;
             float step = 2f * f.span / n;
+            float stepZ = (f.zMax - f.zMin) / nz;
             const float floor = 0.0003f;
             var verts = new List<Vector3>(w * w);
             var uvs = new List<Vector2>(w * w);
             var normals = new List<Vector3>(w * w);
             var colors = new List<Color>(w * w);
-            var tris = new List<int>(n * n * 6);
+            var tris = new List<int>(n * nz * 6);
 
             // A cell is kept when any corner is painted. Corners with no paint sit at the paper line.
-            var used = new bool[n * n];
-            var needed = new bool[w * w];
-            for (int j = 0; j < n; j++)
+            var used = new bool[n * nz];
+            var needed = new bool[w * (nz + 1)];
+            for (int j = 0; j < nz; j++)
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -126,8 +159,8 @@ namespace GardenVR.Sundial
                     needed[j * w + i] = needed[j * w + i + 1] = needed[(j + 1) * w + i] = needed[(j + 1) * w + i + 1] = true;
                 }
             }
-            var map = new int[w * w];
-            for (int j = 0; j < w; j++)
+            var map = new int[w * (nz + 1)];
+            for (int j = 0; j <= nz; j++)
             {
                 for (int i = 0; i < w; i++)
                 {
@@ -135,20 +168,20 @@ namespace GardenVR.Sundial
                     map[k] = -1;
                     if (!needed[k]) continue;
                     float x = -f.span + i * step;
-                    float z = -f.span + j * step;
+                    float z = f.zMin + j * stepZ;
                     float h = Mathf.Max(f.heights[k], floor);
                     map[k] = verts.Count;
                     verts.Add(new Vector3(x * sx, h, z * sz + oz));
-                    uvs.Add(new Vector2((x + f.span) / (2f * f.span), (z + f.span) / (2f * f.span)));
+                    uvs.Add(new Vector2((x + f.span) / (2f * f.span), (z - f.zMin) / (f.zMax - f.zMin)));
                     // Central difference of the heightfield. Edge samples fall back to one side.
                     float hl = Height(f, i - 1, j, floor), hr = Height(f, i + 1, j, floor);
                     float hd = Height(f, i, j - 1, floor), hu = Height(f, i, j + 1, floor);
-                    normals.Add(new Vector3((hl - hr) / sx, 2f * step, (hd - hu) / sz).normalized);
+                    normals.Add(new Vector3((hl - hr) / sx, 2f * step, (hd - hu) / sz * (step / stepZ)).normalized);
                     colors.Add(new Color(1f, 1f, 1f, 0f));
                     if (h > Crown) Crown = h;
                 }
             }
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < nz; j++)
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -165,7 +198,7 @@ namespace GardenVR.Sundial
             {
                 foreach (SoilPebble p in f.pebbles)
                 {
-                    AddPebble(p, verts, uvs, normals, colors, tris, f.span, sx, sz, oz, pebbleScale);
+                    AddPebble(p, verts, uvs, normals, colors, tris, f, sx, sz, oz, pebbleScale);
                     Pebbles++;
                 }
             }
@@ -184,11 +217,11 @@ namespace GardenVR.Sundial
         {
             int w = f.grid + 1;
             i = Mathf.Clamp(i, 0, f.grid);
-            j = Mathf.Clamp(j, 0, f.grid);
+            j = Mathf.Clamp(j, 0, f.gridZ);
             return Mathf.Max(f.heights[j * w + i], floor);
         }
 
-        static void AddPebble(SoilPebble p, List<Vector3> verts, List<Vector2> uvs, List<Vector3> normals, List<Color> colors, List<int> tris, float span,
+        static void AddPebble(SoilPebble p, List<Vector3> verts, List<Vector2> uvs, List<Vector3> normals, List<Color> colors, List<int> tris, SoilMoundFile f,
             float sx, float sz, float oz, float pebbleScale)
         {
             int first = verts.Count;
@@ -212,7 +245,7 @@ namespace GardenVR.Sundial
                     var nrm = spin * new Vector3(unit.x / radius.x, unit.y / radius.y, unit.z / radius.z);
                     verts.Add(pos);
                     normals.Add(nrm.normalized);
-                    uvs.Add(new Vector2((sample.x + span) / (2f * span), (sample.z + span) / (2f * span)));
+                    uvs.Add(new Vector2((sample.x + f.span) / (2f * f.span), (sample.z - f.zMin) / (f.zMax - f.zMin)));
                     colors.Add(tint);
                 }
             }
