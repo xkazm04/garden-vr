@@ -11,6 +11,9 @@
 // _S2_B0, _S2_CUBE and _S2_OPAQUE are the T-TER-044 spike (they ride on _S1_ON, and are compiled only by
 // Fidelity/JarGlass). B0 is the structured pane on the thick-glass mesh. CUBE adds one baked refraction lookup
 // (no resolve, the Quest path). OPAQUE adds the Opaque Texture refraction with 3-tap dispersion (the PC path).
+// _S5_HAZE is the T-TER-045 spike (rides on _S1_ON, compiled only by Fidelity/JarGlass). It adds an analytic chord haze:
+// the view ray is intersected with the cavity cylinder in closed form, the chord length is clipped to the moss surface
+// and the neck, and Beer-Lambert gives the density. No depth texture, no extra draw, one noise sample.
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
 
@@ -25,6 +28,9 @@ CBUFFER_START(UnityPerMaterial)
     float4 _InnerY, _VolumeY;
     // S2: x wall offset in metres (OPAQUE), y dispersion, z refraction mix, w cube proxy distance in metres (CUBE).
     float4 _S2Cfg;
+    // S5 chord haze: _S5Haze = (sigma per metre, colour strength, density gain toward the top, alpha weight);
+    // _S5Cyl = (cavity radius m, bottom y m, top y m, clock s).
+    float4 _S5Haze, _S5Cyl;
 CBUFFER_END
 
 struct A { float4 pos : POSITION; float3 n : NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
@@ -262,6 +268,69 @@ half3 SampleRefractStrip(float3 dir)
 // The bake and the shader agree on this point: the centre of the cavity, 6 cm above the jar origin.
 static const float3 S2_PROBE = float3(0.0, 0.06, 0.0);
 
+
+#if defined(_S5_HAZE)
+// Analytic chord of the view ray through the cavity cylinder (object space, y up), clipped to [yLo, yHi]. Returns the haze
+// amount in x (0..1), the height of the chord midpoint in y (0 at yLo, 1 at yHi) and the chord length in z.
+float3 S5Chord(float3 wp)
+{
+    float R = _S5Cyl.x, yLo = _S5Cyl.y, yHi = _S5Cyl.z;
+    // World-aligned offsets from the jar origin (the same frame as i.op). The glass mesh object is rotated by the FBX import.
+    float3 origin = TransformObjectToWorld(float3(0, 0, 0));
+    float3 ro = _WorldSpaceCameraPos - origin;
+    float3 rd = (wp - origin) - ro;
+    float len = max(length(rd), 1e-5);
+    rd /= len;
+    float a = dot(rd.xz, rd.xz);
+    float b = dot(ro.xz, rd.xz);
+    float c = dot(ro.xz, ro.xz) - R * R;
+    float disc = b * b - a * c;
+    if (disc <= 0.0 || a < 1e-8) return float3(0, 0, 0);
+    float sq = sqrt(disc);
+    float tc0 = (-b - sq) / a;
+    float tc1 = (-b + sq) / a;
+    float ty0 = -1e9, ty1 = 1e9;
+    if (abs(rd.y) > 1e-5)
+    {
+        float t0 = (yLo - ro.y) / rd.y;
+        float t1 = (yHi - ro.y) / rd.y;
+        ty0 = min(t0, t1);
+        ty1 = max(t0, t1);
+    }
+    else if (ro.y < yLo || ro.y > yHi) return float3(0, 0, 0);
+    float e0 = max(max(tc0, ty0), 0.0);
+    float e1 = min(tc1, ty1);
+    float chord = max(e1 - e0, 0.0);
+    float ym = ro.y + rd.y * 0.5 * (e0 + e1);
+    return float3(chord, saturate((ym - yLo) / max(yHi - yLo, 1e-4)), 0);
+}
+
+// Premultiplied haze: rgb already includes the alpha weight. Mint low and dense near the moss, paler and thicker up top.
+half4 S5Haze(float3 wp, half cavityMask)
+{
+    float3 ch = S5Chord(wp);
+    if (ch.x <= 0.0) return half4(0, 0, 0, 0);
+    float R = _S5Cyl.x, yLo = _S5Cyl.y, yHi = _S5Cyl.z;
+    float3 pm = wp - TransformObjectToWorld(float3(0, 0, 0));
+    // Wisps: the condensation plate's blue channel, drifting with the capture clock. Sampled at the near-wall point so
+    // it stays attached to the jar, not to the camera.
+    float ang = atan2(pm.x, -pm.z);
+    float2 wuv = float2(ang * 0.55 + _S5Cyl.w * 0.012, pm.y * 7.0 - _S5Cyl.w * 0.020);
+    half wisp = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, wuv).b;
+    half noiseAmt = saturate(_S5Haze.w);
+    half dens = (half)(_S5Haze.x * lerp(1.0, 1.0 + _S5Haze.z, ch.y)) * lerp(1.0 - noiseAmt, 1.0, wisp);
+    half haze = 1.0 - exp(-dens * (half)ch.x);
+    half3 low = half3(0.03, 0.80, 0.45);
+    half3 high = half3(0.10, 0.82, 0.62);
+    half hy = (half)smoothstep(0.15, 0.95, ch.y);
+    half3 tint = lerp(low, high, hy);
+    // Brightest just above the moss (the reference glows from the bed), thinning to a paler haze toward the neck.
+    half w = haze * _S5Haze.y * lerp(2.0, 0.85, hy);
+    // Alpha takes a little red out of what is behind, so the interior reads teal and not lifted.
+    return half4(tint * w, w * 0.50);
+}
+#endif
+
 #if defined(_S1_ON)
 // Structured clear glass. No veil, no air light, no opaque-copy sample.
 // Schlick covers the pane. NdotV draws the thickness bands. The foot is a light pipe.
@@ -348,6 +417,13 @@ half4 GlassStructured(V i, half backWall)
     half3 body = half3(0.0025, 0.0055, 0.0035);
 
     half a = saturate(F * 0.80 + outer * 0.50 + innerLine * 0.35 + dark * 0.70 + mistA + lipLine * 0.45 + dropMask * 0.55 + footEdge * 0.25);
+#if defined(_S5_HAZE)
+    half4 hz = S5Haze(i.wp, 1.0);
+#if defined(S2_GEOM)
+    hz *= outerFace;
+#endif
+    a = saturate(a + hz.a);
+#endif
     half3 c =
         refl
         + lineCol * (outer * 0.92 + innerLine * 0.50 + lipLine * 0.75)
@@ -356,6 +432,9 @@ half4 GlassStructured(V i, half backWall)
         + footCol * footEdge * 0.85
         + dropRgb
         + body;
+#if defined(_S5_HAZE)
+    c += hz.rgb;
+#endif
 #if defined(S2_REFR)
     // The refracted background sits under the structured layer: weight 0 across the pane, rising to 1 at the wall.
     // The result is the S1 layer over (refracted copy times w), in premultiplied form.
