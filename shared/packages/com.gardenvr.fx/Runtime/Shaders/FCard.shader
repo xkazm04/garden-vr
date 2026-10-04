@@ -5,6 +5,8 @@
 // Boil is a held 10 fps clock. _BoilPx jitters by that many screen pixels (keep it at or under 1.2). _Boil still
 // jitters in UV units when _BoilPx is 0, which is the Terrarium path. A negative _BoilTime uses _T.
 // _Mask > 0 reads an interim halo whose line lives in B and whose glow lives in G (R is empty).
+// _GVR_ROOMLIGHT (global keyword, off by default) multiplies the alpha-to-coverage plant cards by the room-light cookie
+// at the card's world position (Spike S2). Glow, halo, ring and shadow cards are not touched.
 Shader "Fidelity/Card"
 {
     Properties
@@ -51,8 +53,12 @@ Shader "Fidelity/Card"
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_instancing
+            #pragma multi_compile_fragment _ _GVR_ROOMLIGHT
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
+            TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
+            float4x4 _GvrRoomW2C;
+            float4 _GvrRoomParams;
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color, _Color2;
@@ -61,7 +67,7 @@ Shader "Fidelity/Card"
                 float4 _Focus;
             CBUFFER_END
             struct A { float4 pos : POSITION; float3 n : NORMAL; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
-            struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; half4 col : COLOR; UNITY_VERTEX_OUTPUT_STEREO };
+            struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; half4 col : COLOR; float3 wp : TEXCOORD2; UNITY_VERTEX_OUTPUT_STEREO };
             V vert (A i)
             {
                 V o;
@@ -71,6 +77,7 @@ Shader "Fidelity/Card"
                 o.uv = TRANSFORM_TEX(i.uv, _MainTex);
                 o.wn = TransformObjectToWorldNormal(i.n);
                 o.col = i.col;
+                o.wp = TransformObjectToWorld(i.pos.xyz);
                 return o;
             }
             float h21(float2 p) { return frac(sin(dot(p, float2(127.1, 311.7))) * 43758.5453); }
@@ -118,6 +125,17 @@ Shader "Fidelity/Card"
                 else if (_Coverage > 0.5)
                 {
                     c = half4(t.rgb * _Color.rgb, t.a * _Color.a);
+                    #if defined(_GVR_ROOMLIGHT)
+                    {
+                        // The card's base point, so the whole plant takes one value and the cookie does not smear up it.
+                        float3 lp = mul(_GvrRoomW2C, float4(i.wp.x, TransformObjectToWorld(float3(0, 0, 0)).y, i.wp.z, 1.0)).xyz;
+                        float2 cuv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
+                        float cd = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, cuv).r * 2.0 - 1.0;
+                        half cg = (half)(1.0 + _GvrRoomParams.y * cd);
+                        half cpeak = max(max(c.r, c.g), max(c.b, 1e-3));
+                        c.rgb *= min(cg, max((half)1.0, (half)(0.985 / cpeak)));
+                    }
+                    #endif
                     // Drop the empty card. Alpha-to-coverage still softens the ink when MSAA is on.
                     if (c.a < 0.02) discard;
                 }

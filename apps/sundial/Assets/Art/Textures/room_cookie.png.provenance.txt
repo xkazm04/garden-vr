@@ -1,0 +1,4 @@
+asset: room_cookie.png, room_shadow_wash.png
+method: apps/sundial/Art/Scripts/roomlight_s2.py build
+note: Cookie is the blurred plate-dial.png table luminance over its local mean (dial, hand, wall and props masked, filled by masked convolution), capped at +-15 percent and projected from the DialG1 camera onto the table plane. R = 0.5 + 0.5 * d over 0.40 m centred on the dial. The wash is a procedural wedge (apex at v 0, soft edge, darker dried rim, low-frequency mottle). Not copied from the art reference; the plate is a development stand-in and is never shipped.
+derived_from_art_reference: no

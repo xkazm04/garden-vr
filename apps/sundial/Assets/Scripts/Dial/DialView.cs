@@ -103,9 +103,24 @@ namespace GardenVR.Sundial
 
         /// <summary>Spike S1 material. Capture state variant=watercolour swaps the face to it. Default stays look A.</summary>
         public Material faceWatercolour;
+        /// <summary>
+        /// Spike S2 kit. Capture state variant=roomlight turns on the room-light cookie on every drawn material,
+        /// swaps the gnomon shadow for a broad wash wedge, adds a short wash shadow per plant and moves the table
+        /// contact away from the window. Default stays look A.
+        /// </summary>
+        public Texture2D roomCookie;
+        public Material roomShadow;
         const string VariantDefault = "a";
         string _variant = VariantDefault;
         Material _faceDefault;
+        Transform _roomShadowRoot;
+        bool _roomLightApplied;
+        Mesh _wedgeMesh;
+        Transform _gnomonWedge;
+        Transform[] _plantWedges;
+        /// <summary>Direction the key light travels on the table plane (x right, z away). The window is upper left and behind.</summary>
+        static readonly Vector2 RoomKeyTravel = new Vector2(0.45f, -0.64f).normalized;
+        const float ContactAwayFromWindow = 0.012f;
 
         [Header("Wired by Build")]
         public float faceY = 0.012f;
@@ -315,6 +330,14 @@ namespace GardenVR.Sundial
             PlaceHalo(haloArc);
             if (weekPage) CoverDayDrawing();
             ApplyFaceVariant();
+            ApplyRoomLight();
+        }
+
+        static bool IsRoomLightVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            string n = name.Trim().ToLowerInvariant();
+            return n == "roomlight" || n == "room-light" || n == "room" || n == "s2";
         }
 
         static bool IsWatercolourVariant(string name)
@@ -328,7 +351,7 @@ namespace GardenVR.Sundial
         {
             if (string.IsNullOrEmpty(name)) return true;
             string n = name.Trim().ToLowerInvariant();
-            return n == VariantDefault || IsWatercolourVariant(n);
+            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n);
         }
 
         /// <summary>
@@ -353,6 +376,117 @@ namespace GardenVR.Sundial
                 throw new InvalidOperationException("variant=watercolour needs DialView.faceWatercolour");
             if (renderer.sharedMaterial != faceWatercolour)
                 renderer.sharedMaterial = faceWatercolour;
+        }
+
+        /// <summary>
+        /// Look A leaves all of this off. variant=roomlight: the cookie multiply (global keyword), the wedge for the
+        /// gnomon, one short wash per plant, and the table contact moved along the key light's travel.
+        /// </summary>
+        void ApplyRoomLight()
+        {
+            Transform catcher = FindDeep(transform, "TableShadowCatcher");
+            Renderer catcherRenderer = catcher != null ? catcher.GetComponent<Renderer>() : null;
+            if (!IsRoomLightVariant(_variant))
+            {
+                RoomLightGlobals.Clear();
+                if (catcherRenderer != null) catcherRenderer.SetPropertyBlock(null);
+                if (_roomShadowRoot != null) _roomShadowRoot.gameObject.SetActive(false);
+                if (_roomLightApplied)
+                {
+                    // Give look A its shadow wash back. Apply only enables it in play mode.
+                    _roomLightApplied = false;
+                    if (shadow != null && !weekPage)
+                    {
+                        Renderer old = shadow.GetComponent<Renderer>();
+                        if (old != null) old.enabled = true;
+                    }
+                }
+                return;
+            }
+            if (roomCookie == null || roomShadow == null)
+                throw new InvalidOperationException("variant=roomlight needs DialView.roomCookie and DialView.roomShadow");
+            RoomLightGlobals.Apply(roomCookie, transform.worldToLocalMatrix, RoomLightGlobals.Amplitude);
+            _roomLightApplied = true;
+
+            if (catcherRenderer != null)
+            {
+                Vector3 shift = transform.TransformVector(new Vector3(RoomKeyTravel.x, 0f, RoomKeyTravel.y)) * ContactAwayFromWindow;
+                var block = new MaterialPropertyBlock();
+                catcherRenderer.GetPropertyBlock(block);
+                block.SetVector("_Offset", new Vector4(shift.x, 0f, shift.z, 0f));
+                catcherRenderer.SetPropertyBlock(block);
+            }
+
+            EnsureRoomShadows();
+            _roomShadowRoot.gameObject.SetActive(true);
+            // The old shadow wash and the plant contact discs give way to the wedges.
+            bool gnomonVisible = !weekPage && (!Application.isPlaying || appear >= 0.999f);
+            if (shadow != null)
+            {
+                Renderer old = shadow.GetComponent<Renderer>();
+                if (old != null) old.enabled = false;
+            }
+            if (contactRenderer != null) contactRenderer.enabled = false;
+
+            float rad = gnomonDeg * Mathf.Deg2Rad;
+            var dir = new Vector3(Mathf.Cos(rad), 0f, -Mathf.Sin(rad));
+            if (dir.sqrMagnitude < 1e-8f) dir = Vector3.forward;
+            Quaternion aim = Quaternion.LookRotation(dir, Vector3.up);
+
+            _gnomonWedge.localRotation = aim;
+            _gnomonWedge.localPosition = new Vector3(0f, faceY + 0.011f, 0f) + dir.normalized * 0.004f;
+            _gnomonWedge.localScale = new Vector3(0.115f, 1f, 0.115f);
+            _gnomonWedge.gameObject.SetActive(gnomonVisible && !stageStrip);
+
+            for (int i = 0; i < _plantWedges.Length; i++)
+            {
+                Transform wedge = _plantWedges[i];
+                Transform slot = plantSlots != null && i < plantSlots.Length ? plantSlots[i] : null;
+                Renderer card = slot != null ? slot.GetComponent<Renderer>() : null;
+                bool on = card != null && card.enabled && showPlants && !stageStrip && !weekPage;
+                wedge.gameObject.SetActive(on);
+                if (!on) continue;
+                Vector3 baseLocal = slot.localPosition;
+                wedge.localRotation = aim;
+                wedge.localPosition = new Vector3(baseLocal.x, faceY + 0.010f, baseLocal.z);
+                // One short wash. Length follows the plant's height, width its card.
+                wedge.localScale = new Vector3(slot.localScale.x * 0.62f, 1f, slot.localScale.y * 0.36f);
+            }
+        }
+
+        void EnsureRoomShadows()
+        {
+            if (_roomShadowRoot != null) return;
+            var root = new GameObject("RoomLightShadows") { hideFlags = HideFlags.DontSave };
+            root.transform.SetParent(transform, false);
+            _roomShadowRoot = root.transform;
+            _wedgeMesh = new Mesh { name = "RoomShadowWedge", hideFlags = HideFlags.DontSave };
+            _wedgeMesh.SetVertices(new[]
+            {
+                new Vector3(-0.5f, 0f, 0f), new Vector3(0.5f, 0f, 0f),
+                new Vector3(0.5f, 0f, 1f), new Vector3(-0.5f, 0f, 1f)
+            });
+            _wedgeMesh.SetUVs(0, new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(1f, 1f), new Vector2(0f, 1f) });
+            _wedgeMesh.SetColors(new[] { Color.white, Color.white, Color.white, Color.white });
+            _wedgeMesh.SetNormals(new[] { Vector3.up, Vector3.up, Vector3.up, Vector3.up });
+            _wedgeMesh.SetTriangles(new[] { 0, 2, 1, 0, 3, 2 }, 0);
+            _wedgeMesh.RecalculateBounds();
+            _gnomonWedge = NewWedge("GnomonWedge");
+            _plantWedges = new Transform[ArcCount * RowsPerArc];
+            for (int i = 0; i < _plantWedges.Length; i++)
+                _plantWedges[i] = NewWedge("PlantWedge." + i);
+        }
+
+        Transform NewWedge(string name)
+        {
+            var go = new GameObject(name) { hideFlags = HideFlags.DontSave };
+            go.transform.SetParent(_roomShadowRoot, false);
+            go.AddComponent<MeshFilter>().sharedMesh = _wedgeMesh;
+            var renderer = go.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = roomShadow;
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            return go.transform;
         }
 
         /// <summary>
@@ -642,6 +776,7 @@ namespace GardenVR.Sundial
 
         void OnDisable()
         {
+            if (IsRoomLightVariant(_variant)) RoomLightGlobals.Clear();
             if (!_hooked) return;
             RenderPipelineManager.beginCameraRendering -= OnBeginCamera;
             _hooked = false;
@@ -692,7 +827,7 @@ namespace GardenVR.Sundial
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
                 case "variant":
                     if (!IsKnownVariant(value))
-                        throw new FormatException("DialView variant is not a or watercolour: " + value);
+                        throw new FormatException("DialView variant is not a, watercolour or roomlight: " + value);
                     _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
                     break;
                 default:

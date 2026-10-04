@@ -8,6 +8,8 @@ Shader "Fidelity/ShadowCatcher"
         _ShadowColor ("Shadow tone (multiply)", Color) = (0.62, 0.55, 0.50, 1)
         _Fade ("Fade radius (m)", Float) = 0.4
         _Contact ("Painted contact 0..1", Range(0, 1)) = 0
+        // World-space xz shift of the fade disc. Zero (the default) is the original centred disc, so Terrarium is unchanged.
+        _Offset ("Contact offset (world xz, m)", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
@@ -29,6 +31,7 @@ Shader "Fidelity/ShadowCatcher"
                 half4 _ShadowColor;
                 half _Fade;
                 half _Contact;
+                float4 _Offset;
             CBUFFER_END
             #pragma multi_compile_instancing
             struct A { float4 pos : POSITION; UNITY_VERTEX_INPUT_INSTANCE_ID };
@@ -51,7 +54,7 @@ Shader "Fidelity/ShadowCatcher"
                     s = saturate(GetMainLight(TransformWorldToShadowCoord(i.wp)).shadowAttenuation);
                 #endif
                 float3 origin = TransformObjectToWorld(float3(0, 0, 0));
-                half f = saturate(1 - length(i.wp.xz - origin.xz) / max(_Fade, 0.001));
+                half f = saturate(1 - length(i.wp.xz - (origin.xz + _Offset.xz)) / max(_Fade, 0.001));
                 half k = saturate((1 - s) * f + _Contact * f);
                 return half4(lerp(half3(1, 1, 1), _ShadowColor.rgb, k), 1);
             }
