@@ -20,6 +20,8 @@ Shader "Fidelity/JarGlass"
         _Streak ("Streak", Color) = (0.50, 0.66, 0.74, 0.12)
         _Studio ("S1 studio strip, six faces", 2D) = "black" {}
         _DropN ("S1 droplets (RG normal, B height, A mask)", 2D) = "black" {}
+        _RefractStrip ("S2 baked refraction strip, six faces", 2D) = "black" {}
+        _S2Cfg ("S2 (wall offset m, dispersion, mix, proxy m)", Vector) = (0.010, 0.06, 1, 0.25)
     }
     SubShader
     {
@@ -38,6 +40,7 @@ Shader "Fidelity/JarGlass"
             #pragma fragment fragB
             #pragma multi_compile_instancing
             #pragma multi_compile_local _ _S1_ON
+            #pragma multi_compile_local _ _S2_B0 _S2_CUBE _S2_OPAQUE
             V vert(A i) { return GlassVert(i); }
             half4 fragB(V i) : SV_Target { return GlassShade(i, 1); }
             ENDHLSL
@@ -53,6 +56,7 @@ Shader "Fidelity/JarGlass"
             #pragma fragment fragF
             #pragma multi_compile_instancing
             #pragma multi_compile_local _ _S1_ON
+            #pragma multi_compile_local _ _S2_B0 _S2_CUBE _S2_OPAQUE
             V vert(A i) { return GlassVert(i); }
             half4 fragF(V i) : SV_Target { return GlassShade(i, 0); }
             ENDHLSL
