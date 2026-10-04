@@ -19,6 +19,11 @@ namespace GardenVR.Terrarium
         /// <summary>Spike S3 (variant s3): the imported s3_moss model and its four materials.</summary>
         public GameObject S3Model;
         public Material S3Soil, S3Base, S3Shell, S3Sprig;
+        /// <summary>Spike S4 (variants s4, s4f, s4h): the pale backlit frond material inputs and the fuzzy fiddlehead.</summary>
+        public Shader GlowShader, S4FrondShader;
+        public Texture S4FrondAlbedo, S4FrondThick, FernAlbedoA;
+        public Mesh[] S4FiddleStates;
+        public Material S4Fiddle;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         public Mesh Quad;
         public Mesh FlowerMesh;
@@ -106,6 +111,34 @@ namespace GardenVR.Terrarium
         float _s3Alpha2Coverage = 1f;
         Mesh _s3Stack;
         int _s3StackCount;
+        /// <summary>The backlit-fronds and fuzzy-fiddlehead spike (S4). s4 turns both on, s4f only the fronds, s4h only the fiddlehead.</summary>
+        bool _s4Fronds;
+        bool _s4Fiddle;
+        int _s4Shells = S4Fiddle.PcShells;
+        bool _s4FiddleOn;
+        int _s4StackedShells = -1;
+        Mesh[] _s4Stacked;
+        Mesh[] _aFiddleStates;
+        Material _aFiddleMat;
+        // Variant A frond values, written back when the spike is off.
+        static readonly Color FernTintA = new Color(0.72f, 0.92f, 0.68f);
+        // The re-graded albedo is already pale mint, so the tint only trims it.
+        static readonly Color FernTintS4 = new Color(0.58f, 0.76f, 0.60f);
+        static readonly Color BackColorS4 = new Color(0.50f, 0.92f, 0.66f);
+        const float BackStrengthS4 = 0.45f;
+        const float BackPowerS4 = 2.5f;
+        const float BackWrapS4 = 0.45f;
+        const float BackDepthS4 = 0.04f;
+
+        [Header("Spike S4 (variant s4, s4f, s4h). Unused unless the variant is on.")]
+        public Shader glowShader;
+        public Shader s4FrondShader;
+        public Texture s4FrondAlbedo;
+        public Texture s4FrondThick;
+        /// <summary>The locked frond atlas. Written back when the spike is off, even if an earlier run left the spike texture on the shared material.</summary>
+        public Texture fernAlbedoA;
+        public Mesh[] s4FiddleStates;
+        public Material s4FiddleMat;
 
         [Header("Wired by Build")]
         public MeshFilter fiddle;
@@ -195,11 +228,21 @@ namespace GardenVR.Terrarium
         {
             get
             {
-                if (_s3) return _variant == "s1" ? "s1+s3" : "s3";
-                return string.IsNullOrEmpty(_variant) ? "a" : _variant;
+                string name = string.IsNullOrEmpty(_variant) ? "" : _variant;
+                if (_s3) name = name == "" ? "s3" : name + "+s3";
+                string s4 = _s4Fronds && _s4Fiddle ? "s4" : (_s4Fronds ? "s4f" : (_s4Fiddle ? "s4h" : ""));
+                if (s4 != "") name = name == "" ? s4 : name + "+" + s4;
+                return name == "" ? "a" : name;
             }
         }
         public bool StructuredGlass { get { return _variant == "s1"; } }
+        /// <summary>True while a variant shows the pale backlit frond material.</summary>
+        public bool BacklitFronds { get { return _s4Fronds; } }
+        /// <summary>True while a variant shows the thick fuzzy fiddlehead.</summary>
+        public bool FuzzyFiddle { get { return _s4Fiddle; } }
+        public int FuzzShells { get { return _s4Shells; } }
+        /// <summary>Triangles in the live fiddlehead mesh stack. Zero when the spike is off.</summary>
+        public int FiddleTriangles { get { return _s4FiddleOn && fiddle != null ? S4Fiddle.Triangles(fiddle.sharedMesh) : 0; } }
         /// <summary>True while variant s3 shows the soil, mound, shells and sprigs in place of the locked moss.</summary>
         public bool MossInTheJar { get { return _s3; } }
         public int ShellCount { get { return _s3Shells; } }
@@ -260,6 +303,9 @@ namespace GardenVR.Terrarium
             _s3 = false;
             _s3Shells = S3MossShells.PcShells;
             _s3Alpha2Coverage = 1f;
+            _s4Fronds = false;
+            _s4Fiddle = false;
+            _s4Shells = S4Fiddle.PcShells;
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
             int capCompanions = 0;
@@ -286,10 +332,12 @@ namespace GardenVR.Terrarium
                     string name = pair.Value ?? "";
                     foreach (string part in name.Split('+'))
                     {
-                        if (part != "" && part != "a" && part != "s1" && part != "s3")
-                            throw new FormatException("JarView variant must be a, s1, s3 or s1+s3: " + name);
+                        if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h")
+                            throw new FormatException("JarView variant must be a, s1, s3, s4, s4f or s4h, joined with +: " + name);
                         if (part == "s1") _variant = "s1";
                         if (part == "s3") _s3 = true;
+                        if (part == "s4" || part == "s4f") _s4Fronds = true;
+                        if (part == "s4" || part == "s4h") _s4Fiddle = true;
                     }
                     continue;
                 }
@@ -316,6 +364,8 @@ namespace GardenVR.Terrarium
                     // Spike S3 knobs. Shell count preset (16 PC, 8 Quest) and alpha to coverage on the cards and shells.
                     case "shells": _s3Shells = Mathf.Clamp((int)value, 1, 64); break;
                     case "a2c": _s3Alpha2Coverage = value > 0.5f ? 1f : 0f; break;
+                    // Spike S4 knob. Fuzz shells on the fiddlehead: 2 on PC, 0 is the Quest fallback.
+                    case "fuzz": _s4Shells = Mathf.Clamp((int)value, 0, S4Fiddle.MaxShells); break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
                     case "companions":
@@ -493,6 +543,88 @@ namespace GardenVR.Terrarium
         }
 
         /// <summary>
+        /// Variant s4 and s4h swap the fiddlehead for the thick tube with fuzz shells. The five uncoil states are copied
+        /// 1 + N times into one mesh each, so the blend in <see cref="BlendFiddle"/> and every visibility rule keep working.
+        /// Variant A puts the saved states and material back.
+        /// </summary>
+        void ApplyS4Fiddle()
+        {
+            if (fiddle == null) return;
+            bool want = _s4Fiddle && s4FiddleStates != null && s4FiddleStates.Length == 5 && s4FiddleMat != null;
+            if (want == _s4FiddleOn && (!want || _s4StackedShells == _s4Shells)) return;
+            var renderer = fiddle.GetComponent<Renderer>();
+            if (want)
+            {
+                if (!_s4FiddleOn)
+                {
+                    _aFiddleStates = fiddleStates;
+                    _aFiddleMat = fiddleMat;
+                }
+                if (_s4Stacked != null)
+                    for (int i = 0; i < _s4Stacked.Length; i++) DestroyObject(_s4Stacked[i]);
+                _s4Stacked = new Mesh[s4FiddleStates.Length];
+                for (int i = 0; i < s4FiddleStates.Length; i++) _s4Stacked[i] = S4Fiddle.BuildStack(s4FiddleStates[i], _s4Shells);
+                fiddleStates = _s4Stacked;
+                fiddleMat = s4FiddleMat;
+                _s4StackedShells = _s4Shells;
+                _s4FiddleOn = true;
+            }
+            else
+            {
+                if (_aFiddleStates != null) fiddleStates = _aFiddleStates;
+                if (_aFiddleMat != null) fiddleMat = _aFiddleMat;
+                _s4FiddleOn = false;
+                _s4StackedShells = -1;
+            }
+            if (renderer != null && fiddleMat != null) renderer.sharedMaterial = fiddleMat;
+            // Rebuild the live blend from the new states on the next BlendFiddle. The old live mesh is left to the
+            // renderer until then, so an answer in progress never draws a destroyed mesh.
+            _live = null;
+            _shapes = null;
+            _scratch = null;
+        }
+
+        /// <summary>
+        /// Variant s4 and s4f put the pale backlit frond material on the shared frond materials (the three slots, the week
+        /// fronds, the quiet frond and the record copies). The backlight sits behind the crozier light on the eye ray.
+        /// Variant A puts Fidelity/Glow, the saved albedo and the saved tint back.
+        /// </summary>
+        void ApplyS4Fronds(Vector3 focus)
+        {
+            ApplyFrondLook(fernMat, focus);
+            ApplyFrondLook(newFrondMat, focus);
+            ApplyFrondLook(_quietFern, focus);
+            for (int i = 0; i < _recordMats.Count; i++) ApplyFrondLook(_recordMats[i], focus);
+        }
+
+        void ApplyFrondLook(Material m, Vector3 focus)
+        {
+            if (m == null || glowShader == null || s4FrondShader == null || s4FrondAlbedo == null) return;
+            if (_s4Fronds)
+            {
+                if (m.shader != s4FrondShader) m.shader = s4FrondShader;
+                m.SetTexture("_MainTex", s4FrondAlbedo);
+                m.SetTexture("_ThickTex", s4FrondThick);
+                m.SetColor("_Tint", FernTintS4);
+                m.SetColor("_BackColor", BackColorS4);
+                m.SetFloat("_BackStrength", BackStrengthS4);
+                m.SetFloat("_BackPower", BackPowerS4);
+                m.SetFloat("_BackWrap", BackWrapS4);
+                m.SetVector("_BackCenter", new Vector4(focus.x, focus.y, focus.z, BackDepthS4));
+            }
+            else
+            {
+                // Editor runs save material edits, so a material can come back with the spike's shader or albedo. Heal it.
+                if (m.shader == s4FrondShader) m.shader = glowShader;
+                if (m.shader == glowShader && fernAlbedoA != null && m.GetTexture("_MainTex") != fernAlbedoA)
+                {
+                    m.SetTexture("_MainTex", fernAlbedoA);
+                    m.SetColor("_Tint", FernTintA);
+                }
+            }
+        }
+
+        /// <summary>
         /// Variant s3 swaps the locked Moss, MossSkirt and Soil for SoilS3, MossS3, the shell stack and SprigsS3.
         /// Colours come from the locked moss values, so the glow equation and the emission values are shared.
         /// </summary>
@@ -584,6 +716,7 @@ namespace GardenVR.Terrarium
             ResolveFrondSlots();
             ApplyFrondVariants();
             CacheG1Poses();
+            ApplyS4Fiddle();
             if (day >= 7 && flowers < 1) flowers = 1;
             bool answering = answerTime >= 0f;
             if (answering) ApplyAnswerMotion();
@@ -722,6 +855,7 @@ namespace GardenVR.Terrarium
             SetLight(fernMat, pos, color);
             SetLight(newFrondMat, pos, color);
             SetLight(fiddleMat, pos, color);
+            ApplyS4Fronds(pos);
             SetLight(seedlingMat, pos, color);
             SetLight(flowerMat, pos, color);
             SetLight(_quietFern, pos, color);
@@ -803,6 +937,18 @@ namespace GardenVR.Terrarium
             fernMat = library.Fern;
             newFrondMat = library.FernNew;
             fiddleMat = library.Fiddle;
+            glowShader = library.GlowShader;
+            s4FrondShader = library.S4FrondShader;
+            s4FrondAlbedo = library.S4FrondAlbedo;
+            s4FrondThick = library.S4FrondThick;
+            fernAlbedoA = library.FernAlbedoA;
+            s4FiddleStates = library.S4FiddleStates;
+            s4FiddleMat = library.S4Fiddle;
+            _s4FiddleOn = false;
+            _s4StackedShells = -1;
+            _s4Stacked = null;
+            _aFiddleStates = null;
+            _aFiddleMat = null;
             ringMat = library.Ring;
             coilHaloMat = library.CoilHalo;
             jarHaloMat = library.JarHalo;
