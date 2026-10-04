@@ -19,6 +19,7 @@ namespace GardenVR.Terrarium.Editor
     {
         public const string ModelPath = "Assets/Art/Models/night_jar.fbx";
         public const string FlowerModelPath = "Assets/Art/Models/flower.fbx";
+        public const string S3ModelPath = "Assets/Art/Models/s3_moss.fbx";
         public const string PrefabPath = "Assets/Prefabs/Jar.prefab";
         public const string QuadPath = "Assets/Art/Models/CardQuad.asset";
         public const string LiveFiddlePath = "Assets/Art/Models/FiddleLive.asset";
@@ -27,7 +28,7 @@ namespace GardenVR.Terrarium.Editor
         static readonly string[] Textures =
         {
             "condensation", "cork_side", "cork_top", "fern_albedo", "fern_emission", "fiddle_hairs", "halo", "mist",
-            "s1_drops", "s1_studio",
+            "s1_drops", "s1_studio", "s3_strata", "s3_strand",
             "moss_band", "moss_card", "moss_fuzz", "moss_macro", "moss_macro_b", "moss_tile", "moss_top", "petal", "ring", "soil_band", "spore"
         };
 
@@ -38,10 +39,12 @@ namespace GardenVR.Terrarium.Editor
             {
                 ConfigureTextures();
                 ConfigureModel();
+                ConfigureS3Model();
                 var library = CreateLibrary();
                 var modelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
                 if (modelPrefab == null) throw new InvalidOperationException("model not imported: " + ModelPath);
                 LogSourceMeshes(modelPrefab);
+                library.S3Model = InstantiateS3();
                 BuildPrefab(modelPrefab, library);
                 PlaceOnDesk();
                 AssetDatabase.SaveAssets();
@@ -62,7 +65,7 @@ namespace GardenVR.Terrarium.Editor
                 var importer = AssetImporter.GetAtPath(path) as TextureImporter;
                 if (importer == null) throw new InvalidOperationException("texture missing: " + path);
                 bool alpha = name == "fern_albedo" || name == "moss_card" || name == "moss_fuzz" || name == "mist" || name == "petal";
-                bool linear = name == "condensation" || name == "ring" || name == "fern_emission" || name == "s1_drops";
+                bool linear = name == "condensation" || name == "ring" || name == "fern_emission" || name == "s1_drops" || name == "s3_strand";
                 bool repeat = name.IndexOf("band", StringComparison.Ordinal) >= 0
                     || name.IndexOf("side", StringComparison.Ordinal) >= 0
                     || name == "condensation"
@@ -70,7 +73,9 @@ namespace GardenVR.Terrarium.Editor
                     || name == "moss_macro"
                     || name == "moss_macro_b"
                     || name == "fiddle_hairs"
-                    || name == "s1_drops";
+                    || name == "s1_drops"
+                    || name == "s3_strata"
+                    || name == "s3_strand";
                 importer.textureType = TextureImporterType.Default;
                 importer.sRGBTexture = !linear;
                 importer.alphaIsTransparency = alpha;
@@ -85,6 +90,16 @@ namespace GardenVR.Terrarium.Editor
                 }
                 if (name == "s1_studio")
                     importer.mipmapEnabled = false;
+                if (name == "s3_strata")
+                {
+                    importer.wrapModeU = TextureWrapMode.Repeat;
+                    importer.wrapModeV = TextureWrapMode.Clamp;
+                }
+                if (name == "s3_strand")
+                {
+                    importer.filterMode = FilterMode.Trilinear;
+                    importer.anisoLevel = 4;
+                }
                 if (name == "fiddle_hairs")
                 {
                     // The crozier is about a centimetre wide on screen. The default mip drops the hairs.
@@ -120,6 +135,36 @@ namespace GardenVR.Terrarium.Editor
             importer.optimizeMeshPolygons = false;
             importer.optimizeMeshVertices = false;
             importer.SaveAndReimport();
+        }
+
+        static void ConfigureS3Model()
+        {
+            var importer = AssetImporter.GetAtPath(S3ModelPath) as ModelImporter;
+            if (importer == null) throw new InvalidOperationException("model missing: " + S3ModelPath);
+            importer.importBlendShapes = false;
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.globalScale = 1f;
+            importer.useFileScale = true;
+            importer.bakeAxisConversion = true;
+            // The shell mesh carries its own rim normals. Import them as written.
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.weldVertices = false;
+            importer.isReadable = true;
+            importer.optimizeMeshPolygons = false;
+            importer.optimizeMeshVertices = false;
+            importer.SaveAndReimport();
+        }
+
+        static GameObject InstantiateS3()
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(S3ModelPath);
+            if (prefab == null) throw new InvalidOperationException("s3 model not imported: " + S3ModelPath);
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+            PrefabUtility.UnpackPrefabInstance(instance, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            return instance;
         }
 
         static void LogSourceMeshes(GameObject modelPrefab)
@@ -224,6 +269,73 @@ namespace GardenVR.Terrarium.Editor
                 m.SetFloat("_Velvet", 0.85f);
                 m.SetFloat("_TopEmit", 0.40f);
                 m.enableInstancing = true;
+            });
+            // Spike S3. Same colour values as Jar_Moss and Jar_MossCard, so the glow equation is shared.
+            // JarView.ApplyS3 rewrites emission, rim, tip and alpha to coverage every Apply.
+            Action<Material, Texture2D> furBase = (m, albedo) =>
+            {
+                m.SetTexture("_MainTex", albedo);
+                m.SetTexture("_EmissionTex", albedo);
+                m.SetTexture("_StrandTex", Tex("s3_strand"));
+                m.SetColor("_Tint", new Color(0.80f, 0.95f, 0.92f));
+                m.SetColor("_Emission", new Color(0.22f, 0.62f, 0.18f));
+                m.SetColor("_Rim", new Color(0.20f, 0.48f, 0.18f));
+                m.SetFloat("_RimPower", 3.2f);
+                m.SetFloat("_GradBottom", 0.58f);
+                m.SetFloat("_GradTop", 1.02f);
+                m.SetVector("_GradY", new Vector4(0.016f, 0.032f, 0f, 0f));
+                m.SetFloat("_StrandTile", 3.6f);
+                m.SetFloat("_FurLen", 0.0026f);
+                m.SetFloat("_AoBase", 0.08f);
+                m.SetFloat("_TipBoost", 1.9f);
+                m.SetFloat("_Cards", 0f);
+                m.SetFloat("_AlphaToMask", 1f);
+                m.SetFloat("_Cull", (float)CullMode.Back);
+                m.SetFloat("_FarStart", 0.36f);
+                m.SetFloat("_FarEnd", 0.46f);
+                m.SetFloat("_TopEmit", 0.32f);
+                m.SetFloat("_SeatedEmit", 0.72f);
+            };
+            library.S3Base = Mat("Jar_MossS3Base", "Fidelity/MossShell", m => furBase(m, Tex("moss_macro")));
+            library.S3Shell = Mat("Jar_MossS3Shell", "Fidelity/MossShell", m => furBase(m, Tex("moss_macro")));
+            library.S3Sprig = Mat("Jar_MossS3Sprig", "Fidelity/MossShell", m =>
+            {
+                m.SetTexture("_MainTex", Tex("moss_card"));
+                m.SetTexture("_EmissionTex", Tex("moss_card"));
+                m.SetTexture("_StrandTex", Tex("s3_strand"));
+                m.SetColor("_Tint", Color.white);
+                m.SetColor("_Emission", new Color(0.12f, 0.42f, 0.11f));
+                m.SetColor("_Rim", new Color(0.18f, 0.44f, 0.16f));
+                m.SetFloat("_RimPower", 2.2f);
+                m.SetFloat("_Cutoff", 0.04f);
+                m.SetFloat("_Trans", 0.25f);
+                m.SetFloat("_GradBottom", 0.70f);
+                m.SetFloat("_GradTop", 1.08f);
+                m.SetVector("_GradY", new Vector4(0.018f, 0.032f, 0f, 0f));
+                m.SetFloat("_Cards", 1f);
+                m.SetFloat("_AoBase", 1f);
+                m.SetFloat("_AlphaToMask", 1f);
+                m.SetFloat("_Cull", (float)CullMode.Off);
+                m.SetFloat("_FarStart", 0.36f);
+                m.SetFloat("_FarEnd", 0.46f);
+                m.SetFloat("_TopEmit", 0.40f);
+                m.SetFloat("_SeatedEmit", 0.72f);
+            });
+            library.S3Soil = Mat("Jar_SoilS3", "Fidelity/Glow", m =>
+            {
+                m.SetTexture("_MainTex", Tex("s3_strata"));
+                m.SetTexture("_EmissionTex", Tex("s3_strata"));
+                m.SetColor("_Tint", new Color(1f, 1f, 1f));
+                m.SetColor("_Emission", new Color(0.002f, 0.006f, 0.004f));
+                m.SetColor("_Rim", new Color(0.03f, 0.08f, 0.05f));
+                m.SetFloat("_RimPower", 3.4f);
+                m.SetFloat("_GradBottom", 0.70f);
+                m.SetFloat("_GradTop", 1.0f);
+                m.SetVector("_GradY", new Vector4(0.002f, 0.024f, 0f, 0f));
+                m.SetFloat("_Tri", 0f);
+                m.SetTexture("_TopTex", Tex("s3_strata"));
+                m.SetFloat("_TopTile", 22f);
+                m.SetFloat("_TopAmount", 0f);
             });
             library.Soil = Mat("Jar_Soil", "Fidelity/Glow", m =>
             {
