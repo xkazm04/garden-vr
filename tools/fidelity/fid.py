@@ -6,6 +6,8 @@
     python tools/fidelity/fid.py metrics --bare
     python tools/fidelity/fid.py judge --self-test
     python tools/fidelity/fid.py judge --calibrate [--frame JarG1|DialG1]
+    python tools/fidelity/fid.py sweep <spec.json> --out <dir>
+    python tools/fidelity/fid.py sheet <sweep-dir> --frame JarG1|DialG1 [--out <png>] [--judge <pair.json>]
 
 `metrics --bare` always exits 2. A distance is never printed without its ladder.
 """
@@ -30,6 +32,8 @@ usage:
   fid.py judge --pairwise --frame <JarG1|DialG1> --player <id=path> --out <file>
   fid.py judge --regrade --ledger <calls.jsonl> [--check]
   fid.py judge --probe [--frame <JarG1|DialG1>]
+  fid.py sweep <spec.json> --out <dir>
+  fid.py sheet <sweep-dir> --frame <JarG1|DialG1> [--out <png>] [--judge <pair.json>]
 """
 
 
@@ -70,6 +74,26 @@ def main(argv):
         from lab.ladder import run_metrics
 
         return run_metrics(positional[0], frame)
+    if command == "sweep":
+        out = _flag(argv, "--out")
+        positional = [item for item in argv[1:] if not item.startswith("--") and item != out]
+        if not out or not positional:
+            sys.stderr.write(USAGE)
+            return 2
+        from lab.sweep import run_sweep
+
+        return run_sweep(positional[0], out)
+    if command == "sheet":
+        frame = _flag(argv, "--frame")
+        out = _flag(argv, "--out")
+        judge = _flag(argv, "--judge")
+        positional = [item for item in argv[1:] if not item.startswith("--") and item not in (frame, out, judge)]
+        if not frame or not positional:
+            sys.stderr.write(USAGE)
+            return 2
+        from lab.sheet import run_sheet
+
+        return run_sheet(positional[0], frame, out=out, judge=judge)
     if command == "judge":
         from lab.judge import main as judge_main
 

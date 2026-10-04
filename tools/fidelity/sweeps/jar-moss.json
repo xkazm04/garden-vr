@@ -1,0 +1,28 @@
+{
+  "app": "apps/terrarium",
+  "scene": "Assets/Scenes/Main.unity",
+  "framing": "JarG1",
+  "state": "breath=0.5,uncoil=0.3,fog=0.45,time=3",
+  "base": "jar-base",
+  "filePrefix": "",
+  "variants": [
+    { "id": "jar-moss-tex-repaint", "axis": "moss texture", "value": "repaint (all 3 slots)",
+      "textures": { "Jar_Moss": { "_MainTex,_EmissionTex,_TopTex": "Assets/Art/Textures/moss-repaint.png" } } },
+    { "id": "jar-moss-tex-repaint-main", "axis": "moss texture", "value": "repaint (albedo only)",
+      "textures": { "Jar_Moss": { "_MainTex": "Assets/Art/Textures/moss-repaint.png" } } },
+    { "id": "jar-moss-tex-reload", "axis": "moss texture", "value": "current file reloaded (control)",
+      "textures": { "Jar_Moss": { "_MainTex,_EmissionTex,_TopTex": "Assets/Art/Textures/moss_macro.png" } } },
+    { "id": "jar-moss-tint-0.80", "axis": "moss _Tint", "value": "0.80",
+      "materials": { "Jar_Moss": { "_Tint": [0.8, 0.8, 0.8, 1] } } },
+    { "id": "jar-moss-tint-0.90", "axis": "moss _Tint", "value": "0.90",
+      "materials": { "Jar_Moss": { "_Tint": [0.9, 0.9, 0.9, 1] } } },
+    { "id": "jar-moss-tint-1.10", "axis": "moss _Tint", "value": "1.10",
+      "materials": { "Jar_Moss": { "_Tint": [1.1, 1.1, 1.1, 1] } } },
+    { "id": "jar-moss-tint-1.20", "axis": "moss _Tint", "value": "1.20",
+      "materials": { "Jar_Moss": { "_Tint": [1.2, 1.2, 1.2, 1] } } },
+    { "id": "jar-moss-rimpow-2.2", "axis": "moss _RimPower", "value": "2.2",
+      "materials": { "Jar_Moss": { "_RimPower": 2.2 } } },
+    { "id": "jar-moss-rimpow-4.6", "axis": "moss _RimPower", "value": "4.6",
+      "materials": { "Jar_Moss": { "_RimPower": 4.6 } } }
+  ]
+}
