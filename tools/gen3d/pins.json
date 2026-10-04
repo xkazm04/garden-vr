@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-04",
+  "task": "T-TER-046",
+  "classes": {
+    "mushroom":   {"winner": "trellis2-local", "model": "microsoft/TRELLIS.2-4B", "resolution": "1024_cascade", "workflow": "workflows/trellis2_textured_api.json", "finish": "finish_generated.py --remesh voxel --tris 1200", "note": "tripo arm not run (no TRIPO_API_KEY); winner by default, not by comparison"},
+    "pebble_set": {"winner": "trellis2-local", "model": "microsoft/TRELLIS.2-4B", "resolution": "1024_cascade", "workflow": "workflows/trellis2_textured_api.json", "finish": "finish_generated.py --remesh voxel --tris 900", "note": "tripo arm not run"},
+    "moss_clump": {"winner": null, "model": "microsoft/TRELLIS.2-4B", "note": "see REPORT.md: geometry is usable only as a high for baking; a 2k-tri finish is not credible. Keep the Blender/projection moss path"}
+  },
+  "components": {"comfyui": "f1072eb0350638a3390ddb6afbcaa8c6b237c6fd", "trellis2_node": "3e696f2cf174dba141c9efce0205e9a2d87e908a", "torch": "2.11.0+cu128", "blender": "4.2.1 LTS"}
+}

@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: none
+prompt: a small clump of green sheet moss, a compact rounded cushion of fine moss with a little soil at the base. single subject centred, three-quarter view from slightly above, soft even studio light, plain flat light grey background, no shadow on background, no text, painterly hand-painted storybook style with muted natural colours
