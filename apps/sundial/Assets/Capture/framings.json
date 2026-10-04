@@ -30,6 +30,16 @@
       "plate": null,
       "width": 1024,
       "height": 1024
+    },
+    {
+      "name": "DialG1Black",
+      "eye": [0, 0.322, -0.411],
+      "lookAt": [0, 0.012, 0],
+      "fov": 30,
+      "lensShift": [3.6, 0.5],
+      "plate": null,
+      "width": 1824,
+      "height": 1024
     }
   ]
 }
