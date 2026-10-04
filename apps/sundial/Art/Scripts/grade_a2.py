@@ -6,6 +6,10 @@
 # DialView (the filled leaves measure as a two-texel shell, so a bigger card
 # is what puts that shell inside 1.5-2.5 px).
 #
+# The dusk grade follows the painted arc (watercolour_s1.grade_dusk_mask). The old
+# annular sector clipped a flat blue band past that arc. A face that already has
+# the stamp is not rewritten: look A stays dial_face.png. Variant B repairs it.
+#
 #   python apps/sundial/Art/Scripts/grade_a2.py
 import math
 import os
@@ -59,26 +63,29 @@ def world_of(rgb):
 
 
 def dusk_mask(rgb):
-    world_x, world_z = world_of(rgb)
-    rad = np.hypot(world_x, world_z)
-    ang = np.degrees(np.arctan2(world_z, world_x))
-    a0, a1 = 16.0, -100.0
-    span = (a0 - a1) % 360.0
-    frac = ((a0 - ang) % 360.0) / span
-    inside = (frac >= 0.06) & (frac <= 0.94)
-    band = (rad >= 0.055) & (rad <= 0.120)
-    ink = luma(rgb) < 96.0
-    return inside & band & ~ink
+    """Painted dusk arc. Not the old geometric sector (see legacy_sector_mask)."""
+    import watercolour_s1
+    return watercolour_s1.grade_dusk_mask(rgb)
 
 
 def grade_dusk_wash(rgb):
-    """Move the dusk pale wash onto the texture colour that renders as #BFA1BC.
+    """Move the painted dusk wash onto the texture colour that renders as #BFA1BC.
 
     The factor comes from the lighter half of the annulus the A2 sampler uses
-    (about 0.078-0.088 m). The rest of the dusk wash takes the same hue shift,
-    so the wet edge stays darker.
+    (about 0.078-0.088 m). Only the painted arc is multiplied. A face that
+    already carries the geometric stamp is left unchanged so look A stays put.
     """
+    import watercolour_s1
     img = np.asarray(rgb, dtype=np.float32)
+    if watercolour_s1.sector_stamp_present(img):
+        report = watercolour_s1.shape_report(img)
+        print(
+            "dusk wash: geometric stamp present; locked face unchanged",
+            "legacyIoU", report["legacyIoU"],
+            "gradeMaskIoU", report["gradeMaskIoU"],
+            "leak", report["duskHueLeak"],
+        )
+        return img
     mask = dusk_mask(img)
     if int(mask.sum()) < 100:
         raise SystemExit("dusk wash mask is empty")
@@ -277,20 +284,37 @@ def save_rgb(path, rgb):
     Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8), "RGB").save(path)
 
 
+def _save_if_changed(path, rgb, original):
+    out = np.clip(rgb, 0, 255).astype(np.uint8)
+    if original is not None and np.array_equal(out, original):
+        print("unchanged", path)
+        return
+    save_rgb(path, out)
+    print("wrote", path)
+
+
 def main():
+    import watercolour_s1
     face_path = os.path.join(TEX, "dial_face.png")
-    face = np.asarray(Image.open(face_path).convert("RGB")).astype(np.float32)
+    raw = np.asarray(Image.open(face_path).convert("RGB"))
+    face = raw.astype(np.float32)
+    report = watercolour_s1.shape_report(face)
+    print("shape", "legacyIoU", report["legacyIoU"], "(geometric sector, gate is 0.9)")
+    print("shape", "gradeMaskIoU", report["gradeMaskIoU"], "(painted arc)")
+    print("texture hp", report.get("textureHp"))
+    print("dusk hue leak", report["duskHueLeak"], "clipped", report["clippedPx"])
+    # The geometric stamp fails the shape gate. The painted-arc mask is the fix.
+    if report["gradeMaskIoU"] < 0.9 and not report["stamp"]:
+        raise SystemExit("painted dusk grade mask misses the arc: %s" % report["gradeMaskIoU"])
     face = grade_dusk_wash(face)
     face = thin_rim_ink(face)
     face = clear_rim_specks(face)
-    save_rgb(face_path, face)
-    print("face", face_path)
+    _save_if_changed(face_path, face, raw)
 
     atlas_path = os.path.join(TEX, "tiles_atlas.png")
-    atlas = np.asarray(Image.open(atlas_path).convert("RGB")).astype(np.float32)
-    atlas = grade_atlas_dusk(atlas)
-    save_rgb(atlas_path, atlas)
-    print("atlas", atlas_path)
+    atlas_raw = np.asarray(Image.open(atlas_path).convert("RGB"))
+    atlas = grade_atlas_dusk(atlas_raw.astype(np.float32))
+    _save_if_changed(atlas_path, atlas, atlas_raw)
 
 
 if __name__ == "__main__":

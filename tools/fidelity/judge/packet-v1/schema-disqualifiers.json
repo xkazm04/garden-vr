@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["criterion", "a", "b", "reason"],
+  "properties": {
+    "criterion": {"const": "disqualifiers"},
+    "a": {"type": "object", "additionalProperties": {"type": "boolean"}},
+    "b": {"type": "object", "additionalProperties": {"type": "boolean"}},
+    "reason": {"type": "string"}
+  }
+}

@@ -727,6 +727,7 @@ MonoBehaviour:
   pulse: 0
   pulseArc: 1
   reducedMotion: 0
+  faceWatercolour: {fileID: 2100000, guid: c4e1a0515a7e00000000000000000004, type: 2}
   faceY: 0.012000017
   faceRadius: 0.1472
   haloRenderer: {fileID: 8498696889539771156}

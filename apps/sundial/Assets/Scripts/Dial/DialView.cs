@@ -101,6 +101,12 @@ namespace GardenVR.Sundial
         public int pulseArc = 1;
         public bool reducedMotion;
 
+        /// <summary>Spike S1 material. Capture state variant=watercolour swaps the face to it. Default stays look A.</summary>
+        public Material faceWatercolour;
+        const string VariantDefault = "a";
+        string _variant = VariantDefault;
+        Material _faceDefault;
+
         [Header("Wired by Build")]
         public float faceY = 0.012f;
         public float faceRadius = 0.1472f;
@@ -308,6 +314,45 @@ namespace GardenVR.Sundial
             }
             PlaceHalo(haloArc);
             if (weekPage) CoverDayDrawing();
+            ApplyFaceVariant();
+        }
+
+        static bool IsWatercolourVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            string n = name.Trim().ToLowerInvariant();
+            return n == "watercolour" || n == "watercolor" || n == "s1" || n == "b";
+        }
+
+        static bool IsKnownVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return true;
+            string n = name.Trim().ToLowerInvariant();
+            return n == VariantDefault || IsWatercolourVariant(n);
+        }
+
+        /// <summary>
+        /// Look A is the prefab face. variant=watercolour uses the S1 material
+        /// (keyword, control map, paper height, repaired dusk arc).
+        /// </summary>
+        void ApplyFaceVariant()
+        {
+            Transform top = FindDeep(transform, "DialTop");
+            if (top == null) return;
+            Renderer renderer = top.GetComponent<Renderer>();
+            if (renderer == null) return;
+            if (_faceDefault == null)
+                _faceDefault = renderer.sharedMaterial;
+            if (!IsWatercolourVariant(_variant))
+            {
+                if (_faceDefault != null && renderer.sharedMaterial != _faceDefault)
+                    renderer.sharedMaterial = _faceDefault;
+                return;
+            }
+            if (faceWatercolour == null)
+                throw new InvalidOperationException("variant=watercolour needs DialView.faceWatercolour");
+            if (renderer.sharedMaterial != faceWatercolour)
+                renderer.sharedMaterial = faceWatercolour;
         }
 
         /// <summary>
@@ -645,6 +690,11 @@ namespace GardenVR.Sundial
                 case "pulse": pulse = Mathf.Clamp01(ParseFloat(key, value)); break;
                 case "pulseArc": pulseArc = Mathf.Clamp(Mathf.RoundToInt(ParseFloat(key, value)), 0, 2); break;
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
+                case "variant":
+                    if (!IsKnownVariant(value))
+                        throw new FormatException("DialView variant is not a or watercolour: " + value);
+                    _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
+                    break;
                 default:
                     throw new FormatException("DialView has no state field '" + key + "'");
             }

@@ -25,6 +25,20 @@ Shader "Fidelity/Toon"
         _TileTex ("Painted tile atlas (4 columns)", 2D) = "white" {}
         _TilePaint ("Use painted tiles", Float) = 0
         _InkRingR ("Face ink ring radius in UV metres, 0 off", Float) = 0
+        _ControlTex ("Face control (SDF, density, pencil, wash id)", 2D) = "black" {}
+        _PaperH ("Tiled paper height", 2D) = "gray" {}
+        _GranMorning ("Morning granulation", Range(0, 3)) = 1.70
+        _GranMidday ("Midday granulation", Range(0, 3)) = 0
+        _GranDusk ("Dusk granulation", Range(0, 3)) = 1.55
+        _EdgeK ("Wet-edge darkening", Range(0, 1.5)) = 0.20
+        _EdgeW ("Wet-edge width (m)", Range(0.001, 0.02)) = 0.0045
+        _DryMm ("Dry-brush width (m)", Range(0, 0.02)) = 0.004
+        _DryCut ("Dry-brush tooth", Range(0, 1)) = 0.58
+        _DensityAmp ("Low-frequency density", Range(0, 0.8)) = 0.22
+        _PencilAmt ("Pencil darkening", Range(0, 2)) = 1.25
+        _PaperTiling ("Paper repeats across the face UV", Range(1, 16)) = 6.5
+        _SdfMetres ("Control R is this many metres at 1", Range(0.005, 0.05)) = 0.018
+        _WcLift ("Granulation mean lift (re-grade)", Range(0, 1)) = 0.5
         _Outline ("Outline width (m, used when _OutlinePx is 0)", Float) = 0.0009
         _OutlinePx ("Outline width (pixels)", Float) = 0
         _Boil ("Outline boil (fraction of the metre width)", Range(0, 1)) = 0
@@ -44,13 +58,35 @@ Shader "Fidelity/Toon"
         TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
         TEXTURE2D(_StateTex); SAMPLER(sampler_StateTex);
         TEXTURE2D(_TileTex); SAMPLER(sampler_TileTex);
+        TEXTURE2D(_ControlTex); SAMPLER(sampler_ControlTex);
+        TEXTURE2D(_PaperH); SAMPLER(sampler_PaperH);
         CBUFFER_START(UnityPerMaterial)
             float4 _MainTex_ST;
             float4 _TileTex_ST;
+            float4 _ControlTex_ST;
+            float4 _PaperH_ST;
             half4 _Lit, _Shade, _Spec, _Ink, _WashMorning, _WashMidday, _WashDusk;
             half _Step, _Feather, _SpecStep, _Outline, _OutlinePx, _Boil, _BoilPx, _BoilTime, _T, _Grain, _ShadowStrength, _TileMode, _TilePaint, _InkRingR;
+            half _GranMorning, _GranMidday, _GranDusk, _EdgeK, _EdgeW, _DryMm, _DryCut, _DensityAmp, _PencilAmt, _PaperTiling, _SdfMetres, _WcLift;
         CBUFFER_END
         float h31(float3 p) { p = frac(p * 0.1031); p += dot(p, p.zyx + 31.32); return frac((p.x + p.y) * p.z); }
+        float2 Hash22(float2 p)
+        {
+            float2 q = float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)));
+            return frac(sin(q) * 43758.5453);
+        }
+        // Two paper taps. With the control sample that is the S1 budget of 3.
+        float PaperHeight(float2 uv)
+        {
+            float2 uv1 = uv * _PaperTiling;
+            float2 uv2 = uv1 * 1.37 + float2(0.37, 0.17);
+            float2 cell = floor(uv1);
+            float2 hA = Hash22(cell);
+            float2 hB = Hash22(cell + float2(19.1, 7.7));
+            float a = SAMPLE_TEXTURE2D(_PaperH, sampler_PaperH, frac(uv1 + hA)).r;
+            float b = SAMPLE_TEXTURE2D(_PaperH, sampler_PaperH, frac(uv2 + hB)).r;
+            return lerp(a, b, Hash22(cell + float2(2.2, 8.4)).x);
+        }
         float BoilClock()
         {
             float t = _BoilTime >= 0 ? _BoilTime : _T;
@@ -76,6 +112,7 @@ Shader "Fidelity/Toon"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma shader_feature_local_fragment _ _GVR_WATERCOLOUR
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_instancing
@@ -232,6 +269,54 @@ Shader "Fidelity/Toon"
                     half ring = 1.0 - smoothstep(1.60, 2.15, dpx);
                     alb = lerp(alb, _Ink.rgb, ring);
                 }
+                // Both keyword variants keep this CBUFFER live. The clip never fires.
+                {
+                    float wcLive = _GranMorning + _GranMidday + _GranDusk + _EdgeK + _EdgeW
+                        + _DryMm + _DryCut + _DensityAmp + _PencilAmt + _PaperTiling + _SdfMetres + _WcLift
+                        + _ControlTex_ST.x + _ControlTex_ST.y + _PaperH_ST.x + _PaperH_ST.y;
+                    if (wcLive < -10000.0) clip(-1);
+                }
+                #if defined(_GVR_WATERCOLOUR)
+                {
+                    // Face only. Other Toon users leave the keyword off.
+                    // Samples: control, paper A, paper B.
+                    float2 cuv = i.uv * _ControlTex_ST.xy + _ControlTex_ST.zw;
+                    half4 ctrl = SAMPLE_TEXTURE2D(_ControlTex, sampler_ControlTex, cuv);
+                    float a = ctrl.a;
+                    int code = 0;
+                    if (a > 0.16) code = 1;
+                    if (a > 0.50) code = 2;
+                    if (a > 0.83) code = 3;
+                    if (code > 0)
+                    {
+                        float sdf = ctrl.r * _SdfMetres;
+                        float2 puv = i.uv * _PaperH_ST.xy + _PaperH_ST.zw;
+                        float H = PaperHeight(puv);
+                        // Midday's locked grade sits on the delta-E cap (7.884 of 8).
+                        // The samples still run. The formula stays off so the mean holds.
+                        if (code != 2)
+                        {
+                            float g = code == 1 ? _GranMorning : _GranDusk;
+                            float noise = ctrl.g;
+                            float D = 1.0;
+                            D += (noise - 0.5) * (_DensityAmp * 2.0);
+                            // Pigment settles in the valleys. _WcLift pulls the mean back
+                            // so the pale-wash delta-E cap still holds.
+                            D += g * (1.0 - H);
+                            D -= g * _WcLift;
+                            float width = max(_EdgeW * lerp(0.70, 1.30, noise), 1e-4);
+                            D += _EdgeK * exp(-max(sdf, 0.0) / width);
+                            D += ctrl.b * _PencilAmt;
+                            float border = 1.0 - smoothstep(0.0, max(_DryMm, 1e-4), sdf);
+                            float thresh = lerp(_DryCut, 0.15, saturate(sdf / max(_DryMm, 1e-4)));
+                            float tooth = step(thresh, H);
+                            D = lerp(D, min(D, 0.55), border * (1.0 - tooth));
+                            half3 C = alb;
+                            alb = max(C - (C - C * C) * (D - 1.0), 0.0);
+                        }
+                    }
+                }
+                #endif
                 float3 n = normalize(i.wn) * (front ? 1 : -1);
                 Light L = GetMainLight(TransformWorldToShadowCoord(i.wp));
                 half ndl = dot(n, L.direction);

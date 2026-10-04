@@ -1,0 +1,4 @@
+asset: dial_control.png, dial_paper_h.png, dial_face_s1.png
+method: apps/sundial/Art/Scripts/watercolour_s1.py
+note: Control is arc SDF (R), low-frequency density (G), pencil (B), wash id (A). Paper height is tileable spectral tooth, seed 41. dial_face_s1 feathers the clipped dusk band onto the painted arc. dial_face.png is unchanged (look A). Not copied from the art reference.
+derived_from_art_reference: no

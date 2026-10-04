@@ -1,7 +1,7 @@
-# Fidelity lab (F1)
+# Fidelity lab (F1 metrics, F2 judge)
 
 Offline metrics for the JarG1 and DialG1 gates. The tool refuses to print a
-distance that has no ladder. Judge, sweep, and sheet are later tasks.
+distance that has no ladder. Sweep and sheet are later tasks.
 
 ## Setup
 
@@ -37,6 +37,48 @@ fid.cmd metrics --bare
 `--self-test` checks the Sharma CIEDE2000 pair, the locked dial wash numbers,
 the jar spec-anchor windows, the inversion rule, and a GPU hue-shift / 2 px
 shift pair.
+
+## Judge
+
+`judge/packet-v1/` is the frozen packet: instructions, the section 7 rubrics,
+the closed defect vocabulary, the JSON schemas, and the pinned model
+`gemini-3.8-flash-high`. A change of those files starts a new packet series.
+The packet hash is sha256 over those files in manifest order.
+
+```
+fid.cmd judge --self-test
+fid.cmd judge --calibrate [--frame JarG1|DialG1] [--draws 10] [--jobs N] [--evidence <dir>] [--fresh]
+fid.cmd judge --pairwise --frame JarG1|DialG1 --player id=path [--player id=path ...] [--criterion overall] [--crops] [--skip-disqualifiers] --out pair.json
+fid.cmd judge --regrade --ledger calls.jsonl [--check]
+fid.cmd judge --probe [--frame JarG1|DialG1]
+```
+
+Each criterion is one call. Each pair runs in both image orders, staged under
+neutral file names. It is a win only when both orders name the same image.
+Disagreement is a tie. The inversion rate is those disagreements divided by
+pairs where both orders answered A or B. A missing or unparseable reply is
+`ungraded` and is omitted from Bradley-Terry (`choix.ilsr_pairwise`, alpha
+0.01), so it is never a loss. The locked gate frame is always a player.
+A player with no agreed game stays in the list with no fitted strength.
+
+Agy wraps a valid object with `toolAction` and `toolSummary`. Those two keys
+are stripped before the schema check. Any other extra key is `ungraded`.
+
+Every verdict stores the packet hash and the sha256 of the reference and the
+two candidates. `--regrade` reads those stored files. `--check` rebuilds the
+ranking from the ledger and does not call the model. A changed or missing
+file is `ungraded`. The judge does not generate images.
+
+`--calibrate` asks whether reference 2 is closer to reference 1 than the
+locked frame, and whether the locked frame is closer than the round-2 floor.
+Each check is 10 draws in both orders. A check passes at 9 of 10 agreed wins.
+The gate can fail. The summary prints the rates either way. Owner picks in
+`sheet.json` (`chosen_by: owner` and `judge_winner`) are appended to
+`judge/golden.jsonl`. Cohen's kappa is reported at 30 labels, floor 0.6.
+Until the gate passes and kappa meets that floor, the judge is advisory.
+
+`--crops` is used only when the criterion name is a region and every image
+is already 1824x1024. Crops are padded to at least 256 px on the short side.
 
 ## Ladder
 
