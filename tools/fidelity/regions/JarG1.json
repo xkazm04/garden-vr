@@ -1,0 +1,234 @@
+{
+  "frame": "JarG1",
+  "width": 1824,
+  "height": 1024,
+  "source": "Look rects transcribed from apps/terrarium/Art/Scripts/compare_crops.py. Colour windows transcribed from apps/terrarium/Art/Scripts/spec_anchor.py and the glow ring in apps/terrarium/Assets/Art/LOCKED.md. Hexes are the measured ref-1 values in docs/art/terrarium-style.md section 1.",
+  "regions": [
+    {
+      "name": "cork",
+      "polygon": [
+        [
+          760,
+          155
+        ],
+        [
+          1080,
+          155
+        ],
+        [
+          1080,
+          305
+        ],
+        [
+          760,
+          305
+        ]
+      ],
+      "hex": "#1F1913",
+      "hex_role": "cork top in shade",
+      "from": "compare_crops.py cork"
+    },
+    {
+      "name": "glass",
+      "polygon": [
+        [
+          730,
+          230
+        ],
+        [
+          1110,
+          230
+        ],
+        [
+          1110,
+          380
+        ],
+        [
+          730,
+          380
+        ]
+      ],
+      "hex": "#517A7F",
+      "hex_role": "glass mid",
+      "colour_rect": [
+        760,
+        368,
+        28,
+        36
+      ],
+      "colour_stat": "mean",
+      "from": "compare_crops.py glass rim; colour window spec_anchor glassMid"
+    },
+    {
+      "name": "mist",
+      "polygon": [
+        [
+          760,
+          40
+        ],
+        [
+          1100,
+          40
+        ],
+        [
+          1100,
+          190
+        ],
+        [
+          760,
+          190
+        ]
+      ],
+      "hex": null,
+      "from": "compare_crops.py mist"
+    },
+    {
+      "name": "fronds",
+      "polygon": [
+        [
+          750,
+          400
+        ],
+        [
+          1150,
+          400
+        ],
+        [
+          1150,
+          630
+        ],
+        [
+          750,
+          630
+        ]
+      ],
+      "hex": "#58936E",
+      "hex_role": "frond lit edge",
+      "colour_rect": [
+        956,
+        582,
+        24,
+        20
+      ],
+      "colour_stat": "mean",
+      "from": "compare_crops.py fronds; colour window spec_anchor frondEdge"
+    },
+    {
+      "name": "moss",
+      "polygon": [
+        [
+          720,
+          640
+        ],
+        [
+          1140,
+          640
+        ],
+        [
+          1140,
+          820
+        ],
+        [
+          720,
+          820
+        ]
+      ],
+      "hex": "#376222",
+      "hex_role": "moss",
+      "colour_rect": [
+        992,
+        696,
+        48,
+        28
+      ],
+      "colour_stat": "mean",
+      "from": "compare_crops.py moss; colour window spec_anchor moss"
+    },
+    {
+      "name": "ring",
+      "polygon": [
+        [
+          700,
+          850
+        ],
+        [
+          1120,
+          850
+        ],
+        [
+          1120,
+          990
+        ],
+        [
+          700,
+          990
+        ]
+      ],
+      "hex": "#8FF0C8",
+      "hex_role": "glow.mint intent; the rect is the desk band of the stroke",
+      "from": "LOCKED.md ring peak rect"
+    },
+    {
+      "name": "soil",
+      "polygon": [
+        [
+          800,
+          768
+        ],
+        [
+          860,
+          768
+        ],
+        [
+          860,
+          790
+        ],
+        [
+          800,
+          790
+        ]
+      ],
+      "hex": "#0D231D",
+      "hex_role": "soil",
+      "colour_rect": [
+        800,
+        768,
+        60,
+        22
+      ],
+      "colour_stat": "mean",
+      "from": "spec_anchor soil"
+    },
+    {
+      "name": "wall",
+      "polygon": [
+        [
+          1360,
+          200
+        ],
+        [
+          1408,
+          200
+        ],
+        [
+          1408,
+          236
+        ],
+        [
+          1360,
+          236
+        ]
+      ],
+      "hex": "#0C1A1F",
+      "hex_role": "night.room wall",
+      "colour_rect": [
+        1360,
+        200,
+        48,
+        36
+      ],
+      "colour_stat": "mean",
+      "from": "spec_anchor wall"
+    }
+  ]
+}

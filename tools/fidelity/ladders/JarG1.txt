@@ -1,0 +1,87 @@
+frame JarG1  ladder f1-1  cuda NVIDIA GeForce RTX 4090
+region             metric                ceiling     level2    current      floor      noise   position  note
+cork               dreamsim               0.4349     0.5653     0.7239     0.7144     0.0100    -0.0339  current is inside the noise band of the floor
+cork               dinov2                 0.5560     0.7460     0.8112     0.7951     0.0529    -0.0674  current is inside the noise band of the floor
+cork               lab_emd               12.5909    10.9164    20.3781    11.4906     0.4843    INVALID  floor 11.4906 is closer than ceiling 12.5909; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+cork               ciede2000             15.7161     7.6033    44.5251    14.0927     0.4895    INVALID  floor 14.0927 is closer than ceiling 15.7161; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+cork               dists                  0.3413     0.3833     0.4185     0.5022     0.0357     0.5203  
+glass              dreamsim               0.4302     0.5532     0.7524     0.7601     0.0056     0.0233  
+glass              dinov2                 0.7483     0.8157     0.8497     0.8135     0.0101    -0.5560  current is farther than the floor (out of order)
+glass              lab_emd               10.5318    17.3915    15.1323    17.2344     0.3712     0.3136  
+glass              ciede2000              4.0936    27.1622    30.9504    18.5967     0.7970    -0.8518  current is farther than the floor (out of order)
+glass              dists                  0.3451     0.4110     0.4206     0.6000     0.0230     0.7036  
+mist               dreamsim               0.7774     0.4727     0.6970     0.7418     0.0047    INVALID  floor 0.7418 is closer than ceiling 0.7774; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+mist               dinov2                 0.8616     0.6972     0.7535     0.8862     0.0217     5.3899  current is closer than the ceiling (out of order)
+mist               lab_emd                7.0375     5.9479     6.6530     6.2568     0.1662    INVALID  floor 6.2568 is closer than ceiling 7.0375; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+mist               ciede2000              5.0717     2.8227     6.8103     2.4766     0.4625    INVALID  floor 2.4766 is closer than ceiling 5.0717; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+mist               dists                  0.4401     0.3301     0.3737     0.4244     0.0103    INVALID  floor 0.4244 is closer than ceiling 0.4401; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+fronds             dreamsim               0.3010     0.3003     0.3167     0.7792     0.0045     0.9672  
+fronds             dinov2                 0.3456     0.6088     0.3142     0.9312     0.0022     1.0536  current is closer than the ceiling (out of order)
+fronds             lab_emd               11.1998    10.2163    12.7370    13.3704     0.2316     0.2918  
+fronds             ciede2000             10.1356    10.8799    20.7813    14.2755     0.1308    -1.5715  current is farther than the floor (out of order)
+fronds             dists                  0.2714     0.3113     0.3165     0.4339     0.0288     0.7226  
+moss               dreamsim               0.3136     0.2516     0.4099     0.7617     0.0048     0.7850  
+moss               dinov2                 0.4937     0.8608     0.6803     0.9244     0.0260     0.5666  
+moss               lab_emd               24.1416     6.6350     4.6898    14.7349     0.2306    INVALID  floor 14.7349 is closer than ceiling 24.1416; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+moss               ciede2000             28.8228     6.2103     4.5843    21.8652     0.0000    INVALID  floor 21.8652 is closer than ceiling 28.8228; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+moss               dists                  0.3342     0.3054     0.3283     0.4602     0.0233     1.0471  current is inside the noise band of the ceiling
+ring               dreamsim               0.2134     0.2940     0.2632     0.6490     0.0090     0.8857  
+ring               dinov2                 0.2170     0.5024     0.3888     0.9364     0.0065     0.7611  
+ring               lab_emd               11.5684     5.7916     6.2079    24.5010     0.1498     1.4145  current is closer than the ceiling (out of order)
+ring               ciede2000             13.0573     3.5275     4.0433    34.7617     0.2974     1.4153  current is closer than the ceiling (out of order)
+ring               dists                  0.2916     0.2908     0.2645     0.4318     0.0276     1.1932  current is inside the noise band of the ceiling
+soil               dreamsim               0.3133     0.2846     0.4280     0.6837     0.0206     0.6903  
+soil               dinov2                 0.2523     0.3245     0.4499     0.7632     0.0275     0.6133  
+soil               lab_emd               10.1684     3.1270     5.1871    30.4974     0.8015     1.2450  current is closer than the ceiling (out of order)
+soil               ciede2000             11.9794     1.7184     4.0527    37.8787     1.2214     1.3061  current is closer than the ceiling (out of order)
+soil               dists                  0.3249     0.3185     0.2895     0.4344     0.0902     1.3236  current is inside the noise band of the ceiling
+wall               dreamsim               0.1765     0.0198     0.0000     0.2952     0.0099     2.4862  current is closer than the ceiling (out of order)
+wall               dinov2                 0.2226     0.0061     0.0000     0.4135     0.0083     2.1659  current is closer than the ceiling (out of order)
+wall               lab_emd                2.7619     0.0859     0.0000     6.5369     0.2256     1.7316  current is closer than the ceiling (out of order)
+wall               ciede2000              3.8013     0.0000     0.0000     6.5189     0.6676     2.3988  current is closer than the ceiling (out of order)
+wall               dists                  0.2561     0.0112     0.0000     0.2656     0.0343    27.9285  current is closer than the ceiling (out of order)
+frame              dreamsim               0.1389     0.1338     0.2434     0.4986     0.0017     0.7094  
+frame              dinov2                 0.0780     0.2258     0.2305     0.5567     0.0026     0.6813  
+frame              dreamsim_ensemble      0.1119     0.1165     0.1995     0.4026          -     0.6986  
+frame              lab_emd                2.7917     1.7862     2.3797     8.6335     0.2751     1.0705  current is closer than the ceiling (out of order)
+frame              ciede2000              3.6551     0.7966     2.8656     7.6226     0.0000     1.1990  current is closer than the ceiling (out of order)
+frame              dists                  0.1421     0.1350     0.1174     0.4349     0.0095     1.0842  current is closer than the ceiling (out of order)
+
+families (strict means every valid row is ceiling < current < floor, and none are inverted)
+  look       valid 18 ordered 11 within-noise 2 out-of-order 5 inverted 1 strict no
+  palette    valid 12 ordered 2 within-noise 0 out-of-order 10 inverted 6 strict no
+  structure  valid 8 ordered 3 within-noise 3 out-of-order 2 inverted 1 strict no
+
+findings 30
+  cork dreamsim: current is inside the noise band of the floor
+  cork dinov2: current is inside the noise band of the floor
+  cork lab_emd: floor 11.4906 is closer than ceiling 12.5909; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  cork ciede2000: floor 14.0927 is closer than ceiling 15.7161; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  glass dinov2: current is farther than the floor (out of order)
+  glass ciede2000: current is farther than the floor (out of order)
+  mist dreamsim: floor 0.7418 is closer than ceiling 0.7774; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  mist dinov2: current is closer than the ceiling (out of order)
+  mist lab_emd: floor 6.2568 is closer than ceiling 7.0375; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  mist ciede2000: floor 2.4766 is closer than ceiling 5.0717; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  mist dists: floor 0.4244 is closer than ceiling 0.4401; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  fronds dinov2: current is closer than the ceiling (out of order)
+  fronds ciede2000: current is farther than the floor (out of order)
+  moss lab_emd: floor 14.7349 is closer than ceiling 24.1416; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  moss ciede2000: floor 21.8652 is closer than ceiling 28.8228; metric invalid for this region. floor fit is letterbox, so a region mask may not register
+  moss dists: current is inside the noise band of the ceiling
+  ring lab_emd: current is closer than the ceiling (out of order)
+  ring ciede2000: current is closer than the ceiling (out of order)
+  ring dists: current is inside the noise band of the ceiling
+  soil lab_emd: current is closer than the ceiling (out of order)
+  soil ciede2000: current is closer than the ceiling (out of order)
+  soil dists: current is inside the noise band of the ceiling
+  wall dreamsim: current is closer than the ceiling (out of order)
+  wall dinov2: current is closer than the ceiling (out of order)
+  wall lab_emd: current is closer than the ceiling (out of order)
+  wall ciede2000: current is closer than the ceiling (out of order)
+  wall dists: current is closer than the ceiling (out of order)
+  frame lab_emd: current is closer than the ceiling (out of order)
+  frame ciede2000: current is closer than the ceiling (out of order)
+  frame dists: current is closer than the ceiling (out of order)
+
+FLIP, MS-SSIM, and LPIPS have no reference ladder. Their re-render and JPEG numbers are under alignedNoise.

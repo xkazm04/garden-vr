@@ -55,3 +55,12 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   one wash at CIEDE2000 16 while the others sat near 7. Those two numbers became the next two task targets directly.
   Rule: give the judge the style bible's rubric with explicit disqualifiers, and log which disqualifier fired; a
   repeated disqualifier is the highest-value art fix. Target: llm-observability / judge-contract-design.
+- 2026-10-04 - **A calibrated metric ladder reports when a metric cannot rank the comparison.** F1's ladder (floor = old
+  render, ceiling = reference vs reference) put the current Terrarium frame "past the ceiling" on palette EMD and DISTS:
+  those metrics reward colour statistics the render happens to share with the reference and cannot rank fidelity here.
+  Rule: never adopt a perceptual metric without a ladder; a metric whose current reading lies outside floor..ceiling is
+  disqualified for that frame, not celebrated. Target: llm-observability / judge-calibration-and-drift; game-production
+  / art evaluation.
+- 2026-10-04 - **Pairwise A/B against the reference moves where an absolute rubric does not.** After 30 tasks of "every
+  frame scores 2", the first research-driven glass spike won 6 of 6 pairwise draws on the glass region. Target:
+  llm-observability / judge-contract-design.
