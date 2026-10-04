@@ -264,4 +264,5 @@ def main():
         print("[s2]   %.4f %.4f" % (r, y))
 
 
-main()
+if __name__ == "__main__":
+    main()
