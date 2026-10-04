@@ -592,6 +592,17 @@ namespace GardenVR.Sundial
         /// </summary>
         public Texture2D BakeSilhouette(Vector3 viewForwardLocal, Vector2 cardSize, int width, int height, float rootScale)
         {
+            return BakeSilhouette(viewForwardLocal, cardSize, width, height, rootScale, new Vector4(-0.5f, 0f, 0.5f, 1f), Vector2.zero);
+        }
+
+        /// <summary>
+        /// The same silhouette on a bigger canvas. <paramref name="canvas"/> is (xMin, yMin, xMax, yMax) in card widths and heights from
+        /// the card base, so a plant wider than its card is not cut by the card edge (the card spans -0.5..0.5 and 0..1).
+        /// <paramref name="baseDisc"/> (rx in card widths, ry in card heights, zero for none) stamps a flattened ellipse centred on the
+        /// base, so a halo traced around the result also wraps the patch of soil the plant stands in.
+        /// </summary>
+        public Texture2D BakeSilhouette(Vector3 viewForwardLocal, Vector2 cardSize, int width, int height, float rootScale, Vector4 canvas, Vector2 baseDisc)
+        {
             if (!_atlas.isReadable) throw new InvalidOperationException("the parts atlas must be readable for the halo silhouette");
             if (_atlasPixels == null) _atlasPixels = _atlas.GetPixels32();
             Vector3 fwd = viewForwardLocal.normalized;
@@ -609,7 +620,7 @@ namespace GardenVR.Sundial
                 Vector3 p = _verts[i] * rootScale;
                 float t = -Vector3.Dot(p, toCam) / denom;
                 Vector3 q = p + fwd * t;
-                uvp[i] = new Vector2(Vector3.Dot(q, right) / cardSize.x + 0.5f, q.y / cardSize.y);
+                uvp[i] = new Vector2((Vector3.Dot(q, right) / cardSize.x - canvas.x) / (canvas.z - canvas.x), (q.y / cardSize.y - canvas.y) / (canvas.w - canvas.y));
             }
             var on = new Color32[width * height];
             var white = new Color32(255, 255, 255, 255);
@@ -617,6 +628,22 @@ namespace GardenVR.Sundial
             {
                 int ia = _tris[tri], ib = _tris[tri + 1], ic = _tris[tri + 2];
                 RasterTri(on, width, height, uvp[ia], uvp[ib], uvp[ic], _uvs[ia], _uvs[ib], _uvs[ic], white);
+            }
+            if (baseDisc.x > 0f && baseDisc.y > 0f)
+            {
+                float cu = (0f - canvas.x) / (canvas.z - canvas.x) * width;
+                float cv = (0f - canvas.y) / (canvas.w - canvas.y) * height;
+                float rx = baseDisc.x / (canvas.z - canvas.x) * width;
+                float ry = baseDisc.y / (canvas.w - canvas.y) * height;
+                for (int y = Mathf.Max(0, Mathf.FloorToInt(cv - ry)); y <= Mathf.Min(height - 1, Mathf.CeilToInt(cv + ry)); y++)
+                {
+                    for (int x = Mathf.Max(0, Mathf.FloorToInt(cu - rx)); x <= Mathf.Min(width - 1, Mathf.CeilToInt(cu + rx)); x++)
+                    {
+                        float ex = (x + 0.5f - cu) / rx;
+                        float ey = (y + 0.5f - cv) / ry;
+                        if (ex * ex + ey * ey <= 1f) on[y * width + x] = white;
+                    }
+                }
             }
             var tex = new Texture2D(width, height, TextureFormat.RGBA32, false, true)
             {
