@@ -57,6 +57,8 @@ namespace GardenVR.Input
         public event Action<HandIntent> Intent;
         public event Action SystemPause;
         public event Action Recentred;
+        /// <summary>L, a player-visible toggle between two looks. Not a dev command: it is raised in every build.</summary>
+        public event Action LookToggled;
         public event Action<DevCommand> DevCommandRaised;
 
         public string BindingHint(HandIntentKind kind)
@@ -75,6 +77,8 @@ namespace GardenVR.Input
             if (Pressed(raw.Esc, _prev.Esc))
                 SystemPause?.Invoke();
             UpdateDev(raw);
+            if (Pressed(raw.L, _prev.L))
+                LookToggled?.Invoke();
             UpdatePalm(raw, dt, ray);
             if (Pressed(raw.F, _prev.F))
                 Emit(HandIntentKind.Poke, ray, 1f, 0f, _frameHit);

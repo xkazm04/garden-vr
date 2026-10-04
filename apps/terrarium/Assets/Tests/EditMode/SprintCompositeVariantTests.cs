@@ -64,5 +64,36 @@ namespace GardenVR.Terrarium.Tests
                 Object.DestroyImmediate(go);
             }
         }
+
+        /// <summary>T-TER-034: the player's L key flips the look and leaves the rest of the jar's state alone.</summary>
+        [Test]
+        public void SetLook_FlipsTheLook_AndKeepsTheState()
+        {
+            var go = new GameObject("jar-setlook");
+            var view = go.AddComponent<JarView>();
+            try
+            {
+                view.ApplyCaptureState(State(null));
+                view.breath = 0.5f;
+                view.fog = 0.45f;
+                view.SetLook("sprint");
+                Assert.IsTrue(view.SprintLook);
+                Assert.IsTrue(view.SprintComposite);
+                Assert.AreEqual("sprint", view.Variant);
+                Assert.AreEqual(0.5f, view.breath, 1e-6f);
+                Assert.AreEqual(0.45f, view.fog, 1e-6f);
+                view.SetLook("a");
+                Assert.IsFalse(view.SprintLook);
+                Assert.AreEqual("a", view.Variant);
+                Assert.IsFalse(view.SilhouettePass);
+                Assert.IsFalse(view.Atmosphere);
+                Assert.AreEqual(0.5f, view.breath, 1e-6f);
+                Assert.Throws<System.FormatException>(() => view.SetLook("sprint+s7"));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
     }
 }

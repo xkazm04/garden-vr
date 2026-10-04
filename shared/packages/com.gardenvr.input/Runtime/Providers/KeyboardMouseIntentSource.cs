@@ -19,6 +19,8 @@ namespace GardenVR.Input
         public event Action<HandIntent> Intent;
         public event Action SystemPause;
         public event Action Recentred;
+        /// <summary>L pressed. Apps that offer two looks listen; the rest ignore it.</summary>
+        public event Action LookToggled;
         public event Action<DevCommand> DevCommandRaised;
 
         public bool IsPinching => _mapper.IsPinching;
@@ -50,6 +52,7 @@ namespace GardenVR.Input
             _mapper.Intent += HandleIntent;
             _mapper.SystemPause += HandlePause;
             _mapper.Recentred += HandleRecentred;
+            _mapper.LookToggled += HandleLookToggled;
             _mapper.DevCommandRaised += HandleDev;
         }
 
@@ -58,6 +61,7 @@ namespace GardenVR.Input
             _mapper.Intent -= HandleIntent;
             _mapper.SystemPause -= HandlePause;
             _mapper.Recentred -= HandleRecentred;
+            _mapper.LookToggled -= HandleLookToggled;
             _mapper.DevCommandRaised -= HandleDev;
         }
 
@@ -116,6 +120,7 @@ namespace GardenVR.Input
             raw.BracketLeft = keyboard.leftBracketKey.isPressed;
             raw.BracketRight = keyboard.rightBracketKey.isPressed;
             raw.T = keyboard.tKey.isPressed;
+            raw.L = keyboard.lKey.isPressed;
             raw.MousePosition = mouse.position.ReadValue();
             raw.MouseDelta = mouse.delta.ReadValue();
             raw.Dt = Time.unscaledDeltaTime;
@@ -125,6 +130,7 @@ namespace GardenVR.Input
         void HandleIntent(HandIntent intent) { Intent?.Invoke(intent); }
         void HandlePause() { SystemPause?.Invoke(); }
         void HandleRecentred() { Recentred?.Invoke(); }
+        void HandleLookToggled() { LookToggled?.Invoke(); }
         void HandleDev(DevCommand command) { DevCommandRaised?.Invoke(command); }
     }
 }

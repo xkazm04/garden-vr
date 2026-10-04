@@ -403,6 +403,12 @@ namespace GardenVR.Terrarium
             if (!Application.isPlaying) return;
             if (_source == null) SetSource(FindDefaultSource());
             ApplyHoldMode();
+            string startLook = StartLook();
+            if (startLook != null && _view != null)
+            {
+                _view.SetLook(startLook);
+                Debug.Log("[Terrarium] look=" + startLook);
+            }
             BuildChrome();
             BuildSettings();
             FirstRunStarted = _service != null && _service.Outcome == LoadOutcome.Fresh;
@@ -716,6 +722,7 @@ namespace GardenVR.Terrarium
         void OnIntent(HandIntent intent)
         {
             NoteVisibleResponse(intent);
+            LogIntentEdge(intent);
             if (intent.Kind == HandIntentKind.PinchHold)
             {
                 _corkPinch = intent.TargetId == CorkId;
@@ -826,6 +833,50 @@ namespace GardenVR.Terrarium
             {
                 _guide.OnIntent(intent, _session.Breaths, _session.TargetBreaths, _gapReturn, _latchedPause);
             }
+        }
+
+        /// <summary>
+        /// One Player.log line per intent edge (not per frame): what a player pressed, as the app understood it.
+        /// PLAY.md is checked against these lines in the Windows build.
+        /// </summary>
+        void LogIntentEdge(HandIntent intent)
+        {
+            if (intent.Kind == HandIntentKind.Look) return;
+            if (intent.Kind == HandIntentKind.PinchHold)
+            {
+                if (_holdLogged) return;
+                _holdLogged = true;
+            }
+            else if (intent.Kind == HandIntentKind.Release)
+            {
+                _holdLogged = false;
+            }
+            Debug.Log("[Terrarium] intent=" + intent.Kind
+                + " target=" + (string.IsNullOrEmpty(intent.TargetId) ? "-" : intent.TargetId)
+                + " held=" + intent.Held.ToString("0.00", CultureInfo.InvariantCulture)
+                + " breaths=" + (_session != null ? _session.Breaths + "/" + _session.TargetBreaths : "-"));
+        }
+
+        bool _holdLogged;
+
+        /// <summary>
+        /// Tests and captures leave this null, so the editor keeps look A. The Windows player starts on the sprint look
+        /// (T-TER-047) and L switches between the two.
+        /// </summary>
+        public static string StartLookOverride;
+
+        static string StartLook()
+        {
+            if (StartLookOverride != null) return StartLookOverride;
+            return Application.isEditor ? null : "sprint";
+        }
+
+        void OnLookToggled()
+        {
+            if (_view == null) return;
+            string next = _view.SprintLook ? "a" : "sprint";
+            _view.SetLook(next);
+            Debug.Log("[Terrarium] look=" + next);
         }
 
         void OnSystemPause()
@@ -1216,6 +1267,7 @@ namespace GardenVR.Terrarium
                 _lookIndex = frames.Length - 1;
             ShowLookFrame();
             Play("lookback.shimmer", CorkAnchor(), 0f);
+            Log("LookBackBegin");
         }
 
         void TickLook(float dt)
@@ -1640,7 +1692,11 @@ namespace GardenVR.Terrarium
                 _source.Intent += OnIntent;
                 _source.SystemPause += OnSystemPause;
             }
-            if (_keyboard != null) _keyboard.DevCommandRaised += OnDev;
+            if (_keyboard != null)
+            {
+                _keyboard.DevCommandRaised += OnDev;
+                _keyboard.LookToggled += OnLookToggled;
+            }
         }
 
         void Unsubscribe()
@@ -1650,7 +1706,11 @@ namespace GardenVR.Terrarium
                 _source.Intent -= OnIntent;
                 _source.SystemPause -= OnSystemPause;
             }
-            if (_keyboard != null) _keyboard.DevCommandRaised -= OnDev;
+            if (_keyboard != null)
+            {
+                _keyboard.DevCommandRaised -= OnDev;
+                _keyboard.LookToggled -= OnLookToggled;
+            }
         }
 
         static IHandIntentSource FindDefaultSource()
@@ -1747,6 +1807,8 @@ namespace GardenVR.Terrarium
 
         void Log(string ev)
         {
+            // Player.log keeps the event names in every build (no state), so a playthrough can be read back.
+            Debug.Log("[Terrarium] event=" + ev + " breaths=" + (_session != null ? _session.Breaths.ToString(CultureInfo.InvariantCulture) : "-"));
             if (!LogEnabled()) return;
             try
             {

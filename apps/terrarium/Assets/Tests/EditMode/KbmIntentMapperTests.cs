@@ -250,6 +250,20 @@ namespace GardenVR.Terrarium.Tests
         }
 
         [Test]
+        public void LookToggle_RaisesOnPress_InEveryBuild()
+        {
+            var mapper = new KbmIntentMapper { DevCommandsEnabled = false };
+            int toggles = 0;
+            mapper.LookToggled += () => toggles++;
+            mapper.Tick(new RawKbm { Dt = 0.016f, L = true }, Forward);
+            mapper.Tick(new RawKbm { Dt = 0.016f, L = true }, Forward);
+            Assert.AreEqual(1, toggles, "a held key is one toggle");
+            mapper.Tick(new RawKbm { Dt = 0.016f }, Forward);
+            mapper.Tick(new RawKbm { Dt = 0.016f, L = true }, Forward);
+            Assert.AreEqual(2, toggles);
+        }
+
+        [Test]
         public void HeadDrag_ClampsYawPitchAndRRecentres()
         {
             var mapper = new KbmIntentMapper();

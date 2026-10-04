@@ -367,9 +367,23 @@ namespace GardenVR.Terrarium
         static readonly Color JarGlowWarm = new Color(0.36f, 0.32f, 0.12f);
         static readonly Color SpillWarm = new Color(0.42f, 0.36f, 0.14f, 1f);
 
-        public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
+        /// <summary>
+        /// The player's look switch (T-TER-034). "a" is the locked look, "sprint" the stacked spike winners. Only the look
+        /// changes: breath, fog, fronds and every other state field stay as they are, and the next Apply shows it.
+        /// </summary>
+        public void SetLook(string variant)
         {
-            if (state == null) return;
+            ResetVariant();
+            ParseVariant(variant ?? "");
+            ResolveVariant();
+            Apply();
+        }
+
+        /// <summary>True while the sprint composite is the look on screen.</summary>
+        public bool SprintLook { get { return _sprint; } }
+
+        void ResetVariant()
+        {
             _variant = "";
             _s3 = false;
             _s3Shells = S3MossShells.PcShells;
@@ -390,6 +404,52 @@ namespace GardenVR.Terrarium
             _s2Disp = S2DispDefault;
             _s2Mix = S2MixDefault;
             _s2Proxy = S2ProxyDefault;
+        }
+
+        void ParseVariant(string name)
+        {
+            foreach (string part in name.Split('+'))
+            {
+                if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h"
+                    && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5" && part != "s6" && part != "sprint")
+                    throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h, s5, s6 or sprint, joined with +: " + name);
+                if (part == "sprint") _sprint = true;
+                if (part == "s5") _s5 = true;
+                if (part == "s6") _s6 = true;
+                if (part == "s2b0") _s2Mode = 1;
+                if (part == "s2b1") _s2Mode = 2;
+                if (part == "s2b2") _s2Mode = 3;
+                if (part == "s1") _variant = "s1";
+                if (part == "s3") _s3 = true;
+                if (part == "s4" || part == "s4f") _s4Fronds = true;
+                if (part == "s4" || part == "s4h") _s4Fiddle = true;
+            }
+        }
+
+        void ResolveVariant()
+        {
+            if (_sprint)
+            {
+                // The sprint composite: S1 pane and restored inner glow (s5 haze), S2 thick glass with Opaque Texture refraction
+                // unless a lower tier is named (sprint+s2b1 is the Quest path), S3 moss, S4 fiddlehead only, S5 atmosphere, S6 silhouette.
+                _s5 = true;
+                _s6 = true;
+                if (_s2Mode == 0) _s2Mode = 3;
+                _s4Fronds = false;
+            }
+            if (_s6)
+            {
+                // The silhouette pass brings the moss mound and the thick fiddlehead with it, and the thick shell.
+                _s3 = true;
+                _s4Fiddle = true;
+                if (_s2Mode == 0) _s2Mode = 1;
+            }
+        }
+
+        public void ApplyCaptureState(IReadOnlyDictionary<string, string> state)
+        {
+            if (state == null) return;
+            ResetVariant();
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
             int capCompanions = 0;
@@ -413,23 +473,7 @@ namespace GardenVR.Terrarium
                 }
                 if (pair.Key == "variant")
                 {
-                    string name = pair.Value ?? "";
-                    foreach (string part in name.Split('+'))
-                    {
-                        if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h"
-                            && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5" && part != "s6" && part != "sprint")
-                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h, s5, s6 or sprint, joined with +: " + name);
-                        if (part == "sprint") _sprint = true;
-                        if (part == "s5") _s5 = true;
-                        if (part == "s6") _s6 = true;
-                        if (part == "s2b0") _s2Mode = 1;
-                        if (part == "s2b1") _s2Mode = 2;
-                        if (part == "s2b2") _s2Mode = 3;
-                        if (part == "s1") _variant = "s1";
-                        if (part == "s3") _s3 = true;
-                        if (part == "s4" || part == "s4f") _s4Fronds = true;
-                        if (part == "s4" || part == "s4h") _s4Fiddle = true;
-                    }
+                    ParseVariant(pair.Value ?? "");
                     continue;
                 }
                 float value = Parse(pair.Key, pair.Value);
@@ -490,22 +534,7 @@ namespace GardenVR.Terrarium
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
             }
-            if (_sprint)
-            {
-                // The sprint composite: S1 pane and restored inner glow (s5 haze), S2 thick glass with Opaque Texture refraction
-                // unless a lower tier is named (sprint+s2b1 is the Quest path), S3 moss, S4 fiddlehead only, S5 atmosphere, S6 silhouette.
-                _s5 = true;
-                _s6 = true;
-                if (_s2Mode == 0) _s2Mode = 3;
-                _s4Fronds = false;
-            }
-            if (_s6)
-            {
-                // The silhouette pass brings the moss mound and the thick fiddlehead with it, and the thick shell.
-                _s3 = true;
-                _s4Fiddle = true;
-                if (_s2Mode == 0) _s2Mode = 1;
-            }
+            ResolveVariant();
             if (!sawJourney) _hasLook = false;
             if (sawLifetime) lifetimeFronds = lifetimeOverride;
             int lookLit = -1;
