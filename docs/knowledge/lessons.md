@@ -73,3 +73,7 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   turns "waiting for Unity" like Grok had. Fix: `--dangerously-skip-permissions` and the same same-session continuation
   (`--conversation <id>`). Also: a 402 "balance exhausted" is not a rate limit; it will not clear by waiting. Target:
   agent-operations / unattended-build-loop.
+- 2026-10-04 - **Parameter sweeps confirm the plateau; technique changes break it.** F3's first JarG1 sweep (11 variants:
+  moss tint, rim power, texture swaps incl. the projection-baked repaint) moved every region bar within the noise band,
+  while the S3 technique change (wall-to-wall soil + shell moss) won every pairwise draw. Rule: use sweeps to tune a chosen
+  technique, not to search for quality. Target: game-production / art pipeline.
