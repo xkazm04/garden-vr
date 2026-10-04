@@ -1,0 +1,4 @@
+generator: agy (Antigravity CLI image tool)
+model: gemini-3.8-flash-high
+source: C:/Users/kazda/kiro/gvr-terrarium/orchestration/runs/terrarium/T-TER-041/passes/flat-gate.png
+prompt: Repaint only the moss in this flat render. Keep every silhouette and every edge exactly where it is. Do not move, scale, crop, or redraw the outline. Pure black pixels stay pure black. Style sheet, for colour and clump shape only, not for silhouette: an approved cushion-moss macro, soft velvety clumps of tiny overlapping leaves, deep teal-green crevices, brighter yellow-green tips, damp and even. Palette roles: moss body #376222, crevice near #0D231D, tip #8FF0C8 kept gentle, nothing brighter than #E8FFF4. Finish is flat albedo. No lighting, no shadows, no highlights, no rim light, no text, no glass, no jar, no fern, no desk. Do not use a finished jar photograph as the style source.
