@@ -31,6 +31,8 @@ CBUFFER_START(UnityPerMaterial)
     // S5 chord haze: _S5Haze = (sigma per metre, colour strength, density gain toward the top, alpha weight);
     // _S5Cyl = (cavity radius m, bottom y m, top y m, clock s).
     float4 _S5Haze, _S5Cyl;
+    // S6 bed glow (T-TER-049, backward compatible: zero is off): x strength, y height of the glow centre in m, z falloff in m.
+    float4 _S6Bed;
 CBUFFER_END
 
 struct A { float4 pos : POSITION; float3 n : NORMAL; UNITY_VERTEX_INPUT_INSTANCE_ID };
@@ -327,7 +329,19 @@ half4 S5Haze(float3 wp, half cavityMask)
     // Brightest just above the moss (the reference glows from the bed), thinning to a paler haze toward the neck.
     half w = haze * _S5Haze.y * lerp(2.0, 0.85, hy);
     // Alpha takes a little red out of what is behind, so the interior reads teal and not lifted.
-    return half4(tint * w, w * 0.50);
+    half3 rgb = tint * w;
+    half a = w * 0.50;
+    if (_S6Bed.x > 0.0)
+    {
+        // The reference glows from the bed, at the glass: a gaussian in the height of the chord midpoint, weighted toward the
+        // short chords at the silhouette so the glow lines the wall and does not veil the moss.
+        float g = (yLo + ch.y * (yHi - yLo) - _S6Bed.y) / max(_S6Bed.z, 1e-4);
+        half edge = 1.0 - saturate(ch.x / (2.0 * R));
+        half bed = (half)(_S6Bed.x * exp(-g * g)) * lerp(0.2, 1.0, edge * edge);
+        rgb += half3(0.04, 0.84, 0.52) * bed;
+        a += bed * 0.30;
+    }
+    return half4(rgb, a);
 }
 #endif
 

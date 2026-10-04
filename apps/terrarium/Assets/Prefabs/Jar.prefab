@@ -7201,6 +7201,21 @@ MonoBehaviour:
   aGlassMesh: {fileID: 7065439566198968859, guid: 3c733602d994481489db76113f3222b8, type: 3}
   s2JarMesh: {fileID: -6768141841945819295, guid: 718d5a3934157614688c98c6b2790df3, type: 3}
   s2JarFullMesh: {fileID: -9096638396977681743, guid: 718d5a3934157614688c98c6b2790df3, type: 3}
+  s6JarMesh: {fileID: 2902130253409540864, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  s6JarFullMesh: {fileID: -1715358365448410869, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  s6CorkMesh: {fileID: 310258239944896059, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  s6SoilMesh: {fileID: -569348776318614669, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  s6MossMesh: {fileID: -4232552496960999923, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  s6ShellMesh: {fileID: -6366746549405500275, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  s6SprigMesh: {fileID: -1661795517831386682, guid: 7df7af134c1fb964ca68c6259187fe47, type: 3}
+  corkFilter: {fileID: 3834000978489844065}
+  s3SoilFilter: {fileID: 5435690855199443069}
+  s3MossFilter: {fileID: 1135866725587545342}
+  s3SprigFilter: {fileID: 2359635817609818708}
+  _aCorkMesh: {fileID: 5217060457567411043, guid: 3c733602d994481489db76113f3222b8, type: 3}
+  _s3SoilMeshS3: {fileID: 6853321698748912748, guid: 4af9b926e4c9f0d45a921ec8dcc8e270, type: 3}
+  _s3MossMeshS3: {fileID: 351541435747871282, guid: 4af9b926e4c9f0d45a921ec8dcc8e270, type: 3}
+  _s3SprigMeshS3: {fileID: 2179619041264074167, guid: 4af9b926e4c9f0d45a921ec8dcc8e270, type: 3}
   steam: {fileID: 6493233113387700509}
   deskStreakCard: {fileID: 1320516455323319652}
   contactCard: {fileID: 5878402846961107195}

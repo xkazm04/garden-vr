@@ -26,6 +26,8 @@ namespace GardenVR.Terrarium
         public Material S4Fiddle;
         /// <summary>Spike S2 (variants s2b0, s2b1, s2b2): the thick-glass shell with a real inner wall.</summary>
         public Mesh S2Jar, S2JarFull;
+        /// <summary>Spike S6 (variant s6): the reference-proportioned thick shell, the flat cork and the moss meshes rebuilt for the wider cavity.</summary>
+        public Mesh S6Jar, S6JarFull, S6Cork, S6Soil, S6Moss, S6Shell, S6Sprigs;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         /// <summary>Spike S5 (variant s5): the steam puff flipbook, the desk reflection streak and the foot contact line.</summary>
         public Material Steam, DeskStreak, Contact;
@@ -139,6 +141,19 @@ namespace GardenVR.Terrarium
         public Mesh aGlassMesh;
         public Mesh s2JarMesh, s2JarFullMesh;
         bool _s2Full;
+        /// <summary>
+        /// The silhouette pass (S6, T-TER-049). Rides on the thick shell and S5: the reference-proportioned jar (wider, a broad
+        /// shoulder, a short neck, a wide mouth), a low flat cork, a dense rounded moss mound on a dark soil band (the S3 meshes
+        /// rebuilt for the wider cavity), the thick fuzzy fiddlehead (S4 s4h) and a bed-weighted interior haze. s6 implies s3 and
+        /// s4h, and the thick shell if no s2 variant was named.
+        /// </summary>
+        bool _s6;
+        [Header("Spike S6 (variant s6). Unused unless the variant is on.")]
+        public Mesh s6JarMesh, s6JarFullMesh, s6CorkMesh, s6SoilMesh, s6MossMesh, s6ShellMesh, s6SprigMesh;
+        public MeshFilter corkFilter, s3SoilFilter, s3MossFilter, s3SprigFilter;
+        // The locked and S3 meshes variant s6 puts back. Serialized, so a scene saved while s6 was on still knows them.
+        [SerializeField, HideInInspector] Mesh _aCorkMesh, _s3SoilMeshS3, _s3MossMeshS3, _s3SprigMeshS3;
+        Mesh _s3StackSource;
         /// <summary>
         /// The atmosphere-and-contact spike (S5). On: the S1 structured pane with the analytic chord haze, the steam puff
         /// particles in place of the one mist card, stretched spores, the desk reflection streak and the foot contact line,
@@ -262,7 +277,7 @@ namespace GardenVR.Terrarium
             get
             {
                 string name = string.IsNullOrEmpty(_variant) ? "" : _variant;
-                if (_s3) name = name == "" ? "s3" : name + "+s3";
+                if (_s3 && !_s6) name = name == "" ? "s3" : name + "+s3";
                 if (_s2Mode != 0)
                 {
                     string s2 = _s2Mode == 1 ? "s2b0" : (_s2Mode == 2 ? "s2b1" : "s2b2");
@@ -270,11 +285,15 @@ namespace GardenVR.Terrarium
                 }
                 if (_s5) name = name == "" ? "s5" : name + "+s5";
                 string s4 = _s4Fronds && _s4Fiddle ? "s4" : (_s4Fronds ? "s4f" : (_s4Fiddle ? "s4h" : ""));
+                if (_s6 && s4 == "s4h") s4 = "";
                 if (s4 != "") name = name == "" ? s4 : name + "+" + s4;
+                if (_s6) name = name == "" ? "s6" : name + "+s6";
                 return name == "" ? "a" : name;
             }
         }
         public bool StructuredGlass { get { return _variant == "s1" || _s2Mode != 0 || _s5; } }
+        /// <summary>True while variant s6 shows the reference-proportioned jar, the flat cork and the dense moss mound.</summary>
+        public bool SilhouettePass { get { return _s6; } }
         /// <summary>True while variant s5 shows the chord haze, the steam puffs, the stretched spores, the desk streak and the contact line.</summary>
         public bool Atmosphere { get { return _s5; } }
         /// <summary>0 locked glass mesh, 1 thick shell, 2 thick shell with the baked refraction strip, 3 thick shell with Opaque Texture refraction.</summary>
@@ -351,6 +370,7 @@ namespace GardenVR.Terrarium
             _s4Shells = S4Fiddle.PcShells;
             _s2Mode = 0;
             _s5 = false;
+            _s6 = false;
             _s5Haze = S5HazeDefault;
             _s5Steam = _s5Spore = _s5Desk = _s5Cork = 1f;
             _s5Sigma = S5Sigma;
@@ -386,9 +406,10 @@ namespace GardenVR.Terrarium
                     foreach (string part in name.Split('+'))
                     {
                         if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h"
-                            && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5")
-                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h or s5, joined with +: " + name);
+                            && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5" && part != "s6")
+                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h, s5 or s6, joined with +: " + name);
                         if (part == "s5") _s5 = true;
+                        if (part == "s6") _s6 = true;
                         if (part == "s2b0") _s2Mode = 1;
                         if (part == "s2b1") _s2Mode = 2;
                         if (part == "s2b2") _s2Mode = 3;
@@ -454,6 +475,13 @@ namespace GardenVR.Terrarium
                     default:
                         throw new FormatException("JarView has no state field '" + pair.Key + "'");
                 }
+            }
+            if (_s6)
+            {
+                // The silhouette pass brings the moss mound and the thick fiddlehead with it, and the thick shell.
+                _s3 = true;
+                _s4Fiddle = true;
+                if (_s2Mode == 0) _s2Mode = 1;
             }
             if (!sawJourney) _hasLook = false;
             if (sawLifetime) lifetimeFronds = lifetimeOverride;
@@ -709,11 +737,17 @@ namespace GardenVR.Terrarium
                         s3Replaced[i].gameObject.SetActive(!_s3);
             if (!_s3) return;
 
-            if (s3ShellFilter != null && s3ShellSource != null && (_s3Stack == null || _s3StackCount != _s3Shells))
+            // Variant s6 puts the meshes rebuilt for the wider cavity on the same four objects; any other variant puts the S3 ones back.
+            SwapMesh(s3SoilFilter, ref _s3SoilMeshS3, _s6 ? s6SoilMesh : null);
+            SwapMesh(s3MossFilter, ref _s3MossMeshS3, _s6 ? s6MossMesh : null);
+            SwapMesh(s3SprigFilter, ref _s3SprigMeshS3, _s6 ? s6SprigMesh : null);
+            Mesh shellSource = _s6 && s6ShellMesh != null ? s6ShellMesh : s3ShellSource;
+            if (s3ShellFilter != null && shellSource != null && (_s3Stack == null || _s3StackCount != _s3Shells || _s3StackSource != shellSource))
             {
                 DestroyObject(_s3Stack);
-                _s3Stack = S3MossShells.BuildStack(s3ShellSource, _s3Shells);
+                _s3Stack = S3MossShells.BuildStack(shellSource, _s3Shells);
                 _s3StackCount = _s3Shells;
+                _s3StackSource = shellSource;
                 s3ShellFilter.sharedMesh = _s3Stack;
             }
             Color emission = SeasonColor(MossEmission, MossEmissionWarm, seasonWarmth) * (1f + 0.45f * mossGlow);
@@ -727,6 +761,10 @@ namespace GardenVR.Terrarium
                 m.SetColor("_Rim", rim);
                 m.SetFloat("_AlphaToMask", _s3Alpha2Coverage);
                 SetTip(m, 0.018f, 0.048f, 0.55f, 1f);
+                // The s6 mound is taller (crest 38 mm): a darker base and more self-occlusion give the cushion its contrast.
+                m.SetFloat("_GradBottom", _s6 ? 0.38f : 0.58f);
+                m.SetVector("_GradY", _s6 ? new Vector4(0.020f, 0.040f, 0f, 0f) : new Vector4(0.016f, 0.032f, 0f, 0f));
+                m.SetFloat("_AoBase", _s6 ? 0.22f : 0.08f);
             }
             if (s3SprigMat != null)
             {
@@ -737,6 +775,8 @@ namespace GardenVR.Terrarium
             }
             if (s3SoilMat != null && s3SoilMat.HasProperty("_LightPos"))
                 s3SoilMat.SetVector("_LightPos", Vector4.zero);
+            // The dark soil band under the mound.
+            if (s3SoilMat != null) s3SoilMat.SetColor("_Tint", _s6 ? new Color(0.46f, 0.46f, 0.48f) : Color.white);
         }
 
         Material CorkMaterial()
@@ -776,6 +816,7 @@ namespace GardenVR.Terrarium
             if (glassFilter == null) return;
             if (aGlassMesh == null) aGlassMesh = glassFilter.sharedMesh;
             Mesh thick = _s2Full && s2JarFullMesh != null ? s2JarFullMesh : s2JarMesh;
+            if (_s6 && s6JarMesh != null) thick = _s2Full && s6JarFullMesh != null ? s6JarFullMesh : s6JarMesh;
             Mesh want = _s2Mode != 0 && thick != null ? thick : aGlassMesh;
             if (glassFilter.sharedMesh != want) glassFilter.sharedMesh = want;
         }
@@ -800,19 +841,21 @@ namespace GardenVR.Terrarium
         void ApplyCork(bool structured)
         {
             Material cork = CorkMaterial();
+            ApplyCorkMesh();
             if (cork == null) return;
+            Vector4 gradY = _s6 ? new Vector4(S6CorkGradLo, S6CorkGradHi, 0f, 0f) : new Vector4(0.118f, 0.14f, 0f, 0f);
             if (_s5 && _s5Cork > 0f)
             {
                 // Spike S5: the reference cork. Mid brown with the grain still readable, a warm lit rim on the cap edge,
                 // the lower body in shade. _s5Cork blends from the locked tan (0) to this (1).
                 float k = _s5Cork;
-                cork.SetColor("_Tint", Color.Lerp(Color.white, S5CorkTint, k));
+                cork.SetColor("_Tint", Color.Lerp(Color.white, _s6 ? S6CorkTint : S5CorkTint, k));
                 cork.SetColor("_Emission", Color.black);
                 cork.SetColor("_Rim", Color.Lerp(Color.black, S5CorkRim, k));
                 cork.SetFloat("_RimPower", Mathf.Lerp(4f, 2.1f, k));
                 cork.SetFloat("_GradBottom", Mathf.Lerp(1.12f, 0.80f, k));
                 cork.SetFloat("_GradTop", Mathf.Lerp(0.84f, 1.10f, k));
-                cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+                cork.SetVector("_GradY", gradY);
                 return;
             }
             if (!structured)
@@ -823,7 +866,7 @@ namespace GardenVR.Terrarium
                 cork.SetFloat("_RimPower", 4f);
                 cork.SetFloat("_GradBottom", 1.12f);
                 cork.SetFloat("_GradTop", 0.84f);
-                cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+                cork.SetVector("_GradY", gradY);
                 return;
             }
             cork.SetColor("_Tint", new Color(0.11f, 0.070f, 0.045f, 1f));
@@ -833,6 +876,23 @@ namespace GardenVR.Terrarium
             cork.SetFloat("_GradBottom", 0.55f);
             cork.SetFloat("_GradTop", 1.15f);
             cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+        }
+
+        // Variant s6: the flat cork cap runs from the lip crown (0.1285) to 0.1365, so the shading ramp follows it.
+        const float S6CorkGradLo = 0.122f, S6CorkGradHi = 0.1365f;
+        // The s6 cavity is 2.5 mm inside a 47 mm wall. Haze: the interior is denser toward the bed so the glow sits there.
+        const float S6Cavity = 0.0442f, S6HazeBottom = 0.010f, S6HazeTop = 0.100f, S6TopGain = 0f, S6SteamLift = -0.002f;
+        // The glow the reference has at the bed: strength, centre height and falloff in metres (shader _S6Bed).
+        static readonly Vector4 S6Bed = new Vector4(0.50f, 0.032f, 0.014f, 0f);
+        static readonly Color S6CorkTint = new Color(0.27f, 0.215f, 0.185f, 1f);
+
+        /// <summary>Variant s6 swaps the cork for the low flat plug. Any other variant puts the locked cork mesh back.</summary>
+        void ApplyCorkMesh()
+        {
+            if (corkFilter == null) return;
+            if (_aCorkMesh == null) _aCorkMesh = corkFilter.sharedMesh;
+            Mesh want = _s6 && s6CorkMesh != null ? s6CorkMesh : _aCorkMesh;
+            if (corkFilter.sharedMesh != want) corkFilter.sharedMesh = want;
         }
 
         static readonly Color S5CorkTint = new Color(0.40f, 0.32f, 0.28f, 1f);
@@ -861,9 +921,11 @@ namespace GardenVR.Terrarium
             if (glassMat != null)
             {
                 SetKeywordIfKnown(glassMat, S5Keyword, haze);
-                float radius = _s2Mode != 0 ? S5CavityS2 : S5CavityA;
-                glassMat.SetVector("_S5Haze", haze ? new Vector4(_s5Sigma, S5Strength * _s5Haze * (_s2Mode != 0 ? S5ThickScale : 1f), S5TopGain, S5Noise) : Vector4.zero);
-                glassMat.SetVector("_S5Cyl", new Vector4(radius, S5HazeBottom, S5HazeTop, reducedMotion ? 0f : time));
+                float radius = _s6 ? S6Cavity : (_s2Mode != 0 ? S5CavityS2 : S5CavityA);
+                float gain = _s6 ? S6TopGain : S5TopGain;
+                glassMat.SetVector("_S5Haze", haze ? new Vector4(_s5Sigma, S5Strength * _s5Haze * (_s2Mode != 0 ? S5ThickScale : 1f), gain, S5Noise) : Vector4.zero);
+                glassMat.SetVector("_S5Cyl", new Vector4(radius, _s6 ? S6HazeBottom : S5HazeBottom, _s6 ? S6HazeTop : S5HazeTop, reducedMotion ? 0f : time));
+                glassMat.SetVector("_S6Bed", haze && _s6 ? new Vector4(S6Bed.x * _s5Haze, S6Bed.y, S6Bed.z, 0f) : Vector4.zero);
             }
             bool steamOn = _s5 && _s5Steam > 0f && steam != null;
             if (steam != null && steam.gameObject.activeSelf != steamOn) steam.gameObject.SetActive(steamOn);
@@ -874,7 +936,7 @@ namespace GardenVR.Terrarium
                 if (corkR != null)
                 {
                     Bounds b = corkR.bounds;
-                    steam.transform.localPosition = transform.InverseTransformPoint(new Vector3(b.center.x, b.max.y + 0.014f, b.center.z));
+                    steam.transform.localPosition = transform.InverseTransformPoint(new Vector3(b.center.x, b.max.y + (_s6 ? S6SteamLift : 0.014f), b.center.z));
                 }
                 if (steamMat != null) steamMat.SetColor("_Color", new Color(0.80f, 0.93f, 0.89f, 0.38f * _s5Steam));
             }
@@ -1140,6 +1202,13 @@ namespace GardenVR.Terrarium
             fernAlbedoA = library.FernAlbedoA;
             s2JarMesh = library.S2Jar;
             s2JarFullMesh = library.S2JarFull;
+            s6JarMesh = library.S6Jar;
+            s6JarFullMesh = library.S6JarFull;
+            s6CorkMesh = library.S6Cork;
+            s6SoilMesh = library.S6Soil;
+            s6MossMesh = library.S6Moss;
+            s6ShellMesh = library.S6Shell;
+            s6SprigMesh = library.S6Sprigs;
             s4FiddleStates = library.S4FiddleStates;
             s4FiddleMat = library.S4Fiddle;
             _s4FiddleOn = false;
@@ -1169,6 +1238,8 @@ namespace GardenVR.Terrarium
             mossCardMat = library.MossCard;
             SetMat(Require(mt, "Soil"), library.Soil);
             SetMat(Require(mt, "Cork"), library.Cork);
+            corkFilter = Require(mt, "Cork").GetComponent<MeshFilter>();
+            _aCorkMesh = corkFilter.sharedMesh;
 
             BuildS3(mt, library);
 
@@ -1292,6 +1363,14 @@ namespace GardenVR.Terrarium
             _shapes = null;
         }
 
+        static void SwapMesh(MeshFilter filter, ref Mesh original, Mesh replacement)
+        {
+            if (filter == null) return;
+            if (original == null) original = filter.sharedMesh;
+            Mesh want = replacement != null ? replacement : original;
+            if (filter.sharedMesh != want) filter.sharedMesh = want;
+        }
+
         /// <summary>Hangs the S3 meshes under the jar, inactive. Variant s3 turns them on and the locked moss off.</summary>
         void BuildS3(Transform jarModel, JarLibrary library)
         {
@@ -1322,6 +1401,13 @@ namespace GardenVR.Terrarium
             s3SprigMat = library.S3Sprig;
             s3ShellFilter = shell.GetComponent<MeshFilter>();
             s3ShellSource = MeshOf(shell);
+            s3SoilFilter = soil.GetComponent<MeshFilter>();
+            s3MossFilter = mound.GetComponent<MeshFilter>();
+            s3SprigFilter = sprigs.GetComponent<MeshFilter>();
+            _s3SoilMeshS3 = s3SoilFilter.sharedMesh;
+            _s3MossMeshS3 = s3MossFilter.sharedMesh;
+            _s3SprigMeshS3 = s3SprigFilter.sharedMesh;
+            _s3StackSource = null;
             s3Replaced = new[] { Require(jarModel, "Moss"), Require(jarModel, "MossSkirt"), Require(jarModel, "Soil") };
             s3Root = root.transform;
             root.SetActive(false);

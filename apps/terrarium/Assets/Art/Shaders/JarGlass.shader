@@ -24,6 +24,7 @@ Shader "Fidelity/JarGlass"
         _S2Cfg ("S2 (wall offset m, dispersion, mix, proxy m)", Vector) = (0.010, 0.06, 1, 0.25)
         _S5Haze ("S5 haze (sigma per m, colour strength, top gain, noise)", Vector) = (0, 0, 0, 0)
         _S5Cyl ("S5 cavity (radius m, bottom y, top y, clock s)", Vector) = (0.041, 0.034, 0.118, 0)
+        _S6Bed ("S6 bed glow (strength, centre height m, falloff m)", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
