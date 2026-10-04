@@ -22,6 +22,7 @@ namespace GardenVR.Terrarium.Editor
         public const string S3ModelPath = "Assets/Art/Models/s3_moss.fbx";
         public const string S4ModelPath = "Assets/Art/Models/s4_fiddle.fbx";
         public const string S2ModelPath = "Assets/Art/Models/s2_jar.fbx";
+        public const string S6ModelPath = "Assets/Art/Models/s6_jar.fbx";
         public const string PrefabPath = "Assets/Prefabs/Jar.prefab";
         public const string QuadPath = "Assets/Art/Models/CardQuad.asset";
         public const string ContactBandPath = "Assets/Art/Models/ContactBand.asset";
@@ -45,6 +46,7 @@ namespace GardenVR.Terrarium.Editor
                 ConfigureS3Model();
                 ConfigureS4Model();
                 ConfigureS2Model();
+                ConfigureS6Model();
                 var library = CreateLibrary();
                 var modelPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
                 if (modelPrefab == null) throw new InvalidOperationException("model not imported: " + ModelPath);
@@ -192,6 +194,37 @@ namespace GardenVR.Terrarium.Editor
                 if (mesh != null && mesh.name == name) return mesh;
             }
             throw new InvalidOperationException("s2 jar mesh missing: " + name + " in " + S2ModelPath);
+        }
+
+        /// <summary>T-TER-049. The shell is read in play (never), the moss meshes are read to build the fur stack.</summary>
+        static void ConfigureS6Model()
+        {
+            var importer = AssetImporter.GetAtPath(S6ModelPath) as ModelImporter;
+            if (importer == null) throw new InvalidOperationException("model missing: " + S6ModelPath);
+            importer.importBlendShapes = false;
+            importer.materialImportMode = ModelImporterMaterialImportMode.None;
+            importer.importAnimation = false;
+            importer.importCameras = false;
+            importer.importLights = false;
+            importer.globalScale = 1f;
+            importer.useFileScale = true;
+            importer.bakeAxisConversion = true;
+            importer.importNormals = ModelImporterNormals.Import;
+            importer.weldVertices = false;
+            importer.isReadable = true;
+            importer.optimizeMeshPolygons = false;
+            importer.optimizeMeshVertices = false;
+            importer.SaveAndReimport();
+        }
+
+        static Mesh LoadS6Mesh(string name)
+        {
+            foreach (UnityEngine.Object asset in AssetDatabase.LoadAllAssetsAtPath(S6ModelPath))
+            {
+                var mesh = asset as Mesh;
+                if (mesh != null && mesh.name == name) return mesh;
+            }
+            throw new InvalidOperationException("s6 mesh missing: " + name + " in " + S6ModelPath);
         }
 
         static void ConfigureS4Model()
@@ -499,6 +532,13 @@ namespace GardenVR.Terrarium.Editor
             library.FernAlbedoA = Tex("fern_albedo");
             library.S2Jar = LoadS2Jar("JarS2Lean");
             library.S2JarFull = LoadS2Jar("JarS2");
+            library.S6Jar = LoadS6Mesh("JarS6Lean");
+            library.S6JarFull = LoadS6Mesh("JarS6");
+            library.S6Cork = LoadS6Mesh("CorkS6");
+            library.S6Soil = LoadS6Mesh("SoilS6");
+            library.S6Moss = LoadS6Mesh("MossS6");
+            library.S6Shell = LoadS6Mesh("MossShellS6");
+            library.S6Sprigs = LoadS6Mesh("SprigsS6");
             library.S4FiddleStates = LoadS4FiddleStates();
             library.S4Fiddle = Mat("Jar_FiddleS4", "Fidelity/FiddleFuzz", m =>
             {

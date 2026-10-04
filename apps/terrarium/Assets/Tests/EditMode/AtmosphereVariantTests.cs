@@ -41,7 +41,44 @@ namespace GardenVR.Terrarium.Tests
                 // The ablation knobs parse. An unknown token still throws.
                 view.ApplyCaptureState(State("s5", "s5haze", "0", "s5steam", "0", "s5spore", "0", "s5desk", "0", "s5cork", "0", "s5sigma", "12"));
                 Assert.IsTrue(view.Atmosphere);
-                Assert.Throws<System.FormatException>(() => view.ApplyCaptureState(State("s6")));
+                Assert.Throws<System.FormatException>(() => view.ApplyCaptureState(State("s7")));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void CaptureState_S6_ImpliesMossAndFiddle_ComposesAndResets()
+        {
+            var go = new GameObject("jar-s6");
+            var view = go.AddComponent<JarView>();
+            try
+            {
+                Assert.IsFalse(view.SilhouettePass);
+                view.ApplyCaptureState(State("s2b2+s5+s6"));
+                Assert.IsTrue(view.SilhouettePass);
+                Assert.AreEqual("s2b2+s5+s6", view.Variant);
+                Assert.IsTrue(view.MossInTheJar, "s6 brings the dense moss mound");
+                Assert.IsTrue(view.FuzzyFiddle, "s6 brings the thick s4h fiddlehead");
+                Assert.IsFalse(view.BacklitFronds, "s6 does not change the fronds");
+                Assert.AreEqual(3, view.ThickGlassMode);
+                view.ApplyCaptureState(State("s2b1+s5+s6"));
+                Assert.AreEqual("s2b1+s5+s6", view.Variant);
+                Assert.AreEqual(2, view.ThickGlassMode);
+                // Alone, s6 still sits on the thick shell.
+                view.ApplyCaptureState(State("s6"));
+                Assert.AreEqual(1, view.ThickGlassMode);
+                Assert.AreEqual("s2b0+s6", view.Variant);
+
+                view.ApplyCaptureState(State("s2b2+s5"));
+                Assert.IsFalse(view.SilhouettePass);
+                Assert.IsFalse(view.MossInTheJar);
+                Assert.IsFalse(view.FuzzyFiddle);
+                view.ApplyCaptureState(State(null));
+                Assert.IsFalse(view.SilhouettePass);
+                Assert.AreEqual("a", view.Variant);
             }
             finally
             {

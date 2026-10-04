@@ -44,6 +44,14 @@ namespace GardenVR.Terrarium.Editor
             throw new InvalidOperationException("missing -" + name);
         }
 
+        static string OptionalArg(string name)
+        {
+            string[] argv = Environment.GetCommandLineArgs();
+            for (int i = 0; i < argv.Length - 1; i++)
+                if (string.Equals(argv[i], "-" + name, StringComparison.OrdinalIgnoreCase)) return argv[i + 1];
+            return null;
+        }
+
         static string F(float v) { return v.ToString("0.####", CultureInfo.InvariantCulture); }
 
         static string P(Camera cam, Vector3 world, int w, int h)
@@ -57,7 +65,10 @@ namespace GardenVR.Terrarium.Editor
             EditorSceneManager.OpenScene(Scene, OpenSceneMode.Single);
             JarView jar = UnityEngine.Object.FindAnyObjectByType<JarView>();
             if (jar == null) throw new InvalidOperationException("no JarView");
-            jar.ApplyCaptureState(CaptureState.Parse("breath=0.5,uncoil=0.3,fog=0.45,time=3"));
+            // Optional -variant (T-TER-049): the same plane check on another look, for example s2b2+s5+s6.
+            string variant = OptionalArg("variant");
+            jar.ApplyCaptureState(CaptureState.Parse("breath=0.5,uncoil=0.3,fog=0.45,time=3" + (variant != null ? ",variant=" + variant : "")));
+            jar.Apply();
             Transform ring = null, glass = null, cork = null;
             foreach (Transform t in jar.GetComponentsInChildren<Transform>(true))
             {
