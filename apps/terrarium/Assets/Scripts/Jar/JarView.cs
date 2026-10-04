@@ -27,6 +27,10 @@ namespace GardenVR.Terrarium
         /// <summary>Spike S2 (variants s2b0, s2b1, s2b2): the thick-glass shell with a real inner wall.</summary>
         public Mesh S2Jar, S2JarFull;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
+        /// <summary>Spike S5 (variant s5): the steam puff flipbook, the desk reflection streak and the foot contact line.</summary>
+        public Material Steam, DeskStreak, Contact;
+        /// <summary>Spike S5: a flat band around the foot (radius 43 to 57 mm) for the contact line, so it costs no overdraw over the glass.</summary>
+        public Mesh ContactBand;
         public Mesh Quad;
         public Mesh FlowerMesh;
     }
@@ -135,6 +139,20 @@ namespace GardenVR.Terrarium
         public Mesh aGlassMesh;
         public Mesh s2JarMesh, s2JarFullMesh;
         bool _s2Full;
+        /// <summary>
+        /// The atmosphere-and-contact spike (S5). On: the S1 structured pane with the analytic chord haze, the steam puff
+        /// particles in place of the one mist card, stretched spores, the desk reflection streak and the foot contact line,
+        /// and the mid-brown cork. Each part has a knob so a part can be ablated: s5haze, s5steam, s5spore, s5desk, s5cork.
+        /// </summary>
+        bool _s5;
+        float _s5Haze = S5HazeDefault, _s5Steam = 1f, _s5Spore = 1f, _s5Desk = 1f, _s5Cork = 1f;
+        const float S5HazeDefault = 1f;
+        [Header("Spike S5 (variant s5). Unused unless the variant is on.")]
+        public ParticleSystem steam;
+        public Transform deskStreakCard;
+        public Transform contactCard;
+        public Material steamMat, deskStreakMat, contactMat;
+        bool _steamLive;
         // Variant A frond values, written back when the spike is off.
         static readonly Color FernTintA = new Color(0.72f, 0.92f, 0.68f);
         // The re-graded albedo is already pale mint, so the tint only trims it.
@@ -250,12 +268,15 @@ namespace GardenVR.Terrarium
                     string s2 = _s2Mode == 1 ? "s2b0" : (_s2Mode == 2 ? "s2b1" : "s2b2");
                     name = name == "" ? s2 : name + "+" + s2;
                 }
+                if (_s5) name = name == "" ? "s5" : name + "+s5";
                 string s4 = _s4Fronds && _s4Fiddle ? "s4" : (_s4Fronds ? "s4f" : (_s4Fiddle ? "s4h" : ""));
                 if (s4 != "") name = name == "" ? s4 : name + "+" + s4;
                 return name == "" ? "a" : name;
             }
         }
-        public bool StructuredGlass { get { return _variant == "s1" || _s2Mode != 0; } }
+        public bool StructuredGlass { get { return _variant == "s1" || _s2Mode != 0 || _s5; } }
+        /// <summary>True while variant s5 shows the chord haze, the steam puffs, the stretched spores, the desk streak and the contact line.</summary>
+        public bool Atmosphere { get { return _s5; } }
         /// <summary>0 locked glass mesh, 1 thick shell, 2 thick shell with the baked refraction strip, 3 thick shell with Opaque Texture refraction.</summary>
         public int ThickGlassMode { get { return _s2Mode; } }
         /// <summary>True while a variant shows the pale backlit frond material.</summary>
@@ -329,6 +350,10 @@ namespace GardenVR.Terrarium
             _s4Fiddle = false;
             _s4Shells = S4Fiddle.PcShells;
             _s2Mode = 0;
+            _s5 = false;
+            _s5Haze = S5HazeDefault;
+            _s5Steam = _s5Spore = _s5Desk = _s5Cork = 1f;
+            _s5Sigma = S5Sigma;
             _s2Full = false;
             _s2Offset = S2OffsetDefault;
             _s2Disp = S2DispDefault;
@@ -361,8 +386,9 @@ namespace GardenVR.Terrarium
                     foreach (string part in name.Split('+'))
                     {
                         if (part != "" && part != "a" && part != "s1" && part != "s3" && part != "s4" && part != "s4f" && part != "s4h"
-                            && part != "s2b0" && part != "s2b1" && part != "s2b2")
-                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f or s4h, joined with +: " + name);
+                            && part != "s2b0" && part != "s2b1" && part != "s2b2" && part != "s5")
+                            throw new FormatException("JarView variant must be a, s1, s2b0, s2b1, s2b2, s3, s4, s4f, s4h or s5, joined with +: " + name);
+                        if (part == "s5") _s5 = true;
                         if (part == "s2b0") _s2Mode = 1;
                         if (part == "s2b1") _s2Mode = 2;
                         if (part == "s2b2") _s2Mode = 3;
@@ -399,6 +425,13 @@ namespace GardenVR.Terrarium
                     // Spike S4 knob. Fuzz shells on the fiddlehead: 2 on PC, 0 is the Quest fallback.
                     // Spike S2 knobs: wall offset (millimetres, OPAQUE), dispersion, refraction mix, cube proxy (centimetres).
                     case "s2full": _s2Full = value > 0.5f; break;
+                    // Spike S5 knobs. Each is a strength; 0 turns that part off (ablation).
+                    case "s5haze": _s5Haze = Mathf.Max(0f, value); break;
+                    case "s5sigma": _s5Sigma = Mathf.Max(0f, value); break;
+                    case "s5steam": _s5Steam = Mathf.Clamp01(value); break;
+                    case "s5spore": _s5Spore = Mathf.Clamp01(value); break;
+                    case "s5desk": _s5Desk = Mathf.Clamp01(value); break;
+                    case "s5cork": _s5Cork = Mathf.Clamp01(value); break;
                     case "s2off": _s2Offset = Mathf.Max(0f, value) * 0.001f; break;
                     case "s2disp": _s2Disp = Mathf.Clamp(value, 0f, 0.5f); break;
                     case "s2mix": _s2Mix = Mathf.Clamp01(value); break;
@@ -768,6 +801,20 @@ namespace GardenVR.Terrarium
         {
             Material cork = CorkMaterial();
             if (cork == null) return;
+            if (_s5 && _s5Cork > 0f)
+            {
+                // Spike S5: the reference cork. Mid brown with the grain still readable, a warm lit rim on the cap edge,
+                // the lower body in shade. _s5Cork blends from the locked tan (0) to this (1).
+                float k = _s5Cork;
+                cork.SetColor("_Tint", Color.Lerp(Color.white, S5CorkTint, k));
+                cork.SetColor("_Emission", Color.black);
+                cork.SetColor("_Rim", Color.Lerp(Color.black, S5CorkRim, k));
+                cork.SetFloat("_RimPower", Mathf.Lerp(4f, 2.1f, k));
+                cork.SetFloat("_GradBottom", Mathf.Lerp(1.12f, 0.80f, k));
+                cork.SetFloat("_GradTop", Mathf.Lerp(0.84f, 1.10f, k));
+                cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
+                return;
+            }
             if (!structured)
             {
                 cork.SetColor("_Tint", Color.white);
@@ -787,6 +834,73 @@ namespace GardenVR.Terrarium
             cork.SetFloat("_GradTop", 1.15f);
             cork.SetVector("_GradY", new Vector4(0.118f, 0.14f, 0f, 0f));
         }
+
+        static readonly Color S5CorkTint = new Color(0.40f, 0.32f, 0.28f, 1f);
+        static readonly Color S5CorkRim = new Color(0.40f, 0.29f, 0.17f, 1f);
+        // Chord haze constants (spike S5). Sigma is per metre of chord, tuned on the JarG1 frame.
+        const float S5Sigma = 20f, S5Strength = 0.12f, S5TopGain = 0.6f, S5Noise = 0.45f;
+        const float S5CavityA = 0.0405f, S5CavityS2 = 0.0425f, S5HazeBottom = 0.016f, S5HazeTop = 0.118f;
+        float _s5Sigma = S5Sigma;
+
+        static readonly string S5Keyword = "_S5_HAZE";
+
+        static void SetKeywordIfKnown(Material material, string name, bool on)
+        {
+            if (material == null || material.shader == null) return;
+            var keyword = new LocalKeyword(material.shader, name);
+            if (keyword.isValid) material.SetKeyword(keyword, on);
+        }
+
+        /// <summary>
+        /// Spike S5. Writes the chord haze inputs, shows or hides the steam puffs, the desk streak and the contact line, and
+        /// swaps the one mist card for the puffs. Variant A hides all of it and puts the mist card back.
+        /// </summary>
+        void ApplyAtmosphere()
+        {
+            bool haze = _s5 && _s5Haze > 0f;
+            if (glassMat != null)
+            {
+                SetKeywordIfKnown(glassMat, S5Keyword, haze);
+                float radius = _s2Mode != 0 ? S5CavityS2 : S5CavityA;
+                glassMat.SetVector("_S5Haze", haze ? new Vector4(_s5Sigma, S5Strength * _s5Haze * (_s2Mode != 0 ? S5ThickScale : 1f), S5TopGain, S5Noise) : Vector4.zero);
+                glassMat.SetVector("_S5Cyl", new Vector4(radius, S5HazeBottom, S5HazeTop, reducedMotion ? 0f : time));
+            }
+            bool steamOn = _s5 && _s5Steam > 0f && steam != null;
+            if (steam != null && steam.gameObject.activeSelf != steamOn) steam.gameObject.SetActive(steamOn);
+            if (steamOn)
+            {
+                Transform corkT = FindNamed("Cork");
+                Renderer corkR = corkT != null ? corkT.GetComponent<Renderer>() : null;
+                if (corkR != null)
+                {
+                    Bounds b = corkR.bounds;
+                    steam.transform.localPosition = transform.InverseTransformPoint(new Vector3(b.center.x, b.max.y + 0.014f, b.center.z));
+                }
+                if (steamMat != null) steamMat.SetColor("_Color", new Color(0.80f, 0.93f, 0.89f, 0.38f * _s5Steam));
+            }
+            if (mist != null && mist.Length > 0 && mist[0] != null && mist[0].gameObject.activeSelf == steamOn)
+                mist[0].gameObject.SetActive(!steamOn);
+            bool deskOn = _s5 && _s5Desk > 0f;
+            if (deskStreakCard != null && deskStreakCard.gameObject.activeSelf != deskOn) deskStreakCard.gameObject.SetActive(deskOn);
+            if (contactCard != null && contactCard.gameObject.activeSelf != deskOn) contactCard.gameObject.SetActive(deskOn);
+            if (deskOn)
+            {
+                if (deskStreakMat != null)
+                {
+                    deskStreakMat.SetColor("_Color", S5StreakColor * _s5Desk);
+                    deskStreakMat.SetColor("_Color2", S5StreakColor2 * _s5Desk);
+                }
+                if (contactMat != null) contactMat.SetColor("_Color", new Color(0.006f, 0.020f, 0.014f, 0.85f * _s5Desk));
+            }
+        }
+
+        const float S5HaloScale = 0.35f;
+        // The thick shell has a wider cavity and the refraction layer under it, so the same haze reads stronger.
+        const float S5ThickScale = 0.75f;
+        // The streak starts just outside the foot (4.5 cm radius), so the card never sits behind the glass: no extra layer over the jar.
+        const float S5StreakWidth = 0.075f, S5StreakLength = 0.085f, S5StreakStart = 0.047f;
+        static readonly Color S5StreakColor = new Color(0.30f, 0.72f, 0.46f, 1f);
+        static readonly Color S5StreakColor2 = new Color(0.10f, 0.30f, 0.18f, 1f);
 
         public void Apply()
         {
@@ -837,11 +951,12 @@ namespace GardenVR.Terrarium
                 // A near-white streak at 0.46 was a hard column in the pane. Keep the stroke, under the cap.
                 glassMat.SetColor("_Streak", SeasonColor(GlassStreakCool, GlassStreakWarm, seasonWarmth));
                 glassMat.SetShaderPassEnabled("SRPDefaultUnlit", false);
-                SetStructuredKeyword(glassMat, _variant == "s1" || _s2Mode != 0);
+                SetStructuredKeyword(glassMat, _variant == "s1" || _s2Mode != 0 || _s5);
                 SetThickKeywords(glassMat, _s2Mode);
                 glassMat.SetVector("_S2Cfg", new Vector4(_s2Offset, _s2Disp, _s2Mix, _s2Proxy));
             }
             ApplyThickShell();
+            ApplyAtmosphere();
             ApplyCork(_variant == "s1");
             float recoveredWave = 0f;
             if (_hasLook && _look.Recovered && recoveredTime >= 0f && recoveredTime <= 2.5f)
@@ -907,6 +1022,7 @@ namespace GardenVR.Terrarium
             DriveMist();
             DriveSporeLook();
             DriveSpores();
+            DriveSteam();
             ApplyFlowers();
             bool warm = day >= 7 || (_hasLook && flowers > 0);
             ApplyFocusedLight(warm ? FocusWarm : SeasonColor(FocusMint, FocusGold, seasonWarmth));
@@ -1036,6 +1152,9 @@ namespace GardenVR.Terrarium
             jarHaloMat = library.JarHalo;
             mistMat = library.Mist;
             sporeMat = library.Spore;
+            steamMat = library.Steam;
+            deskStreakMat = library.DeskStreak;
+            contactMat = library.Contact;
             flowerMesh = library.FlowerMesh;
             flowerMat = library.Flower;
 
@@ -1149,6 +1268,20 @@ namespace GardenVR.Terrarium
             _baseBills = bills.ToArray();
             billboards = _baseBills;
             spores = BuildSpores(library.Spore);
+
+            // Spike S5, all inactive until variant s5. The streak lies on the desk from the foot toward the eye
+            // (texture up is toward the jar), the contact line is a thin dark ring at the foot.
+            if (library.DeskStreak != null && library.Contact != null && library.Steam != null)
+            {
+                var streakCard = Card("DeskStreak", library.DeskStreak, new Vector3(0f, 0.0005f, -S5StreakLength * 0.5f - S5StreakStart), new Vector2(S5StreakWidth, S5StreakLength), flat);
+                deskStreakCard = streakCard.transform;
+                streakCard.SetActive(false);
+                var contact = Card("ContactLine", library.Contact, new Vector3(0f, 0.0003f, 0f), new Vector2(1f, 1f), Quaternion.identity, library.ContactBand != null ? library.ContactBand : _quad);
+                contactCard = contact.transform;
+                contact.SetActive(false);
+                steam = BuildSteam(library.Steam);
+                steam.gameObject.SetActive(false);
+            }
 
             AddCollider(Require(mt, "Jar").gameObject);
             AddCollider(Require(mt, "Cork").gameObject);
@@ -1440,7 +1573,11 @@ namespace GardenVR.Terrarium
                     renderer.sharedMaterial.SetColor("_Color", SeasonColor(SpillMint, SpillWarm, Season.Warmth(Mathf.Max(0, lifetimeFronds))));
             }
             if (_haloCard != null)
-                _haloCard.localScale = new Vector3(LeanHaloWidth, LeanHaloHeight, 1f);
+            {
+                // Spike S5: the chord haze carries the inner light, so the halo card shrinks.
+                float halo = _s5 ? S5HaloScale : 1f;
+                _haloCard.localScale = new Vector3(LeanHaloWidth * halo, LeanHaloHeight * halo, 1f);
+            }
         }
 
         // The frond card faces the camera. A yaw turns it edge-on, so the week only rolls and spreads.
@@ -1626,6 +1763,50 @@ namespace GardenVR.Terrarium
             var main = spores.main;
             main.maxParticles = reducedMotion ? 20 : 40;
             main.startSize = new ParticleSystem.MinMaxCurve(reducedMotion ? 0.0014f : 0.0018f, reducedMotion ? 0.0024f : 0.0034f);
+            ApplySporeStretch();
+        }
+
+        /// <summary>
+        /// Spike S5. The reference spores are short curved gold streaks that drift well out from the jar. Stretched billboards
+        /// point along the velocity, the start size drops so the streak is thin, and a little sideways drift fans them out.
+        /// Variant A puts the round dots, the tight cloud and the straight rise back.
+        /// </summary>
+        void ApplySporeStretch()
+        {
+            if (spores == null) return;
+            var renderer = spores.GetComponent<ParticleSystemRenderer>();
+            var shape = spores.shape;
+            var velocity = spores.velocityOverLifetime;
+            var main = spores.main;
+            bool on = _s5 && _s5Spore > 0f;
+            if (on)
+            {
+                renderer.renderMode = ParticleSystemRenderMode.Stretch;
+                renderer.lengthScale = 2.4f;
+                renderer.velocityScale = 0.16f;
+                main.maxParticles = reducedMotion ? 28 : 56;
+                var sporeEmission = spores.emission;
+                sporeEmission.rateOverTime = reducedMotion ? 3f : 5.5f;
+                shape.radius = 0.085f;
+                shape.radiusThickness = 0.85f;
+                shape.position = new Vector3(0f, 0.062f, 0f);
+                velocity.x = new ParticleSystem.MinMaxCurve(-0.010f, 0.010f);
+                velocity.y = new ParticleSystem.MinMaxCurve(0.008f, 0.028f);
+                velocity.z = new ParticleSystem.MinMaxCurve(-0.010f, 0.010f);
+                main.startSize = new ParticleSystem.MinMaxCurve(reducedMotion ? 0.0011f : 0.0013f, reducedMotion ? 0.0018f : 0.0024f);
+            }
+            else
+            {
+                renderer.renderMode = ParticleSystemRenderMode.Billboard;
+                renderer.lengthScale = 2f;
+                renderer.velocityScale = 0f;
+                shape.radius = 0.038f;
+                shape.radiusThickness = 0.55f;
+                shape.position = new Vector3(0f, 0.050f, 0f);
+                velocity.x = new ParticleSystem.MinMaxCurve(0f, 0f);
+                velocity.y = new ParticleSystem.MinMaxCurve(0.01f, 0.03f);
+                velocity.z = new ParticleSystem.MinMaxCurve(0f, 0f);
+            }
         }
 
         void ApplyFlowers()
@@ -1738,6 +1919,111 @@ namespace GardenVR.Terrarium
             _sporeVelocityAligned = true;
         }
 
+        /// <summary>
+        /// Spike S5. A handful of Shuriken puffs: the 8 x 8 flipbook (s5_steam.png) on soft billboards that drift up from the
+        /// cork, grow, turn slowly and fade by age, which is fade by height above the cork (no depth texture, no soft particles).
+        /// </summary>
+        ParticleSystem BuildSteam(Material material)
+        {
+            var go = new GameObject("Steam");
+            go.transform.SetParent(transform, false);
+            go.transform.localPosition = new Vector3(0f, 0.150f, 0f);
+            var ps = go.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = ps.main;
+            main.loop = true;
+            main.playOnAwake = false;
+            main.duration = 10f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(3.0f, 4.2f);
+            main.startSpeed = 0f;
+            main.startSize3D = true;
+            main.startSizeX = new ParticleSystem.MinMaxCurve(0.026f, 0.036f);
+            main.startSizeY = new ParticleSystem.MinMaxCurve(0.040f, 0.056f);
+            main.startSizeZ = 1f;
+            main.startRotation = new ParticleSystem.MinMaxCurve(-0.35f, 0.35f);
+            main.startColor = Color.white;
+            main.maxParticles = 12;
+            main.simulationSpace = ParticleSystemSimulationSpace.Local;
+            main.useUnscaledTime = false;
+            var emission = ps.emission;
+            emission.rateOverTime = 2.2f;
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Circle;
+            shape.radius = 0.006f;
+            shape.rotation = new Vector3(90f, 0f, 0f);
+            var velocity = ps.velocityOverLifetime;
+            velocity.enabled = true;
+            velocity.x = new ParticleSystem.MinMaxCurve(-0.0015f, 0.0015f);
+            velocity.y = new ParticleSystem.MinMaxCurve(0.005f, 0.008f);
+            velocity.z = new ParticleSystem.MinMaxCurve(-0.0015f, 0.0015f);
+            var noise = ps.noise;
+            noise.enabled = true;
+            noise.strength = 0.004f;
+            noise.frequency = 0.45f;
+            noise.scrollSpeed = 0.15f;
+            var size = ps.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(
+                new Keyframe(0f, 0.65f), new Keyframe(0.35f, 1.0f), new Keyframe(1f, 1.55f)));
+            var rotation = ps.rotationOverLifetime;
+            rotation.enabled = true;
+            rotation.z = new ParticleSystem.MinMaxCurve(-0.12f, 0.12f);
+            var color = ps.colorOverLifetime;
+            color.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[]
+                {
+                    new GradientAlphaKey(0f, 0f),
+                    new GradientAlphaKey(0.80f, 0.12f),
+                    new GradientAlphaKey(0.50f, 0.50f),
+                    new GradientAlphaKey(0f, 1f)
+                });
+            color.color = gradient;
+            var sheet = ps.textureSheetAnimation;
+            sheet.enabled = true;
+            sheet.mode = ParticleSystemAnimationMode.Grid;
+            sheet.numTilesX = 8;
+            sheet.numTilesY = 8;
+            sheet.animation = ParticleSystemAnimationType.WholeSheet;
+            sheet.frameOverTime = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 0f, 1f, 1f));
+            sheet.startFrame = new ParticleSystem.MinMaxCurve(0f, 1f);
+            sheet.cycleCount = 1;
+            var renderer = ps.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            ps.useAutoRandomSeed = false;
+            ps.randomSeed = 45;
+            return ps;
+        }
+
+        void DriveSteam()
+        {
+            if (steam == null || !steam.gameObject.activeInHierarchy) return;
+            if (sporeStep >= 0f)
+            {
+                if (!_steamLive)
+                {
+                    steam.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                    steam.useAutoRandomSeed = false;
+                    steam.randomSeed = 45;
+                    steam.Simulate(10f, true, true, true);
+                    _steamLive = true;
+                }
+                if (sporeStep > 0f) steam.Simulate(sporeStep, true, false, false);
+                return;
+            }
+            _steamLive = false;
+            steam.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            steam.useAutoRandomSeed = false;
+            steam.randomSeed = 45;
+            // Reduced motion freezes the plume at the warmed-up state. Otherwise the clock carries it on.
+            steam.Simulate(10f + (reducedMotion ? 0f : Mathf.Max(0f, time)), true, true, true);
+        }
+
         ParticleSystem BuildSpores(Material material)
         {
             var go = new GameObject("Spores");
@@ -1797,9 +2083,14 @@ namespace GardenVR.Terrarium
 
         GameObject Card(string name, Material material, Vector3 pos, Vector2 size, Quaternion rotation)
         {
+            return Card(name, material, pos, size, rotation, _quad);
+        }
+
+        GameObject Card(string name, Material material, Vector3 pos, Vector2 size, Quaternion rotation, Mesh mesh)
+        {
             var go = new GameObject(name);
             go.transform.SetParent(transform, false);
-            go.AddComponent<MeshFilter>().sharedMesh = _quad;
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
             var renderer = go.AddComponent<MeshRenderer>();
             renderer.sharedMaterial = material;
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

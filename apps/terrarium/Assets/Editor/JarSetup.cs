@@ -24,6 +24,7 @@ namespace GardenVR.Terrarium.Editor
         public const string S2ModelPath = "Assets/Art/Models/s2_jar.fbx";
         public const string PrefabPath = "Assets/Prefabs/Jar.prefab";
         public const string QuadPath = "Assets/Art/Models/CardQuad.asset";
+        public const string ContactBandPath = "Assets/Art/Models/ContactBand.asset";
         public const string LiveFiddlePath = "Assets/Art/Models/FiddleLive.asset";
         public const string MaterialDir = "Assets/Art/Materials";
 
@@ -279,7 +280,7 @@ namespace GardenVR.Terrarium.Editor
                 return tex;
             }
 
-            var library = new JarLibrary { Quad = SaveQuad() };
+            var library = new JarLibrary { Quad = SaveQuad(), ContactBand = SaveContactBand() };
             library.Glass = Mat("Jar_Glass", "Fidelity/JarGlass", m =>
             {
                 m.SetTexture("_Cond", Tex("condensation"));
@@ -567,6 +568,11 @@ namespace GardenVR.Terrarium.Editor
             library.CoilHalo.SetVector("_Focus", new Vector4(0.50f, 0.50f, 0.48f, 0f));
             library.Mist = CardMat("Jar_Mist", Tex("mist"), new Color(0.84f, 0.93f, 0.90f, 0.80f), Color.black, true, 30);
             library.Spore = CardMat("Jar_Spore", Tex("spore"), new Color(0.9490196f, 0.8235294f, 0.4784314f) * 1.85f, Color.black, false, 40);
+            // Spike S5. Steam puffs (alpha flipbook), the desk reflection streak (additive) and the foot contact line (alpha).
+            ConfigureS5Textures();
+            library.Steam = CardMat("Jar_SteamS5", Tex("s5_steam"), new Color(0.80f, 0.93f, 0.89f, 0.62f), Color.black, true, 31);
+            library.DeskStreak = CardMat("Jar_DeskStreakS5", Tex("s5_desk_streak"), new Color(0.30f, 0.72f, 0.46f), new Color(0.10f, 0.30f, 0.18f), false, -10);
+            library.Contact = CardMat("Jar_ContactS5", Tex("s5_contact"), new Color(0.006f, 0.020f, 0.014f, 0.85f), Color.black, true, -12);
             library.Flower = Mat("Jar_Flower", "Fidelity/Glow", m =>
             {
                 m.SetTexture("_MainTex", Tex("petal"));
@@ -623,6 +629,24 @@ namespace GardenVR.Terrarium.Editor
             return found;
         }
 
+        /// <summary>The flipbook keeps no mips (they would bleed one frame into the next) and every S5 card clamps its edge.</summary>
+        static void ConfigureS5Textures()
+        {
+            foreach (string name in new[] { "s5_steam", "s5_desk_streak", "s5_contact" })
+            {
+                string path = "Assets/Art/Textures/" + name + ".png";
+                var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                if (importer == null) throw new InvalidOperationException("texture missing: " + path);
+                bool wantMips = name != "s5_steam";
+                if (importer.wrapMode == TextureWrapMode.Clamp && importer.mipmapEnabled == wantMips && importer.alphaIsTransparency) continue;
+                importer.wrapMode = TextureWrapMode.Clamp;
+                importer.mipmapEnabled = wantMips;
+                importer.alphaIsTransparency = true;
+                importer.maxTextureSize = 1024;
+                importer.SaveAndReimport();
+            }
+        }
+
         static Material CardMat(string name, Texture2D tex, Color color, Color color2, bool alpha, int queueOffset)
         {
             return Mat(name, "Fidelity/Card", m =>
@@ -657,6 +681,51 @@ namespace GardenVR.Terrarium.Editor
             init(material);
             EditorUtility.SetDirty(material);
             return material;
+        }
+
+        /// <summary>
+        /// Spike S5. A flat annulus in the XZ plane, radius 43 to 57 mm, uv 0..1 over a 0.12 m square (the s5_contact.png layout).
+        /// A band instead of a square card keeps the contact line out from behind the glass.
+        /// </summary>
+        static Mesh SaveContactBand()
+        {
+            const int segments = 96;
+            const float inner = 0.043f, outer = 0.057f, extent = 0.12f;
+            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(ContactBandPath);
+            if (mesh == null)
+            {
+                mesh = new Mesh { name = "ContactBand" };
+                AssetDatabase.CreateAsset(mesh, ContactBandPath);
+            }
+            mesh.Clear();
+            var vertices = new Vector3[segments * 2];
+            var uvs = new Vector2[segments * 2];
+            var normals = new Vector3[segments * 2];
+            var colors = new Color[segments * 2];
+            var triangles = new int[segments * 6];
+            for (int i = 0; i < segments; i++)
+            {
+                float a = i / (float)segments * Mathf.PI * 2f;
+                float c = Mathf.Cos(a), s = Mathf.Sin(a);
+                vertices[i * 2] = new Vector3(c * inner, 0f, s * inner);
+                vertices[i * 2 + 1] = new Vector3(c * outer, 0f, s * outer);
+                uvs[i * 2] = new Vector2(vertices[i * 2].x / extent + 0.5f, vertices[i * 2].z / extent + 0.5f);
+                uvs[i * 2 + 1] = new Vector2(vertices[i * 2 + 1].x / extent + 0.5f, vertices[i * 2 + 1].z / extent + 0.5f);
+                normals[i * 2] = normals[i * 2 + 1] = Vector3.up;
+                colors[i * 2] = colors[i * 2 + 1] = Color.white;
+                int n = (i + 1) % segments;
+                int t = i * 6;
+                triangles[t] = i * 2; triangles[t + 1] = i * 2 + 1; triangles[t + 2] = n * 2;
+                triangles[t + 3] = i * 2 + 1; triangles[t + 4] = n * 2 + 1; triangles[t + 5] = n * 2;
+            }
+            mesh.vertices = vertices;
+            mesh.uv = uvs;
+            mesh.normals = normals;
+            mesh.colors = colors;
+            mesh.triangles = triangles;
+            mesh.RecalculateBounds();
+            EditorUtility.SetDirty(mesh);
+            return mesh;
         }
 
         static Mesh SaveQuad()
