@@ -104,3 +104,8 @@ software-engineering). Each line: date, what happened (measured), the rule it su
 - **2026-10-04 (T-TER-046) TRELLIS.2 (MIT ComfyUI port) at 1024_cascade runs on a 24 GB 4090 for compact props.** Hard-surface
   and simple organic props (mushroom, stacked pebbles) come out clean; fuzzy mass (moss clump) faceted on decimation; colour can
   drift (one pebble turned orange). Domain: game-production / generated assets.
+
+- **2026-10-04 (T-TER-034) A Unity 6.6 Windows player built from a batchmode project can ship with the Input System backend
+  off.** `Keyboard.current` and `Mouse.current` were null in the player (activeInputHandler 0) though every editor test passed;
+  set Active Input Handling to the Input System (2) or Both before the first build and smoke-test one key in the player log.
+  Domain: game-production / Unity build pipeline.
