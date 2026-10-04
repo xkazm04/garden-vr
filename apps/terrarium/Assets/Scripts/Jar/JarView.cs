@@ -16,6 +16,9 @@ namespace GardenVR.Terrarium
     public sealed class JarLibrary
     {
         public Material Glass, Moss, MossCard, Soil, Cork, Fern, FernNew, Fiddle, Seedling, Dew, Flower;
+        /// <summary>Spike S3 (variant s3): the imported s3_moss model and its four materials.</summary>
+        public GameObject S3Model;
+        public Material S3Soil, S3Base, S3Shell, S3Sprig;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         public Mesh Quad;
         public Mesh FlowerMesh;
@@ -97,6 +100,12 @@ namespace GardenVR.Terrarium
         float _corkPuff;
         /// <summary>Empty or "a" is the locked look. "s1" is the structured-glass spike.</summary>
         string _variant = "";
+        /// <summary>The moss-in-the-jar spike (S3). Independent of the glass variant, so s1+s3 is the pair.</summary>
+        bool _s3;
+        int _s3Shells = S3MossShells.PcShells;
+        float _s3Alpha2Coverage = 1f;
+        Mesh _s3Stack;
+        int _s3StackCount;
 
         [Header("Wired by Build")]
         public MeshFilter fiddle;
@@ -108,6 +117,15 @@ namespace GardenVR.Terrarium
         public Material corkMat;
         public Material mossMat;
         public Material mossCardMat;
+        [Header("Spike S3 (variant s3). Hidden unless the variant is on.")]
+        public Transform s3Root;
+        public MeshFilter s3ShellFilter;
+        public Mesh s3ShellSource;
+        public Transform[] s3Replaced;
+        public Material s3SoilMat;
+        public Material s3BaseMat;
+        public Material s3ShellMat;
+        public Material s3SprigMat;
         public Material soilMat;
         public Material seedlingMat;
         public Material coilHaloMat;
@@ -173,8 +191,20 @@ namespace GardenVR.Terrarium
         public int LookLit { get { return _lookLit; } }
         public bool LookHeld { get { return _lookHeld; } }
         /// <summary>"a" is the locked glass and cork. "s1" is the structured-glass spike.</summary>
-        public string Variant { get { return string.IsNullOrEmpty(_variant) ? "a" : _variant; } }
+        public string Variant
+        {
+            get
+            {
+                if (_s3) return _variant == "s1" ? "s1+s3" : "s3";
+                return string.IsNullOrEmpty(_variant) ? "a" : _variant;
+            }
+        }
         public bool StructuredGlass { get { return _variant == "s1"; } }
+        /// <summary>True while variant s3 shows the soil, mound, shells and sprigs in place of the locked moss.</summary>
+        public bool MossInTheJar { get { return _s3; } }
+        public int ShellCount { get { return _s3Shells; } }
+        /// <summary>Triangles in the live shell stack. Zero when the variant is off or the stack is not built.</summary>
+        public int ShellTriangles { get { return _s3 ? S3MossShells.Triangles(_s3Stack) : 0; } }
 
         struct GardenLook
         {
@@ -227,6 +257,9 @@ namespace GardenVR.Terrarium
         {
             if (state == null) return;
             _variant = "";
+            _s3 = false;
+            _s3Shells = S3MossShells.PcShells;
+            _s3Alpha2Coverage = 1f;
             bool sawAnswerTime = state.ContainsKey("answerTime");
             bool sawJourney = false;
             int capCompanions = 0;
@@ -251,9 +284,13 @@ namespace GardenVR.Terrarium
                 if (pair.Key == "variant")
                 {
                     string name = pair.Value ?? "";
-                    if (name != "" && name != "a" && name != "s1")
-                        throw new FormatException("JarView variant must be a or s1: " + name);
-                    _variant = name == "s1" ? "s1" : "";
+                    foreach (string part in name.Split('+'))
+                    {
+                        if (part != "" && part != "a" && part != "s1" && part != "s3")
+                            throw new FormatException("JarView variant must be a, s1, s3 or s1+s3: " + name);
+                        if (part == "s1") _variant = "s1";
+                        if (part == "s3") _s3 = true;
+                    }
                     continue;
                 }
                 float value = Parse(pair.Key, pair.Value);
@@ -276,6 +313,9 @@ namespace GardenVR.Terrarium
                         sawLifetime = true;
                         break;
                     case "reducedMotion": reducedMotion = value > 0.5f; break;
+                    // Spike S3 knobs. Shell count preset (16 PC, 8 Quest) and alpha to coverage on the cards and shells.
+                    case "shells": _s3Shells = Mathf.Clamp((int)value, 1, 64); break;
+                    case "a2c": _s3Alpha2Coverage = value > 0.5f ? 1f : 0f; break;
                     case "vitality": vitality = value; break;
                     case "time": time = value; break;
                     case "companions":
@@ -452,6 +492,50 @@ namespace GardenVR.Terrarium
             else material.DisableKeyword("_S1_ON");
         }
 
+        /// <summary>
+        /// Variant s3 swaps the locked Moss, MossSkirt and Soil for SoilS3, MossS3, the shell stack and SprigsS3.
+        /// Colours come from the locked moss values, so the glow equation and the emission values are shared.
+        /// </summary>
+        void ApplyS3(float seasonWarmth, float mossGlow)
+        {
+            if (s3Root == null) return;
+            if (s3Root.gameObject.activeSelf != _s3) s3Root.gameObject.SetActive(_s3);
+            if (s3Replaced != null)
+                for (int i = 0; i < s3Replaced.Length; i++)
+                    if (s3Replaced[i] != null && s3Replaced[i].gameObject.activeSelf == _s3)
+                        s3Replaced[i].gameObject.SetActive(!_s3);
+            if (!_s3) return;
+
+            if (s3ShellFilter != null && s3ShellSource != null && (_s3Stack == null || _s3StackCount != _s3Shells))
+            {
+                DestroyObject(_s3Stack);
+                _s3Stack = S3MossShells.BuildStack(s3ShellSource, _s3Shells);
+                _s3StackCount = _s3Shells;
+                s3ShellFilter.sharedMesh = _s3Stack;
+            }
+            Color emission = SeasonColor(MossEmission, MossEmissionWarm, seasonWarmth) * (1f + 0.45f * mossGlow);
+            Color rim = SeasonColor(MossRim, MossRimWarm, seasonWarmth) * (0.85f + 0.35f * mossGlow);
+            Material[] fur = { s3BaseMat, s3ShellMat };
+            for (int i = 0; i < fur.Length; i++)
+            {
+                Material m = fur[i];
+                if (m == null) continue;
+                m.SetColor("_Emission", emission);
+                m.SetColor("_Rim", rim);
+                m.SetFloat("_AlphaToMask", _s3Alpha2Coverage);
+                SetTip(m, 0.018f, 0.048f, 0.55f, 1f);
+            }
+            if (s3SprigMat != null)
+            {
+                s3SprigMat.SetColor("_Emission", SeasonColor(MossCardEmission, MossCardEmissionWarm, seasonWarmth) * (1f + 0.40f * mossGlow));
+                s3SprigMat.SetColor("_Rim", SeasonColor(MossCardRim, MossCardRimWarm, seasonWarmth));
+                s3SprigMat.SetFloat("_AlphaToMask", _s3Alpha2Coverage);
+                SetTip(s3SprigMat, 0.020f, 0.052f, 0.28f, 1f);
+            }
+            if (s3SoilMat != null && s3SoilMat.HasProperty("_LightPos"))
+                s3SoilMat.SetVector("_LightPos", Vector4.zero);
+        }
+
         Material CorkMaterial()
         {
             if (corkMat != null) return corkMat;
@@ -565,6 +649,7 @@ namespace GardenVR.Terrarium
                 mossCardMat.SetColor("_Rim", SeasonColor(MossCardRim, MossCardRimWarm, seasonWarmth));
                 SetTip(mossCardMat, 0.020f, 0.052f, 0.28f, 1f);
             }
+            ApplyS3(seasonWarmth, mossGlow);
             float coil = answer > 0f ? 0.70f + 0.30f * pulse : 0.90f + 0.20f * Mathf.Sin(breath * Mathf.PI);
             if (_hasLook && _look.Gap) coil = 0.35f;
             if (_lookLit >= 0) coil = 0.35f;
@@ -628,6 +713,9 @@ namespace GardenVR.Terrarium
             Vector3 pos = FocusPoint();
             SetLight(mossMat, pos, color);
             SetLight(mossCardMat, pos, color);
+            SetLight(s3BaseMat, pos, color);
+            SetLight(s3ShellMat, pos, color);
+            SetLight(s3SprigMat, pos, color);
             // Soil stays a dark bed. The crozier light is for the plants, not the loam.
             if (soilMat != null && soilMat.HasProperty("_LightPos"))
                 soilMat.SetVector("_LightPos", Vector4.zero);
@@ -731,6 +819,8 @@ namespace GardenVR.Terrarium
             mossCardMat = library.MossCard;
             SetMat(Require(mt, "Soil"), library.Soil);
             SetMat(Require(mt, "Cork"), library.Cork);
+
+            BuildS3(mt, library);
 
             Transform fid = Require(mt, "Fiddle0");
             SetMat(fid, library.Fiddle);
@@ -836,6 +926,41 @@ namespace GardenVR.Terrarium
 
             _live = null;
             _shapes = null;
+        }
+
+        /// <summary>Hangs the S3 meshes under the jar, inactive. Variant s3 turns them on and the locked moss off.</summary>
+        void BuildS3(Transform jarModel, JarLibrary library)
+        {
+            s3Root = null;
+            s3ShellFilter = null;
+            s3ShellSource = null;
+            s3Replaced = null;
+            s3SoilMat = s3BaseMat = s3ShellMat = s3SprigMat = null;
+            _s3Stack = null;
+            if (library.S3Model == null) return;
+            GameObject root = library.S3Model;
+            root.name = "MossInTheJarS3";
+            root.transform.SetParent(jarModel, false);
+            root.transform.localPosition = Vector3.zero;
+            root.transform.localRotation = Quaternion.identity;
+            root.transform.localScale = Vector3.one;
+            Transform soil = Require(root.transform, "SoilS3");
+            Transform mound = Require(root.transform, "MossS3");
+            Transform shell = Require(root.transform, "MossShellS3");
+            Transform sprigs = Require(root.transform, "SprigsS3");
+            SetMat(soil, library.S3Soil);
+            SetMat(mound, library.S3Base);
+            SetMat(shell, library.S3Shell);
+            SetMat(sprigs, library.S3Sprig);
+            s3SoilMat = library.S3Soil;
+            s3BaseMat = library.S3Base;
+            s3ShellMat = library.S3Shell;
+            s3SprigMat = library.S3Sprig;
+            s3ShellFilter = shell.GetComponent<MeshFilter>();
+            s3ShellSource = MeshOf(shell);
+            s3Replaced = new[] { Require(jarModel, "Moss"), Require(jarModel, "MossSkirt"), Require(jarModel, "Soil") };
+            s3Root = root.transform;
+            root.SetActive(false);
         }
 
         public void Face(Camera cam)

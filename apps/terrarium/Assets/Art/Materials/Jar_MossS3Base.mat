@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Jar_MossS3Base
+  m_Shader: {fileID: 4800000, guid: 1d48db30c60751c4bb158e1b0895cf6a, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _EmissionTex:
+        m_Texture: {fileID: 2800000, guid: 79ef0e63e6dda3648b9da2e3e95ad382, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 79ef0e63e6dda3648b9da2e3e95ad382, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StrandTex:
+        m_Texture: {fileID: 2800000, guid: 2a505fc3debdfd546be52ea266da77a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaToMask: 1
+    - _AoBase: 0.08
+    - _Cards: 0
+    - _Cull: 2
+    - _Cutoff: 0.04
+    - _FarEnd: 0.46
+    - _FarStart: 0.36
+    - _FurLen: 0.0026
+    - _GradBottom: 0.58
+    - _GradTop: 1.02
+    - _RimPower: 3.2
+    - _SeatedEmit: 0.72
+    - _StrandTile: 3.6
+    - _TipBoost: 1.9
+    - _TopEmit: 0.32
+    - _Trans: 0
+    m_Colors:
+    - _Emission: {r: 0.22, g: 0.62, b: 0.18, a: 1}
+    - _GradY: {r: 0.016, g: 0.032, b: 0, a: 0}
+    - _LightColor: {r: 0.32, g: 0.66, b: 0.4, a: 1}
+    - _LightPos: {r: 0.0013878052, g: 0.06917092, b: 0.0036657539, a: 0.08}
+    - _Rim: {r: 0.17, g: 0.408, b: 0.15300001, a: 0.85}
+    - _Tint: {r: 0.8, g: 0.95, b: 0.92, a: 1}
+    - _Tip: {r: 0.018, g: 0.048, b: 0.55, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
