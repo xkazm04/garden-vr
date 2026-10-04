@@ -530,14 +530,32 @@ namespace GardenVR.Sundial
                 soil.localPosition = _soilBasePos;
                 return;
             }
+            // The disc's mesh lies in whichever local plane the importer left it in. Work in the parent's axes: which local axis
+            // runs along the dial's x and which along its z, then stretch those two.
             Bounds b = filter.sharedMesh.bounds;
-            float halfX = Mathf.Max(b.extents.x * _soilBaseScale.x, 1e-4f);
-            float halfZ = Mathf.Max(b.extents.z * _soilBaseScale.z, 1e-4f);
+            Quaternion rot = soil.localRotation;
+            Vector3[] dir = { rot * Vector3.right, rot * Vector3.up, rot * Vector3.forward };
+            float[] ext = { b.extents.x * _soilBaseScale.x, b.extents.y * _soilBaseScale.y, b.extents.z * _soilBaseScale.z };
+            float halfX = 0f;
+            float halfZ = 0f;
+            for (int i = 0; i < 3; i++)
+            {
+                halfX += Mathf.Abs(dir[i].x) * ext[i];
+                halfZ += Mathf.Abs(dir[i].z) * ext[i];
+            }
+            halfX = Mathf.Max(halfX, 1e-4f);
+            halfZ = Mathf.Max(halfZ, 1e-4f);
             float kx = DialLayout.BedHalfX * faceRadius / halfX;
             float kz = DialLayout.BedHalfZ * faceRadius / halfZ;
-            soil.localScale = new Vector3(_soilBaseScale.x * kx, _soilBaseScale.y, _soilBaseScale.z * kz);
-            float centreZ = DialLayout.BedCentreZ * faceRadius;
-            soil.localPosition = new Vector3(_soilBasePos.x, _soilBasePos.y, centreZ - b.center.z * _soilBaseScale.z * kz);
+            var k = new float[3];
+            for (int i = 0; i < 3; i++)
+                k[i] = Mathf.Abs(dir[i].x) > 0.5f ? kx : Mathf.Abs(dir[i].z) > 0.5f ? kz : 1f;
+            Vector3 scale = new Vector3(_soilBaseScale.x * k[0], _soilBaseScale.y * k[1], _soilBaseScale.z * k[2]);
+            soil.localScale = scale;
+            Vector3 centreNow = rot * Vector3.Scale(b.center, scale);
+            Vector3 centreBase = _soilBasePos + rot * Vector3.Scale(b.center, _soilBaseScale);
+            var target = new Vector3(0f, centreBase.y, DialLayout.BedCentreZ * faceRadius);
+            soil.localPosition = target - centreNow;
         }
 
         /// <summary>The halo and nothing else, for the metrics (the gold clips on the bright paper, so it is read on black).</summary>

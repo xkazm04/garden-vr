@@ -87,6 +87,35 @@ namespace GardenVR.Sundial.Tests.EditMode
         }
 
         [Test]
+        public void WithoutTheMound_TheFlatDiscBecomesTheBedWhateverPlaneItsMeshLiesIn()
+        {
+            GameObject root = NewDial(out DialView view, out MeshRenderer disc, out _);
+            try
+            {
+                // The imported disc lies in the local XY plane and the node turns it flat, as the FBX does.
+                var mesh = new Mesh();
+                mesh.vertices = new[] { new Vector3(-0.07f, -0.07f, 0f), new Vector3(0.07f, -0.07f, 0f), new Vector3(0.07f, 0.07f, 0f), new Vector3(-0.07f, 0.07f, 0f) };
+                mesh.triangles = new[] { 0, 2, 1, 0, 3, 2 };
+                mesh.RecalculateBounds();
+                disc.GetComponent<MeshFilter>().sharedMesh = mesh;
+                disc.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+                view.ApplyCaptureState(new Dictionary<string, string> { { "variant", "layout" } });
+                Bounds b = disc.bounds;
+                float s = DialLayout.Scale;
+                Assert.AreEqual(2f * DialLayout.BedHalfX * FaceRadius * s, b.size.x, 1e-3f);
+                Assert.AreEqual(2f * DialLayout.BedHalfZ * FaceRadius * s, b.size.z, 1e-3f);
+                Assert.AreEqual(DialLayout.BedCentreZ * FaceRadius * s + DialLayout.Offset.z, b.center.z, 1e-3f);
+                view.ApplyCaptureState(new Dictionary<string, string> { { "variant", "a" } });
+                Assert.AreEqual(Vector3.one, disc.transform.localScale);
+                Assert.AreEqual(Vector3.zero, disc.transform.localPosition);
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
         public void PlantsStandOnTheBed_AndMorningAndDuskStayInTheirArcs()
         {
             for (int arc = 0; arc < 3; arc++)

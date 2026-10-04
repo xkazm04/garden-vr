@@ -127,3 +127,25 @@ The card textures were not edited. Sizes are `DialView.PlantSize`. Contours on t
 | Ask fill | (0.937, 0.910, 0.855) |
 | Note stroke | `clamp(min(width, height) * 0.018, 1.7, 2.8)` px |
 | Card | `Fidelity/Card`, tint white, render queue 3100 on the TextMesh |
+
+## Layout (T-SUN-052, variant=layout)
+
+A variant, not a replacement: look A and every number above are unchanged and stay the default. `variant=layout` (alone, or joined as `layout+soilmound+leafplant`) is what the host compared against `T-SUN-047/pinch-b.sbs.png`. Adopting it is an owner call; if adopted, the table below is the lock. Measured at DialG1 (1824x1024) against `A2-05-field-notebook-1.png`. The habit record (63 tiles, their ids and angles, the three arcs, the nine plant slots) is untouched.
+
+| Proportion | Look A (old) | Layout (new) | Reference |
+| --- | --- | --- | --- |
+| Dial scale about its centre (`DialLayout.Scale`) | 1.0 | 0.8843 | - |
+| Dial silhouette major axis, px | 1148.9 | 1011.2 | 1008.3 |
+| Major axis over hand scale (sqrt of the hand matte area, 577 px) | 1.991 | 1.753 | 1.748 |
+| Silhouette IoU against the reference | 0.759 | 0.970 | - |
+| Wash disc ends at, of the face radius | 0.731 | 0.82 (`InnerRing`) | 0.79 to 0.83 |
+| Rim band width, of the face radius | 0.269 (washes to edge) | 0.18 | 0.17 to 0.25 (left to right) |
+| Shader ink ring `_InkRingR` | 0.12685 m (0.862) | 0.12100 m (0.822), `Dial_Face_Layout.mat` | - |
+| Tile row radii (rows 0, 1, 2) | 0.82, 0.70, 0.58 | 0.885, 0.775, 0.70 | - |
+| Plant spots (x, z in face radii) | (-0.30,-0.08) (0.16,0.18) (0.26,-0.16) | (-0.46,-0.20) (0.26,-0.02) (0.46,-0.36) | - |
+| Soil | mound circle 0.50 at the centre | bed ellipse 0.70 x 0.41, centre z -0.39 (`BedHalfX`, `BedHalfZ`, `BedCentreZ`) | 0.75 x 0.48 |
+| Soil area over dial silhouette | 0.185 (disc), 0.223 (S4 mound) | 0.328 | 0.318 |
+| Soil bed IoU against the reference bed | 0.214 (disc), 0.254 (mound) | 0.806 | - |
+| Halo close radius, card texels | 5 (`HaloClosePx`) | 14 (`DialLayout.HaloClosePx`) | - |
+
+The face is `Resources/Layout/dial_face_layout.png`: `layout_t052_face.py` remaps `dial_face.png` radially (no new paint, wash colours untouched), mirrors the wash into the blank paper core, keeps half the contrast of the ticks and adds a warm tone and a seeded pencil hatch to the band. The halo stroke (3 px core, 8 px glow, gold, `_Silhouette` 2.15, queue 3012) is the T-SUN-031 lock, unchanged; only the close radius and, for a drawn-leaf plant, a canvas wider than the card with a soil patch under the base change. The midday plant stands outside its arc by 26 degrees (at -4 degrees, the arc starts at 22) because the bed's far edge is at z +0.02; its tiles and wash are unchanged. `Dial_Face`, `Dial_Rim`, the gnomon and every frame hashed above are not edited.

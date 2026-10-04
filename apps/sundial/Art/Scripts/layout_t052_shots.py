@@ -30,6 +30,8 @@ LAYOUT_ONLY = ",variant=layout"
 
 S = ",variant=soilmound+leafplant"
 SHOTS = (
+    # Look A must still be the locked T-SUN-031 frame (sha256 7fecea65...), byte for byte.
+    ("nohalo-a", "DialG1", NOHALO, False, []),
     # Dial silhouette on black (no plants), for the IoU and the axes.
     ("black-a", "DialG1Black", NOHALO + ",plants=0,isolate=dial", False, []),
     ("black-s", "DialG1Black", NOHALO + ",plants=0,isolate=dial" + S, False, []),
