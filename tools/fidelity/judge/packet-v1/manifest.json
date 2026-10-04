@@ -1,0 +1,79 @@
+{
+  "id": "packet-v1",
+  "model": "gemini-3.8-flash-high",
+  "bt_alpha": 0.01,
+  "agy": {
+    "output_format": "json",
+    "print_timeout": "240s",
+    "disable_slash_commands": true,
+    "skip_permissions": true,
+    "winner_schema": "schema-winner.json",
+    "disqualifier_schema": "schema-disqualifiers.json"
+  },
+  "calibration": {
+    "draws": 10,
+    "pass_min": 9,
+    "kappa_floor": 0.6,
+    "kappa_min_labels": 30
+  },
+  "files": [
+    "manifest.json",
+    "instructions.md",
+    "disqualifier-instructions.md",
+    "schema-winner.json",
+    "schema-disqualifiers.json",
+    "rubric-dial.md",
+    "rubric-jar.md"
+  ],
+  "instructions": "instructions.md",
+  "disqualifier_instructions": "disqualifier-instructions.md",
+  "frames": {
+    "DialG1": {
+      "rubric": "rubric-dial.md",
+      "criteria": [
+        {"id": "overall", "question": "Which candidate is closer to the reference's look at a 2 s glance, in every region?"},
+        {"id": "plants", "question": "Which candidate's plants are closer to the reference?"},
+        {"id": "soil", "question": "Which candidate's soil is closer to the reference?"},
+        {"id": "tiles", "question": "Which candidate's tiles are closer to the reference?"},
+        {"id": "washes", "question": "Which candidate's washes are closer to the reference?"},
+        {"id": "paper", "question": "Which candidate's paper is closer to the reference?"},
+        {"id": "ink", "question": "Which candidate's ink contours are closer to the reference?"},
+        {"id": "halo", "question": "Which candidate's halo is closer to the reference?"}
+      ],
+      "defects": {
+        "plants_keyed_from_reference": "plants keyed from the reference frame",
+        "room_stylised": "the room stylised (screen tones, outlines on real objects)",
+        "text_or_handwriting": "text or legible handwriting",
+        "constant_width_contour": "a constant-width vector contour on all plants",
+        "boil_colour_drift": "boil frames drifting colour",
+        "missing_outline": "missing outline segments at silhouettes",
+        "neon_harsh_bloom": "neon or harsh bloom",
+        "sorting_pop": "transparent sorting pop or z-fighting",
+        "placeholder": "magenta or placeholder material",
+        "borrowed_pixels": "pixels taken from the reference frame",
+        "default_font": "a default font"
+      }
+    },
+    "JarG1": {
+      "rubric": "rubric-jar.md",
+      "criteria": [
+        {"id": "overall", "question": "Which candidate is closer to the reference's look at a 2 s glance, in every region (glass, fronds, moss, cork, mist, ring)?"},
+        {"id": "glass", "question": "Which candidate's glass is closer to the reference?"},
+        {"id": "fronds", "question": "Which candidate's fronds are closer to the reference?"},
+        {"id": "moss", "question": "Which candidate's moss is closer to the reference?"},
+        {"id": "cork", "question": "Which candidate's cork is closer to the reference?"},
+        {"id": "mist", "question": "Which candidate's mist is closer to the reference?"},
+        {"id": "ring", "question": "Which candidate's ring is closer to the reference?"}
+      ],
+      "defects": {
+        "magenta_or_placeholder": "magenta or placeholder material",
+        "sorting_pop": "transparent sorting pop or z-fighting in the glass",
+        "borrowed_pixels": "pixels taken from the reference frame",
+        "neon_harsh_bloom": "neon or harsh bloom",
+        "text_other_than_etch": "any text other than the etched hints",
+        "pure_black_or_white": "a pure-black or pure-white region larger than the dew bead",
+        "default_font": "a default font"
+      }
+    }
+  }
+}

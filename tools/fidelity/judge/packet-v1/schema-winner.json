@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["winner", "criterion", "defects", "reason"],
+  "properties": {
+    "winner": {"enum": ["A", "B", "tie"]},
+    "criterion": {"type": "string"},
+    "defects": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "boil_colour_drift",
+          "borrowed_pixels",
+          "constant_width_contour",
+          "default_font",
+          "magenta_or_placeholder",
+          "missing_outline",
+          "neon_harsh_bloom",
+          "placeholder",
+          "plants_keyed_from_reference",
+          "pure_black_or_white",
+          "room_stylised",
+          "sorting_pop",
+          "text_or_handwriting",
+          "text_other_than_etch"
+        ]
+      }
+    },
+    "reason": {"type": "string"}
+  }
+}
