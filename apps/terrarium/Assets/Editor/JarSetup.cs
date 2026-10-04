@@ -183,14 +183,14 @@ namespace GardenVR.Terrarium.Editor
             importer.SaveAndReimport();
         }
 
-        static Mesh LoadS2Jar()
+        static Mesh LoadS2Jar(string name)
         {
             foreach (UnityEngine.Object asset in AssetDatabase.LoadAllAssetsAtPath(S2ModelPath))
             {
                 var mesh = asset as Mesh;
-                if (mesh != null && mesh.name == "JarS2") return mesh;
+                if (mesh != null && mesh.name == name) return mesh;
             }
-            throw new InvalidOperationException("s2 jar mesh missing: JarS2 in " + S2ModelPath);
+            throw new InvalidOperationException("s2 jar mesh missing: " + name + " in " + S2ModelPath);
         }
 
         static void ConfigureS4Model()
@@ -496,7 +496,8 @@ namespace GardenVR.Terrarium.Editor
             library.S4FrondAlbedo = Tex("s4_frond_albedo");
             library.S4FrondThick = Tex("s4_frond_thick");
             library.FernAlbedoA = Tex("fern_albedo");
-            library.S2Jar = LoadS2Jar();
+            library.S2Jar = LoadS2Jar("JarS2Lean");
+            library.S2JarFull = LoadS2Jar("JarS2");
             library.S4FiddleStates = LoadS4FiddleStates();
             library.S4Fiddle = Mat("Jar_FiddleS4", "Fidelity/FiddleFuzz", m =>
             {

@@ -25,7 +25,7 @@ namespace GardenVR.Terrarium
         public Mesh[] S4FiddleStates;
         public Material S4Fiddle;
         /// <summary>Spike S2 (variants s2b0, s2b1, s2b2): the thick-glass shell with a real inner wall.</summary>
-        public Mesh S2Jar;
+        public Mesh S2Jar, S2JarFull;
         public Material Ring, Spill, JarHalo, CoilHalo, Mist, Spore;
         public Mesh Quad;
         public Mesh FlowerMesh;
@@ -130,9 +130,11 @@ namespace GardenVR.Terrarium
         int _s2Mode;
         float _s2Offset = S2OffsetDefault, _s2Disp = S2DispDefault, _s2Mix = S2MixDefault, _s2Proxy = S2ProxyDefault;
         const float S2OffsetDefault = 0.010f, S2DispDefault = 0.06f, S2MixDefault = 1f, S2ProxyDefault = 0.25f;
-        MeshFilter _glassFilter;
-        Mesh _aGlassMesh;
-        Mesh s2JarMesh;
+        [Header("Spike S2 (variants s2b0, s2b1, s2b2). Unused unless the variant is on.")]
+        public MeshFilter glassFilter;
+        public Mesh aGlassMesh;
+        public Mesh s2JarMesh, s2JarFullMesh;
+        bool _s2Full;
         // Variant A frond values, written back when the spike is off.
         static readonly Color FernTintA = new Color(0.72f, 0.92f, 0.68f);
         // The re-graded albedo is already pale mint, so the tint only trims it.
@@ -327,6 +329,7 @@ namespace GardenVR.Terrarium
             _s4Fiddle = false;
             _s4Shells = S4Fiddle.PcShells;
             _s2Mode = 0;
+            _s2Full = false;
             _s2Offset = S2OffsetDefault;
             _s2Disp = S2DispDefault;
             _s2Mix = S2MixDefault;
@@ -395,6 +398,7 @@ namespace GardenVR.Terrarium
                     case "a2c": _s3Alpha2Coverage = value > 0.5f ? 1f : 0f; break;
                     // Spike S4 knob. Fuzz shells on the fiddlehead: 2 on PC, 0 is the Quest fallback.
                     // Spike S2 knobs: wall offset (millimetres, OPAQUE), dispersion, refraction mix, cube proxy (centimetres).
+                    case "s2full": _s2Full = value > 0.5f; break;
                     case "s2off": _s2Offset = Mathf.Max(0f, value) * 0.001f; break;
                     case "s2disp": _s2Disp = Mathf.Clamp(value, 0f, 0.5f); break;
                     case "s2mix": _s2Mix = Mathf.Clamp01(value); break;
@@ -736,10 +740,11 @@ namespace GardenVR.Terrarium
         /// </summary>
         void ApplyThickShell()
         {
-            if (_glassFilter == null) return;
-            if (_aGlassMesh == null) _aGlassMesh = _glassFilter.sharedMesh;
-            Mesh want = _s2Mode != 0 && s2JarMesh != null ? s2JarMesh : _aGlassMesh;
-            if (_glassFilter.sharedMesh != want) _glassFilter.sharedMesh = want;
+            if (glassFilter == null) return;
+            if (aGlassMesh == null) aGlassMesh = glassFilter.sharedMesh;
+            Mesh thick = _s2Full && s2JarFullMesh != null ? s2JarFullMesh : s2JarMesh;
+            Mesh want = _s2Mode != 0 && thick != null ? thick : aGlassMesh;
+            if (glassFilter.sharedMesh != want) glassFilter.sharedMesh = want;
         }
 
         /// <summary>Triangles in the glass mesh now on the jar (the locked mesh, or the S2 thick shell).</summary>
@@ -747,7 +752,7 @@ namespace GardenVR.Terrarium
         {
             get
             {
-                Mesh mesh = _glassFilter != null ? _glassFilter.sharedMesh : null;
+                Mesh mesh = glassFilter != null ? glassFilter.sharedMesh : null;
                 if (mesh == null) return 0;
                 long indices = 0;
                 for (int i = 0; i < mesh.subMeshCount; i++) indices += mesh.GetIndexCount(i);
@@ -1018,6 +1023,7 @@ namespace GardenVR.Terrarium
             s4FrondThick = library.S4FrondThick;
             fernAlbedoA = library.FernAlbedoA;
             s2JarMesh = library.S2Jar;
+            s2JarFullMesh = library.S2JarFull;
             s4FiddleStates = library.S4FiddleStates;
             s4FiddleMat = library.S4Fiddle;
             _s4FiddleOn = false;
@@ -1036,8 +1042,8 @@ namespace GardenVR.Terrarium
             Transform mt = model.transform;
             Transform jarGlass = Require(mt, "Jar");
             SetMat(jarGlass, library.Glass);
-            _glassFilter = jarGlass.GetComponent<MeshFilter>();
-            _aGlassMesh = _glassFilter.sharedMesh;
+            glassFilter = jarGlass.GetComponent<MeshFilter>();
+            aGlassMesh = glassFilter.sharedMesh;
             SetMat(Require(mt, "Moss"), library.Moss);
             Transform skirt = Require(mt, "MossSkirt");
             SetMat(skirt, library.MossCard);

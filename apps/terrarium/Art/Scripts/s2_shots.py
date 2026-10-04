@@ -28,7 +28,8 @@ REF = os.path.join(REPO, "shared", "assets", "art-reference", "A1-03-night-moss-
 STRIP = os.path.join(PROJECT, "Assets", "Art", "Textures", "s2_refract_strip.png")
 
 G1 = "breath=0.5,uncoil=0.3,fog=0.45,time=3"
-LOOKS = {"a": "", "s1": ",variant=s1", "b0": ",variant=s2b0", "b1": ",variant=s2b1", "b2": ",variant=s2b2"}
+LOOKS = {"a": "", "s1": ",variant=s1", "b0": ",variant=s2b0", "b1": ",variant=s2b1", "b2": ",variant=s2b2",
+         "b0f": ",variant=s2b0,s2full=1"}  # b0f: the full inner wall (ablation of the lean mesh)
 
 # name, framing, target, look, msaa (None = capture default 8), reference side-by-side
 SHOTS = []

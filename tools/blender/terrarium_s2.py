@@ -2,7 +2,7 @@
 
     blender.exe -b -P tools/blender/terrarium_s2.py -- --out apps/terrarium/Assets/Art/Models
 
-Writes s2_jar.fbx with one mesh, JarS2, in the night_jar frame (metres, Blender Z up, exported Y up), so JarView
+Writes s2_jar.fbx with two meshes, JarS2 (full) and JarS2Lean (the shipping candidate, see make_lean), in the night_jar frame (metres, Blender Z up, exported Y up), so JarView
 swaps it onto the Jar glass filter and keeps every transform. It is ONE closed glass solid revolved from a single
 profile: up the outside, over a rolled lip, and down the inside to the raised floor. The inner wall is therefore a
 real surface 2.5 mm inside the outer one with normals pointing into the cavity (flipped against the outer wall).
@@ -173,6 +173,42 @@ def drop_back_faces(obj):
     return total, len(doomed)
 
 
+def make_lean(full):
+    """JarS2Lean: the same shell, but the inner far wall is kept only in a band near the silhouette.
+
+    Face-on, a clear wall adds nothing (Fresnel 4%), yet it is a second transparent layer over the whole pane.
+    Faces whose normal points into the cavity (the inner wall) are kept when the eye ray meets them at
+    view.normal below 0.55 (about 57 degrees off the normal, 0.84 of the radius and out). The floor, its rounded
+    corner, the bore and the lip are not wall faces and stay whole.
+    """
+    lean = full.copy()
+    lean.data = full.data.copy()
+    lean.name = "JarS2Lean"
+    lean.data.name = "JarS2Lean"
+    bpy.context.collection.objects.link(lean)
+    bm = bmesh.new()
+    bm.from_mesh(lean.data)
+    bm.normal_update()
+    cam = Vector((0.0, -0.44, 0.175))
+    doomed = []
+    for f in bm.faces:
+        c = f.calc_center_median()
+        radial = Vector((c.x, c.y, 0.0))
+        if radial.length < 1e-4 or not (0.012 < c.z < 0.1):
+            continue
+        s = radial.normalized().dot(Vector((f.normal.x, f.normal.y, 0.0)))
+        if s < -0.7:
+            view = (cam - c).normalized()
+            if view.dot(f.normal) > 0.55:
+                doomed.append(f)
+    bmesh.ops.delete(bm, geom=doomed, context="FACES")
+    bm.to_mesh(lean.data)
+    lean.data.update()
+    bm.free()
+    print("[s2] lean dropped %d inner wall faces" % len(doomed))
+    return lean
+
+
 def main():
     out = resolve_out()
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -212,8 +248,11 @@ def main():
     print("[s2] tris %d verts %d" % (tris, len(jar.data.vertices)))
     bbox = [jar.matrix_world @ Vector(c) for c in jar.bound_box]
     print("[s2] bbox z %.4f..%.4f max r %.4f" % (min(v.z for v in bbox), max(v.z for v in bbox), max(abs(v.x) for v in bbox)))
+    lean = make_lean(jar)
+    print("[s2] lean tris %d" % sum(len(p.vertices) - 2 for p in lean.data.polygons))
     bpy.ops.object.select_all(action='DESELECT')
     jar.select_set(True)
+    lean.select_set(True)
     path = os.path.join(out, "s2_jar.fbx")
     bpy.ops.export_scene.fbx(filepath=path, use_selection=True, apply_scale_options='FBX_SCALE_ALL', axis_forward='-Z',
                              axis_up='Y', object_types={'MESH'}, use_mesh_modifiers=True, mesh_smooth_type='FACE',
