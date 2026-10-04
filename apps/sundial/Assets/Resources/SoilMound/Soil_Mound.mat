@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Soil_Mound
+  m_Shader: {fileID: 4800000, guid: a3d76ebd660124643839168c7b6a3fb3, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 35c596274fda8b54f892a2a32dd8d565, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PaperH:
+        m_Texture: {fileID: 2800000, guid: c4e1a0519a9e00000000000000000003, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Cut: 0.45
+    - _Feather: 0.07
+    - _Grain: 0.045
+    - _Gran: 0.22
+    - _PaperTiling: 3.75
+    - _PebbleInk: 0.75
+    - _ShadowStrength: 0.85
+    - _Step: 0.05
+    m_Colors:
+    - _Ink: {r: 0.165, g: 0.149, b: 0.133, a: 1}
+    - _Lit: {r: 1.02, g: 0.99, b: 0.95, a: 1}
+    - _Shade: {r: 0.8, g: 0.76, b: 0.72, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
