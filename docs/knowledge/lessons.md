@@ -77,3 +77,9 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   moss tint, rim power, texture swaps incl. the projection-baked repaint) moved every region bar within the noise band,
   while the S3 technique change (wall-to-wall soil + shell moss) won every pairwise draw. Rule: use sweeps to tune a chosen
   technique, not to search for quality. Target: game-production / art pipeline.
+
+- **2026-10-04 (T-SUN-045) A still-image judge cannot see the billboard defect.** Asked "flat cut-out or volume?", a VLM judge
+  called both the camera-facing card plant and the 52-card 3D assembly "volume" in 6 of 6 draws each. The difference only shows
+  in an orbit (+-15 deg montage) or a stereo pair. Score depth/volume claims with orbit and stereo evidence, not stills; and a
+  frame-level region metric (DISTS/dinov2 over three plants) moves the wrong way when one of three changes - give the changed
+  object its own region. Domain: game-production / asset evaluation.
