@@ -8,5 +8,5 @@ touch $root/orchestration/STOP-$app
 pid=$(tr -d '\r\n ' < $pidf)
 while powershell -NoProfile -Command "if (Get-Process -Id $pid -ErrorAction SilentlyContinue) { exit 0 } else { exit 1 }"; do sleep 30; done
 rm -f $root/orchestration/STOP-$app
-powershell -NoProfile -Command "\$p = Start-Process -FilePath node -ArgumentList 'tools/orchestrate/agent-loop.mjs','--app','$app','--worktree','C:/Users/kazda/kiro/gvr-$app','--model','grok-4.7' -WorkingDirectory 'C:/Users/kazda/kiro/garden-vr' -WindowStyle Hidden -RedirectStandardOutput 'C:/Users/kazda/kiro/garden-vr/orchestration/runs/$app/loop.out' -RedirectStandardError 'C:/Users/kazda/kiro/garden-vr/orchestration/runs/$app/loop.err' -PassThru; \$p.Id" > $pidf
+powershell -NoProfile -Command "\$p = Start-Process -FilePath node -ArgumentList 'tools/orchestrate/agent-loop.mjs','--app','$app','--worktree','C:/Users/kazda/kiro/gvr-$app','--engine','claude','--claude-model','claude-sonnet-5-5','--claude-effort','high' -WorkingDirectory 'C:/Users/kazda/kiro/garden-vr' -WindowStyle Hidden -RedirectStandardOutput 'C:/Users/kazda/kiro/garden-vr/orchestration/runs/$app/loop.out' -RedirectStandardError 'C:/Users/kazda/kiro/garden-vr/orchestration/runs/$app/loop.err' -PassThru; \$p.Id" > $pidf
 echo "$app relaunched as pid $(cat $pidf)"
