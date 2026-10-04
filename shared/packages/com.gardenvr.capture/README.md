@@ -1,6 +1,6 @@
 # Garden VR Capture (`com.gardenvr.capture`)
 
-Batchmode shots, image checks, labelled side-by-sides, pixel diffs, budget measurement, and PlayMode sequence recording. Terrarium and Sundial both call this package. The command line below is the contract.
+Batchmode shots, image checks, labelled side-by-sides, pixel diffs, budget measurement, one-launch variant sweeps, and PlayMode sequence recording. Terrarium and Sundial both call this package. The command line below is the contract.
 
 Owner: Sundial (`docs/PLAN.md`). Shaders `Fidelity/Plate` and `Fidelity/Overdraw` live in `com.gardenvr.fx`, which both apps already reference.
 
@@ -128,6 +128,38 @@ The dev plate is not included. World objects named `PcRoomPlate` are disabled. C
 - `textures`: name, width, height (excludes `Texture2D.whiteTexture`)
 - `texMemAstc6x6MB`: `ceil(w/6) * ceil(h/6) * 16 * 4/3` bytes, summed, in MiB, from the texture's current size
 - `transparentMeanLayers`, `transparentCoverage`: overdraw inside the target's screen rectangle at the framing. Coverage is the fraction of that rectangle with at least one transparent layer. Mean layers is the average over those covered pixels. The counting shader is `Fidelity/Overdraw` (1/32 red per layer). Also writes `<stem>.overdraw.png`.
+
+### Sweep
+
+One Unity launch, one scene open, many variants. `CaptureCli` is a partial class; the entry lives in `Editor/CaptureCli.Sweep.cs`.
+
+```bash
+"$U" -batchmode -quit -projectPath apps/terrarium -executeMethod GardenVR.Capture.Editor.CaptureCli.Sweep   -sweep "$(pwd)/tools/fidelity/sweeps/jar-moss.json" -out "$(pwd)/$R/jar-moss" -logFile "$R/jar-moss/sweep.log"
+```
+
+`tools/fidelity/fid.py sweep <spec> --out <dir>` wraps this (foreground), reads the log, and checks drift and `git status`. Needs a GPU (no `-nographics`).
+
+Spec (JSON). `scene`, `framing` and `variants` are required; `state`, `target`, `reference`, `w`, `h`, `msaa` default as for `Shot`. `-scene`, `-framing`, `-state`, `-target` on the command line fill in what the spec leaves out.
+
+```json
+{ "app": "apps/terrarium", "scene": "Assets/Scenes/Main.unity", "framing": "JarG1",
+  "state": "breath=0.5,uncoil=0.3,fog=0.45,time=3", "base": "jar-base", "focusRegion": "moss",
+  "variants": [
+    { "id": "jar-moss-tint-1.10", "axis": "moss _Tint", "value": "1.10",
+      "materials": { "Jar_Moss": { "_Tint": [1.1, 1.1, 1.1, 1] } } },
+    { "id": "jar-moss-tex-repaint", "axis": "moss texture", "value": "repaint",
+      "textures": { "Jar_Moss": { "_MainTex,_EmissionTex": "Assets/Art/Textures/moss-repaint.png" } } },
+    { "id": "dial-variant-watercolour", "state": "variant=watercolour" }
+  ] }
+```
+
+* The base variant (no overrides, id `base` unless `"base"` names it) is rendered **first and last**; the last one is `<base>-last`. Their difference is the drift inside the launch.
+* `state` on a variant is merged over the sweep state, and the whole state is applied again before every variant, so a delta cannot leak into the next one. `ICaptureState` hosts see it exactly as with `Shot`.
+* `materials`: key is the material asset name (a trailing ` (Instance)` is ignored). Every renderer slot that uses it gets one runtime copy (`new Material(shared)`) for that variant. A float takes a number, a colour or vector takes 3 or 4 numbers (a colour also takes `"#rrggbb"`). An unknown material or property fails the sweep.
+* `textures`: property to file. A key may list several properties, comma separated. The file is read from disk (`Assets/...` is project relative; otherwise the usual `ResolveFile` search) into a runtime `Texture2D` with mips. Wrap mode, filter, aniso and colour space follow the texture being replaced. The file is uncompressed, so add the current texture's own file as a control variant (`jar-moss-tex-reload`) to see the load path's effect.
+* Copies are put back and destroyed after each variant. Before any state is applied the sweep snapshots every material under `Assets/` and restores them at the end, because scene hosts such as `JarView` write into shared material assets and Unity would save that on exit. Any other asset still dirty is listed in `sweep.json` (`dirtyAssets`) with a warning.
+* Output in `-out`: `<id>.png` + `<id>.png.check.json` per variant (same render path as `Shot`: async compilation off, one discarded render after every change, then the frame) and `sweep.json` (ids, labels, state, sha256, mean luma, per-variant millis, override list, hashes of texture files). `[Capture] Sweep OK <dir>` on success. A variant id is a file name; ids that begin with `jar` or `dial` are picked up by `fid metrics`.
+* Base-first is byte-identical to a plain `Shot` of the same framing and state.
 
 ## PlayMode
 

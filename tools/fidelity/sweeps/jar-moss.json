@@ -4,6 +4,7 @@
   "framing": "JarG1",
   "state": "breath=0.5,uncoil=0.3,fog=0.45,time=3",
   "base": "jar-base",
+  "focusRegion": "moss",
   "filePrefix": "",
   "variants": [
     { "id": "jar-moss-tex-repaint", "axis": "moss texture", "value": "repaint (all 3 slots)",

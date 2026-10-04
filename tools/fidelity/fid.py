@@ -7,7 +7,7 @@
     python tools/fidelity/fid.py judge --self-test
     python tools/fidelity/fid.py judge --calibrate [--frame JarG1|DialG1]
     python tools/fidelity/fid.py sweep <spec.json> --out <dir>
-    python tools/fidelity/fid.py sheet <sweep-dir> --frame JarG1|DialG1 [--out <png>] [--judge <pair.json>]
+    python tools/fidelity/fid.py sheet <sweep-dir> --frame JarG1|DialG1 [--out <png>] [--judge <pair.json>] [--region <name>]
 
 `metrics --bare` always exits 2. A distance is never printed without its ladder.
 """
@@ -33,7 +33,7 @@ usage:
   fid.py judge --regrade --ledger <calls.jsonl> [--check]
   fid.py judge --probe [--frame <JarG1|DialG1>]
   fid.py sweep <spec.json> --out <dir>
-  fid.py sheet <sweep-dir> --frame <JarG1|DialG1> [--out <png>] [--judge <pair.json>]
+  fid.py sheet <sweep-dir> --frame <JarG1|DialG1> [--out <png>] [--judge <pair.json>] [--region <name>]
 """
 
 
@@ -87,13 +87,14 @@ def main(argv):
         frame = _flag(argv, "--frame")
         out = _flag(argv, "--out")
         judge = _flag(argv, "--judge")
-        positional = [item for item in argv[1:] if not item.startswith("--") and item not in (frame, out, judge)]
+        region = _flag(argv, "--region")
+        positional = [item for item in argv[1:] if not item.startswith("--") and item not in (frame, out, judge, region)]
         if not frame or not positional:
             sys.stderr.write(USAGE)
             return 2
         from lab.sheet import run_sheet
 
-        return run_sheet(positional[0], frame, out=out, judge=judge)
+        return run_sheet(positional[0], frame, out=out, judge=judge, focus=region)
     if command == "judge":
         from lab.judge import main as judge_main
 
