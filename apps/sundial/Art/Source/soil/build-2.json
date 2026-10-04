@@ -21,7 +21,7 @@
   "meshCellsKept": 1957,
   "heightMaxMm": 4.84,
   "bedAreaCm2": 239.3,
-  "textureLumaMean": 101.1,
+  "textureLumaMean": 101.2,
   "gains": {
     "dark": 0.62,
     "pale": 1.3,

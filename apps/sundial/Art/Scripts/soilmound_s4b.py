@@ -165,6 +165,11 @@ def build():
     core = cv2.erode(mask, np.ones((3, 3), np.uint8), iterations=9) > 0
     idx = ndimage.distance_transform_edt(~core, return_distances=False, return_indices=True)
     col = rgb.astype(np.float32)[idx[0], idx[1]]
+    # The nearest-pixel extension smears the rim into radial streaks; blur it where it is extension, ramping in with distance.
+    ext = ndimage.distance_transform_edt(~core).astype(np.float32)
+    soft = cv2.GaussianBlur(col, (0, 0), 4.0)
+    wext = np.clip(ext / 5.0, 0.0, 1.0)[..., None]
+    col = col * (1.0 - wext) + soft * wext
     lum = s4.luma(col)[..., None]
     col = lum + (col - lum) * SAT
     pale = zone_pale(x, z)
