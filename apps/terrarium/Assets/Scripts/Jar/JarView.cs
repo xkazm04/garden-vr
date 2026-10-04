@@ -851,7 +851,7 @@ namespace GardenVR.Terrarium
                 float k = _s5Cork;
                 cork.SetColor("_Tint", Color.Lerp(Color.white, _s6 ? S6CorkTint : S5CorkTint, k));
                 cork.SetColor("_Emission", Color.black);
-                cork.SetColor("_Rim", Color.Lerp(Color.black, S5CorkRim, k));
+                cork.SetColor("_Rim", Color.Lerp(Color.black, _s6 ? S6CorkRim : S5CorkRim, k));
                 cork.SetFloat("_RimPower", Mathf.Lerp(4f, 2.1f, k));
                 cork.SetFloat("_GradBottom", Mathf.Lerp(1.12f, 0.80f, k));
                 cork.SetFloat("_GradTop", Mathf.Lerp(0.84f, 1.10f, k));
@@ -884,7 +884,8 @@ namespace GardenVR.Terrarium
         const float S6Cavity = 0.0442f, S6HazeBottom = 0.010f, S6HazeTop = 0.100f, S6TopGain = 0f, S6SteamLift = -0.002f;
         // The glow the reference has at the bed: strength, centre height and falloff in metres (shader _S6Bed).
         static readonly Vector4 S6Bed = new Vector4(0.50f, 0.032f, 0.014f, 0f);
-        static readonly Color S6CorkTint = new Color(0.27f, 0.215f, 0.185f, 1f);
+        static readonly Color S6CorkRim = new Color(0.27f, 0.19f, 0.11f, 1f);
+        static readonly Color S6CorkTint = new Color(0.19f, 0.155f, 0.135f, 1f);
 
         /// <summary>Variant s6 swaps the cork for the low flat plug. Any other variant puts the locked cork mesh back.</summary>
         void ApplyCorkMesh()
