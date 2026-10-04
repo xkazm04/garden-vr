@@ -1,33 +1,191 @@
 {
   "advisory": true,
-  "advisory_reason": "calibration gate failed; need 30 owner labels, have 0",
-  "calls": 80,
+  "advisory_reason": "need 30 owner labels, have 0",
+  "calls": 120,
   "date": "2026-10-04",
   "draws": 10,
   "frames": {
     "DialG1": {
       "bradley_terry": {
         "alpha": 0.01,
-        "comparisons": 20,
+        "comparisons": 36,
         "note": null,
         "players": [
           "ref2",
           "locked",
-          "floor"
+          "floor",
+          "control_blur",
+          "control_hueflip"
         ],
         "ranking": [
           "floor",
           "ref2",
-          "locked"
+          "locked",
+          "control_blur",
+          "control_hueflip"
         ],
         "strengths": {
-          "floor": 2.167681,
-          "locked": -4.335361,
-          "ref2": 2.167681
+          "control_blur": -5.035553,
+          "control_hueflip": -5.035553,
+          "floor": 5.002213,
+          "locked": 0.257872,
+          "ref2": 4.81102
         },
         "unplayed": []
       },
       "checks": [
+        {
+          "completed": 10,
+          "draws": 10,
+          "draws_detail": [
+            {
+              "draw": 1,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 0,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 2,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 4,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 3,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 5,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 7,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 6,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 8,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 9,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            }
+          ],
+          "expected": "locked",
+          "gate": true,
+          "id": "locked_over_blur",
+          "inversions": 0,
+          "pass": true,
+          "pass_min": 9,
+          "prefer_expected": 10,
+          "prefer_other": 0,
+          "tie": 0,
+          "ungraded": 0
+        },
+        {
+          "completed": 10,
+          "draws": 10,
+          "draws_detail": [
+            {
+              "draw": 0,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 1,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 2,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 3,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 4,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 5,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 6,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 7,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 8,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            },
+            {
+              "draw": 9,
+              "inversion": false,
+              "result": "locked",
+              "status": "graded"
+            }
+          ],
+          "expected": "locked",
+          "gate": true,
+          "id": "locked_over_hueflip",
+          "inversions": 0,
+          "pass": true,
+          "pass_min": 9,
+          "prefer_expected": 10,
+          "prefer_other": 0,
+          "tie": 0,
+          "ungraded": 0
+        },
         {
           "completed": 10,
           "draws": 10,
@@ -46,15 +204,15 @@
             },
             {
               "draw": 2,
-              "inversion": false,
-              "result": "ref2",
-              "status": "graded"
+              "inversion": true,
+              "result": "tie",
+              "status": "tie"
             },
             {
               "draw": 3,
               "inversion": false,
-              "result": "ref2",
-              "status": "graded"
+              "result": "tie",
+              "status": "tie"
             },
             {
               "draw": 4,
@@ -63,16 +221,16 @@
               "status": "graded"
             },
             {
-              "draw": 6,
-              "inversion": false,
-              "result": "ref2",
-              "status": "graded"
+              "draw": 5,
+              "inversion": true,
+              "result": "tie",
+              "status": "tie"
             },
             {
-              "draw": 5,
+              "draw": 6,
               "inversion": false,
-              "result": "ref2",
-              "status": "graded"
+              "result": "tie",
+              "status": "tie"
             },
             {
               "draw": 7,
@@ -94,13 +252,14 @@
             }
           ],
           "expected": "ref2",
+          "gate": false,
           "id": "ref2_over_locked",
-          "inversions": 0,
-          "pass": true,
+          "inversions": 2,
+          "pass": false,
           "pass_min": 9,
-          "prefer_expected": 10,
+          "prefer_expected": 6,
           "prefer_other": 0,
-          "tie": 0,
+          "tie": 4,
           "ungraded": 0
         },
         {
@@ -169,6 +328,7 @@
             }
           ],
           "expected": "locked",
+          "gate": false,
           "id": "locked_over_floor",
           "inversions": 0,
           "pass": false,
@@ -179,8 +339,16 @@
           "ungraded": 0
         }
       ],
-      "gate_pass": false,
+      "gate_pass": true,
       "images": {
+        "control_blur": {
+          "path": "tools/fidelity/rungs/DialG1-control-blur-dial.png",
+          "sha256": "f6b5ea064476aeba19171c09c0f2a3a6139eb43a295845ac139f7242caf39a58"
+        },
+        "control_hueflip": {
+          "path": "tools/fidelity/rungs/DialG1-control-hueflip-washes.png",
+          "sha256": "e9524ba46dc470aefcccaf7a7cae5823279dd31b28687c51d69d6700f497dacb"
+        },
         "floor": {
           "path": "tools/fidelity/rungs/DialG1-floor-iwsdk.png",
           "sha256": "6d31bc79bc8cd8c48279c84f7360167c4280e4c24a0fc8c4a078105ae7494911"
@@ -199,15 +367,15 @@
         }
       },
       "inversion": {
-        "agreements": 20,
-        "both_decisive": 20,
-        "inversions": 0,
-        "rate": 0.0,
-        "ties": 0,
+        "agreements": 36,
+        "both_decisive": 38,
+        "inversions": 2,
+        "rate": 0.05263157894736842,
+        "ties": 2,
         "ungraded": 0
       },
       "omitted_from_ranking": {
-        "ties": 0,
+        "ties": 4,
         "ungraded": 0
       }
     },
@@ -239,13 +407,13 @@
           "draws": 10,
           "draws_detail": [
             {
-              "draw": 0,
+              "draw": 1,
               "inversion": false,
               "result": "ref2",
               "status": "graded"
             },
             {
-              "draw": 1,
+              "draw": 0,
               "inversion": false,
               "result": "ref2",
               "status": "graded"
@@ -300,6 +468,7 @@
             }
           ],
           "expected": "ref2",
+          "gate": true,
           "id": "ref2_over_locked",
           "inversions": 0,
           "pass": true,
@@ -338,13 +507,13 @@
               "status": "graded"
             },
             {
-              "draw": 4,
+              "draw": 5,
               "inversion": false,
               "result": "locked",
               "status": "graded"
             },
             {
-              "draw": 5,
+              "draw": 4,
               "inversion": false,
               "result": "locked",
               "status": "graded"
@@ -362,19 +531,20 @@
               "status": "graded"
             },
             {
-              "draw": 8,
+              "draw": 9,
               "inversion": false,
               "result": "locked",
               "status": "graded"
             },
             {
-              "draw": 9,
+              "draw": 8,
               "inversion": false,
               "result": "locked",
               "status": "graded"
             }
           ],
           "expected": "locked",
+          "gate": true,
           "id": "locked_over_floor",
           "inversions": 0,
           "pass": true,
@@ -418,7 +588,7 @@
       }
     }
   },
-  "gate_pass": false,
+  "gate_pass": true,
   "kappa": {
     "floor": 0.6,
     "kappa": null,

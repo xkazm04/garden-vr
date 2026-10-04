@@ -74,7 +74,7 @@ The packet hash is sha256 over those files in manifest order.
 fid.cmd judge --self-test
 fid.cmd judge --calibrate [--frame JarG1|DialG1] [--draws 10] [--jobs N] [--evidence <dir>] [--fresh]
 fid.cmd judge --pairwise --frame JarG1|DialG1 --player id=path [--player id=path ...] [--criterion overall] [--crops] [--skip-disqualifiers] --out pair.json
-fid.cmd judge --regrade --ledger calls.jsonl [--check]
+fid.cmd judge --regrade --ledger calls.jsonl [--out file] [--jobs N] [--check]
 fid.cmd judge --probe [--frame JarG1|DialG1]
 ```
 
@@ -86,6 +86,15 @@ pairs where both orders answered A or B. A missing or unparseable reply is
 0.01), so it is never a loss. The locked gate frame is always a player.
 A player with no agreed game stays in the list with no fitted strength.
 
+Reply handling (harness `h2`, recorded on every verdict; the packet files are unchanged, so the packet hash is the
+same). Code appends an output contract to each prompt: look only at the three images, the last message is one JSON
+object, and the schema file is inlined. The agent runs in the staging folder, not the repo, so it cannot read ladders,
+ledgers or reports (a stored reply showed it searching the codebase). The verdict is the last JSON object in the
+reply that has a `winner` or `criterion` key, so narration around it is fine. A reply that still does not validate
+gets one repair call: the same images, the bad reply quoted, the reason named. A failed call (empty, timeout) is
+retried once. At most three calls per verdict; `attempt_log` keeps the raw text of every call and `repaired` says
+whether a repair call produced the verdict. A reply that fails after the repair is `ungraded`, never a loss.
+
 Agy wraps a valid object with `toolAction` and `toolSummary`. Those two keys
 are stripped before the schema check. Any other extra key is `ungraded`.
 
@@ -94,9 +103,15 @@ two candidates. `--regrade` reads those stored files. `--check` rebuilds the
 ranking from the ledger and does not call the model. A changed or missing
 file is `ungraded`. The judge does not generate images.
 
-`--calibrate` asks whether reference 2 is closer to reference 1 than the
-locked frame, and whether the locked frame is closer than the round-2 floor.
-Each check is 10 draws in both orders. A check passes at 9 of 10 agreed wins.
+`--calibrate` runs the checks in `CHECKS` (per frame in `lab/judge.py`). JarG1 asks whether reference 2 is closer
+to reference 1 than the locked frame, and whether the locked frame is closer than the round-2 floor. DialG1 cannot
+be gated that way: reference 2 and the round-2 floor are different compositions from reference 1, and the judge
+ranks them by framing (T-SUN-048: round-3 render beat reference 2 4 of 4, floor beat the locked frame 10 of 10).
+DialG1 is gated on same-framing negative controls built from the locked frame by `lab/controls.py` (listed in
+`judge/controls.json`; images in `rungs/`): the dial blurred, and the three washes hue-rotated 180 degrees. The
+order is true by construction. The two rung checks are still run and printed as `diagnostic, not gated`.
+A gate that passes on controls shows the judge sees a large same-framing difference. It does not show it can rank
+two close variants. Each check is 10 draws in both orders. A check passes at 9 of 10 agreed wins.
 The gate can fail. The summary prints the rates either way. Owner picks in
 `sheet.json` (`chosen_by: owner` and `judge_winner`) are appended to
 `judge/golden.jsonl`. Cohen's kappa is reported at 30 labels, floor 0.6.
