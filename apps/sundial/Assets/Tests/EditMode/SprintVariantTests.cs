@@ -26,9 +26,33 @@ namespace GardenVR.Sundial.Tests.EditMode
                 Assert.IsTrue(RoomLightGlobals.IsOn, "room light");
                 Assert.IsNotNull(view.LeafAssemblyFor(1), "midday assembly");
                 Assert.IsNotNull(view.LeafAssemblyFor(2), "evening assembly");
-                Assert.IsNull(view.Halo2Kit, "halo v2 is not in the stack");
                 Assert.Throws<System.FormatException>(() =>
                     view.ApplyCaptureState(new Dictionary<string, string> { { "variant", "sprint+nonsense" } }));
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
+        public void HaloV2DrawsForTheCardPlant_AndTheDrawnLeavesKeepTheLayoutHalo()
+        {
+            GameObject root = NewDial(out DialView view, out _, out _, out _);
+            try
+            {
+                Renderer halo = view.haloRenderer;
+                view.ApplyCaptureState(new Dictionary<string, string>
+                {
+                    { "halo", "1" }, { "haloTarget", "morning" }, { "gnomonDeg", "105" }, { "time", "1" }, { "variant", "sprint" }
+                });
+                Assert.IsNotNull(view.Halo2Kit, "the morning card gets halo v2");
+                Assert.IsNotNull(root.transform.Find("PinchHalo").Find("PinchHalo2"));
+                Assert.IsTrue(root.transform.Find("PinchHalo").Find("PinchHalo2").gameObject.activeSelf);
+                Assert.IsFalse(halo.enabled, "and the card halo steps aside");
+                view.ApplyCaptureState(new Dictionary<string, string> { { "haloTarget", "midday" } });
+                Assert.IsFalse(root.transform.Find("PinchHalo").Find("PinchHalo2").gameObject.activeSelf, "a drawn-leaf plant has no baked mask");
+                Assert.IsTrue(halo.enabled, "so the halo stroke (the layout's wider close) draws");
             }
             finally
             {
@@ -256,6 +280,23 @@ namespace GardenVR.Sundial.Tests.EditMode
             contactGo.AddComponent<MeshFilter>().sharedMesh = quad;
             view.contactRenderer = contactGo.AddComponent<MeshRenderer>();
             view.contactRenderer.sharedMaterial = new Material(Shader.Find("Fidelity/Card"));
+            var haloGo = new GameObject("PinchHalo");
+            haloGo.transform.SetParent(root.transform, false);
+            haloGo.AddComponent<MeshFilter>().sharedMesh = new Mesh();
+            var halo = haloGo.AddComponent<MeshRenderer>();
+            halo.sharedMaterial = new Material(Shader.Find("Fidelity/Card"));
+            view.haloRenderer = halo;
+            var poolGo = new GameObject("HaloPool");
+            poolGo.transform.SetParent(root.transform, false);
+            poolGo.AddComponent<MeshFilter>().sharedMesh = new Mesh();
+            view.poolRenderer = poolGo.AddComponent<MeshRenderer>();
+            view.poolRenderer.sharedMaterial = new Material(Shader.Find("Fidelity/Card"));
+            var morningCard = new Texture2D(4, 4) { name = "plant_sunrise_full" };
+            var middayCard = new Texture2D(4, 4) { name = "plant_midday_full" };
+            var duskCard = new Texture2D(4, 4) { name = "plant_dusk_full" };
+            view.morningCards = new[] { morningCard, morningCard, morningCard, morningCard, morningCard };
+            view.middayCards = new[] { middayCard, middayCard, middayCard, middayCard, middayCard };
+            view.windDownCards = new[] { duskCard, duskCard, duskCard, duskCard, duskCard };
             view.roomCookie = new Texture2D(4, 4);
             view.roomShadow = new Material(Shader.Find("Fidelity/Card"));
             return root;

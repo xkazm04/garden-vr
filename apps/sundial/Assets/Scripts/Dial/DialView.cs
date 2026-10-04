@@ -741,10 +741,10 @@ namespace GardenVR.Sundial
         public const string SprintToken = "sprint";
         /// <summary>
         /// S1 watercolour and paper (with the layout face, see <see cref="ApplyFaceVariant"/>), S2 room light, S4 soil mound, S6 layout,
-        /// S3b drawn leaves for the midday and evening plants. S5 halo v2 is not in the stack: it has no mask for a drawn-leaf plant,
-        /// and the layout's closed halo stroke covers every plant, card or assembly.
+        /// S3b drawn leaves for the midday and evening plants, S5 halo v2 for the plant that stays a card. Halo v2 has no mask for a
+        /// drawn-leaf plant, so those two keep the layout's closed halo stroke (see <see cref="ApplyHalo2"/>).
         /// </summary>
-        public static readonly string[] SprintParts = { "layout", "watercolour", "roomlight", "soilmound", SprintLeafToken };
+        public static readonly string[] SprintParts = { "layout", "watercolour", "roomlight", "soilmound", SprintLeafToken, "halo2" };
         /// <summary>Arcs drawn as assemblies under the sprint. The morning plant stays a card: its assembly lost to the card (T-SUN-049, 2 of 6).</summary>
         public static readonly bool[] SprintLeafArcs = { false, true, true };
 
