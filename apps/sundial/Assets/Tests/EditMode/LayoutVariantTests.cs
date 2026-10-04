@@ -77,8 +77,9 @@ namespace GardenVR.Sundial.Tests.EditMode
             Bounds bed = MoundBounds(true, out float bedCentreZ);
             TestContext.WriteLine("mound x " + old.min.x.ToString("0.000") + ".." + old.max.x.ToString("0.000") + " z " + old.min.z.ToString("0.000") + ".." + old.max.z.ToString("0.000")
                                   + " | bed x " + bed.min.x.ToString("0.000") + ".." + bed.max.x.ToString("0.000") + " z " + bed.min.z.ToString("0.000") + ".." + bed.max.z.ToString("0.000"));
-            Assert.Greater(bed.size.x, old.size.x * 1.3f, "the bed fills the face");
-            Assert.Less(bedCentreZ, oldCentreZ - 0.04f, "centred nearer the viewer");
+            // T-SUN-051: the S4b mound is already a wide crescent (0.21 m), so the layout no longer widens it by 1.3x; it still fills the bed's width.
+            Assert.Greater(bed.size.x, 2f * DialLayout.BedHalfX * FaceRadius * 0.95f, "the bed fills the face");
+            Assert.Less(bedCentreZ, oldCentreZ - 0.015f, "centred nearer the viewer");
             // It stays inside the wash disc (the inner ring at 0.82 of the face radius), allowing the ragged lip and the pebbles.
             Assert.Less(Mathf.Max(Mathf.Abs(bed.min.x), Mathf.Abs(bed.max.x)), DialLayout.InnerRing * FaceRadius * 1.08f);
             Assert.Greater(bed.min.z, -DialLayout.InnerRing * FaceRadius * 1.08f);

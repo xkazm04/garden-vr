@@ -59,6 +59,17 @@ namespace GardenVR.Sundial
             oz = BedCentreZ * faceRadius;
         }
 
+        /// <summary>
+        /// T-SUN-051. The same map for a baked bed that is not a circle: its box (half width <paramref name="halfX"/>, near and far z, metres)
+        /// goes onto the box of the bed ellipse, so the crescent fills the layout's bed from its near rim to its far edge.
+        /// </summary>
+        public static void BedBoxMap(float faceRadius, float halfX, float z0, float z1, out float sx, out float sz, out float oz)
+        {
+            sx = BedHalfX * faceRadius / halfX;
+            sz = 2f * BedHalfZ * faceRadius / (z1 - z0);
+            oz = (BedCentreZ - BedHalfZ) * faceRadius - z0 * sz;
+        }
+
         /// <summary>True when the point (face radii) is inside the bed ellipse.</summary>
         public static bool InsideBed(Vector2 p)
         {

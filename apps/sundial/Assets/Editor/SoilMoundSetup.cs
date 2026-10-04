@@ -74,6 +74,9 @@ namespace GardenVR.Sundial.Editor
                 material.SetFloat("_Grain", 0.045f);
                 material.SetFloat("_ShadowStrength", 0.85f);
                 material.SetFloat("_PebbleInk", 0.75f);
+                material.SetFloat("_WashTint", 0.55f);
+                material.SetFloat("_EdgeGran", 0.5f);
+                material.SetColor("_WashFallback", new Color(0.957f, 0.929f, 0.875f, 1f));
                 EditorUtility.SetDirty(material);
                 AssetDatabase.SaveAssets();
                 Debug.Log("[SoilMoundSetup] OK " + MaterialPath);
