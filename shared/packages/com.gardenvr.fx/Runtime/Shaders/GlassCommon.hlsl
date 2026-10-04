@@ -31,7 +31,8 @@ CBUFFER_START(UnityPerMaterial)
     // S5 chord haze: _S5Haze = (sigma per metre, colour strength, density gain toward the top, alpha weight);
     // _S5Cyl = (cavity radius m, bottom y m, top y m, clock s).
     float4 _S5Haze, _S5Cyl;
-    // S6 bed glow (T-TER-049, backward compatible: zero is off): x strength, y height of the glow centre in m, z falloff in m.
+    // S6 bed glow (T-TER-049, backward compatible: zero is off): x strength, y height of the glow centre in m, z falloff in m,
+    // w (T-TER-047, 0 keeps the old look) moss top height in m: the haze chord ends at that plane and the bed glow keeps no centre floor.
     float4 _S6Bed;
 CBUFFER_END
 
@@ -274,9 +275,9 @@ static const float3 S2_PROBE = float3(0.0, 0.06, 0.0);
 #if defined(_S5_HAZE)
 // Analytic chord of the view ray through the cavity cylinder (object space, y up), clipped to [yLo, yHi]. Returns the haze
 // amount in x (0..1), the height of the chord midpoint in y (0 at yLo, 1 at yHi) and the chord length in z.
-float3 S5Chord(float3 wp)
+float3 S5Chord(float3 wp, float yLo)
 {
-    float R = _S5Cyl.x, yLo = _S5Cyl.y, yHi = _S5Cyl.z;
+    float R = _S5Cyl.x, yHi = _S5Cyl.z;
     // World-aligned offsets from the jar origin (the same frame as i.op). The glass mesh object is rotated by the FBX import.
     float3 origin = TransformObjectToWorld(float3(0, 0, 0));
     float3 ro = _WorldSpaceCameraPos - origin;
@@ -310,9 +311,12 @@ float3 S5Chord(float3 wp)
 // Premultiplied haze: rgb already includes the alpha weight. Mint low and dense near the moss, paler and thicker up top.
 half4 S5Haze(float3 wp, half cavityMask)
 {
-    float3 ch = S5Chord(wp);
-    if (ch.x <= 0.0) return half4(0, 0, 0, 0);
     float R = _S5Cyl.x, yLo = _S5Cyl.y, yHi = _S5Cyl.z;
+    float3 ch = S5Chord(wp, yLo);
+    if (ch.x <= 0.0) return half4(0, 0, 0, 0);
+    // T-TER-047 (backward compatible: _S6Bed.w is 0 elsewhere): the haze is the air in front of the moss, so its chord ends at the
+    // plane _S6Bed.w (m, the moss top) when the ray goes down to it. The wall glow below keeps the full chord.
+    float3 hc = _S6Bed.w > 0.0 ? S5Chord(wp, max(_S6Bed.w, yLo)) : ch;
     float3 pm = wp - TransformObjectToWorld(float3(0, 0, 0));
     // Wisps: the condensation plate's blue channel, drifting with the capture clock. Sampled at the near-wall point so
     // it stays attached to the jar, not to the camera.
@@ -320,11 +324,11 @@ half4 S5Haze(float3 wp, half cavityMask)
     float2 wuv = float2(ang * 0.55 + _S5Cyl.w * 0.012, pm.y * 7.0 - _S5Cyl.w * 0.020);
     half wisp = SAMPLE_TEXTURE2D(_Cond, sampler_Cond, wuv).b;
     half noiseAmt = saturate(_S5Haze.w);
-    half dens = (half)(_S5Haze.x * lerp(1.0, 1.0 + _S5Haze.z, ch.y)) * lerp(1.0 - noiseAmt, 1.0, wisp);
-    half haze = 1.0 - exp(-dens * (half)ch.x);
+    half dens = (half)(_S5Haze.x * lerp(1.0, 1.0 + _S5Haze.z, hc.y)) * lerp(1.0 - noiseAmt, 1.0, wisp);
+    half haze = 1.0 - exp(-dens * (half)hc.x);
     half3 low = half3(0.03, 0.80, 0.45);
     half3 high = half3(0.10, 0.82, 0.62);
-    half hy = (half)smoothstep(0.15, 0.95, ch.y);
+    half hy = (half)smoothstep(0.15, 0.95, hc.y);
     half3 tint = lerp(low, high, hy);
     // Brightest just above the moss (the reference glows from the bed), thinning to a paler haze toward the neck.
     half w = haze * _S5Haze.y * lerp(2.0, 0.85, hy);
@@ -337,7 +341,7 @@ half4 S5Haze(float3 wp, half cavityMask)
         // short chords at the silhouette so the glow lines the wall and does not veil the moss.
         float g = (yLo + ch.y * (yHi - yLo) - _S6Bed.y) / max(_S6Bed.z, 1e-4);
         half edge = 1.0 - saturate(ch.x / (2.0 * R));
-        half bed = (half)(_S6Bed.x * exp(-g * g)) * lerp(0.2, 1.0, edge * edge);
+        half bed = (half)(_S6Bed.x * exp(-g * g)) * lerp(_S6Bed.w > 0.0 ? 0.0 : 0.2, 1.0, edge * edge);
         rgb += half3(0.04, 0.84, 0.52) * bed;
         a += bed * 0.30;
     }
