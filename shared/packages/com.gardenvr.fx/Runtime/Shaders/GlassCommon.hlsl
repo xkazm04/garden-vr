@@ -316,6 +316,13 @@ half4 GlassStructured(V i, half backWall)
     half shoulder = smoothstep(0.074, 0.092, y) * (1.0 - smoothstep(0.116, 0.123, y));
     // The JarG1 glass-mean window is this shoulder. The plate behind it is about 0.03.
     half mistA = shoulder * presence * (1.0 - wipe) * 0.20;
+#if defined(S2_GEOM)
+    // The thick shell has two walls. Mist and beads belong to the outer face only, so the look does not depend on how
+    // much of the inner wall the mesh keeps (outer normals point away from the axis, inner ones toward it).
+    half outerFace = step(0.0, dot(n, float3(i.op.x, 0.0, i.op.z)));
+    dropMask *= outerFace;
+    mistA *= outerFace;
+#endif
 
     float3 up = float3(0, 1, 0);
     float3 tangent = cross(up, n);

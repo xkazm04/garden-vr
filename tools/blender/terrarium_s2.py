@@ -176,6 +176,7 @@ def drop_back_faces(obj):
 def make_lean(full):
     """JarS2Lean: the same shell, but the inner far wall is kept only in a band near the silhouette.
 
+    The cut is only on the straight wall: a face-granular cut on the curved shoulder shows as a stair-step.
     Face-on, a clear wall adds nothing (Fresnel 4%), yet it is a second transparent layer over the whole pane.
     Faces whose normal points into the cavity (the inner wall) are kept when the eye ray meets them at
     view.normal below 0.55 (about 57 degrees off the normal, 0.84 of the radius and out). The floor, its rounded
@@ -194,10 +195,10 @@ def make_lean(full):
     for f in bm.faces:
         c = f.calc_center_median()
         radial = Vector((c.x, c.y, 0.0))
-        if radial.length < 1e-4 or not (0.012 < c.z < 0.1):
+        if radial.length < 1e-4 or not (0.014 < c.z < 0.0855):
             continue
         s = radial.normalized().dot(Vector((f.normal.x, f.normal.y, 0.0)))
-        if s < -0.7:
+        if s < -0.25:
             view = (cam - c).normalized()
             if view.dot(f.normal) > 0.55:
                 doomed.append(f)
