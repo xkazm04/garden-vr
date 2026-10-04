@@ -83,3 +83,9 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   in an orbit (+-15 deg montage) or a stereo pair. Score depth/volume claims with orbit and stereo evidence, not stills; and a
   frame-level region metric (DISTS/dinov2 over three plants) moves the wrong way when one of three changes - give the changed
   object its own region. Domain: game-production / asset evaluation.
+
+- **2026-10-04 (T-SUN-048) An LLM judge run with the repo as cwd goes exploring instead of judging.** The one unparseable F2
+  verdict was the agent narrating while it browsed ladders and rubrics in the repo. Running each judge call in a temp folder
+  holding only the neutrally named images, inlining the schema and a "last message is one JSON object" contract, and taking the
+  last JSON object with a verdict key gave 0 unparseable in 193 calls. Also a leak risk closed. Domain: llm-observability /
+  judge-contract-design.

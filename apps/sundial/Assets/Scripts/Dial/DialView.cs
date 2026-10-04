@@ -122,6 +122,11 @@ namespace GardenVR.Sundial
         Texture2D _leafSilhouette;
         string _leafSilhouetteKey;
         public LeafPlant LeafAssembly { get { return _leaf; } }
+        // Spike S4. variant=soilmound hides the old low soil disc and draws a raised heightfield mound with a top-down
+        // painting, a ragged feathered edge and a few pebbles: one mesh, one draw. Resources/SoilMound holds the rest.
+        SoilMound _mound;
+        bool _moundApplied;
+        public SoilMound Mound { get { return _mound; } }
         const string VariantDefault = "a";
         string _variant = VariantDefault;
         Material _faceDefault;
@@ -352,6 +357,44 @@ namespace GardenVR.Sundial
             if (weekPage) CoverDayDrawing();
             ApplyFaceVariant();
             ApplyRoomLight();
+            ApplySoilMound();
+        }
+
+        static bool IsSoilMoundVariant(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            string n = name.Trim().ToLowerInvariant();
+            return n == "soilmound" || n == "soil-mound" || n == "mound" || n == "soil" || n == "s4";
+        }
+
+        /// <summary>
+        /// Look A leaves the soil disc alone. variant=soilmound turns it off and shows the mound in its place. The mound
+        /// follows the same intro and week-page rules as the disc it replaces.
+        /// </summary>
+        void ApplySoilMound()
+        {
+            bool visible = !weekPage && (!Application.isPlaying || appear >= 2f / 3f);
+            if (!IsSoilMoundVariant(_variant))
+            {
+                if (_moundApplied)
+                {
+                    if (_mound != null) _mound.SetActive(false);
+                    EnableNamed("Soil", visible);
+                    _moundApplied = false;
+                }
+                return;
+            }
+            if (_mound == null)
+            {
+                var material = Resources.Load<Material>(SoilMound.ResourceMaterial);
+                var data = Resources.Load<TextAsset>(SoilMound.ResourceData);
+                if (material == null || data == null)
+                    throw new InvalidOperationException("variant=soilmound needs Resources/SoilMound/Soil_Mound.mat and soil-mound.json (run SoilMoundSetup.Run)");
+                _mound = new SoilMound(transform, material, data, faceY);
+            }
+            _mound.SetActive(visible);
+            EnableNamed("Soil", false);
+            _moundApplied = true;
         }
 
         static bool IsRoomLightVariant(string name)
@@ -379,7 +422,7 @@ namespace GardenVR.Sundial
         {
             if (string.IsNullOrEmpty(name)) return true;
             string n = name.Trim().ToLowerInvariant();
-            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n);
+            return n == VariantDefault || IsWatercolourVariant(n) || IsRoomLightVariant(n) || IsLeafPlantVariant(n) || IsSoilMoundVariant(n);
         }
 
         /// <summary>
@@ -912,6 +955,7 @@ namespace GardenVR.Sundial
         void OnDestroy()
         {
             if (_leaf != null) _leaf.Destroy();
+            if (_mound != null) _mound.Destroy();
             if (_contactNoMidday != null) DestroyObject(_contactNoMidday);
             if (_leafSilhouette != null) DestroyObject(_leafSilhouette);
         }
@@ -969,7 +1013,7 @@ namespace GardenVR.Sundial
                 case "reducedMotion": reducedMotion = ParseBool(value); break;
                 case "variant":
                     if (!IsKnownVariant(value))
-                        throw new FormatException("DialView variant is not a, watercolour, roomlight or leafplant: " + value);
+                        throw new FormatException("DialView variant is not a, watercolour, roomlight, leafplant or soilmound: " + value);
                     _variant = string.IsNullOrEmpty(value) ? VariantDefault : value.Trim();
                     break;
                 default:
