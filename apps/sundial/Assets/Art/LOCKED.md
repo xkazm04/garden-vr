@@ -149,3 +149,18 @@ A variant, not a replacement: look A and every number above are unchanged and st
 | Halo close radius, card texels | 5 (`HaloClosePx`) | 14 (`DialLayout.HaloClosePx`) | - |
 
 The face is `Resources/Layout/dial_face_layout.png`: `layout_t052_face.py` remaps `dial_face.png` radially (no new paint, wash colours untouched), mirrors the wash into the blank paper core, keeps half the contrast of the ticks and adds a warm tone and a seeded pencil hatch to the band. The halo stroke (3 px core, 8 px glow, gold, `_Silhouette` 2.15, queue 3012) is the T-SUN-031 lock, unchanged; only the close radius and, for a drawn-leaf plant, a canvas wider than the card with a soil patch under the base change. The midday plant stands outside its arc by 26 degrees (at -4 degrees, the arc starts at 22) because the bed's far edge is at z +0.02; its tiles and wash are unchanged. `Dial_Face`, `Dial_Rim`, the gnomon and every frame hashed above are not edited.
+
+## Sprint composite (T-SUN-050, variant=sprint)
+
+A variant, not a replacement: look A and every number above are unchanged and stay the default. `variant=sprint` stands for `layout+watercolour+roomlight+soilmound+sprintleaf+halo2` (`DialView.SprintParts`); naming more tokens adds them (`sprint+leafplant` also draws the morning plant as an assembly). Adopting it is an owner call; nothing here is a lock until then.
+
+| Part | Spike | In the stack | Why |
+| --- | --- | --- | --- |
+| Face, washes, paper | S1 T-SUN-041 B | yes, on the layout face (`Resources/Layout/Dial_Face_Layout_S1.mat`, `layout_t052_face.py --s1`) | judge 6/6, wash and paper hp inside the dossier bands |
+| Room light | S2 T-SUN-044 B | yes, including the `Fidelity/Leaf` path and the leaf plants' wash wedges | judge 6/6 closer |
+| Drawn leaves | S3b T-SUN-049 B | midday and evening only | the morning assembly lost to its card (2 of 6), so the morning plant stays a card |
+| Soil | S4 T-SUN-046 B | yes (the layout stretches it to the bed) | judge 6/6, soil gate met |
+| Halo | S5 T-SUN-047 B | for the card plant only | it has no mask for a drawn-leaf plant; those two keep the layout's closed stroke (`HaloClosePx` 14, canvas and soil patch) |
+| Proportions | T-SUN-052 | yes | IoU 0.759 to 0.970 |
+
+Seams fixed in this pass: the S1 face and control map are remapped with the layout's radial knots (the washes keep their ids and grain on the wider disc); `Fidelity/Leaf` takes the room-light cookie once per vertex at the plant's base point (0 fragment samples); a hero plant drawn as an assembly keeps its wash wedge; the cookie is read through the dial's look A transform, so the layout scale (0.8843) does not stretch the room's light by 1 / 0.8843 against the plate. Frames: `orchestration/runs/sundial/T-SUN-050/nohalo-s.png` (sha256 `1e1d4ecd49efe35bbbf093dcfad17b17e5e318c677cbcd7cd90322e9ef81745d`) and `pinch-s.png`, state `halo=0,waiting=0,gnomonDeg=105,time=1` and `halo=1,haloTarget=midday,gnomonDeg=105,time=1`, framing `DialG1`.
