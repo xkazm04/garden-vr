@@ -1,7 +1,7 @@
-# S3 judge draws, advisory. Direct agy calls (Gemini), three draws per question and per order.
+# S3 / S3b (T-SUN-049) judge draws, advisory. Direct agy calls (Gemini), three draws per question and per order.
 # The host re-scores with tools/fidelity (F2). Calls run four at a time; each takes about 3 minutes.
 #
-#   python apps/sundial/Art/Scripts/leafplant_s3_judge.py            # all 18 draws
+#   python apps/sundial/Art/Scripts/leafplant_s3_judge.py            # every draw
 #   python apps/sundial/Art/Scripts/leafplant_s3_judge.py only closer  # one question (finished draws are skipped)
 #   python apps/sundial/Art/Scripts/leafplant_s3_judge.py summary    # parse the saved answers
 import concurrent.futures
@@ -13,14 +13,14 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, "..", "..", "..", ".."))
-RUN = os.path.join(REPO, "orchestration", "runs", "sundial", "T-SUN-045")
+RUN = os.path.join(REPO, "orchestration", "runs", "sundial", "T-SUN-049")
 REF = os.path.join(REPO, "shared", "assets", "art-reference", "A2-05-field-notebook-1.png")
 AGY = os.environ.get("AGY", os.path.join(os.environ.get("LOCALAPPDATA", ""), "agy", "bin", "agy.exe"))
 MODEL = "gemini-3.8-flash-high"
 TIMEOUT = 1500
 
 PINCH = {"a": os.path.join(RUN, "pinch-a.png"), "b": os.path.join(RUN, "pinch-b.png")}
-MONTAGE = {"a": os.path.join(RUN, "orbit-close-a.montage.png"), "b": os.path.join(RUN, "orbit-close-b.montage.png")}
+PLANTS = (("morning", "-morning", "the green herb at the left"), ("midday", "", "the pink flowering plant"), ("dusk", "-evening", "the lavender at the right"))
 
 RUBRIC = (
     "Rubric levels: 1 flat-shaded 3D primitives; 2 drawn materials but plants or soil read as cut-outs or CG; "
@@ -29,33 +29,44 @@ RUBRIC = (
     "5 indistinguishable from the reference's look."
 )
 
+CUTOUT_Q = ("This image shows three views of the same plant from slightly different camera angles (left, middle, right). "
+            "Does the plant look like a flat cut-out or billboard card, or like a plant with volume? Reply with CUTOUT or "
+            "VOLUME on the first line, then one sentence that says whether you see any cut-out, billboard or paper-card look.")
+CROP_Q = ("This is a crop of the three plants (a green herb, a pink flowering plant, a lavender) from a stylised, hand-drawn-looking "
+          "scene. Do the plants look like flat cut-outs or billboard cards, or like plants with volume and drawn leaves? Reply "
+          "with CUTOUT or VOLUME on the first line, then one sentence that says whether you see any cut-out, billboard or "
+          "paper-card look.")
+
 
 def jobs():
     out = []
     for order, first, second in (("ab", "a", "b"), ("ba", "b", "a")):
         spec = "Candidate A is %s and candidate B is %s." % (PINCH[first], PINCH[second])
-        q = ("Which candidate is closer to the reference watercolour field notebook, looking at the plants "
-             "(the pink flowering plant in particular)? Reply with A or B on the first line, then one sentence.")
+        q = ("Which candidate is closer to the reference watercolour field notebook, looking at the three plants (the green herb, "
+             "the pink flowering plant and the lavender)? Reply with A or B on the first line, then one sentence.")
         for draw in (1, 2, 3):
             out.append(("closer", order, draw, "Reference notebook: %s. %s %s" % (REF, spec, q)))
+    for name, tag, what in PLANTS:
+        for order, first, second in (("ab", "a", "b"), ("ba", "b", "a")):
+            ca = os.path.join(RUN, "g1-%s-crop-%s.png" % (name, first))
+            cb = os.path.join(RUN, "g1-%s-crop-%s.png" % (name, second))
+            q = ("Which candidate crop shows %s drawn closer to the style of the reference watercolour field notebook "
+                 "(its plants are small, delicately inked with light pencil-like lines and soft watercolour fills)? "
+                 "Candidate A is %s and candidate B is %s. Reply with A or B on the first line, then one sentence." % (what, ca, cb))
+            for draw in (1, 2, 3):
+                out.append(("closer-" + name, order, draw, "Reference notebook: %s. %s" % (REF, q)))
+    for name, tag, what in PLANTS:
+        for variant in ("a", "b"):
+            for draw in (1, 2, 3):
+                path = os.path.join(RUN, "orbit-close%s-%s.montage.png" % (tag, variant))
+                out.append(("cutout-" + name, variant, draw, "Image: %s. %s" % (path, CUTOUT_Q)))
     for variant in ("a", "b"):
-        q = ("This image shows three views of the same pink flowering plant from slightly different camera angles "
-             "(left, middle, right). Does the plant look like a flat cut-out or billboard card, or like a plant with "
-             "volume? Reply with CUTOUT or VOLUME on the first line, then one sentence that says whether you see "
-             "any cut-out, billboard or paper-card look.")
         for draw in (1, 2, 3):
-            out.append(("cutout", variant, draw, "Image: %s. %s" % (MONTAGE[variant], q)))
+            out.append(("cutstill", variant, draw, "Image: %s. %s" % (os.path.join(RUN, "g1-plants-crop-%s.png" % variant), CROP_Q)))
     for variant in ("a", "b"):
-        q = ("This is a crop of one pink flowering plant from a stylised, hand-drawn-looking scene. Does the plant look "
-             "like a flat cut-out or billboard card, or like a plant with volume and drawn leaves? Reply with CUTOUT "
-             "or VOLUME on the first line, then one sentence that says whether you see any cut-out, billboard or "
-             "paper-card look.")
-        for draw in (1, 2, 3):
-            out.append(("cutstill", variant, draw, "Image: %s. %s" % (os.path.join(RUN, "g1-plant-crop-%s.png" % variant), q)))
-    for variant in ("a", "b"):
-        q = ("Score the PLANTS region of the candidate frame only (the pink flowering plant, the green plant and the "
+        q = ("Score the PLANTS region of the candidate frame only (the green herb, the pink flowering plant and the "
              "lavender), against the reference frame. %s Reply with 'LEVEL: n' on the first line (n from 1 to 5), "
-             "then two sentences." % RUBRIC)
+             "then two sentences. Say whether any plant still looks like a flat cut-out or billboard card." % RUBRIC)
         for draw in (1, 2, 3):
             out.append(("rubric", variant, draw, "Reference notebook: %s. Candidate frame: %s. %s" % (REF, PINCH[variant], q)))
     return out
@@ -106,18 +117,19 @@ def summary():
     tally = {}
     for (key, who), firsts in sorted(rows.items()):
         tally["%s %s" % (key, who)] = firsts
-    # closer: map the letter back to the variant
-    closer = {"a": 0, "b": 0, "none": 0}
+    # closer*: map the letter back to the variant
+    closer = {}
     for (key, who), firsts in rows.items():
-        if key != "closer":
+        if not key.startswith("closer"):
             continue
+        votes = closer.setdefault(key, {"a": 0, "b": 0, "none": 0})
         for f in firsts:
             letter = (f or "").strip().upper()[:1]
             if letter not in ("A", "B"):
-                closer["none"] += 1
+                votes["none"] += 1
                 continue
             variant = letter.lower() if who == "ab" else ("b" if letter == "A" else "a")
-            closer[variant] += 1
+            votes[variant] += 1
     print(json.dumps({"tally": tally, "closer_votes_by_variant": closer}, indent=1))
     with open(os.path.join(RUN, "judge-summary.json"), "w", encoding="utf-8", newline="\n") as handle:
         json.dump({"tally": tally, "closer_votes_by_variant": closer}, handle, indent=1)
@@ -131,7 +143,7 @@ def main(argv):
     failed = 0
     chosen = jobs()
     if argv and argv[0] == "only":
-        chosen = [j for j in chosen if j[0] in argv[1:]]
+        chosen = [j for j in chosen if any(j[0].startswith(k) for k in argv[1:])]
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
         for key, who, draw, code in pool.map(ask, chosen):
             failed += code != 0
