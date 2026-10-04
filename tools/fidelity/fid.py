@@ -30,7 +30,7 @@ usage:
   fid.py judge --self-test
   fid.py judge --calibrate [--frame <JarG1|DialG1>] [--draws N] [--jobs N] [--evidence <dir>] [--fresh]
   fid.py judge --pairwise --frame <JarG1|DialG1> --player <id=path> --out <file>
-  fid.py judge --regrade --ledger <calls.jsonl> [--check]
+  fid.py judge --regrade --ledger <calls.jsonl> [--out <file>] [--jobs N] [--check]
   fid.py judge --probe [--frame <JarG1|DialG1>]
   fid.py sweep <spec.json> --out <dir>
   fid.py sheet <sweep-dir> --frame <JarG1|DialG1> [--out <png>] [--judge <pair.json>] [--region <name>]

@@ -1,0 +1,27 @@
+{
+  "note": "Same-framing negative controls built from the locked frame by tools/fidelity/lab/controls.py. Each makes one region worse in a way that cannot move it toward the reference, so the expected order is true by construction.",
+  "controls": [
+    {
+      "id": "control_blur",
+      "frame": "DialG1",
+      "from": "current",
+      "region": "dial",
+      "op": {
+        "kind": "blur",
+        "sigma": 7
+      },
+      "path": "tools/fidelity/rungs/DialG1-control-blur-dial.png"
+    },
+    {
+      "id": "control_hueflip",
+      "frame": "DialG1",
+      "from": "current",
+      "region": "washes",
+      "op": {
+        "kind": "hue_rotate",
+        "degrees": 180
+      },
+      "path": "tools/fidelity/rungs/DialG1-control-hueflip-washes.png"
+    }
+  ]
+}
