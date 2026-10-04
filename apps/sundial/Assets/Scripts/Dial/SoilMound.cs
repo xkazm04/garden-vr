@@ -24,6 +24,16 @@ namespace GardenVR.Sundial
     }
 
     /// <summary>
+    /// T-SUN-052. Asks the mound to be the layout's bed: the baked circle is stretched to the bed ellipse (<see cref="DialLayout"/>) and
+    /// shifted toward the viewer, the painting stretching with it (the UV stays the baked one), and the pebbles scale up.
+    /// </summary>
+    public sealed class SoilBed
+    {
+        public readonly float FaceRadius;
+        public SoilBed(float faceRadius) { FaceRadius = faceRadius; }
+    }
+
+    /// <summary>
     /// Spike S4. The soil as a raised heightfield mound (about 8 mm at the crown, a ragged lip that rises from the paper)
     /// with a top-down painting projected planar from above, and a handful of low pebbles merged into the same mesh.
     /// One mesh, one renderer, one draw (<c>Fidelity/SoilMound</c>). The heightfield and the pebbles are baked and seeded by
@@ -50,7 +60,7 @@ namespace GardenVR.Sundial
         readonly Material _material;
         readonly MeshRenderer _renderer;
 
-        public SoilMound(Transform parent, Material template, TextAsset data, float faceY)
+        public SoilMound(Transform parent, Material template, TextAsset data, float faceY, SoilBed bed = null)
         {
             if (template == null) throw new InvalidOperationException("SoilMound needs the Fidelity/SoilMound material");
             if (data == null) throw new InvalidOperationException("SoilMound needs the heightfield json");
@@ -64,7 +74,7 @@ namespace GardenVR.Sundial
             _root = go.transform;
             _mesh = new Mesh { name = "SoilMound", hideFlags = HideFlags.DontSave };
             _material = new Material(template) { name = "SoilMound.instance", hideFlags = HideFlags.DontSave };
-            Build(file);
+            Build(file, bed);
             go.AddComponent<MeshFilter>().sharedMesh = _mesh;
             _renderer = go.AddComponent<MeshRenderer>();
             _renderer.sharedMaterial = _material;
@@ -84,8 +94,14 @@ namespace GardenVR.Sundial
             if (_material != null) UnityEngine.Object.DestroyImmediate(_material);
         }
 
-        void Build(SoilMoundFile f)
+        void Build(SoilMoundFile f, SoilBed bed)
         {
+            float sx = 1f, sz = 1f, oz = 0f, pebbleScale = 1f;
+            if (bed != null)
+            {
+                DialLayout.BedMap(bed.FaceRadius, f.moundRadius, out sx, out sz, out oz);
+                pebbleScale = DialLayout.PebbleScale;
+            }
             int n = f.grid;
             int w = n + 1;
             float step = 2f * f.span / n;
@@ -122,12 +138,12 @@ namespace GardenVR.Sundial
                     float z = -f.span + j * step;
                     float h = Mathf.Max(f.heights[k], floor);
                     map[k] = verts.Count;
-                    verts.Add(new Vector3(x, h, z));
+                    verts.Add(new Vector3(x * sx, h, z * sz + oz));
                     uvs.Add(new Vector2((x + f.span) / (2f * f.span), (z + f.span) / (2f * f.span)));
                     // Central difference of the heightfield. Edge samples fall back to one side.
                     float hl = Height(f, i - 1, j, floor), hr = Height(f, i + 1, j, floor);
                     float hd = Height(f, i, j - 1, floor), hu = Height(f, i, j + 1, floor);
-                    normals.Add(new Vector3(hl - hr, 2f * step, hd - hu).normalized);
+                    normals.Add(new Vector3((hl - hr) / sx, 2f * step, (hd - hu) / sz).normalized);
                     colors.Add(new Color(1f, 1f, 1f, 0f));
                     if (h > Crown) Crown = h;
                 }
@@ -149,7 +165,7 @@ namespace GardenVR.Sundial
             {
                 foreach (SoilPebble p in f.pebbles)
                 {
-                    AddPebble(p, verts, uvs, normals, colors, tris, f.span);
+                    AddPebble(p, verts, uvs, normals, colors, tris, f.span, sx, sz, oz, pebbleScale);
                     Pebbles++;
                 }
             }
@@ -172,7 +188,8 @@ namespace GardenVR.Sundial
             return Mathf.Max(f.heights[j * w + i], floor);
         }
 
-        static void AddPebble(SoilPebble p, List<Vector3> verts, List<Vector2> uvs, List<Vector3> normals, List<Color> colors, List<int> tris, float span)
+        static void AddPebble(SoilPebble p, List<Vector3> verts, List<Vector2> uvs, List<Vector3> normals, List<Color> colors, List<int> tris, float span,
+            float sx, float sz, float oz, float pebbleScale)
         {
             int first = verts.Count;
             Quaternion spin = Quaternion.Euler(0f, p.rot, 0f);
@@ -189,11 +206,13 @@ namespace GardenVR.Sundial
                     float theta = 2f * Mathf.PI * k / Slices;
                     var unit = new Vector3(ring * Mathf.Cos(theta), y, ring * Mathf.Sin(theta));
                     Vector3 local = new Vector3(unit.x * radius.x, unit.y * radius.y, unit.z * radius.z);
-                    Vector3 pos = centre + spin * local;
+                    Vector3 off = spin * local;
+                    Vector3 pos = new Vector3(centre.x * sx, centre.y, centre.z * sz + oz) + off * pebbleScale;
+                    Vector3 sample = centre + off;
                     var nrm = spin * new Vector3(unit.x / radius.x, unit.y / radius.y, unit.z / radius.z);
                     verts.Add(pos);
                     normals.Add(nrm.normalized);
-                    uvs.Add(new Vector2((pos.x + span) / (2f * span), (pos.z + span) / (2f * span)));
+                    uvs.Add(new Vector2((sample.x + span) / (2f * span), (sample.z + span) / (2f * span)));
                     colors.Add(tint);
                 }
             }
