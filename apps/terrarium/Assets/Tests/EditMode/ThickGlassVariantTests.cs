@@ -30,7 +30,7 @@ namespace GardenVR.Terrarium.Tests
                 Assert.AreEqual(2, view.ThickGlassMode);
                 view.ApplyCaptureState(State("s2b2+s3"));
                 Assert.AreEqual(3, view.ThickGlassMode);
-                Assert.AreEqual("s2b2+s3", view.Variant);
+                Assert.AreEqual("s3+s2b2", view.Variant, "parts print in a fixed order: s1, s3, s2, s4");
                 view.ApplyCaptureState(State("s1+s2b1"));
                 Assert.AreEqual("s1+s2b1", view.Variant);
 
