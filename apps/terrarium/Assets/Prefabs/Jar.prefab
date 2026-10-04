@@ -4797,6 +4797,10 @@ MonoBehaviour:
   answerTime: -1
   recoveredTime: -1
   sporeStep: -1
+  glassFilter: {fileID: 2456400444553323768}
+  aGlassMesh: {fileID: 7065439566198968859, guid: 3c733602d994481489db76113f3222b8, type: 3}
+  s2JarMesh: {fileID: -6768141841945819295, guid: 718d5a3934157614688c98c6b2790df3, type: 3}
+  s2JarFullMesh: {fileID: -9096638396977681743, guid: 718d5a3934157614688c98c6b2790df3, type: 3}
   glowShader: {fileID: 4800000, guid: 88fd645f85b6421448a0135ed11607d4, type: 3}
   s4FrondShader: {fileID: 4800000, guid: e5454a4e564c8a54ba917d45e55102d2, type: 3}
   s4FrondAlbedo: {fileID: 2800000, guid: d6f3c9f14e2203d48a8bb0b2e80218e9, type: 3}
