@@ -140,7 +140,24 @@ def reject_occluded(obj, scene, cam, uv_name):
     return hidden
 
 
-def projection_material(image, uv_name, weight_only):
+def _between_zero_and_one(nt, socket):
+    """1 when socket is inside (0, 1), else 0."""
+    low = nt.nodes.new("ShaderNodeMath")
+    low.operation = "GREATER_THAN"
+    low.inputs[1].default_value = 0.0
+    high = nt.nodes.new("ShaderNodeMath")
+    high.operation = "LESS_THAN"
+    high.inputs[1].default_value = 1.0
+    nt.links.new(socket, low.inputs[0])
+    nt.links.new(socket, high.inputs[0])
+    both = nt.nodes.new("ShaderNodeMath")
+    both.operation = "MULTIPLY"
+    nt.links.new(low.outputs["Value"], both.inputs[0])
+    nt.links.new(high.outputs["Value"], both.inputs[1])
+    return both
+
+
+def projection_material(image, uv_name, weight_only, eye=None):
     mat = bpy.data.materials.new("Project")
     mat.use_nodes = True
     nt = mat.node_tree
@@ -156,11 +173,28 @@ def projection_material(image, uv_name, weight_only):
     uv.uv_map = uv_name
     nt.links.new(uv.outputs["UV"], tex.inputs["Vector"])
     if weight_only:
+        # Cycles' Incoming during an EMIT bake is the bake ray, not the camera,
+        # so every view baked the same weight. Use the camera position instead.
         geom = nt.nodes.new("ShaderNodeNewGeometry")
+        if eye is None:
+            view = geom.outputs["Incoming"]
+        else:
+            combine = nt.nodes.new("ShaderNodeCombineXYZ")
+            combine.inputs["X"].default_value = float(eye[0])
+            combine.inputs["Y"].default_value = float(eye[1])
+            combine.inputs["Z"].default_value = float(eye[2])
+            delta = nt.nodes.new("ShaderNodeVectorMath")
+            delta.operation = "SUBTRACT"
+            nt.links.new(combine.outputs["Vector"], delta.inputs[0])
+            nt.links.new(geom.outputs["Position"], delta.inputs[1])
+            normalise = nt.nodes.new("ShaderNodeVectorMath")
+            normalise.operation = "NORMALIZE"
+            nt.links.new(delta.outputs["Vector"], normalise.inputs[0])
+            view = normalise.outputs["Vector"]
         dot = nt.nodes.new("ShaderNodeVectorMath")
         dot.operation = "DOT_PRODUCT"
         nt.links.new(geom.outputs["Normal"], dot.inputs[0])
-        nt.links.new(geom.outputs["Incoming"], dot.inputs[1])
+        nt.links.new(view, dot.inputs[1])
         clamp = nt.nodes.new("ShaderNodeMath")
         clamp.operation = "MAXIMUM"
         clamp.inputs[1].default_value = 0.0
@@ -169,7 +203,18 @@ def projection_material(image, uv_name, weight_only):
         power.operation = "POWER"
         power.inputs[1].default_value = 2.0
         nt.links.new(clamp.outputs["Value"], power.inputs[0])
-        nt.links.new(power.outputs["Value"], emit.inputs["Strength"])
+        # Occluded loops were moved to UV (-1, -1). They must not keep a facing weight.
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        nt.links.new(uv.outputs["UV"], sep.inputs["Vector"])
+        gate = nt.nodes.new("ShaderNodeMath")
+        gate.operation = "MULTIPLY"
+        nt.links.new(_between_zero_and_one(nt, sep.outputs["X"]).outputs["Value"], gate.inputs[0])
+        nt.links.new(_between_zero_and_one(nt, sep.outputs["Y"]).outputs["Value"], gate.inputs[1])
+        faced = nt.nodes.new("ShaderNodeMath")
+        faced.operation = "MULTIPLY"
+        nt.links.new(power.outputs["Value"], faced.inputs[0])
+        nt.links.new(gate.outputs["Value"], faced.inputs[1])
+        nt.links.new(faced.outputs["Value"], emit.inputs["Strength"])
         emit.inputs["Color"].default_value = (1.0, 1.0, 1.0, 1.0)
     else:
         nt.links.new(tex.outputs["Color"], emit.inputs["Color"])
@@ -221,12 +266,13 @@ def depth_material():
     emit = nt.nodes.new("ShaderNodeEmission")
     cam = nt.nodes.new("ShaderNodeCameraData")
     span = nt.nodes.new("ShaderNodeMapRange")
-    # Blender 4.2 names this output View Z Depth. It is camera-space Z,
-    # negative in front of the camera. The jar sits about 0.45 m away.
-    span.inputs["From Min"].default_value = -0.55
-    span.inputs["From Max"].default_value = -0.35
-    span.inputs["To Min"].default_value = 0.0
-    span.inputs["To Max"].default_value = 1.0
+    # Blender 4.2 names this output View Z Depth. It is the positive distance
+    # in front of the camera, not the negative camera-space Z. A negative
+    # window clamps the whole mound to white. The jar sits about 0.45 m away.
+    span.inputs["From Min"].default_value = 0.35
+    span.inputs["From Max"].default_value = 0.55
+    span.inputs["To Min"].default_value = 1.0
+    span.inputs["To Max"].default_value = 0.0
     span.clamp = True
     nt.links.new(cam.outputs["View Z Depth"], span.inputs["Value"])
     nt.links.new(span.outputs["Result"], emit.inputs["Color"])
@@ -462,7 +508,12 @@ def op_bake(out, views_path, previous, resolution):
         # Multiplying here and again in the blend would darken the gate view.
         f4_lib.assign_material(mound, projection_material(repaint, "proj", weight_only=False))
         color_bake = bake_current(mound, color_img, samples=1)
-        f4_lib.assign_material(mound, projection_material(repaint, "proj", weight_only=True))
+        f4_lib.assign_material(
+            mound,
+            projection_material(
+                repaint, "proj", weight_only=True, eye=tuple(cam.matrix_world.translation),
+            ),
+        )
         weight_bake = bake_current(mound, weight_img, samples=1)
         colors.append(color_img)
         weights.append(weight_img)
