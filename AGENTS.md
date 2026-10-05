@@ -29,8 +29,8 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 
 ## Commands
 
-This is the canonical command list (`.ai/manifest.yaml` `guidance.canonical`). `CLAUDE.md` carries the same block, and
-`tools/guard/check.mjs` fails if the two drift. `<app>` is `terrarium` or `sundial`. `<out>` is the task's run folder.
+This is the canonical command list (`.ai/manifest.yaml` `guidance.canonical`). `CLAUDE.md` carries the same block and
+`.ai/manifest.yaml` lists the same commands. `tools/guard/check.mjs` fails if any of the three drift (rules G1, G2). `<app>` is `terrarium` or `sundial`. `<out>` is the task's run folder.
 Unity exits on its own after `-runTests`, so never add `-quit` to a test run. Read the results XML (test-case count
 above 0, failed 0), not the exit code alone.
 

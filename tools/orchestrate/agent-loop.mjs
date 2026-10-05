@@ -7,11 +7,12 @@
 // not all in orchestration/done/ is skipped until they are. Running a task: the file moves to orchestration/running/,
 // Grok runs headless in the agent's worktree, and the task moves to done/ when the agent left
 // <worktree>/orchestration/runs/<app>/<id>/REPORT.md, else to failed/. Raw Grok output goes to
-// orchestration/runs/<app>/<id>/ in the main checkout (host-side log). Idle: polls every 2 min for new tasks.
+// orchestration/runs/<app>/<id>/ in the main checkout (host-side log), beside guard.txt: the output of
+// `node tools/guard/check.mjs --all` run in the worktree after the task (advisory). Idle: polls every 2 min for new tasks.
 // Stop: create orchestration/STOP-<app> (finishes the current task first).
 import fs from 'node:fs';
 import path from 'node:path';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -116,6 +117,19 @@ async function runGrok(task) {
   return { id, code, wallS: Math.round((Date.now() - t0) / 1000) };
 }
 
+// Runs the AGENTS.md rule guard over the worktree after a task (docs/AI_HARNESS.md, Definition of Done step 4). Advisory:
+// it never changes done/failed; the host reads guard.txt when verifying. Returns the exit code, or null when not run.
+function runGuard(id) {
+  const script = path.join(wt, 'tools', 'guard', 'check.mjs');
+  if (!fs.existsSync(script)) { log(`${id}: guard not run (no tools/guard/check.mjs on this branch yet)`); return null; }
+  const g = spawnSync(process.execPath, [script, '--all'], { cwd: wt, encoding: 'utf8', windowsHide: true, timeout: 120000 });
+  const out = `${g.stdout || ''}${g.stderr || ''}${g.error ? `guard: could not run: ${g.error.message}\n` : ''}`;
+  fs.mkdirSync(O('runs', app, id), { recursive: true });
+  fs.writeFileSync(O('runs', app, id, 'guard.txt'), out);
+  log(`${id}: guard exit=${g.status} ${(out.trim().split(/\r?\n/).filter((l) => l.startsWith('guard:'))[0] || '').trim()}`);
+  return g.status;
+}
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 log(`loop start: engine=${engineState.primary} claude=${claudeModel}@${claudeEffort} grok=${model} agy=${agyModel} worktree=${wt}`);
 while (true) {
@@ -132,6 +146,8 @@ while (true) {
   const report = path.join(wt, 'orchestration', 'runs', app, r.id, 'REPORT.md');
   const ok = r.code === 0 && fs.existsSync(report);
   fs.renameSync(O('running', task.file), O(ok ? 'done' : 'failed', task.file));
-  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report) }) + '\n');
-  log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)}`);
+  let guard = null;
+  try { guard = runGuard(r.id); } catch (e) { log(`${r.id}: guard crashed: ${e.message}`); }
+  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report), guard }) + '\n');
+  log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)} guard=${guard}`);
 }

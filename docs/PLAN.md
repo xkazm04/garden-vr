@@ -155,14 +155,20 @@ against the agent's own claims (registry `diff-from-the-recorded-base`).
    process CPU. Verdict per agent: `observed-changes` / `observed-quiet` / `could-not-observe` (registry
    `passive-signal-ingestion`). Quiet for 90 min with a task running and no CPU: check the environment first (Unity
    licence, editor lock, sleep, ElevenLabs refusal, GPU) before blaming the model (registry `clear-the-environment-first`).
-2. **Verify each newly done task** on a clean checkout of `agent/<app>` at its head:
+2. **Verify each newly done task** on a clean checkout of `agent/<app>` at its head. This is the short form of the
+   Definition of Done in `docs/AI_HARNESS.md`, the single full list. A task that fails any step is `rejected: <reason>`.
    - restore the oracles from the base commit (the task's test files, playback scripts, acceptance scripts) and note any
      agent edit to them as a separate finding (registry `grade-with-checks-the-run-could-not-touch`);
    - re-run every Acceptance command in the task, with the same timeouts; read results XML (collected count > 0,
      failed = 0), not exit codes alone;
+   - `dotnet test shared/core-dotnet` passes;
+   - `node tools/guard/check.mjs --all` reports 0 errors (the loop's `orchestration/runs/<app>/<id>/guard.txt` is the
+     first look, the host re-run is the verdict); each `W1` warning matches a path in `touches:` and the report flags it;
    - `git diff --stat <base>..HEAD` touches only the task's `touches:` plus the agent's owned paths (section 5, ownership);
      `git check-ignore` on committed paths finds no `Library/`, `Temp/`, `Logs/`, builds, `.env`;
    - read the evidence (open the PNGs, watch the MP4); a capture that is black or magenta is a failed capture;
+   - a visual change carries the side-by-side against the art reference, and one that touches a gate frame gets the A3
+     blind judge, run by the host (advisory; only the owner's A1 rating certifies);
    - termination cause recorded: finished / ceiling / refused / crashed / unknown.
 3. **Merge** verified work to `main` (`git merge --no-ff agent/<app>`), run `dotnet test shared/core-dotnet` and a
    batchmode compile of BOTH apps on `main` (a shared-package change must not break the other app), then confirm with

@@ -20,7 +20,9 @@ version and points there.
 - Unity EditMode and PlayMode suites in `apps/*/Assets/Tests/` cover the canonical journey playback, `FirstRun_*`,
   `PauseAt_*` and reduced motion (gate U1, S2-S4, A7). The commands are in the `## Commands` block of `AGENTS.md`.
 - `tools/guard/check.mjs` mechanically checks AGENTS.md rules 1, 4 and 7, committed artefacts and path ownership. It
-  has a `--self-test`.
+  also checks that `CLAUDE.md` carries exactly the `AGENTS.md` command list (G1) and that `.ai/manifest.yaml`
+  declares `AGENTS.md` canonical and lists the same commands (G2). It has a `--self-test`. The agent loop runs it
+  after every task and writes `orchestration/runs/<app>/<id>/guard.txt`.
 - `tools/fidelity/` (`fid.cmd`, `fid.py`, `README.md`) is the art-fidelity lab: F1 metrics against per-frame ladders, the F2 pairwise judge, and the F3 sweep and contact sheet.
 - The LLM-as-judge for art is the A3 blind second opinion. Its rubric is section 7 of `docs/art/terrarium-style.md`
   and `docs/art/sundial-style.md`. Sundial's judge runs are scripted in `apps/sundial/Art/Scripts/*_judge.py` and
@@ -60,7 +62,9 @@ head, against the base commit recorded at dispatch (`git diff <base>..agent/<app
    XML: the test-case count must be above 0 and the failed count must be 0. An exit code alone does not count.
 3. **Core tests.** `dotnet test shared/core-dotnet` passes.
 4. **Guard.** `node tools/guard/check.mjs --all` reports 0 errors. Each `W1` warning must match a path the task's
-   `touches:` names, and the report must flag it.
+   `touches:` names, and the report must flag it. The agent loop already ran it once after the task. Its
+   `orchestration/runs/<app>/<id>/guard.txt` and the `guard` exit code in `tasks.jsonl` are the first look, but only
+   the host's re-run counts.
 5. **Scope.** `git diff --stat <base>..HEAD` touches only `touches:` plus the agent's owned paths (PLAN section 5,
    ownership), and `git check-ignore` finds no committed `Library/`, `Temp/`, `Logs/`, builds or `.env`.
 6. **Evidence opened.** Open every PNG and watch every MP4 the task names. A black or magenta capture is a failed
@@ -92,5 +96,6 @@ head, against the base commit recorded at dispatch (`git diff <base>..agent/<app
 | Who | Checks | Record |
 |---|---|---|
 | Agent | Runs its Acceptance commands and `node tools/guard/check.mjs --staged` before each commit, then leaves evidence | `orchestration/runs/<app>/<id>/REPORT.md` |
+| Agent loop | `node tools/guard/check.mjs --all` in the worktree after every task (advisory, never moves a task) | `orchestration/runs/<app>/<id>/guard.txt`, `guard` in `tasks.jsonl` |
 | Host | Steps 1-8 above, plus the A3 judge on gate frames | `verified:` / `rejected:` line in the task file, and `orchestration/STATUS.md` |
 | Owner | Owner-eyes gate items: first-time use (U2), daily use (U4), feel (S6), A1 frame rating, audio listen (A6), motion watch (A7); approves reserved changes | witness and evidence columns of `apps/terrarium/GATE.md` and `apps/sundial/GATE.md` |

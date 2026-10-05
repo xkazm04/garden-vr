@@ -8,8 +8,9 @@ registry:
   local: ../ai-registry
 skills:
   - scan-sweep
-# Which guidance file wins. CLAUDE.md is an adapter that defers to AGENTS.md; tools/guard/check.mjs (rule G1) fails
-# when the CLAUDE.md Commands block drifts from the AGENTS.md one.
+# Which guidance file wins. CLAUDE.md is an adapter that defers to AGENTS.md; tools/guard/check.mjs fails when the
+# CLAUDE.md Commands block drifts from the AGENTS.md one (G1), or when this file stops naming AGENTS.md canonical or
+# misses one of its commands below (G2).
 guidance:
   canonical: AGENTS.md
   adapters: [CLAUDE.md]

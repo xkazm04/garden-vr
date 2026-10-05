@@ -20,7 +20,8 @@ alone exit 0.
 | R4 | error | No `UnityEngine` / `UnityEditor` in `shared/packages/com.gardenvr.core/` or `shared/core-dotnet/`, and `GardenVR.Core.asmdef` keeps `"noEngineReferences": true` | AGENTS rule 4 |
 | R7 | error | No em dash (U+2014) inside a string literal in `.cs` under `apps/*/Assets/` or `shared/packages/*/Runtime/`. `Tests/` and `TextMesh Pro/` are skipped | AGENTS rule 7 |
 | A1 | error | No committed `apps/<app>/Library/`, `Temp/`, `Obj/`, `Logs/`, `Build(s)/`, `UserSettings/`, no `.env` / `.env.*` other than `.env.example`, and no `*.blend1` | AGENTS "How to work a task" |
-| G1 | error | Every line in the `## Commands` block of `CLAUDE.md` also appears in the canonical `## Commands` block of `AGENTS.md` | `.ai/manifest.yaml` `guidance.canonical` |
+| G1 | error | The `## Commands` block of `CLAUDE.md` holds exactly the commands of the canonical `## Commands` block of `AGENTS.md`, no more and no fewer. The fence must sit inside the `## Commands` section | `.ai/manifest.yaml` `guidance.canonical` |
+| G2 | error | `.ai/manifest.yaml` declares `guidance:` `canonical: AGENTS.md`, and every `AGENTS.md` command appears verbatim in it, so a tool reading the manifest gets the same answer an agent reads | `.ai/manifest.yaml` `guidance.canonical` |
 | W1 | warning | On branch `agent/<app>`, a staged path that the other agent owns or the host owns (PLAN section 5 ownership table) | PLAN section 5 |
 
 W1 is a warning because PLAN section 5 allows a non-owned path when the task's `touches:` names it. The agent must
@@ -29,6 +30,18 @@ recorded most often (T-TER-014 edited Sundial's `SceneSetup.cs`; see `docs/knowl
 
 Full-line comments are ignored. If a rule fires on code that is legitimately correct, fix the rule and add a fixture
 for that case to `--self-test`. Do not bypass the hook with `--no-verify`.
+
+`--staged` runs G1 and G2 only when `AGENTS.md`, `CLAUDE.md` or `.ai/manifest.yaml` is staged. `--all` always runs them.
+
+## Where it runs
+
+- **Agent, before each commit.** `--staged` (AGENTS.md "How to work a task"), and the pre-commit hook once it is
+  installed.
+- **Agent loop, after each task.** `tools/orchestrate/agent-loop.mjs` runs `--all` in the agent's worktree. It writes
+  the output to `orchestration/runs/<app>/<id>/guard.txt` in the main checkout and records the exit code as `guard`
+  in `tasks.jsonl` and the loop log. This is the local stand-in for CI, since nothing is ever pushed. It is advisory:
+  a red guard does not move the task to `failed/`, but the host rejects the task in Definition of Done step 4.
+- **Host, when verifying.** `--all` on the agent branch (`docs/AI_HARNESS.md`, step 4).
 
 ## Installing the hook (owner's call)
 

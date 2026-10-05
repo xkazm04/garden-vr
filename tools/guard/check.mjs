@@ -15,6 +15,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '.
 
 const INPUT_PROVIDER = 'shared/packages/com.gardenvr.input/Runtime/Providers/';
 const CORE_ASMDEF = 'shared/packages/com.gardenvr.core/Runtime/GardenVR.Core.asmdef';
+const MANIFEST = '.ai/manifest.yaml';
 const EM_DASH = '—';
 
 // Raw device reads that must stay inside the keyboard/mouse provider (AGENTS rule 1, gate S1).
@@ -115,18 +116,38 @@ function checkOwnership(branch, p) {
   return [];
 }
 
-// G1: the command list in CLAUDE.md must not drift from the canonical one in AGENTS.md.
+// G1: CLAUDE.md carries exactly the canonical command list from AGENTS.md, so Claude and Grok sessions run the same
+// commands. The fence must sit inside the "## Commands" section; a later section's fence does not count.
 function commandsBlock(text) {
-  const m = text.match(/^## Commands[^\n]*\n[\s\S]*?^```[^\n]*\n([\s\S]*?)^```/m);
+  const s = text.replace(/\r/g, '').match(/^## Commands[^\n]*\n([\s\S]*?)(?=^## |(?![\s\S]))/m);
+  const m = s && s[1].match(/^```[^\n]*\n([\s\S]*?)^```/m);
   return m ? m[1].split('\n').map((l) => l.trim()).filter(Boolean) : null;
 }
 function checkGuidance(claude, agents) {
-  const a = commandsBlock(agents.replace(/\r/g, ''));
+  const a = commandsBlock(agents);
   if (!a) return [finding('AGENTS.md', 0, 'G1', 'no "## Commands" fenced block; it is the canonical command list')];
-  const c = commandsBlock(claude.replace(/\r/g, ''));
+  const c = commandsBlock(claude);
   if (!c) return [finding('CLAUDE.md', 0, 'G1', 'no "## Commands" fenced block; copy it from AGENTS.md')];
-  const have = new Set(a);
-  return c.filter((l) => !have.has(l)).map((l) => finding('CLAUDE.md', 0, 'G1', `command not in the AGENTS.md Commands block: ${l}`));
+  const inA = new Set(a), inC = new Set(c);
+  return [
+    ...c.filter((l) => !inA.has(l)).map((l) => finding('CLAUDE.md', 0, 'G1', `command not in the AGENTS.md Commands block: ${l}`)),
+    ...a.filter((l) => !inC.has(l)).map((l) => finding('CLAUDE.md', 0, 'G1', `AGENTS.md command missing from the CLAUDE.md Commands block: ${l}`)),
+  ];
+}
+
+// G2: .ai/manifest.yaml machine-declares AGENTS.md as the canonical guidance and lists every canonical command, so a
+// tool reading the manifest sees the same rules and commands an agent reads. A text check; the guard has no YAML parser.
+function checkManifest(manifest, agents) {
+  const text = manifest.replace(/\r/g, '');
+  if (!text) return [finding(MANIFEST, 0, 'G2', 'missing; it declares guidance.canonical and the commands')];
+  const g = text.match(/^guidance:[ \t]*\n((?:[ \t]+[^\n]*\n?|[ \t]*#[^\n]*\n?|[ \t]*\n)*)/m);
+  const canon = g && (g[1].match(/^[ \t]+canonical:[ \t]*["']?([^"'\s#]+)/m) || [])[1];
+  const out = [];
+  if (canon !== 'AGENTS.md')
+    out.push(finding(MANIFEST, 0, 'G2', `guidance.canonical must be AGENTS.md (found: ${canon || 'none'})`));
+  for (const l of commandsBlock(agents) || [])
+    if (!text.includes(l)) out.push(finding(MANIFEST, 0, 'G2', `AGENTS.md command missing from commands: ${l}`));
+  return out;
 }
 
 const git = (args) => execFileSync('git', args, { cwd: root, maxBuffer: 1 << 28 });
@@ -142,9 +163,9 @@ function staged() {
     out.push(...checkPath(p), ...checkOwnership(branch, p));
     if (readsContent(p)) out.push(...checkContent(p, git(['show', ':' + p]).toString('utf8')));
   }
-  if (files.includes('CLAUDE.md') || files.includes('AGENTS.md')) {
+  if (['CLAUDE.md', 'AGENTS.md', MANIFEST].some((p) => files.includes(p))) {
     const show = (p) => { try { return git(['show', ':' + p]).toString('utf8'); } catch { return ''; } };
-    out.push(...checkGuidance(show('CLAUDE.md'), show('AGENTS.md')));
+    out.push(...checkGuidance(show('CLAUDE.md'), show('AGENTS.md')), ...checkManifest(show(MANIFEST), show('AGENTS.md')));
   }
   return out;
 }
@@ -159,6 +180,7 @@ function all() {
   }
   if (!files.includes(CORE_ASMDEF)) out.push(finding(CORE_ASMDEF, 0, 'R4', 'core asmdef is not tracked; the engine-free flag cannot be checked'));
   out.push(...checkGuidance(read('CLAUDE.md') || '', read('AGENTS.md') || ''));
+  out.push(...checkManifest(read(MANIFEST) || '', read('AGENTS.md') || ''));
   return out;
 }
 
@@ -175,6 +197,9 @@ function selfTest() {
   const app = 'apps/terrarium/Assets/Scripts/Fixture.cs';
   const ui = 'apps/sundial/Assets/Scripts/Ui/Fixture.cs';
   const doc = (lines) => `# Fixture\n\n## Commands\n\n\`\`\`powershell\n${lines.join('\n')}\n\`\`\`\n\n## Next\n`;
+  const manifest = (canonical, cmds) =>
+    `schema: ai-manifest\n# which file wins\nguidance:\n  canonical: ${canonical}\n  adapters: [CLAUDE.md]\n\n# commands\ncommands:\n` +
+    cmds.map((c, i) => `  c${i}: >-\n    ${c}\n`).join('');
   // [name, findings, the one rule expected to fire, or null for none]
   const cases = [
     ['R1 app reads Keyboard.current', checkContent(app, 'var k = Keyboard.current;'), 'R1'],
@@ -213,11 +238,20 @@ function selfTest() {
     ['W1 the own app is fine', checkOwnership('agent/terrarium', 'apps/terrarium/Assets/Scripts/Jar.cs'), null],
     ['W1 an owned shared path is fine', checkOwnership('agent/sundial', 'shared/packages/com.gardenvr.fx/Runtime/Shaders/FCard.shader'), null],
     ['W1 the host branch is not checked', checkOwnership('main', 'apps/sundial/Assets/Editor/SceneSetup.cs'), null],
-    ['G1 in sync', checkGuidance(doc(['a', 'b']), doc(['a', 'b', 'c'])), null],
+    ['G1 in sync', checkGuidance(doc(['a', 'b']), doc(['b', 'a'])), null],
     ['G1 CRLF in sync', checkGuidance(doc(['a', 'b']).replace(/\n/g, '\r\n'), doc(['b', 'a'])), null],
     ['G1 drift', checkGuidance(doc(['a', 'x']), doc(['a'])), 'G1'],
+    ['G1 AGENTS.md gained a command CLAUDE.md lacks', checkGuidance(doc(['a', 'b']), doc(['a', 'b', 'c'])), 'G1'],
     ['G1 AGENTS.md lost its block', checkGuidance(doc(['a']), '# Fixture\n'), 'G1'],
     ['G1 CLAUDE.md lost its block', checkGuidance('# Fixture\n', doc(['a'])), 'G1'],
+    ['G1 a later section\'s fence does not count', checkGuidance('# F\n\n## Commands\n\nsee AGENTS.md\n\n## Next\n\n```\na\n```\n', doc(['a'])), 'G1'],
+    ['G2 in sync', checkManifest(manifest('AGENTS.md', ['run-one', "run two '-x'"]), doc(['run-one', "run two '-x'"])), null],
+    ['G2 CRLF and quoted canonical in sync', checkManifest(manifest('"AGENTS.md"', ['run-one']).replace(/\n/g, '\r\n'), doc(['run-one'])), null],
+    ['G2 manifest missing', checkManifest('', doc(['run-one'])), 'G2'],
+    ['G2 canonical missing', checkManifest('guidance:\n  plan: docs/PLAN.md\ncommands:\n  t: run-one\n', doc(['run-one'])), 'G2'],
+    ['G2 canonical outside guidance', checkManifest('canonical: AGENTS.md\nguidance:\n  plan: docs/PLAN.md\ncommands:\n  t: run-one\n', doc(['run-one'])), 'G2'],
+    ['G2 canonical names the wrong file', checkManifest(manifest('CLAUDE.md', ['run-one']), doc(['run-one'])), 'G2'],
+    ['G2 command missing', checkManifest(manifest('AGENTS.md', ['run-one']), doc(['run-one', 'run-two'])), 'G2'],
   ];
   let failed = 0;
   for (const [name, found, rule] of cases) {

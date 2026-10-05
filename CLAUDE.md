@@ -9,7 +9,7 @@ Done in `docs/AI_HARNESS.md`.
 ## Commands
 
 The same list as `AGENTS.md`, so Claude and Grok sessions run the same commands; `node tools/guard/check.mjs` fails if
-this block drifts from it. `<app>` is `terrarium` or `sundial`; `<out>` is the run folder. Never add `-quit` to a
+this block gains or loses a command against it (G1), or if `.ai/manifest.yaml` stops listing them (G2). `<app>` is `terrarium` or `sundial`; `<out>` is the run folder. Never add `-quit` to a
 Unity test run.
 
 ```powershell
