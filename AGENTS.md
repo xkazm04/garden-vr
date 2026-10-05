@@ -27,14 +27,30 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 6. **No medical claims** in any text or narration about breathing or meditation.
 7. **No em dash in user-facing strings.**
 
+## Commands
+
+This is the canonical command list (`.ai/manifest.yaml` `guidance.canonical`). `CLAUDE.md` carries the same block, and
+`tools/guard/check.mjs` fails if the two drift. `<app>` is `terrarium` or `sundial`. `<out>` is the task's run folder.
+Unity exits on its own after `-runTests`, so never add `-quit` to a test run. Read the results XML (test-case count
+above 0, failed 0), not the exit code alone.
+
+```powershell
+dotnet test shared/core-dotnet
+node tools/guard/check.mjs --staged
+node tools/guard/check.mjs --all
+node tools/guard/check.mjs --self-test
+Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe" -ArgumentList '-batchmode','-nographics','-projectPath','apps/<app>','-runTests','-testPlatform','EditMode','-testResults','<out>/editmode.xml','-logFile','<out>/editmode.log'
+Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe" -ArgumentList '-batchmode','-projectPath','apps/<app>','-runTests','-testPlatform','PlayMode','-testResults','<out>/playmode.xml','-logFile','<out>/playmode.log'
+```
+
 ## How to work a task
 
 - Your task file is in `orchestration/running/`. It names the goal, the acceptance checks and the evidence to leave.
 - Work only inside your app folder and the shared paths the task names. If a shared package must change, keep the
   change backward compatible and say so in your report; the orchestrator merges shared changes.
 - Unity editor: `C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe`. Use `-batchmode -nographics -quit
-  -projectPath apps/<app> -executeMethod ...` for builds/tests and `-batchmode` (with graphics) for captures.
-  Never run two Unity instances on the same project at once.
+  -projectPath apps/<app> -executeMethod ...` for builds and editor scripts, `-runTests` without `-quit` for tests (see
+  Commands), and `-batchmode` (with graphics) for captures. Never run two Unity instances on the same project at once.
 - **Run Unity (and any long process) in the foreground and wait for it.** In headless mode your run ENDS the moment
   you finish a turn without a tool call, so never end a turn "waiting for" a background process. Use
   `Start-Process -Wait -FilePath <Unity.exe> -ArgumentList ...` (PowerShell does not wait on GUI-subsystem exes
@@ -44,6 +60,9 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 - Verify before you claim: run the tests, capture the screenshot, read the log. A claim you did not run is "not run".
 - **Commit atomically** on your own branch (`agent/<app>`), one commit per finished sub-step, with a clear message.
   Never push. Never rewrite history. Never commit `Library/`, `Temp/`, `Logs/`, builds or `.env`.
+- Before each commit run `node tools/guard/check.mjs --staged`. It checks rules 1, 4 and 7, committed artefacts and
+  path ownership, and it exits 1 on a break; fix the break, never bypass it. A `W1` warning means you touched a path
+  you do not own; that is allowed only when the task's `touches:` names it, and your report must say so.
 - Finish by writing `orchestration/runs/<app>/<task-id>/REPORT.md`: what changed, commands run with their real
   output (trimmed), evidence paths (screenshots, side-by-sides, videos), what failed, what you would do next.
 

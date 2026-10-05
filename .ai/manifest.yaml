@@ -8,3 +8,20 @@ registry:
   local: ../ai-registry
 skills:
   - scan-sweep
+# Which guidance file wins. CLAUDE.md is an adapter that defers to AGENTS.md; tools/guard/check.mjs (rule G1) fails
+# when the CLAUDE.md Commands block drifts from the AGENTS.md one.
+guidance:
+  canonical: AGENTS.md
+  adapters: [CLAUDE.md]
+  plan: docs/PLAN.md
+  harness: docs/AI_HARNESS.md
+# The same commands as the "## Commands" block in AGENTS.md. <app> is terrarium or sundial; <out> is the run folder.
+commands:
+  test-core: dotnet test shared/core-dotnet
+  guard: node tools/guard/check.mjs --all
+  guard-staged: node tools/guard/check.mjs --staged
+  guard-selftest: node tools/guard/check.mjs --self-test
+  unity-editmode: >-
+    Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe" -ArgumentList '-batchmode','-nographics','-projectPath','apps/<app>','-runTests','-testPlatform','EditMode','-testResults','<out>/editmode.xml','-logFile','<out>/editmode.log'
+  unity-playmode: >-
+    Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe" -ArgumentList '-batchmode','-projectPath','apps/<app>','-runTests','-testPlatform','PlayMode','-testResults','<out>/playmode.xml','-logFile','<out>/playmode.log'
