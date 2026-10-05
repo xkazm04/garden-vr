@@ -57,6 +57,8 @@ namespace GardenVR.Core
         public void Set<T>(SettingKey<T> key, T value)
         {
             Require(key);
+            if (value is double number && (double.IsNaN(number) || double.IsInfinity(number)))
+                throw new ArgumentException("a setting value must be a finite number");
             if (object.Equals(value, key.Default)) _stored.Remove(key.Name);
             else _stored[key.Name] = value;
         }
