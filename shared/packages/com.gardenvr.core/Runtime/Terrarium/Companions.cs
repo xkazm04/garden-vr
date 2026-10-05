@@ -37,9 +37,7 @@ namespace GardenVR.Core
             int last = LastKeptDay(ledger, habitId);
             if (last < 0) return 1f;
             int gap = today.Index - last;
-            if (gap < 0) gap = 0;
-            if (gap <= 1) return 1f;
-            return Math.Max(Garden.VitalityFloor, 1f - 0.15f * (gap - 1));
+            return Garden.VitalityForGap(Math.Max(0, gap));
         }
 
         public static int LastKeptDay(Ledger ledger, string habitId)

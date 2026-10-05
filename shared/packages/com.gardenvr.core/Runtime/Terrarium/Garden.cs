@@ -53,7 +53,12 @@ namespace GardenVR.Core
 
         public float Vitality(int today)
         {
-            int gap = DaysSinceRitual(today);
+            return VitalityForGap(DaysSinceRitual(today));
+        }
+
+        /// <summary>The one droop curve: full through a one-day gap, then 0.15 lower per further day, floored.</summary>
+        public static float VitalityForGap(int gap)
+        {
             if (gap <= 1) return 1f;
             return Math.Max(VitalityFloor, 1f - 0.15f * (gap - 1));
         }
