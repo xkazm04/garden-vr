@@ -2,9 +2,11 @@
 #
 # The [*.cs] analyzer severities below run in every `dotnet test shared/core-dotnet` build, through
 # shared/core-dotnet/Directory.Build.props (EnableNETAnalyzers, EnforceCodeStyleInBuild). That build compiles the pure
-# C# core (shared/packages/com.gardenvr.core/Runtime) and its tests. Everything here is a warning, never an error: a
-# rule is promoted in Directory.Build.props (WarningsAsErrors) only once a build shows 0 hits for it. Unity reads none
-# of this when it compiles the apps; in the apps it gives editor hints only.
+# C# core (shared/packages/com.gardenvr.core/Runtime) and its tests. Every rule here is a warning; a rule is promoted
+# in Directory.Build.props (WarningsAsErrors) once a build shows 0 hits for it, and from then on a hit fails the build.
+# Promoted: CA2242, CA2200, CA2241, CA2245, CA1304, CA1310. Keep each promoted line at warning (or error): its line here
+# is what switches it on, and guard rule B1 fails if one is removed or turned down. Unity reads none of this when it
+# compiles the apps; in the apps it gives editor hints only.
 root = true
 
 [*]

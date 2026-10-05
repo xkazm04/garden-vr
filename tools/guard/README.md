@@ -26,7 +26,8 @@ alone exit 0.
 | V1 | error | Every line of `docs/knowledge/verifications.jsonl` is one verdict object with a task id, a known app, `verified` or `rejected`, a date, base and head shas, and all eight Definition of Done checks as `pass`, `fail`, `not run` or `n/a`. A `rejected` line has a reason. A `verified` line has the merge sha, every check `pass` or `n/a` ("not run" is never a pass), and a `guardOut` of `guard: 0 error(s)`. A `judge` is null or names its script and git blob sha | `docs/AI_HARNESS.md`, Definition of Done |
 | V2 | error on `main`, warning elsewhere | Every first-parent `Merge branch 'agent/<app>'` on `main` since the ledger was added has a line in `main`'s ledger whose `merge` is that commit. Off `main` (the agent loop's runs) it is a warning, so a host lapse shows in every `guard.txt` without failing the agent | `docs/AI_HARNESS.md`, Definition of Done |
 | W1 | warning | On branch `agent/<app>` (or `--as agent/<app>`), a staged or changed path that the other agent owns or the host owns (PLAN section 5 ownership table) | PLAN section 5 |
-| H1 | warning | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard | this file, "Installing the hooks" |
+| B1 | error | The analyzer ratchet never demotes. Every id in `PROMOTED` (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310) stays in `<WarningsAsErrors>` of `shared/core-dotnet/Directory.Build.props`, stays out of `<NoWarn>`, and keeps a `dotnet_diagnostic.<id>.severity` of `warning` or `error` in `.editorconfig` (that line is what switches the rule on) | this file, "C# analyzer and format baseline" |
+| H1 | error on `main`, warning elsewhere | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard. On `main`, where host and human commits land, a checkout without the hook cannot report green. Elsewhere it is a warning, because the agent loop wires the hook for agent commits through the environment, which the worktree config never shows | this file, "Installing the hooks" |
 
 W1 is a warning because PLAN section 5 allows a non-owned path when the task's `touches:` names it. The agent must
 flag it in `REPORT.md`, and the host checks it against `touches:` during verification. Cross-app edits are the slip
@@ -36,8 +37,9 @@ report W1, because it has no notion of "this task's change"; `--range` and `--st
 Full-line comments are ignored. If a rule fires on code that is legitimately correct, fix the rule and add a fixture
 for that case to `--self-test`. Do not bypass the hook with `--no-verify`.
 
-`--staged` and `--range` run G1 and G2 only when `AGENTS.md`, `CLAUDE.md` or `.ai/manifest.yaml` changed, and V1 only
-when the ledger changed. `--all` always runs G1, G2, V1 and V2.
+`--staged` and `--range` run G1 and G2 only when `AGENTS.md`, `CLAUDE.md` or `.ai/manifest.yaml` changed, V1 only
+when the ledger changed, and B1 only when `Directory.Build.props` or `.editorconfig` changed. `--all` always runs G1,
+G2, V1, V2 and B1. H1 runs in `--all` and `--range`; its level follows the branch (`--as` counts for `--range`).
 
 ## Where it runs
 
@@ -56,11 +58,16 @@ when the ledger changed. `--all` always runs G1, G2, V1 and V2.
   check.
 - **Host, at each merge.** Once the hooks are installed, `pre-merge-commit` runs `--staged` on `git merge --no-ff
   agent/<app>`.
+- **Host and human commits on `main`.** The rules check the repo's content, not who wrote it, so a human commit is held
+  to the same rules as an agent commit (W1 aside, which is about agent ownership). The hook gates it once
+  `core.hooksPath` is set. Until then, `--all` and `--range` on `main` fail with H1, so the checkout where those commits
+  land cannot report green while its commits skip the guard.
 
 ## Installing the hooks (owner's call)
 
 `core.hooksPath` is shared by the main checkout and every agent worktree, so the owner turns it on once. That gates
-host commits and merges too (H1 warns on every `--all` run until then):
+host and human commits and merges too. Until then H1 fails every `--all` run on `main` and warns on every other
+branch:
 
 ```powershell
 git config core.hooksPath tools/guard/hooks
@@ -74,9 +81,18 @@ or macOS, also run `git update-index --chmod=+x tools/guard/hooks/pre-commit too
 The repo-root `.editorconfig` holds the C# formatting rules (IDE0055) and a short list of bug-pattern analyzers:
 CA2242 (NaN compared with ==), CA1304/CA1305/CA1310 (culture-dependent parsing), CA1806 (a dropped result), CA2241,
 CA2200, CA1065 and CA2245. `shared/core-dotnet/Directory.Build.props` switches the SDK's analyzers on for the core
-build, so `dotnet test shared/core-dotnet` reports them as warnings on every run. The analyzers ship with the .NET
-SDK, so no package is added.
+build, so `dotnet test shared/core-dotnet` runs them on every build. The analyzers ship with the .NET SDK, so no
+package is added.
 
-Ratchet: a rule moves to `WarningsAsErrors` in `Directory.Build.props` once a build shows 0 hits for it. Pending, and
-not run yet: `dotnet format whitespace shared/core-dotnet/GardenVR.sln --verify-no-changes`. It joins the `## Commands`
+Ratchet: a rule moves to `WarningsAsErrors` in `Directory.Build.props` once a build shows 0 hits for it, and from then
+on a hit fails `dotnet test shared/core-dotnet`, which is Definition of Done steps 3 and 8. Guard rule B1 keeps it there.
+To promote a rule, add it to `WarningsAsErrors` and to `PROMOTED` in `check.mjs` in the same commit.
+
+| State | Rules | Why |
+|---|---|---|
+| Error | CA2242, CA2200, CA2241, CA2245, CA1304, CA1310 | A static read of the core and its tests found 0 hits (2026-10-05), and a hit is a real bug |
+| Warning | CA1305 | Known hits: `Sundial/StretchSession.cs` `Time.ToString("0.00")`, `Common/SaveStore.cs` `int.ToString()`, the tests' `Guid.ToString("N")`. Fix them, then promote |
+| Warning | CA1806, CA1065, IDE0055 | Not measured yet. Read the warning list of `dotnet build shared/core-dotnet` and promote each one that shows 0 hits |
+
+Pending, and not run yet: `dotnet format whitespace shared/core-dotnet/GardenVR.sln --verify-no-changes`. It joins the `## Commands`
 block (AGENTS.md, CLAUDE.md and `.ai/manifest.yaml` together, or G1/G2 fail) only after it has run green once.

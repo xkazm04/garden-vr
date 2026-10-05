@@ -24,8 +24,13 @@ version and points there.
   declares `AGENTS.md` canonical and lists the same commands (G2). It has a `--self-test`. Every agent commit runs it
   through `tools/guard/hooks/pre-commit`, which the agent loop wires for the agent's process tree. The loop also runs
   `--all` and `--range <base>..<head>` after every task and writes `orchestration/runs/<app>/<id>/guard.txt`.
-- `.editorconfig` and `shared/core-dotnet/Directory.Build.props` hold the C# format and analyzer baseline. It is
-  reported as warnings on every `dotnet test shared/core-dotnet` build (`tools/guard/README.md`).
+- `.editorconfig` and `shared/core-dotnet/Directory.Build.props` hold the C# format and analyzer baseline, which runs on
+  every `dotnet test shared/core-dotnet` build. The promoted rules (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310)
+  fail that build. The rest are warnings until a build shows 0 hits for them. Guard rule B1 stops a promoted rule from
+  being demoted (`tools/guard/README.md`, analyzer section).
+- On `main`, where host and human commits land, the guard's H1 is an error until `core.hooksPath` points at
+  `tools/guard/hooks`. Those commits face the same rules as an agent commit. The checkout cannot report green while
+  they skip the hook.
 - `docs/knowledge/verifications.jsonl` is the committed record of every host verdict (below). The guard rules V1 and V2
   validate it.
 - `tools/fidelity/` (`fid.cmd`, `fid.py`, `README.md`) is the art-fidelity lab: F1 metrics against per-frame ladders, the F2 pairwise judge, and the F3 sweep and contact sheet.
@@ -87,7 +92,8 @@ head, against the base commit recorded at dispatch (`git diff <base>..agent/<app
 9. **Record.** Append one line to `docs/knowledge/verifications.jsonl` and commit it on `main` right after the merge.
    For a rejection, append the line without merging. The task-file `verified:` line is the working note, and the
    ledger is the record that survives, because `orchestration/` is not tracked. `node tools/guard/check.mjs --all`
-   fails on a malformed line (V1). On `main` it also fails on an agent merge that has no line (V2).
+   fails on a malformed line (V1). On `main` it also fails on an agent merge that has no line (V2), and on a checkout
+   whose commit hooks are not installed (H1).
 
 One line per verdict, on a single line in the file (wrapped here for reading):
 
@@ -128,5 +134,6 @@ One line per verdict, on a single line in the file (wrapped here for reading):
 |---|---|---|
 | Agent | Runs its Acceptance commands, leaves evidence. Every commit runs `node tools/guard/check.mjs --staged` through the pre-commit hook the loop wires | `orchestration/runs/<app>/<id>/REPORT.md` |
 | Agent loop | `node tools/guard/check.mjs --all` and `--range <base>..<head>` in the worktree after every task (advisory, never moves a task) | `orchestration/runs/<app>/<id>/guard.txt`, `base`, `head`, `guard`, `guardRange` in `tasks.jsonl` |
+| Host or human commit on `main` | `node tools/guard/check.mjs --staged` through `pre-commit` / `pre-merge-commit` once the owner sets `core.hooksPath`. Until then `--all` on `main` fails with H1. Analyzer rules promoted in `Directory.Build.props` fail `dotnet test shared/core-dotnet` for everyone | the commit itself; the guard output |
 | Host | Steps 1-9 above, plus the A3 judge on gate frames | committed line in `docs/knowledge/verifications.jsonl` (guard V1, V2), plus the `verified:` / `rejected:` note in the task file and `orchestration/STATUS.md` |
 | Owner | Owner-eyes gate items: first-time use (U2), daily use (U4), feel (S6), A1 frame rating, audio listen (A6), motion watch (A7); approves reserved changes | witness and evidence columns of `apps/terrarium/GATE.md` and `apps/sundial/GATE.md` |

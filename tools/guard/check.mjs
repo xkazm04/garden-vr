@@ -22,7 +22,13 @@ const CORE_ASMDEF = 'shared/packages/com.gardenvr.core/Runtime/GardenVR.Core.asm
 const MANIFEST = '.ai/manifest.yaml';
 const LEDGER = 'docs/knowledge/verifications.jsonl';
 const HOOKS = 'tools/guard/hooks';
+const BUILD_PROPS = 'shared/core-dotnet/Directory.Build.props';
+const EDITORCONFIG = '.editorconfig';
 const EM_DASH = '—';
+
+// Analyzer rules promoted to errors in the core build (B1). The ratchet only moves one way: add an id here and to
+// WarningsAsErrors in Directory.Build.props together, once a build shows 0 hits for it; never remove one.
+const PROMOTED = ['CA2242', 'CA2200', 'CA2241', 'CA2245', 'CA1304', 'CA1310'];
 
 // Raw device reads that must stay inside the keyboard/mouse provider (AGENTS rule 1, gate S1).
 const RAW_INPUT = [
@@ -157,11 +163,43 @@ function checkManifest(manifest, agents) {
 }
 
 // H1: the commit hooks are installed. core.hooksPath is shared by the main checkout and every agent worktree, so setting
-// it is the owner's call (README); until then every host commit and merge skips the guard, and this says so on each run.
-function checkHook(hooksPath) {
+// it is the owner's call (README); until then every host or human commit and merge skips the guard. An error on main,
+// where those commits land, so a checkout without the hook cannot report green; a warning on any other branch (the
+// agent loop wires the hook for agent commits through GIT_CONFIG_* env, so their worktree config never shows it).
+function checkHook(hooksPath, level = 'warn') {
   const v = (hooksPath || '').trim().replace(/\\/g, '/').replace(/\/+$/, '');
   if (v === HOOKS || v.endsWith('/' + HOOKS)) return [];
-  return [finding('core.hooksPath', 0, 'H1', `commit hooks not installed (core.hooksPath is ${v ? `"${v}"` : 'unset'}); commits and merges here skip the guard until the owner runs: git config core.hooksPath ${HOOKS}`, 'warn')];
+  return [finding('core.hooksPath', 0, 'H1', `commit hooks not installed (core.hooksPath is ${v ? `"${v}"` : 'unset'}); commits and merges here skip the guard until the owner runs: git config core.hooksPath ${HOOKS}`, level)];
+}
+
+// B1: the analyzer ratchet never demotes. Every PROMOTED id stays in <WarningsAsErrors> of the core's
+// Directory.Build.props, stays out of <NoWarn>, and keeps a `dotnet_diagnostic.<id>.severity` of warning or error in
+// .editorconfig: that line is what switches the rule on, so deleting it would silently turn the error off too.
+function checkRatchet(props, editorconfig) {
+  const p = props.replace(/\r/g, '').replace(/<!--[\s\S]*?-->/g, '');
+  if (!p.trim()) return [finding(BUILD_PROPS, 0, 'B1', 'missing; it switches the analyzers on and fails the core build on the promoted rules')];
+  const ids = (tag) => {
+    const set = new Set();
+    for (const m of p.matchAll(new RegExp(`<${tag}>([^<]*)</${tag}>`, 'g')))
+      for (const id of m[1].split(/[;,\s]+/)) if (id) set.add(id.toUpperCase());
+    return set;
+  };
+  const asErrors = ids('WarningsAsErrors'), noWarn = ids('NoWarn');
+  const severity = new Map();
+  editorconfig.replace(/\r/g, '').split('\n').forEach((l, i) => {
+    const m = /^\s*dotnet_diagnostic\.(\w+)\.severity\s*=\s*(\w+)/i.exec(l);
+    if (m) severity.set(m[1].toUpperCase(), { level: m[2].toLowerCase(), line: i + 1 });
+  });
+  const out = [];
+  for (const id of PROMOTED) {
+    if (!asErrors.has(id)) out.push(finding(BUILD_PROPS, 0, 'B1', `${id} is promoted and must stay in <WarningsAsErrors>; the ratchet never demotes`));
+    if (noWarn.has(id)) out.push(finding(BUILD_PROPS, 0, 'B1', `${id} is promoted and must not be in <NoWarn>`));
+    const s = severity.get(id);
+    if (!s) out.push(finding(EDITORCONFIG, 0, 'B1', `${id} is promoted but has no dotnet_diagnostic.${id}.severity line, so the analyzer may not run`));
+    else if (s.level !== 'warning' && s.level !== 'error')
+      out.push(finding(EDITORCONFIG, s.line, 'B1', `${id} is promoted; its severity must stay warning or error (found: ${s.level})`));
+  }
+  return out;
 }
 
 // V1: the verification ledger, one host verdict per line (docs/AI_HARNESS.md, Definition of Done). It is the committed
@@ -227,6 +265,7 @@ function checkFiles(branch, files, show) {
   if (['CLAUDE.md', 'AGENTS.md', MANIFEST].some((p) => files.includes(p)))
     out.push(...checkGuidance(get('CLAUDE.md'), get('AGENTS.md')), ...checkManifest(get(MANIFEST), get('AGENTS.md')));
   if (files.includes(LEDGER)) out.push(...checkLedger(get(LEDGER)));
+  if ([BUILD_PROPS, EDITORCONFIG].some((p) => files.includes(p))) out.push(...checkRatchet(get(BUILD_PROPS), get(EDITORCONFIG)));
   return out;
 }
 
@@ -264,8 +303,9 @@ function range(spec, asBranch) {
     process.exit(2);
   }
   console.log(`range ${spec}: ${files.length} changed file(s)`);
-  const out = checkFiles(asBranch || currentBranch(), files, (p) => git(['show', `${head}:${p}`]).toString('utf8'));
-  out.push(...checkHook(hooksPath()));
+  const branch = asBranch || currentBranch();
+  const out = checkFiles(branch, files, (p) => git(['show', `${head}:${p}`]).toString('utf8'));
+  out.push(...checkHook(hooksPath(), branch === 'main' ? 'error' : 'warn'));
   return out;
 }
 
@@ -282,11 +322,12 @@ function all() {
   out.push(...checkManifest(read(MANIFEST) || '', read('AGENTS.md') || ''));
   const ledger = read(LEDGER);
   if (ledger !== null) out.push(...checkLedger(ledger));
+  out.push(...checkRatchet(read(BUILD_PROPS) || '', read(EDITORCONFIG) || ''));
   // V2 always reads main: its ledger and its merges. On another branch (an agent worktree) it is a warning.
   const onMain = currentBranch() === 'main';
   const mainLedger = onMain ? ledger : showAt('main', LEDGER);
   if (mainLedger !== null) out.push(...checkMergeRecords(mergesSinceLedger(onMain ? 'HEAD' : 'main'), mainLedger, onMain ? 'error' : 'warn'));
-  out.push(...checkHook(hooksPath()));
+  out.push(...checkHook(hooksPath(), onMain ? 'error' : 'warn'));
   return out;
 }
 
@@ -307,6 +348,12 @@ function selfTest() {
     `schema: ai-manifest\n# which file wins\nguidance:\n  canonical: ${canonical}\n  adapters: [CLAUDE.md]\n\n# commands\ncommands:\n` +
     cmds.map((c, i) => `  c${i}: >-\n    ${c}\n`).join('');
   const PASS = { oracles: 'pass', acceptance: 'pass', core: 'pass', guard: 'pass', scope: 'pass', evidence: 'n/a', report: 'pass', postMerge: 'pass' };
+  const props = (ids, extra = '') =>
+    `<Project>\n  <!-- promote with <WarningsAsErrors>$(WarningsAsErrors);CA0000</WarningsAsErrors> -->\n  <PropertyGroup>\n` +
+    `    <EnableNETAnalyzers>true</EnableNETAnalyzers>\n    <WarningsAsErrors>$(WarningsAsErrors);${ids.join(';')}</WarningsAsErrors>\n${extra}  </PropertyGroup>\n</Project>\n`;
+  const editorconfig = (sev = () => 'warning') =>
+    'root = true\n\n[*.cs]\n# NaN compared with ==\n' + ['CA1305', ...PROMOTED].map((id) => `dotnet_diagnostic.${id}.severity = ${sev(id)}\n`).join('');
+  const [FIRST] = PROMOTED;
   const MERGE = 'c3d4e5f';
   const verdict = (o) => JSON.stringify({
     task: 'T-TER-045', app: 'terrarium', verdict: 'verified', reason: null, base: 'a1b2c3d', head: 'b2c3d4e', merge: MERGE,
@@ -368,12 +415,29 @@ function selfTest() {
     ['H1 hooks point elsewhere', checkHook('.husky\n'), 'H1'],
     ['H1 hooks installed', checkHook('tools/guard/hooks\n'), null],
     ['H1 hooks installed by absolute Windows path', checkHook('C:\\Users\\x\\garden-vr\\tools\\guard\\hooks\\'), null],
+    ['H1 hooks unset on main', checkHook('', 'error'), 'H1'],
+    ['H1 hooks installed on main', checkHook('tools/guard/hooks', 'error'), null],
+    ['B1 ratchet in sync', checkRatchet(props(PROMOTED), editorconfig()), null],
+    ['B1 CRLF in sync', checkRatchet(props(PROMOTED).replace(/\n/g, '\r\n'), editorconfig().replace(/\n/g, '\r\n')), null],
+    ['B1 error severity is fine', checkRatchet(props(PROMOTED), editorconfig(() => 'error')), null],
+    ['B1 a pending rule may stay a warning', checkRatchet(props(PROMOTED), editorconfig((id) => (id === 'CA1305' ? 'suggestion' : 'warning'))), null],
+    ['B1 props missing', checkRatchet('', editorconfig()), 'B1'],
+    ['B1 a promoted id dropped from WarningsAsErrors', checkRatchet(props(PROMOTED.slice(1)), editorconfig()), 'B1'],
+    ['B1 a promoted id only in a comment', checkRatchet(props(PROMOTED.slice(1)).replace('CA0000', FIRST), editorconfig()), 'B1'],
+    ['B1 a promoted id in NoWarn', checkRatchet(props(PROMOTED, `    <NoWarn>$(NoWarn);${FIRST}</NoWarn>\n`), editorconfig()), 'B1'],
+    ['B1 a promoted id turned down', checkRatchet(props(PROMOTED), editorconfig((id) => (id === FIRST ? 'suggestion' : 'warning'))), 'B1'],
+    ['B1 a promoted id turned off by a later line', checkRatchet(props(PROMOTED), editorconfig() + `dotnet_diagnostic.${FIRST}.severity = none\n`), 'B1'],
+    ['B1 a promoted id with no severity line', checkRatchet(props(PROMOTED), editorconfig().replace(new RegExp(`dotnet_diagnostic\\.${FIRST}\\.[^\\n]*\\n`), '')), 'B1'],
     ['range: the other app on an agent branch', checkFiles('agent/terrarium', ['apps/sundial/Assets/Editor/SceneSetup.cs'], () => 'class S {}'), 'W1'],
     ['range: raw input in a changed file', checkFiles('main', [app], () => 'var k = Keyboard.current;'), 'R1'],
     ['range: a committed Library file', checkFiles('agent/sundial', ['apps/sundial/Library/ArtifactDB'], () => ''), 'A1'],
     ['range: guidance drift in a changed file', checkFiles('main', ['CLAUDE.md'],
       (p) => ({ 'CLAUDE.md': doc(['a', 'x']), 'AGENTS.md': doc(['a']), [MANIFEST]: manifest('AGENTS.md', ['a']) })[p]), 'G1'],
     ['range: a bad ledger line in a changed file', checkFiles('main', [LEDGER], () => '{oops\n'), 'V1'],
+    ['range: a ratchet demotion in a changed file', checkFiles('main', [EDITORCONFIG],
+      (p) => ({ [BUILD_PROPS]: props(PROMOTED), [EDITORCONFIG]: editorconfig((id) => (id === FIRST ? 'none' : 'warning')) })[p]), 'B1'],
+    ['range: the ratchet in sync after a props change', checkFiles('main', [BUILD_PROPS],
+      (p) => ({ [BUILD_PROPS]: props(PROMOTED), [EDITORCONFIG]: editorconfig() })[p]), null],
     ['range: a clean change', checkFiles('agent/sundial', ['apps/sundial/Assets/Scripts/Dial.cs'], () => 'class Dial {}'), null],
     ['V1 empty ledger', checkLedger(''), null],
     ['V1 a verified line', checkLedger(verdict({}) + '\n'), null],
@@ -406,8 +470,8 @@ function selfTest() {
   }
   const warnOnly = checkOwnership('agent/terrarium', 'apps/sundial/x.cs').every((f) => f.level === 'warn');
   if (!warnOnly) { failed++; console.log('FAIL W1 must be a warning, never an error'); }
-  const hookWarnOnly = checkHook('').every((f) => f.level === 'warn');
-  if (!hookWarnOnly) { failed++; console.log('FAIL H1 must be a warning, never an error'); }
+  const hookLevels = checkHook('').every((f) => f.level === 'warn') && checkHook('', 'error').every((f) => f.level === 'error');
+  if (!hookLevels) { failed++; console.log('FAIL H1 must be an error on main and a warning elsewhere'); }
   const lost = [{ sha: 'f'.repeat(40), subject: "Merge branch 'agent/sundial'" }];
   const v2Levels = checkMergeRecords(lost, '').every((f) => f.level === 'error') && checkMergeRecords(lost, '', 'warn').every((f) => f.level === 'warn');
   if (!v2Levels) { failed++; console.log('FAIL V2 must be an error on main and a warning elsewhere'); }
