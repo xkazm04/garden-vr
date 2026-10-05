@@ -94,15 +94,33 @@ namespace GardenVR.Core
                 // Resume into whatever the hand is doing now; an inhale cut by a long drop restarts cleanly.
                 // A held-full beat resumes as itself, so the pinch does not start a second inhale.
                 Emit(BreathEventKind.Resumed);
+                // A release that had not yet lasted MinExhaleSeconds, or a held-full beat, is a breath already earned.
+                bool owed = _beforePause == BreathPhase.Exhaling && !_exhaleCounted;
+                bool fullHeld = _beforePause == BreathPhase.HoldingFull;
+                _exhaleCounted = true;
+                PhaseTime = 0f;
                 if (p == PinchState.Held)
-                    Phase = _beforePause == BreathPhase.HoldingFull ? BreathPhase.HoldingFull : BreathPhase.Inhaling;
+                {
+                    Phase = fullHeld ? BreathPhase.HoldingFull : BreathPhase.Inhaling;
+                    if (owed && CountBreath()) return;
+                }
                 else if (_beforePause == BreathPhase.Waiting)
                     Phase = BreathPhase.Waiting;
                 else if (_beforePause == BreathPhase.HoldingEmpty)
                     Phase = BreathPhase.HoldingEmpty;
+                else if (owed)
+                {
+                    Phase = BreathPhase.Exhaling;
+                    _exhaleCounted = false; // the release counts once it has lasted MinExhaleSeconds
+                }
+                else if (fullHeld)
+                {
+                    Enter(BreathPhase.Exhaling, BreathEventKind.ExhaleStarted);
+                    _exhaleCounted = false;
+                    Fog = 1f;
+                }
                 else
                     Phase = BreathPhase.Exhaling;
-                PhaseTime = 0f; _exhaleCounted = true;
                 if (Phase == BreathPhase.Inhaling) Emit(BreathEventKind.InhaleStarted);
             }
 
@@ -153,9 +171,7 @@ namespace GardenVR.Core
                     if (!_exhaleCounted && PhaseTime >= _c.MinExhaleSeconds)
                     {
                         _exhaleCounted = true;
-                        Breaths++;
-                        Emit(BreathEventKind.BreathCounted);
-                        if (Breaths >= _c.TargetBreaths) { Enter(BreathPhase.Complete, BreathEventKind.RitualComplete); break; }
+                        if (CountBreath()) break;
                     }
                     if (p == PinchState.Held) { Enter(BreathPhase.Inhaling, BreathEventKind.InhaleStarted); break; }
                     if (_c.HoldEmptySeconds > 0f && _c.IdealExhaleSeconds > 0f && _exhaleCounted && PhaseTime >= _c.IdealExhaleSeconds)
@@ -176,6 +192,16 @@ namespace GardenVR.Core
                     Settle(dt);
                     break;
             }
+        }
+
+        /// <summary>Counts one breath. Returns true when it was the last one and the ritual is now complete.</summary>
+        bool CountBreath()
+        {
+            Breaths++;
+            Emit(BreathEventKind.BreathCounted);
+            if (Breaths < _c.TargetBreaths) return false;
+            Enter(BreathPhase.Complete, BreathEventKind.RitualComplete);
+            return true;
         }
 
         void Settle(float dt)
