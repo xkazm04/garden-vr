@@ -28,7 +28,7 @@ alone exit 0.
 | W1 | warning | On branch `agent/<app>` (or `--as agent/<app>`), a staged or changed path that the other agent owns or the host owns (PLAN section 5 ownership table) | PLAN section 5 |
 | B1 | error | The analyzer ratchet never demotes. Every id in `PROMOTED` (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310) stays in `<WarningsAsErrors>` of `shared/core-dotnet/Directory.Build.props`, stays out of `<NoWarn>`, and keeps a `dotnet_diagnostic.<id>.severity` of `warning` or `error` in `.editorconfig` (that line is what switches the rule on) | this file, "C# analyzer and format baseline" |
 | P1 | error | Every prompt file in `tools/orchestrate/prompts/` (`*.md` except `README.md`) opens with front matter `prompt: <its file name>` and an integer `prompt_version`. A commit or range that changes a prompt's text must raise its `prompt_version` (compared with `HEAD` for `--staged`, with `<base>` for `--range`); a new file and a line-ending-only change need no bump. The agent loop records each prompt's version and blob sha per task in `tasks.jsonl`, so a change in what agents are told is never silent | `tools/orchestrate/prompts/README.md` |
-| H1 | error on `main`, warning elsewhere, not reported in CI | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard. On `main`, where host and human commits land, a checkout without the hook cannot report green. Elsewhere it is a warning, because the agent loop wires the hook for agent commits through the environment, which the worktree config never shows. Under GitHub Actions (`GITHUB_ACTIONS=true`) it reports nothing: the runner's clone makes no commits, and the workflow is the gate | this file, "Installing the hooks" |
+| H1 | error on `main`, warning elsewhere, not reported in CI | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard. On `main`, where host and human commits land, a checkout without the hook cannot report green. Elsewhere it is a warning, because the agent loop wires the hook for agent commits through the environment, which the worktree config never shows. Under GitHub Actions (`GITHUB_ACTIONS=true`) it reports nothing: the runner's clone makes no commits, and the workflow re-checks the pushed commits. Whether that red check blocks a merge is a GitHub setting; H1 does not fail CI over it (see "Making CI block a merge") | this file, "Installing the hooks" |
 | C1 | error | `.github/workflows/guard.yml` exists and, outside full-line comments, still runs `tools/guard/check.mjs --self-test`, `--all`, `--range` and `dotnet test shared/core-dotnet`. CI is where a commit that skipped the hook is still checked, so removing one of these loosens a gate, which is owner-reserved | this file, "Where it runs" |
 | D1 | error | `AGENTS.md`, `CLAUDE.md`, `README.md`, `CONTRIBUTING.md`, `docs/PLAN.md`, `docs/AI_HARNESS.md`, `docs/plans/*.md` and `docs/knowledge/contest-record.md` cite only repo paths a fresh clone has. A backticked or linked path under `apps/`, `shared/`, `tools/`, `docs/`, `.ai/` or `.github/` must be a tracked file or folder. Placeholders (`<app>`, `*`, `{1,2}`, `0001..0003`), `orchestration/` (untracked by design) and absolute local paths (provenance) are not checked | `docs/knowledge/contest-record.md`; `AGENTS.md`, missing-input rule |
 
@@ -96,7 +96,10 @@ which CI cannot license; the asmdef reference is the same constraint with no dep
   `origin/main` for a new branch or a force push). A second job runs `dotnet test shared/core-dotnet` on Windows, which
   enforces the analyzer ratchet. Any error turns the check red. This holds a commit that skipped every local hook,
   whoever made it, to the same rules once it reaches GitHub. Unity test runs stay out of CI because they need an editor
-  licence. C1 keeps the workflow's checks in place.
+  licence. C1 keeps the workflow's checks in place. Red is a report, not a block: the host merges locally and pushes
+  `main`, so CI reads a commit that has already landed, and it holds a merge back only where the owner made its jobs
+  required checks ("Making CI block a merge" below). `.github/workflows/merge-gate.yml` says in every run which of the
+  two it is.
 
 ## Installing the hooks (owner's call)
 
@@ -118,6 +121,32 @@ Git for Windows runs `hooks/pre-commit` and `hooks/pre-merge-commit` because eac
 or macOS a hook runs only when its file is executable: `install.mjs` sets the bit in the working tree, and
 `git update-index --chmod=+x tools/guard/hooks/pre-commit tools/guard/hooks/pre-merge-commit` records it for every
 clone (the hooks are still committed as 100644).
+
+## Making CI block a merge (owner's call)
+
+A red CI check stops a merge only when `main` requires it. Until then `guard.yml` *detects* a bad commit after it is
+on `main`; it does not keep one out. Requiring it is a repository setting, so no file in this repo can turn it on, and
+it is reserved for the owner:
+
+1. In a ruleset for `main` (Settings, Rules) or in classic branch protection, require the status checks
+   `guard (AGENTS.md rules)` and `core tests and analyzer ratchet`. These are the job `name:` values in `guard.yml`;
+   renaming a job breaks the match, and the probe below then reports it as not required.
+2. Leave admins out of the bypass list (classic: "Do not allow bypassing the above settings"). Otherwise the owner's
+   own pushes, which are most pushes to `main`, skip the check.
+3. Change how `main` is published. A required check refuses a push whose commit has not already passed it, so the
+   host's local merge goes to a branch first and reaches `main` through a pull request (or a push of the already-green
+   commit). This changes the merge policy in PLAN section 5, which is why it is the owner's decision.
+
+`tools/guard/protection.mjs` reports the current state. `.github/workflows/merge-gate.yml` runs it on every push and
+pull request. It reads both places GitHub keeps required checks (`/rules/branches/main` and `/branches/main`) and
+prints `required`, `not required` or `unknown` per gate job. If any gate job is not required everywhere, it raises a
+`Merge gate` warning annotation and adds a line to the step summary. A setting it cannot read is `unknown`, never a
+pass. Its `--self-test` checks the parsing and the verdict against fixtures and the real `guard.yml`.
+
+The probe always passes, and H1 does not fail CI over this setting, for three reasons. A red check that is not
+required blocks nothing either. Every push and Dependabot pull request would turn red over a setting no contributor
+can change, which teaches everyone to ignore red. And H1 is about this checkout's `core.hooksPath`, while the guard
+stays offline and deterministic. Do not make the probe's own job a required check.
 
 ## Review routing on GitHub
 

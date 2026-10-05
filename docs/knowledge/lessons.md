@@ -128,3 +128,18 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   case-insensitively, keep the `into agent/` exclusion, and add a fixture copied from a real merge subject. Rule: build
   a check's fixtures from the real artefact (`git log --merges` on main), not from the doc that describes it. Domain:
   software-engineering / quality-gates.
+
+- **2026-10-05 A CI check is a gate only where the branch requires it.** The docs called `guard.yml` "the gate". But the
+  host merges locally and pushes `main` directly, so CI reads a commit that has already landed: red is a report, not a
+  block, until the owner makes the guard jobs required status checks on `main` and routes `main` through a pull request
+  (a required check refuses a direct push of an unchecked commit). That setting lives on GitHub, not in git, so a clone
+  cannot see it. `tools/guard/protection.mjs` now asks the API in every CI run (`.github/workflows/merge-gate.yml`).
+  It does not fail, and H1 does not fail CI over the setting: a red check that is not required blocks nothing, and
+  turning every push red over a setting nobody pushing can change teaches everyone to ignore red.
+  Not measured yet (needs a shell and `gh`):
+  - which first-parent commits on main since 755a709 today's rules would reject (`check.mjs --range C^..C --as main`,
+    ignoring H1);
+  - which main SHAs went red in CI (`gh run list --workflow guard.yml --branch main`).
+
+  Git does not record whether a hook ran, so "which commits skipped the hook" has no direct answer. Rule: before calling
+  a pipeline a gate, name the setting that makes its red stop a merge. Domain: software-engineering / quality-gates.

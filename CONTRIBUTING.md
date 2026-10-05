@@ -35,7 +35,7 @@ The same checks run in three places, so skipping one of them does not skip the c
 | Where | What runs | What happens when it fails |
 |---|---|---|
 | Your commit | `tools/guard/hooks/pre-commit` runs the guard on the staged files | the commit is refused |
-| Every push and pull request | [`.github/workflows/guard.yml`](.github/workflows/guard.yml): the guard's self-test, `--all` and `--range` over the pushed commits, then `dotnet test shared/core-dotnet` on Windows | the check turns red on GitHub |
+| Every push and pull request | [`.github/workflows/guard.yml`](.github/workflows/guard.yml): the guard's self-test, `--all` and `--range` over the pushed commits, then `dotnet test shared/core-dotnet` on Windows | the check turns red on GitHub. It blocks a merge only where the owner made it a required check on `main`, which [`.github/workflows/merge-gate.yml`](.github/workflows/merge-gate.yml) reports in every run ([`tools/guard/README.md`](tools/guard/README.md), "Making CI block a merge") |
 | Host verification of an agent task | the Definition of Done in [`docs/AI_HARNESS.md`](docs/AI_HARNESS.md) | the task is rejected, and the verdict is recorded in `docs/knowledge/verifications.jsonl` |
 
 - `dotnet test shared/core-dotnet` also runs the analyzer ratchet. The rules promoted in
