@@ -161,6 +161,8 @@ namespace GardenVR.Core
             if (snap == null || string.IsNullOrEmpty(snap.Phase) || snap.Phase == "Idle") return block;
             FocusPhase phase;
             if (!Enum.TryParse(snap.Phase, out phase) || phase == FocusPhase.Idle) return block;
+            // Running or Paused with no start instant is not an hour in progress; a 1970 start would finish it at once.
+            if (phase != FocusPhase.Complete && snap.StartedUtcMs <= 0L) return block;
             block.Phase = phase;
             block._started = DateTimeOffset.FromUnixTimeMilliseconds(snap.StartedUtcMs);
             long pausedMs = snap.PausedMs < 0L ? 0L : snap.PausedMs;
