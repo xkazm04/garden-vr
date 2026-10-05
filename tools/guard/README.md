@@ -28,7 +28,9 @@ alone exit 0.
 | W1 | warning | On branch `agent/<app>` (or `--as agent/<app>`), a staged or changed path that the other agent owns or the host owns (PLAN section 5 ownership table) | PLAN section 5 |
 | B1 | error | The analyzer ratchet never demotes. Every id in `PROMOTED` (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310) stays in `<WarningsAsErrors>` of `shared/core-dotnet/Directory.Build.props`, stays out of `<NoWarn>`, and keeps a `dotnet_diagnostic.<id>.severity` of `warning` or `error` in `.editorconfig` (that line is what switches the rule on) | this file, "C# analyzer and format baseline" |
 | P1 | error | Every prompt file in `tools/orchestrate/prompts/` (`*.md` except `README.md`) opens with front matter `prompt: <its file name>` and an integer `prompt_version`. A commit or range that changes a prompt's text must raise its `prompt_version` (compared with `HEAD` for `--staged`, with `<base>` for `--range`); a new file and a line-ending-only change need no bump. The agent loop records each prompt's version and blob sha per task in `tasks.jsonl`, so a change in what agents are told is never silent | `tools/orchestrate/prompts/README.md` |
-| H1 | error on `main`, warning elsewhere | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard. On `main`, where host and human commits land, a checkout without the hook cannot report green. Elsewhere it is a warning, because the agent loop wires the hook for agent commits through the environment, which the worktree config never shows | this file, "Installing the hooks" |
+| H1 | error on `main`, warning elsewhere, not reported in CI | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard. On `main`, where host and human commits land, a checkout without the hook cannot report green. Elsewhere it is a warning, because the agent loop wires the hook for agent commits through the environment, which the worktree config never shows. Under GitHub Actions (`GITHUB_ACTIONS=true`) it reports nothing: the runner's clone makes no commits, and the workflow is the gate | this file, "Installing the hooks" |
+| C1 | error | `.github/workflows/guard.yml` exists and, outside full-line comments, still runs `tools/guard/check.mjs --self-test`, `--all`, `--range` and `dotnet test shared/core-dotnet`. CI is where a commit that skipped the hook is still checked, so removing one of these loosens a gate, which is owner-reserved | this file, "Where it runs" |
+| D1 | error | `AGENTS.md`, `CLAUDE.md`, `README.md`, `CONTRIBUTING.md`, `docs/PLAN.md`, `docs/AI_HARNESS.md`, `docs/plans/*.md` and `docs/knowledge/contest-record.md` cite only repo paths a fresh clone has. A backticked or linked path under `apps/`, `shared/`, `tools/`, `docs/`, `.ai/` or `.github/` must be a tracked file or folder. Placeholders (`<app>`, `*`, `{1,2}`, `0001..0003`), `orchestration/` (untracked by design) and absolute local paths (provenance) are not checked | `docs/knowledge/contest-record.md`; `AGENTS.md`, missing-input rule |
 
 W1 is a warning because PLAN section 5 allows a non-owned path when the task's `touches:` names it. The agent must
 flag it in `REPORT.md`, and the host checks it against `touches:` during verification. Cross-app edits are the slip
@@ -40,8 +42,11 @@ for that case to `--self-test`. Do not bypass the hook with `--no-verify`.
 
 `--staged` and `--range` run G1 and G2 only when `AGENTS.md`, `CLAUDE.md` or `.ai/manifest.yaml` changed, V1 only
 when the ledger changed, B1 only when `Directory.Build.props` or `.editorconfig` changed, and P1 on each changed prompt
-file (header and version bump). `--all` always runs G1, G2, V1, V2 and B1, and P1's header check on every prompt file
-(it has no earlier state, so it cannot check a bump). H1 runs in `--all` and `--range`; its level follows the branch (`--as` counts for `--range`).
+file (header and version bump). C1 runs there when the workflow changed, and D1 on each changed citing doc, against
+the files tracked at the checked state. `--all` always runs G1, G2, V1, V2, B1, C1 and D1, and P1's header check on
+every prompt file (it has no earlier state, so it cannot check a bump). H1 runs in `--all` and `--range`; its level
+follows the branch (`--as` counts for `--range`). A deleted workflow is caught by `--all`, not by `--staged` or `--range`,
+which read only added and modified files.
 
 ## Where it runs
 
@@ -64,12 +69,18 @@ file (header and version bump). `--all` always runs G1, G2, V1, V2 and B1, and P
   to the same rules as an agent commit (W1 aside, which is about agent ownership). The hook gates it once
   `core.hooksPath` is set. Until then, `--all` and `--range` on `main` fail with H1, so the checkout where those commits
   land cannot report green while its commits skip the guard.
+- **CI, on every push and pull request.** `.github/workflows/guard.yml` runs `--self-test`, `--all`, and `--range`
+  over the pushed commits (`<before>..<sha>` on a push, `<base>..<merge>` on a pull request, and the merge base with
+  `origin/main` for a new branch or a force push). A second job runs `dotnet test shared/core-dotnet` on Windows, which
+  enforces the analyzer ratchet. Any error turns the check red. This holds a commit that skipped every local hook,
+  whoever made it, to the same rules once it reaches GitHub. Unity test runs stay out of CI because they need an editor
+  licence. C1 keeps the workflow's checks in place.
 
 ## Installing the hooks (owner's call)
 
 `core.hooksPath` is shared by the main checkout and every agent worktree, so the owner turns it on once. That gates
-host and human commits and merges too. Until then H1 fails every `--all` run on `main` and warns on every other
-branch:
+host and human commits and merges at commit time. Until then H1 fails every `--all` run on `main` and warns on every
+other branch, and CI is the first place an unhooked commit is checked:
 
 ```powershell
 git config core.hooksPath tools/guard/hooks

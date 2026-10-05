@@ -109,3 +109,12 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   off.** `Keyboard.current` and `Mouse.current` were null in the player (activeInputHandler 0) though every editor test passed;
   set Active Input Handling to the Input System (2) or Both before the first build and smoke-test one key in the player log.
   Domain: game-production / Unity build pipeline.
+
+- **2026-10-05 A guard wired into the agent's process tree binds the agents and nobody else.** The pre-commit guard
+  (755a709) ran only where the agent loop injected `core.hooksPath` through `GIT_CONFIG_*`. Every host, human and
+  automation-lane commit since (the guard's own commits included) skipped it, and `core.hooksPath` is owner-reserved
+  shared config that no lane may set. The fix that does not depend on anyone's local config is a pipeline that re-runs
+  the same checks on whatever reaches the remote (`.github/workflows/guard.yml`), plus a guard rule (C1) that keeps the
+  pipeline's checks from being quietly removed. The same pass found that the plan's binding inputs had been untracked
+  with the contest folder, so a clone planned from half the facts (now `docs/knowledge/contest-record.md`, rule D1).
+  Domain: software-engineering / quality-gates; agent-operations / agent-instruction-files.

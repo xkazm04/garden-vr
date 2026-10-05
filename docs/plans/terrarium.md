@@ -4,7 +4,10 @@ App: `apps/terrarium` (Unity 6.6 URP). Agent: Grok "terrarium" on `agent/terrari
 Moss** - extend reality, add glow and magic on top. Programme, gates and dates: `docs/PLAN.md`. Style bible:
 `docs/art/terrarium-style.md`. Audio: `docs/audio/AUDIO-BIBLE.md`.
 
-Sources (relative to `C:\Users\kazda\kiro\personas\.contest\`):
+Binding facts: `docs/knowledge/contest-record.md` (competition rules, device and glasses facts, owner intent; a
+"TOOLING.md" citation below means its section 2). This plan restates what it uses from the rounds, so it stands on
+its own. The sources below are provenance, relative to the contest folder `C:\Users\kazda\kiro\personas\.contest\` on
+the owner's machine, and may be absent on yours (missing-input rule in `AGENTS.md`):
 
 - Round 1 design: `arena/habit-garden/entries/claude-claude-opus-5-5_high/variant-1/index.html` (+ `NOTES.md`): scope,
   journey, hand vocabulary, growth rules, data model, audio table.
@@ -13,7 +16,7 @@ Sources (relative to `C:\Users\kazda\kiro\personas\.contest\`):
 - Round 3 fidelity gate: `arena/habit-garden-r2-r3/entries/claude-claude-opus-5-5_high-v1/variant-1/` (`index.html`,
   `RUNBOOK.md`): the night jar in URP at the owner's framing, gap ledger, cost table, Quest techniques; assets built by
   `spike/fidelity/scripts/{blender_heroes.py,paint_textures.py,make_plates.py}` (now `tools/blender/`), shaders
-  `spike/unity/Assets/Fidelity/Shaders/F*.shader`, driver `FidelityHero.cs` (now `docs/contest/seed-unity/`).
+  `spike/unity/Assets/Fidelity/Shaders/F*.shader`, driver `FidelityHero.cs` (copied once to docs/contest/seed-unity/, untracked since 2026-10-05; provenance only).
 - Art target: `staging/habit-garden/reference/A1-03-night-moss-{1,2}.png` (now `shared/assets/art-reference/`),
   follow-up prompts in `staging/habit-garden/OWNER-CHOICE.md`.
 

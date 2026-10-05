@@ -7,10 +7,22 @@ must meet before it counts as finished. The detail lives in `docs/PLAN.md` secti
 version and points there.
 
 ## Components
-- [x] Evals and golden tests for AI-generated output
-- [x] A versioned prompt and agent library the team reuses (below; the older A3 judge scripts stay pinned by blob)
-- [x] Agent runbooks for recurring tasks
-- [x] A review gate and Definition of Done for AI changes (below)
+
+Each row names what a reviewer can open or re-run from a clone, and what is not shown yet. A component counts as
+evidenced only by something in git that runs, not by this page.
+
+| Component | State (2026-10-05) | Evidence in git | Not shown yet |
+|---|---|---|---|
+| Evals and golden tests for AI-generated output | **Runs** for code; **advisory** for art | `shared/core-dotnet/GardenVR.Core.Tests/` runs on every `dotnet test shared/core-dotnet` and on every push in `.github/workflows/guard.yml`; the art judge's packet `tools/fidelity/judge/packet-v1/` and its calibration record `tools/fidelity/judge/calibration-2026-10-04.json` | The art judge cannot be re-run from a clone: its implementation (tools/fidelity/lab) and the locked gate frames it scores live only on the host machine. Its calibration is advisory (0 of 30 owner labels). There is no golden-render regression check yet |
+| Versioned prompt and agent library | **Runs** | `tools/orchestrate/prompts/` with `prompt_version`, which guard rule P1 enforces on every commit and in CI | - |
+| Agent runbooks for recurring tasks | **Written** | PLAN section 5, `docs/decisions/`, `docs/knowledge/lessons.md` | - |
+| Review gate and Definition of Done | **Specified; enforced in shape** | the steps below; guard rules V1 and V2 over `docs/knowledge/verifications.jsonl`; `.github/pull_request_template.md` | The ledger holds **0 verdicts** so far. No verification has been recorded since it was added on 2026-10-05, and no merge has a committed record of what the host re-ran |
+| Guard for every commit, agent or human | **Runs** | `tools/guard/check.mjs` (hook, `--all`, `--range`) and the CI workflow above | Local human commits are hooked only after the owner sets `core.hooksPath`; CI catches them once pushed |
+
+**Has a judge verdict ever changed a merge?** Not visibly. Judge findings have steered work: the repeated "neon /
+harsh bloom" disqualifier and the 2/5 plateau became the next task targets (`docs/knowledge/lessons.md`, 2026-10-03),
+and two merges quote F2 tallies in their subjects. But no verdict line records a judge result, and no merge is known
+to have been held back by one. The A3 score stays advisory (below) until it is calibrated against owner labels.
 
 ## Where things live
 
@@ -31,6 +43,12 @@ version and points there.
 - On `main`, where host and human commits land, the guard's H1 is an error until `core.hooksPath` points at
   `tools/guard/hooks`. Those commits face the same rules as an agent commit. The checkout cannot report green while
   they skip the hook.
+- `.github/workflows/guard.yml` re-runs the guard (`--self-test`, `--all`, `--range` over the pushed commits) and
+  `dotnet test shared/core-dotnet` (with the analyzer ratchet) on every push and pull request. So a commit that skipped
+  every local hook still turns a check red once it reaches GitHub. Guard rule C1 fails if a check is removed from it.
+- Guard rule D1 fails when `AGENTS.md`, `README.md`, `CONTRIBUTING.md`, this page, `docs/PLAN.md` or a plan in
+  `docs/plans/` cites a repo path that a fresh clone does not have. The contest facts the plan binds on are tracked in
+  `docs/knowledge/contest-record.md`.
 - `docs/knowledge/verifications.jsonl` is the committed record of every host verdict (below). The guard rules V1 and V2
   validate it.
 - `tools/fidelity/` (`fid.cmd`, `fid.py`, `README.md`) is the art-fidelity lab: F1 metrics against per-frame ladders, the F2 pairwise judge, and the F3 sweep and contact sheet.
@@ -67,12 +85,17 @@ version and points there.
 **Runbooks for recurring agent tasks**
 - The hourly host check is in PLAN section 5: observe, verify, merge, queue, STATUS.
 - Merge policy and shared-package ownership are in PLAN section 5.
-- `docs/decisions/0001-0003` hold the ADRs.
+- `docs/decisions/` holds the ADRs (0001-0003).
 - `docs/knowledge/lessons.md` holds what broke and why. `docs/knowledge/registry-consult.md` lists the registry
   rules this repo follows.
 
-**No issue or PR templates.** Nothing is pushed, and the host merges `agent/<app>` into `main` locally. The task file
-plays the role of the issue template, and `REPORT.md` plays the role of the PR description.
+**Issue and PR templates.** The host merges `agent/<app>` into `main` locally, so the task file stays the issue and
+`REPORT.md` stays the PR description for agent work. Work that enters or leaves through GitHub uses the same shape:
+- `.github/ISSUE_TEMPLATE/agent-task.md` asks for the task-template fields (`tools/orchestrate/prompts/task-template.md`
+  stays canonical), including `touches:` and the Acceptance commands. So a task is fully specified before it reaches
+  the queue.
+- `.github/pull_request_template.md` is the Definition of Done below as a checklist, with the eight `checks` keys and
+  the verdict line.
 
 ## Review gate for AI changes: Definition of Done
 
@@ -146,6 +169,7 @@ One line per verdict, on a single line in the file (wrapped here for reading):
 |---|---|---|
 | Agent | Runs its Acceptance commands, leaves evidence. Every commit runs `node tools/guard/check.mjs --staged` through the pre-commit hook the loop wires | `orchestration/runs/<app>/<id>/REPORT.md` |
 | Agent loop | `node tools/guard/check.mjs --all` and `--range <base>..<head>` in the worktree after every task (advisory, never moves a task) | `orchestration/runs/<app>/<id>/guard.txt`, `base`, `head`, `guard`, `guardRange` in `tasks.jsonl` |
+| CI, every push and pull request | `.github/workflows/guard.yml`: `node tools/guard/check.mjs --self-test`, `--all`, `--range` over the pushed commits, and `dotnet test shared/core-dotnet` on Windows. Catches a commit that skipped every local hook | the check on GitHub, red or green |
 | Host or human commit on `main` | `node tools/guard/check.mjs --staged` through `pre-commit` / `pre-merge-commit` once the owner sets `core.hooksPath`. Until then `--all` on `main` fails with H1. Analyzer rules promoted in `Directory.Build.props` fail `dotnet test shared/core-dotnet` for everyone | the commit itself; the guard output |
 | Host | Steps 1-9 above, plus the A3 judge on gate frames | committed line in `docs/knowledge/verifications.jsonl` (guard V1, V2), plus the `verified:` / `rejected:` note in the task file and `orchestration/STATUS.md` |
 | Owner | Owner-eyes gate items: first-time use (U2), daily use (U4), feel (S6), A1 frame rating, audio listen (A6), motion watch (A7); approves reserved changes | witness and evidence columns of `apps/terrarium/GATE.md` and `apps/sundial/GATE.md` |

@@ -58,6 +58,11 @@ Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Edit
 - **Unity 6.6 API notes:** `Object.GetInstanceID()` is obsolete as an error (CS0619) - use `GetEntityId()`; package
   versions must be the 6.6-compatible ones already in `Packages/manifest.json` (Input System 1.20.0, URP 17.6.0).
 - Verify before you claim: run the tests, capture the screenshot, read the log. A claim you did not run is "not run".
+- **A cited path that does not exist on your machine is neither a blocker nor something to guess.** The contest folder
+  (`C:\Users\kazda\kiro\personas\.contest\`, the `staging/...` and `arena/...` paths in the plans) and another
+  machine's `orchestration/runs/` are provenance. Read `docs/knowledge/contest-record.md`, which holds every fact the
+  plan binds on. If the fact you need is not there, write `input missing: <path> (<what you needed>)` in your report,
+  continue with what the tracked docs say, and leave the decision that needed it to the host.
 - **Commit atomically** on your own branch (`agent/<app>`), one commit per finished sub-step, with a clear message.
   Never push. Never rewrite history. Never commit `Library/`, `Temp/`, `Logs/`, builds or `.env`.
 - Before each commit run `node tools/guard/check.mjs --staged`. It checks rules 1, 4 and 7, committed artefacts and

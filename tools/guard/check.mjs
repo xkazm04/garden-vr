@@ -25,7 +25,21 @@ const HOOKS = 'tools/guard/hooks';
 const BUILD_PROPS = 'shared/core-dotnet/Directory.Build.props';
 const EDITORCONFIG = '.editorconfig';
 const PROMPTS = 'tools/orchestrate/prompts/';
+const WORKFLOW = '.github/workflows/guard.yml';
 const EM_DASH = '—';
+
+// What the CI workflow must keep running (C1). CI is where a commit that skipped the hook is still checked, so a step
+// removed from it is a loosened gate, which is owner-reserved (PLAN section 5, merge policy).
+const CI_REQUIRED = [
+  'tools/guard/check.mjs --self-test',
+  'tools/guard/check.mjs --all',
+  'tools/guard/check.mjs --range',
+  'dotnet test shared/core-dotnet',
+];
+
+// The docs an agent plans from (D1). Every repo path they cite must exist in a fresh clone.
+const CITING_DOCS = ['AGENTS.md', 'CLAUDE.md', 'README.md', 'CONTRIBUTING.md', 'docs/PLAN.md', 'docs/AI_HARNESS.md', 'docs/knowledge/contest-record.md'];
+const isCitingDoc = (p) => CITING_DOCS.includes(p) || /^docs\/plans\/[^/]+\.md$/.test(p);
 
 // Analyzer rules promoted to errors in the core build (B1). The ratchet only moves one way: add an id here and to
 // WarningsAsErrors in Directory.Build.props together, once a build shows 0 hits for it; never remove one.
@@ -167,10 +181,53 @@ function checkManifest(manifest, agents) {
 // it is the owner's call (README); until then every host or human commit and merge skips the guard. An error on main,
 // where those commits land, so a checkout without the hook cannot report green; a warning on any other branch (the
 // agent loop wires the hook for agent commits through GIT_CONFIG_* env, so their worktree config never shows it).
-function checkHook(hooksPath, level = 'warn') {
+// In CI (`ci`) there is no finding: the runner's clone makes no commits, and the workflow itself is the gate.
+function checkHook(hooksPath, level = 'warn', ci = false) {
+  if (ci) return [];
   const v = (hooksPath || '').trim().replace(/\\/g, '/').replace(/\/+$/, '');
   if (v === HOOKS || v.endsWith('/' + HOOKS)) return [];
   return [finding('core.hooksPath', 0, 'H1', `commit hooks not installed (core.hooksPath is ${v ? `"${v}"` : 'unset'}); commits and merges here skip the guard until the owner runs: git config core.hooksPath ${HOOKS}`, level)];
+}
+
+// C1: the CI workflow exists and still runs every check in CI_REQUIRED. Full-line YAML comments do not count.
+function checkWorkflow(text) {
+  const body = (text || '').replace(/\r/g, '').split('\n').filter((l) => !/^\s*#/.test(l)).join('\n');
+  if (!body.trim())
+    return [finding(WORKFLOW, 0, 'C1', 'missing; CI re-runs the guard and the core tests on every push, so a commit that skipped the hook is still checked')];
+  return CI_REQUIRED.filter((c) => !body.includes(c))
+    .map((c) => finding(WORKFLOW, 0, 'C1', `no longer runs "${c}"; removing a CI check loosens a gate, which is owner-reserved`));
+}
+
+// D1: the docs an agent plans from cite only paths a fresh clone has. A backticked or linked path under a tracked
+// top-level folder must be a tracked file or folder at the state being checked. Placeholders (<app>, *, {1,2}, ranges
+// such as 0001..0003) and orchestration/ (untracked by design) are skipped; an absolute local path is provenance, not a
+// repo path, and is not checked. `exists(p)` answers for the checked state.
+function citedPaths(text) {
+  const out = [];
+  text.replace(/\r/g, '').split('\n').forEach((l, i) => {
+    for (const m of l.matchAll(/`([^`\s]+)`|\]\(([^)\s#]+)\)/g)) {
+      let p = m[1] || m[2];
+      if (!/^(apps|shared|tools|docs|\.ai|\.github)\//.test(p) && !/^(AGENTS|CLAUDE|README|CONTRIBUTING)\.md$/.test(p)) continue;
+      if (/[<>*{}|]|\.\./.test(p)) continue;
+      p = p.replace(/[:,.;]+$/, '').replace(/:\d+$/, '');
+      out.push({ path: p, line: i + 1 });
+    }
+  });
+  return out;
+}
+function checkCitations(doc, text, exists) {
+  return citedPaths(text || '').filter((c) => !exists(c.path))
+    .map((c) => finding(doc, c.line, 'D1', `cites ${c.path}, which is not tracked, so a fresh clone cannot read it; fix the path, or move the fact into docs/knowledge/contest-record.md`));
+}
+// A lookup over a list of tracked files: a path exists when it is one of them or a folder above one of them.
+function pathIndex(list) {
+  const files = new Set(list);
+  const dirs = new Set();
+  for (const f of list) {
+    const parts = f.split('/');
+    for (let i = 1; i < parts.length; i++) dirs.add(parts.slice(0, i).join('/'));
+  }
+  return (p) => { const q = p.replace(/\/+$/, ''); return files.has(q) || dirs.has(q); };
 }
 
 // B1: the analyzer ratchet never demotes. Every PROMOTED id stays in <WarningsAsErrors> of the core's
@@ -285,7 +342,8 @@ function checkMergeRecords(merges, ledgerText, level = 'error') {
 // The path, ownership and content rules over a list of changed files, plus G1/G2 and V1 when their files changed.
 // `show(p)` returns the file's content at the state being checked (the index for --staged, <head> for --range);
 // `before(p)`, when given, returns it at the state compared against (HEAD, <base>), for P1's version bump.
-function checkFiles(branch, files, show, before = null) {
+// `exists(p)`, when given, says whether a path is tracked at the checked state, for D1 on changed docs.
+function checkFiles(branch, files, show, before = null, exists = null) {
   const get = (p) => { try { return show(p) || ''; } catch { return ''; } };
   const prev = (p) => { if (!before) return null; try { const t = before(p); return typeof t === 'string' ? t : null; } catch { return null; } };
   const out = [];
@@ -293,7 +351,9 @@ function checkFiles(branch, files, show, before = null) {
     out.push(...checkPath(p), ...checkOwnership(branch, p));
     if (readsContent(p)) out.push(...checkContent(p, get(p)));
     if (isPrompt(p)) out.push(...checkPrompt(p, get(p), prev(p)));
+    if (exists && isCitingDoc(p)) out.push(...checkCitations(p, get(p), exists));
   }
+  if (files.includes(WORKFLOW)) out.push(...checkWorkflow(get(WORKFLOW)));
   if (['CLAUDE.md', 'AGENTS.md', MANIFEST].some((p) => files.includes(p)))
     out.push(...checkGuidance(get('CLAUDE.md'), get('AGENTS.md')), ...checkManifest(get(MANIFEST), get('AGENTS.md')));
   if (files.includes(LEDGER)) out.push(...checkLedger(get(LEDGER)));
@@ -306,6 +366,8 @@ const zlist = (buf) => buf.toString('utf8').split('\0').filter(Boolean);
 const readsContent = (p) => p.endsWith('.cs') || p === CORE_ASMDEF;
 const currentBranch = () => { try { return git(['rev-parse', '--abbrev-ref', 'HEAD']).toString().trim(); } catch { return ''; } };
 const hooksPath = () => { try { return git(['config', '--get', 'core.hooksPath']).toString(); } catch { return ''; } };
+// GitHub Actions sets GITHUB_ACTIONS=true. There the workflow is the gate, so H1 has nothing to report (README, H1).
+const inCI = () => process.env.GITHUB_ACTIONS === 'true';
 
 // The first-parent merges on `ref` since the commit that added the ledger (V2). Empty before the ledger is committed.
 function mergesSinceLedger(ref) {
@@ -320,7 +382,8 @@ const showAt = (ref, p) => { try { return git(['show', `${ref}:${p}`]).toString(
 
 function staged() {
   const files = zlist(git(['diff', '--cached', '--name-only', '-z', '--diff-filter=ACMR']));
-  return checkFiles(currentBranch(), files, (p) => git(['show', ':' + p]).toString('utf8'), (p) => git(['show', 'HEAD:' + p]).toString('utf8'));
+  const index = pathIndex(zlist(git(['ls-files', '-z'])));
+  return checkFiles(currentBranch(), files, (p) => git(['show', ':' + p]).toString('utf8'), (p) => git(['show', 'HEAD:' + p]).toString('utf8'), index);
 }
 
 function range(spec, asBranch) {
@@ -336,8 +399,9 @@ function range(spec, asBranch) {
   }
   console.log(`range ${spec}: ${files.length} changed file(s)`);
   const branch = asBranch || currentBranch();
-  const out = checkFiles(branch, files, (p) => git(['show', `${head}:${p}`]).toString('utf8'), (p) => git(['show', `${base}:${p}`]).toString('utf8'));
-  out.push(...checkHook(hooksPath(), branch === 'main' ? 'error' : 'warn'));
+  const index = pathIndex(zlist(git(['ls-tree', '-r', '--name-only', '-z', head])));
+  const out = checkFiles(branch, files, (p) => git(['show', `${head}:${p}`]).toString('utf8'), (p) => git(['show', `${base}:${p}`]).toString('utf8'), index);
+  out.push(...checkHook(hooksPath(), branch === 'main' ? 'error' : 'warn', inCI()));
   return out;
 }
 
@@ -356,11 +420,14 @@ function all() {
   const ledger = read(LEDGER);
   if (ledger !== null) out.push(...checkLedger(ledger));
   out.push(...checkRatchet(read(BUILD_PROPS) || '', read(EDITORCONFIG) || ''));
+  out.push(...checkWorkflow(read(WORKFLOW) || ''));
+  const index = pathIndex(files);
+  for (const p of files.filter(isCitingDoc)) { const text = read(p); if (text !== null) out.push(...checkCitations(p, text, index)); }
   // V2 always reads main: its ledger and its merges. On another branch (an agent worktree) it is a warning.
   const onMain = currentBranch() === 'main';
   const mainLedger = onMain ? ledger : showAt('main', LEDGER);
   if (mainLedger !== null) out.push(...checkMergeRecords(mergesSinceLedger(onMain ? 'HEAD' : 'main'), mainLedger, onMain ? 'error' : 'warn'));
-  out.push(...checkHook(hooksPath(), onMain ? 'error' : 'warn'));
+  out.push(...checkHook(hooksPath(), onMain ? 'error' : 'warn', inCI()));
   return out;
 }
 
@@ -395,6 +462,10 @@ function selfTest() {
     task: 'T-TER-045', app: 'terrarium', verdict: 'verified', reason: null, base: 'a1b2c3d', head: 'b2c3d4e', merge: MERGE,
     date: '2026-10-05', checks: PASS, guardOut: 'guard: 0 error(s), 1 warning(s)', w1: [], judge: null, ...o,
   });
+  const workflow = (cmds) =>
+    'name: guard\n# re-runs the guard on every push\non:\n  push:\njobs:\n  guard:\n    runs-on: ubuntu-latest\n    steps:\n' +
+    cmds.map((c) => `      - run: ${c.startsWith('tools/') ? 'node ' + c : c}\n`).join('');
+  const tracked = pathIndex(['docs/PLAN.md', 'docs/plans/terrarium.md', 'tools/guard/check.mjs', 'shared/assets/art-reference/A1-03-night-moss-1.png']);
   // [name, findings, the one rule expected to fire, or null for none]
   const cases = [
     ['R1 app reads Keyboard.current', checkContent(app, 'var k = Keyboard.current;'), 'R1'],
@@ -515,6 +586,26 @@ function selfTest() {
     ['V2 an agent merge with an empty ledger', checkMergeRecords([{ sha: 'f'.repeat(40), subject: "Merge branch 'agent/sundial' into main" }], ''), 'V2'],
     ['V2 main merged into an agent branch is not a verdict', checkMergeRecords([{ sha: 'f'.repeat(40), subject: "Merge branch 'main' into agent/sundial" }], ''), null],
     ['V2 another merge is not a verdict', checkMergeRecords([{ sha: 'f'.repeat(40), subject: "Merge branch 'ascent/loop-1'" }], ''), null],
+    ['H1 not reported in CI, where the workflow is the gate', checkHook('', 'error', true), null],
+    ['C1 workflow in place', checkWorkflow(workflow(CI_REQUIRED)), null],
+    ['C1 CRLF workflow in place', checkWorkflow(workflow(CI_REQUIRED).replace(/\n/g, '\r\n')), null],
+    ['C1 workflow missing', checkWorkflow(''), 'C1'],
+    ['C1 the core tests dropped', checkWorkflow(workflow(CI_REQUIRED.slice(0, 3))), 'C1'],
+    ['C1 the range run commented out', checkWorkflow(workflow(CI_REQUIRED).replace('      - run: node tools/guard/check.mjs --range', '      # - run: node tools/guard/check.mjs --range')), 'C1'],
+    ['range: a workflow change that drops a check', checkFiles('main', [WORKFLOW], () => workflow(CI_REQUIRED.slice(1))), 'C1'],
+    ['D1 a tracked file', checkCitations('docs/PLAN.md', 'See `tools/guard/check.mjs`.', tracked), null],
+    ['D1 a tracked folder', checkCitations('docs/PLAN.md', 'Frames in `shared/assets/art-reference/`.', tracked), null],
+    ['D1 a linked tracked file', checkCitations('README.md', 'Read [the plan](docs/PLAN.md).', tracked), null],
+    ['D1 a file with a line number', checkCitations('docs/PLAN.md', 'At `tools/guard/check.mjs:12`, see.', tracked), null],
+    ['D1 an untracked folder', checkCitations('README.md', 'Provenance in [`docs/contest/`](docs/contest/).', tracked), 'D1'],
+    ['D1 an untracked file', checkCitations('docs/plans/terrarium.md', 'Driver in `docs/contest/seed-unity/FidelityHero.cs`.', tracked), 'D1'],
+    ['D1 placeholders are skipped', checkCitations('docs/PLAN.md', '`docs/plans/<app>.md`, `apps/*/Assets`, `docs/decisions/0001..0003`, `x-{1,2}.png`', tracked), null],
+    ['D1 orchestration is untracked by design', checkCitations('docs/PLAN.md', 'Queue in `orchestration/queue/terrarium/`.', tracked), null],
+    ['D1 an absolute provenance path is not a repo path', checkCitations('docs/PLAN.md', 'Contest root `C:\\Users\\x\\.contest\\`.', tracked), null],
+    ['D1 a command is not a path', checkCitations('AGENTS.md', 'Run `node tools/guard/check.mjs --all`.', tracked), null],
+    ['range: a dead citation in a changed doc', checkFiles('main', ['docs/PLAN.md'], () => 'Read `docs/contest/README.md`.', null, tracked), 'D1'],
+    ['range: a live citation in a changed doc', checkFiles('main', ['docs/PLAN.md'], () => 'Read `docs/PLAN.md`.', null, tracked), null],
+    ['range: a doc outside the citing set is not read', checkFiles('main', ['docs/knowledge/lessons.md'], () => 'Was `docs/contest/`.', null, tracked), null],
   ];
   let failed = 0;
   for (const [name, found, rule] of cases) {

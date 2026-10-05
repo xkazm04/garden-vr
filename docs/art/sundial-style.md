@@ -8,7 +8,9 @@ photographic.** The contrast between drawn object and real room is the point (`O
 Sources: `staging/habit-garden/ART-STYLE-STORYBOARD.md` (A2-05 entry), `staging/habit-garden/OWNER-CHOICE.md`
 (A/2-05-F1..F3 and the extra negative), the owner's frames `shared/assets/art-reference/A2-05-field-notebook-{1,2}.png`,
 round 3 Unity seat section 02 and IWSDK seat "Asset pipeline" / "How each effect is drawn". Paths relative to
-`C:\Users\kazda\kiro\personas\.contest\` unless they start with `shared/` or `tools/`.
+`C:\Users\kazda\kiro\personas\.contest\` unless they start with `shared/` or `tools/`. That folder is provenance and
+may be absent on your machine: the storyboard and owner choice are copied to `docs/art/`, and the rest of what this
+bible uses is restated below (`docs/knowledge/contest-record.md`).
 
 ## 1. Palette
 
