@@ -122,6 +122,29 @@ or macOS a hook runs only when its file is executable: `install.mjs` sets the bi
 `git update-index --chmod=+x tools/guard/hooks/pre-commit tools/guard/hooks/pre-merge-commit` records it for every
 clone (the hooks are still committed as 100644).
 
+### Claude sessions, without core.hooksPath (not wired yet)
+
+`claude-hook.mjs` is a Claude Code `PreToolUse` hook that gates a Claude session's commits in any clone without
+touching any config. When a Bash or PowerShell command would run `git commit` or `git merge` here while
+`core.hooksPath` is not `tools/guard/hooks` (and neither a `-c` on that call nor the agent loop's `GIT_CONFIG_*` env sets
+it), it refuses the command and names the per-call override that makes git run the same two hooks:
+
+```powershell
+git -c core.hooksPath=tools/guard/hooks commit -m "..."
+```
+
+It always refuses `--no-verify` and `-n`. It lets through anything it cannot read: bad input, no git, or a repo without
+these hooks. `node tools/guard/claude-hook.mjs --self-test` checks each decision against command fixtures, and
+`.github/workflows/claude-hook.yml` runs that on every push. It takes effect only once the host commits
+`.claude/settings.json` with this entry (an automation lane could not write that file):
+
+```json
+{ "hooks": { "PreToolUse": [ { "matcher": "Bash|PowerShell", "hooks": [
+  { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/tools/guard/claude-hook.mjs\"", "timeout": 30 } ] } ] } }
+```
+
+That covers the host and lane sessions. A person committing by hand still needs `install.mjs`, and CI covers both.
+
 ## Making CI block a merge (owner's call)
 
 A red CI check stops a merge only when `main` requires it. Until then `guard.yml` *detects* a bad commit after it is
