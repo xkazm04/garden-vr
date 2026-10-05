@@ -112,7 +112,7 @@ The apps are built by autonomous coding agents under a single orchestrator:
   Agents never push; `main` is the only branch published here.
 
 Rules every agent follows: [`AGENTS.md`](AGENTS.md). How every change, by an agent or a person, is gated (hook, CI,
-Definition of Done): [`CONTRIBUTING.md`](CONTRIBUTING.md). Decisions: [`docs/decisions/`](docs/decisions/) (Unity for both
+Definition of Done): [`CONTRIBUTING.md`](CONTRIBUTING.md). Reporting a vulnerability: [`SECURITY.md`](SECURITY.md). Decisions: [`docs/decisions/`](docs/decisions/) (Unity for both
 apps, PC-first hand intents, shared packages with one branch per agent).
 
 ## Where the design came from

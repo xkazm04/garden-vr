@@ -183,7 +183,8 @@ against the agent's own claims (registry `diff-from-the-recorded-base`).
 3. **Merge** verified work to `main` (`git merge --no-ff agent/<app>`), run `dotnet test shared/core-dotnet` and a
    batchmode compile of BOTH apps on `main` (a shared-package change must not break the other app), then confirm with
    `git log -1 --stat` that the merge is the one intended. Then commit the task's verdict line to
-   `docs/knowledge/verifications.jsonl` (a rejection gets its line without a merge); on `main`,
+   `docs/knowledge/verifications.jsonl` (a rejection gets its line without a merge), written by
+   `node tools/orchestrate/verdict.mjs --app <app> --task <id> --merge <sha>` with the checks re-run (AI_HARNESS step 9); on `main`,
    `node tools/guard/check.mjs --all` fails on an agent merge that has no line (V2).
 4. **Queue**: keep 3-5 ready tasks per agent; write new tasks from the plan's milestones and the reports' "next" notes;
    requeue failed tasks with a sharpened task file (fix the instruction before changing model or effort, registry

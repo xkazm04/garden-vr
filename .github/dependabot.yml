@@ -1,0 +1,54 @@
+# Dependabot watches every dependency manifest a clone builds or runs from, and opens a pull request when one has a
+# newer or patched version. A version bump is owner-reserved (PLAN section 5, merge policy), so these pull requests
+# are proposals: .github/CODEOWNERS routes each one to the owner, and the guard workflow checks it like any other push.
+#
+# Not covered: the Unity packages in apps/*/Packages/manifest.json. Dependabot has no Unity Package Manager support,
+# and those versions are pinned to the editor's verified set (AGENTS.md, Unity 6.6 API notes), so they move only with
+# an editor upgrade. tools/gen3d/pins.json is a hand-kept pin list, not a package manifest.
+version: 2
+updates:
+  # The actions the CI workflow runs (.github/workflows/).
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps(actions)"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  # The core test harness: xunit, the test SDK and the VS runner (shared/core-dotnet/GardenVR.Core.Tests).
+  - package-ecosystem: nuget
+    directory: /shared/core-dotnet
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps(core-dotnet)"
+    groups:
+      test-harness:
+        patterns: ["*"]
+
+  # playwright-core, which rasterises the Sundial dial face (apps/sundial/Art/Scripts/package.json).
+  - package-ecosystem: npm
+    directory: /apps/sundial/Art/Scripts
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "deps(sundial-art)"
+
+  # The fidelity lab's metric packages (tools/fidelity/requirements.txt). Torch is installed from the CUDA index by
+  # hand (tools/fidelity/README.md) and is not in this file, so it is not watched here.
+  - package-ecosystem: pip
+    directory: /tools/fidelity
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps(fidelity)"
+    groups:
+      fidelity-lab:
+        patterns: ["*"]

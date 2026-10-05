@@ -118,3 +118,13 @@ software-engineering). Each line: date, what happened (measured), the rule it su
   pipeline's checks from being quietly removed. The same pass found that the plan's binding inputs had been untracked
   with the contest folder, so a clone planned from half the facts (now `docs/knowledge/contest-record.md`, rule D1).
   Domain: software-engineering / quality-gates; agent-operations / agent-instruction-files.
+
+- **2026-10-05 A record check written from the documented commit message never fires on the real one.** Guard rule V2
+  ("every agent merge on main has a verdict line") looks for git's default subject, `Merge branch 'agent/<app>'`. Every
+  host merge on main is titled by hand: `merge agent/sundial: S4b soil crescent ...`, `merge agent/terrarium: sprint
+  composite ...`. So once the ledger reaches main, V2 would report a fully recorded history while no merge has a line,
+  and its self-test passes because its fixtures use the documented subject too. Fix (not yet made; it needs a session
+  that can run `node tools/guard/check.mjs --self-test`): match `^merge (branch )?'?agent/(terrarium|sundial)\b`
+  case-insensitively, keep the `into agent/` exclusion, and add a fixture copied from a real merge subject. Rule: build
+  a check's fixtures from the real artefact (`git log --merges` on main), not from the doc that describes it. Domain:
+  software-engineering / quality-gates.

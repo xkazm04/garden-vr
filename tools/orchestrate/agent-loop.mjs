@@ -208,4 +208,7 @@ while (true) {
   try { ({ guard, guardRange } = runGuard(r.id, base, head)); } catch (e) { log(`${r.id}: guard crashed: ${e.message}`); }
   fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report), base, head, hook, guard, guardRange, prompts: promptPins() }) + '\n');
   log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)} guard=${guard} guardRange=${guardRange}`);
+  // The loop never certifies; it only names the command that writes the host's verdict (docs/AI_HARNESS.md, step 9).
+  log(`${r.id}: record the host verdict with: node tools/orchestrate/verdict.mjs --app ${app} --task ${r.id} (--merge <sha> | --reject "<reason>") ` +
+    `plus --oracles --acceptance --core --evidence --report --postMerge pass|fail|n/a for each check re-run; base and head are read from tasks.jsonl`);
 }
