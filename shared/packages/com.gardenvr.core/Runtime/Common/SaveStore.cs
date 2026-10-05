@@ -167,6 +167,7 @@ namespace GardenVR.Core
         public LoadResult<T> Load()
         {
             _readOnly = false;
+            if (!_io.Exists(LiveName)) RecoverTemp();
             if (!_io.Exists(LiveName))
             {
                 if (Backup()) return Fail("missing-save");
@@ -286,6 +287,23 @@ namespace GardenVR.Core
             if (_io.Exists(Prev1Name)) _io.Move(Prev1Name, Prev2Name);
             if (_io.Exists(LiveName)) _io.Move(LiveName, Prev1Name);
             _io.Move(TempName, LiveName);
+        }
+
+        /// <summary>
+        /// A crash after the live file rotated to prev1 and before the temp file moved in leaves no live file and a
+        /// finished temp file holding the newest save. Install it. A temp file that does not parse is a torn first
+        /// write and is left alone, so a first-ever save that never finished still loads as Fresh.
+        /// </summary>
+        void RecoverTemp()
+        {
+            try
+            {
+                if (!_io.Exists(TempName)) return;
+                var text = Utf8.GetString(_io.ReadBytes(TempName));
+                RequireVersion(Json.ParseObject(text));
+                _io.Move(TempName, LiveName);
+            }
+            catch (Exception) { }
         }
 
         bool Backup()
