@@ -37,6 +37,10 @@ to have been held back by one. The A3 score stays advisory (below) until it is c
   declares `AGENTS.md` canonical and lists the same commands (G2). It has a `--self-test`. Every agent commit runs it
   through `tools/guard/hooks/pre-commit`, which the agent loop wires for the agent's process tree. The loop also runs
   `--all` and `--range <base>..<head>` after every task and writes `orchestration/runs/<app>/<id>/guard.txt`.
+- `shared/core-dotnet/GardenVR.Core.Tests/ArchitectureRuleTests.cs` holds rules 1, 4 and 6 at the assembly level on every
+  `dotnet test shared/core-dotnet`: only GardenVR.Input may reference the Input System, app runtime code must sit in an
+  asmdef, the core asmdef stays a reference-free leaf, and no user-facing string makes a medical claim
+  (`tools/guard/README.md`, architecture rules).
 - `.editorconfig` and `shared/core-dotnet/Directory.Build.props` hold the C# format and analyzer baseline, which runs on
   every `dotnet test shared/core-dotnet` build. The promoted rules (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310)
   fail that build. The rest are warnings until a build shows 0 hits for them. Guard rule B1 stops a promoted rule from

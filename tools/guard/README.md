@@ -48,6 +48,28 @@ every prompt file (it has no earlier state, so it cannot check a bump). H1 runs 
 follows the branch (`--as` counts for `--range`). A deleted workflow is caught by `--all`, not by `--staged` or `--range`,
 which read only added and modified files.
 
+## Architecture rules in the core test run
+
+The guard reads text. Some of the rules are better held by what the compiler can see.
+`shared/core-dotnet/GardenVR.Core.Tests/ArchitectureRuleTests.cs` checks them on the repo's own files in every
+`dotnet test shared/core-dotnet`, so they run in Definition of Done step 3 and in the CI `core` job, whoever made the
+commit:
+
+| Test | Rule | Fails when |
+|---|---|---|
+| `Only_the_input_package_compiles_against_the_input_system` | AGENTS rule 1 | an `.asmdef` under `apps/<app>/Assets` or `shared/packages` other than `GardenVR.Input.asmdef` references `Unity.InputSystem` (by name, GUID or precompiled DLL). Test asmdefs are exempt. Without the reference, `Keyboard.current` in app code does not compile |
+| `App_runtime_code_never_falls_into_the_default_assembly` | AGENTS rule 1 | a non-Editor `.cs` under `apps/<app>/Assets` has no `.asmdef`/`.asmref` above it, so it compiles into Assembly-CSharp, which references every package |
+| `Core_assembly_stays_an_engine_free_leaf` | AGENTS rule 4 | `GardenVR.Core.asmdef` loses `noEngineReferences`, gains a reference or precompiled DLL, or `com.gardenvr.core` gains a package dependency |
+| `No_device_read_outside_the_keyboard_mouse_provider` | AGENTS rule 1 | wider than R1: any Input System device `.current`, `InputSystem.GetDevice` / `devices` / `onEvent`, or a legacy touch, scroll or sensor read outside the provider |
+| `No_medical_claim_in_user_facing_text` | AGENTS rule 6 | a string literal in app or package runtime code, or a line of an app's `Audio/**/*.json`, uses the medical vocabulary the narration tests ban (therapy, medical, anxiety, cure, diagnose, treatment, clinical, insomnia, heal) |
+
+Each rule test first checks that its detector fires on a known positive (the provider's own reference and device
+reads), and two theories pin the matchers on in-memory lines, so a check that silently matches nothing fails.
+Imported `TextMesh Pro/` and `Samples/` folders are skipped. AGENTS rules 2, 3 and 5 have no file or token form:
+"streak" is a legitimate shader and material word (`_Streak`), so rule 3 is held by the PlayMode narration and save
+tests instead. A Roslyn banned-API analyzer would be a new package (owner-reserved) and could only run inside Unity,
+which CI cannot license; the asmdef reference is the same constraint with no dependency.
+
 ## Where it runs
 
 - **Agent, at each commit.** The agent loop sets `core.hooksPath` to the worktree's `tools/guard/hooks` for the agent's

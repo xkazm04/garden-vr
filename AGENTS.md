@@ -68,7 +68,10 @@ Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Edit
 - Before each commit run `node tools/guard/check.mjs --staged`. It checks rules 1, 4 and 7, committed artefacts and
   path ownership, and it exits 1 on a break; fix the break, never bypass it. The agent loop also wires it as your
   pre-commit hook, so a commit that breaks a rule is refused. After the task, the loop re-checks every file your commits
-  changed (`--range`), so `--no-verify` is caught. A `W1` warning means you touched a path
+  changed (`--range`), so `--no-verify` is caught. `dotnet test shared/core-dotnet` also runs
+  `shared/core-dotnet/GardenVR.Core.Tests/ArchitectureRuleTests.cs`, which fails when an assembly other than
+  GardenVR.Input references the Input System, when app runtime code sits outside an asmdef, when the core gains a
+  reference or package dependency, or when a user-facing string makes a medical claim (rule 6). A `W1` warning means you touched a path
   you do not own; that is allowed only when the task's `touches:` names it, and your report must say so.
 - Finish by writing `orchestration/runs/<app>/<task-id>/REPORT.md`: what changed, commands run with their real
   output (trimmed), evidence paths (screenshots, side-by-sides, videos), what failed, what you would do next.
