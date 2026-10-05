@@ -138,15 +138,16 @@ Unity project; two Unity instances never open the same project path.
 
 `queue/<app>/` -> `running/` -> `done/` or `failed/` (by `tools/orchestrate/agent-loop.mjs`), then **verified** by the
 host. The loop moves a task to `done/` when the agent left `REPORT.md`; that is a self-report. The host's verification
-is a separate state: the host appends `verified: <sha> <date>` or `rejected: <reason>` to the task file in `done/` and
-records it in `STATUS.md`. A downstream task in the same queue may start on a self-reported upstream, but **the host
+is a separate state: the host appends `verified: <sha> <date>` or `rejected: <reason>` to the task file in `done/`,
+records it in `STATUS.md`, and commits one verdict line to `docs/knowledge/verifications.jsonl` (the tracked record;
+`orchestration/` is not tracked; format in `docs/AI_HARNESS.md`, Definition of Done step 9). A downstream task in the same queue may start on a self-reported upstream, but **the host
 never merges an unverified task**, and a rejected upstream sends its dependants back to `queue/`.
 
 Each task file carries `id, app, title, depends, estimate_min, touches` and the sections Goal, Read first, Steps,
 Acceptance (Windows commands), Evidence, Out of scope. Cross-queue dependencies are allowed (`depends: [T-SUN-002]` in a
 Terrarium task).
 
-At dispatch the host records the base commit; verification reads the work as `git diff <base>..agent/<app>`, not
+At dispatch the loop records the base commit (`base` in `tasks.jsonl`, with the task's `head`); verification reads the work as `git diff <base>..agent/<app>`, not
 against the agent's own claims (registry `diff-from-the-recorded-base`).
 
 ### Hourly host check (every hour while agents run; faster when a task just finished)
@@ -162,8 +163,9 @@ against the agent's own claims (registry `diff-from-the-recorded-base`).
    - re-run every Acceptance command in the task, with the same timeouts; read results XML (collected count > 0,
      failed = 0), not exit codes alone;
    - `dotnet test shared/core-dotnet` passes;
-   - `node tools/guard/check.mjs --all` reports 0 errors (the loop's `orchestration/runs/<app>/<id>/guard.txt` is the
-     first look, the host re-run is the verdict); each `W1` warning matches a path in `touches:` and the report flags it;
+   - `node tools/guard/check.mjs --all` and `--range <base>..agent/<app> --as agent/<app>` report 0 errors (the loop's
+     `orchestration/runs/<app>/<id>/guard.txt` is the first look, the host re-run is the verdict); each `W1` warning
+     from the range run matches a path in `touches:` and the report flags it;
    - `git diff --stat <base>..HEAD` touches only the task's `touches:` plus the agent's owned paths (section 5, ownership);
      `git check-ignore` on committed paths finds no `Library/`, `Temp/`, `Logs/`, builds, `.env`;
    - read the evidence (open the PNGs, watch the MP4); a capture that is black or magenta is a failed capture;
@@ -172,7 +174,9 @@ against the agent's own claims (registry `diff-from-the-recorded-base`).
    - termination cause recorded: finished / ceiling / refused / crashed / unknown.
 3. **Merge** verified work to `main` (`git merge --no-ff agent/<app>`), run `dotnet test shared/core-dotnet` and a
    batchmode compile of BOTH apps on `main` (a shared-package change must not break the other app), then confirm with
-   `git log -1 --stat` that the merge is the one intended.
+   `git log -1 --stat` that the merge is the one intended. Then commit the task's verdict line to
+   `docs/knowledge/verifications.jsonl` (a rejection gets its line without a merge); on `main`,
+   `node tools/guard/check.mjs --all` fails on an agent merge that has no line (V2).
 4. **Queue**: keep 3-5 ready tasks per agent; write new tasks from the plan's milestones and the reports' "next" notes;
    requeue failed tasks with a sharpened task file (fix the instruction before changing model or effort, registry
    `instruction-defect-before-tier-escalation`).

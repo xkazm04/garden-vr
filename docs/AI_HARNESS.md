@@ -21,8 +21,13 @@ version and points there.
   `PauseAt_*` and reduced motion (gate U1, S2-S4, A7). The commands are in the `## Commands` block of `AGENTS.md`.
 - `tools/guard/check.mjs` mechanically checks AGENTS.md rules 1, 4 and 7, committed artefacts and path ownership. It
   also checks that `CLAUDE.md` carries exactly the `AGENTS.md` command list (G1) and that `.ai/manifest.yaml`
-  declares `AGENTS.md` canonical and lists the same commands (G2). It has a `--self-test`. The agent loop runs it
-  after every task and writes `orchestration/runs/<app>/<id>/guard.txt`.
+  declares `AGENTS.md` canonical and lists the same commands (G2). It has a `--self-test`. Every agent commit runs it
+  through `tools/guard/hooks/pre-commit`, which the agent loop wires for the agent's process tree. The loop also runs
+  `--all` and `--range <base>..<head>` after every task and writes `orchestration/runs/<app>/<id>/guard.txt`.
+- `.editorconfig` and `shared/core-dotnet/Directory.Build.props` hold the C# format and analyzer baseline. It is
+  reported as warnings on every `dotnet test shared/core-dotnet` build (`tools/guard/README.md`).
+- `docs/knowledge/verifications.jsonl` is the committed record of every host verdict (below). The guard rules V1 and V2
+  validate it.
 - `tools/fidelity/` (`fid.cmd`, `fid.py`, `README.md`) is the art-fidelity lab: F1 metrics against per-frame ladders, the F2 pairwise judge, and the F3 sweep and contact sheet.
 - The LLM-as-judge for art is the A3 blind second opinion. Its rubric is section 7 of `docs/art/terrarium-style.md`
   and `docs/art/sundial-style.md`. Sundial's judge runs are scripted in `apps/sundial/Art/Scripts/*_judge.py` and
@@ -36,8 +41,11 @@ version and points there.
 - `tools/orchestrate/agent-loop.mjs` runs each agent with a pinned model and effort.
 - The per-app plans are in `docs/plans/`.
 - Not yet versioned: the judge prompts sit inline in each judge script (for example the `PROMPT` constant in
-  `sprint_t050_rubric.py`). There is no shared prompt file with a version, so two runs can drift. Lifting them into
-  one versioned file is the open item behind the unticked box.
+  `sprint_t050_rubric.py`). There is no shared prompt file with a version yet. Until there is, each verdict line that
+  used the judge records the script's git blob sha (`judge.blob`), which pins the exact prompt that run used, so drift
+  between two runs is visible. Lifting the prompts into one versioned file is the open item behind the unticked box.
+- The scan-sweep lenses come from the `scan-sweep` skill (`.ai/manifest.yaml` `skills:`). Its prompts are versioned in
+  the ai-registry, not here. Its bug-hunting lens found the most real defects so far: the `fix(core-*)` commits.
 
 **Runbooks for recurring agent tasks**
 - The hourly host check is in PLAN section 5: observe, verify, merge, queue, STATUS.
@@ -61,10 +69,11 @@ head, against the base commit recorded at dispatch (`git diff <base>..agent/<app
 2. **Acceptance re-run.** Re-run every Acceptance command in the task file with the same timeouts. Read the results
    XML: the test-case count must be above 0 and the failed count must be 0. An exit code alone does not count.
 3. **Core tests.** `dotnet test shared/core-dotnet` passes.
-4. **Guard.** `node tools/guard/check.mjs --all` reports 0 errors. Each `W1` warning must match a path the task's
-   `touches:` names, and the report must flag it. The agent loop already ran it once after the task. Its
-   `orchestration/runs/<app>/<id>/guard.txt` and the `guard` exit code in `tasks.jsonl` are the first look, but only
-   the host's re-run counts.
+4. **Guard.** `node tools/guard/check.mjs --all` and `node tools/guard/check.mjs --range <base>..agent/<app> --as
+   agent/<app>` both report 0 errors. Each `W1` warning from the range run must match a path the task's `touches:`
+   names, and the report must flag it (`--all` cannot report W1). The agent loop already ran both after the task. Its
+   `orchestration/runs/<app>/<id>/guard.txt`, and the `guard`, `guardRange`, `base` and `head` fields in
+   `tasks.jsonl`, are the first look, but only the host's re-run counts.
 5. **Scope.** `git diff --stat <base>..HEAD` touches only `touches:` plus the agent's owned paths (PLAN section 5,
    ownership), and `git check-ignore` finds no committed `Library/`, `Temp/`, `Logs/`, builds or `.env`.
 6. **Evidence opened.** Open every PNG and watch every MP4 the task names. A black or magenta capture is a failed
@@ -75,6 +84,28 @@ head, against the base commit recorded at dispatch (`git diff <base>..agent/<app
 8. **After the merge.** On `main`, `dotnet test shared/core-dotnet` passes and **both** apps compile in batchmode. A
    shared-package change must not break the other app. `git log -1 --stat` confirms that the merge is the one
    intended.
+9. **Record.** Append one line to `docs/knowledge/verifications.jsonl` and commit it on `main` right after the merge.
+   For a rejection, append the line without merging. The task-file `verified:` line is the working note, and the
+   ledger is the record that survives, because `orchestration/` is not tracked. `node tools/guard/check.mjs --all`
+   fails on a malformed line (V1). On `main` it also fails on an agent merge that has no line (V2).
+
+One line per verdict, on a single line in the file (wrapped here for reading):
+
+```json
+{"task":"T-TER-045","app":"terrarium","verdict":"verified","reason":null,"base":"<sha>","head":"<sha>","merge":"<sha>",
+ "date":"2026-10-05","checks":{"oracles":"pass","acceptance":"pass","core":"pass","guard":"pass","scope":"pass",
+ "evidence":"pass","report":"pass","postMerge":"pass"},"guardOut":"guard: 0 error(s), 1 warning(s)",
+ "w1":["apps/sundial/Assets/Editor/SceneSetup.cs"],"judge":null}
+```
+
+- The `checks` keys are steps 1-8, and each value is `pass`, `fail`, `not run` or `n/a`. A `verified` line needs
+  every check at `pass` or `n/a`, because "not run" is never a pass.
+- A `rejected` line names its `reason` and has `"merge": null`.
+- `base` and `head` come from `tasks.jsonl`.
+- `guardOut` is the summary line of the host's `--all` re-run.
+- `w1` lists the paths that the range run warned about.
+- When the A3 judge ran, `judge` is `{"script": "<path>", "blob": "<git hash-object of the script>", "model": "...",
+  "median": <score>}`.
 
 **Visual changes** (anything that changes a rendered frame) also need:
 - a side-by-side against the art reference at the same framing, saved with the evidence (AGENTS rule 5);
@@ -95,7 +126,7 @@ head, against the base commit recorded at dispatch (`git diff <base>..agent/<app
 
 | Who | Checks | Record |
 |---|---|---|
-| Agent | Runs its Acceptance commands and `node tools/guard/check.mjs --staged` before each commit, then leaves evidence | `orchestration/runs/<app>/<id>/REPORT.md` |
-| Agent loop | `node tools/guard/check.mjs --all` in the worktree after every task (advisory, never moves a task) | `orchestration/runs/<app>/<id>/guard.txt`, `guard` in `tasks.jsonl` |
-| Host | Steps 1-8 above, plus the A3 judge on gate frames | `verified:` / `rejected:` line in the task file, and `orchestration/STATUS.md` |
+| Agent | Runs its Acceptance commands, leaves evidence. Every commit runs `node tools/guard/check.mjs --staged` through the pre-commit hook the loop wires | `orchestration/runs/<app>/<id>/REPORT.md` |
+| Agent loop | `node tools/guard/check.mjs --all` and `--range <base>..<head>` in the worktree after every task (advisory, never moves a task) | `orchestration/runs/<app>/<id>/guard.txt`, `base`, `head`, `guard`, `guardRange` in `tasks.jsonl` |
+| Host | Steps 1-9 above, plus the A3 judge on gate frames | committed line in `docs/knowledge/verifications.jsonl` (guard V1, V2), plus the `verified:` / `rejected:` note in the task file and `orchestration/STATUS.md` |
 | Owner | Owner-eyes gate items: first-time use (U2), daily use (U4), feel (S6), A1 frame rating, audio listen (A6), motion watch (A7); approves reserved changes | witness and evidence columns of `apps/terrarium/GATE.md` and `apps/sundial/GATE.md` |

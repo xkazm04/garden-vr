@@ -8,7 +8,10 @@
 // Grok runs headless in the agent's worktree, and the task moves to done/ when the agent left
 // <worktree>/orchestration/runs/<app>/<id>/REPORT.md, else to failed/. Raw Grok output goes to
 // orchestration/runs/<app>/<id>/ in the main checkout (host-side log), beside guard.txt: the output of
-// `node tools/guard/check.mjs --all` run in the worktree after the task (advisory). Idle: polls every 2 min for new tasks.
+// `node tools/guard/check.mjs --all` and `--range <base>..<head>` run in the worktree after the task (advisory; the host
+// rejects in the Definition of Done). Every commit the agent makes runs tools/guard/hooks/pre-commit: the loop sets
+// core.hooksPath for the agent's process tree only, through git's GIT_CONFIG_* environment (git 2.31+), so the shared
+// config stays the owner's call. Idle: polls every 2 min for new tasks.
 // Stop: create orchestration/STOP-<app> (finishes the current task first).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,6 +32,12 @@ if (!app || !wt) { console.error('need --app and --worktree'); process.exit(1); 
 const O = (...p) => path.join(main, 'orchestration', ...p);
 for (const d of ['queue/' + app, 'running', 'done', 'merged', 'failed', 'runs/' + app]) fs.mkdirSync(O(d), { recursive: true });
 const log = (m) => { const line = `[${new Date().toISOString()}] [${app}] ${m}`; console.log(line); fs.appendFileSync(O('runs', app, 'loop.log'), line + '\n'); };
+
+// git in the agent's worktree; the trimmed stdout, or null when git fails (an unset config key exits 1).
+const gitWt = (...args) => { const r = spawnSync('git', ['-C', wt, ...args], { encoding: 'utf8', windowsHide: true }); return r.status === 0 ? r.stdout.trim() : null; };
+const HOOKS_DIR = path.join(wt, 'tools', 'guard', 'hooks').replace(/\\/g, '/');
+const hookConfigured = () => /(^|\/)tools\/guard\/hooks\/?$/.test((gitWt('config', '--get', 'core.hooksPath') || '').replace(/\\/g, '/'));
+const hookAvailable = () => fs.existsSync(path.join(HOOKS_DIR, 'pre-commit'));
 
 const front = (txt) => {
   const m = txt.match(/^---\r?\n([\s\S]*?)\r?\n---/); const f = {};
@@ -82,6 +91,13 @@ async function runGrok(task) {
     const env = { ...process.env, GROK_AGENT_DASHBOARD: '0' };
     if (eng === 'claude') for (const k of Object.keys(env)) if (k === 'CLAUDECODE' || k.startsWith('CLAUDE_CODE_') || k === 'ANTHROPIC_API_KEY') delete env[k];
     if (eng === 'claude') env.CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS = '0';
+    // Every commit the agent makes runs the guard's pre-commit hook (AGENTS.md "How to work a task"). An instruction
+    // alone did not hold a runner-level habit (docs/knowledge/lessons.md, 2026-10-03), so the runner wires it, scoped to
+    // this process tree; a commit made with --no-verify is still caught by the --range run after the task.
+    if (hookAvailable()) {
+      const n = Number(env.GIT_CONFIG_COUNT || 0);
+      env[`GIT_CONFIG_KEY_${n}`] = 'core.hooksPath'; env[`GIT_CONFIG_VALUE_${n}`] = HOOKS_DIR; env.GIT_CONFIG_COUNT = String(n + 1);
+    }
     const child = spawn(bin, args, { cwd: wt, env, shell: false, windowsHide: true });
     child.stdout.pipe(fs.createWriteStream(path.join(runDir, `${eng}${tag}.json`)));
     child.stderr.pipe(fs.createWriteStream(path.join(runDir, `${eng}${tag}.stderr.log`)));
@@ -117,21 +133,35 @@ async function runGrok(task) {
   return { id, code, wallS: Math.round((Date.now() - t0) / 1000) };
 }
 
-// Runs the AGENTS.md rule guard over the worktree after a task (docs/AI_HARNESS.md, Definition of Done step 4). Advisory:
-// it never changes done/failed; the host reads guard.txt when verifying. Returns the exit code, or null when not run.
-function runGuard(id) {
+// Runs the AGENTS.md rule guard over the worktree after a task (docs/AI_HARNESS.md, Definition of Done step 4): `--all`
+// over every tracked file, and `--range <base>..<head>` over the files this task's commits changed, which adds the W1
+// ownership warnings and catches a commit that skipped the hook. Advisory: it never changes done/failed; the host reads
+// guard.txt when verifying. Returns both exit codes, null for one that did not run.
+function runGuard(id, base, head) {
   const script = path.join(wt, 'tools', 'guard', 'check.mjs');
-  if (!fs.existsSync(script)) { log(`${id}: guard not run (no tools/guard/check.mjs on this branch yet)`); return null; }
-  const g = spawnSync(process.execPath, [script, '--all'], { cwd: wt, encoding: 'utf8', windowsHide: true, timeout: 120000 });
-  const out = `${g.stdout || ''}${g.stderr || ''}${g.error ? `guard: could not run: ${g.error.message}\n` : ''}`;
+  if (!fs.existsSync(script)) { log(`${id}: guard not run (no tools/guard/check.mjs on this branch yet)`); return { guard: null, guardRange: null }; }
+  const run = (args) => {
+    const g = spawnSync(process.execPath, [script, ...args], { cwd: wt, encoding: 'utf8', windowsHide: true, timeout: 120000 });
+    const out = `${g.stdout || ''}${g.stderr || ''}${g.error ? `guard: could not run: ${g.error.message}\n` : ''}`;
+    return { status: g.status, out, summary: (out.trim().split(/\r?\n/).filter((l) => l.startsWith('guard:'))[0] || '').trim() };
+  };
+  const a = run(['--all']);
+  let text = `$ node tools/guard/check.mjs --all\n${a.out}`;
+  let r = null;
+  if (base && head && base !== head && fs.readFileSync(script, 'utf8').includes("'--range'")) {
+    r = run(['--range', `${base}..${head}`]);
+    text += `\n$ node tools/guard/check.mjs --range ${base}..${head}\n${r.out}`;
+  }
   fs.mkdirSync(O('runs', app, id), { recursive: true });
-  fs.writeFileSync(O('runs', app, id, 'guard.txt'), out);
-  log(`${id}: guard exit=${g.status} ${(out.trim().split(/\r?\n/).filter((l) => l.startsWith('guard:'))[0] || '').trim()}`);
-  return g.status;
+  fs.writeFileSync(O('runs', app, id, 'guard.txt'), text);
+  log(`${id}: guard exit=${a.status} ${a.summary}${r ? ` | range ${base.slice(0, 10)}..${head.slice(0, 10)} exit=${r.status} ${r.summary}` : ' | range not run'}`);
+  return { guard: a.status, guardRange: r ? r.status : null };
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 log(`loop start: engine=${engineState.primary} claude=${claudeModel}@${claudeEffort} grok=${model} agy=${agyModel} worktree=${wt}`);
+if (!hookAvailable()) log('WARNING: no tools/guard/hooks/pre-commit on this branch; agent commits are not gated until main is merged in');
+if (!hookConfigured()) log(`commit hooks: agent commits run ${HOOKS_DIR}/pre-commit through GIT_CONFIG_* env; host commits and merges skip the guard until the owner runs: git config core.hooksPath tools/guard/hooks`);
 while (true) {
   if (fs.existsSync(O('STOP-' + app))) { log('STOP file present, exiting'); break; }
   const task = nextTask();
@@ -140,14 +170,19 @@ while (true) {
   await new Promise((res) => { const g = spawn('git', ['-C', wt, 'merge', '--no-edit', 'main'], { windowsHide: true });
     let o = ''; g.stdout.on('data', (d) => (o += d)); g.stderr.on('data', (d) => (o += d));
     g.on('close', (code) => { if (code !== 0) { log(`merge main failed, aborting merge: ${o.trim().slice(0, 300)}`); spawn('git', ['-C', wt, 'merge', '--abort']); } else log(`merged main: ${o.trim().split(/\r?\n/)[0]}`); res(); }); });
+  // The dispatch base (PLAN section 5): the host grades `git diff <base>..agent/<app>` and copies base and head into the
+  // verification ledger (docs/knowledge/verifications.jsonl).
+  const base = gitWt('rev-parse', 'HEAD');
+  const hook = hookAvailable() ? (hookConfigured() ? 'config' : 'env') : 'none';
   fs.renameSync(O('queue', app, task.file), O('running', task.file));
-  log(`start ${task.file}`);
+  log(`start ${task.file} base=${base} hook=${hook}`);
   const r = await runGrok(task);
+  const head = gitWt('rev-parse', 'HEAD');
   const report = path.join(wt, 'orchestration', 'runs', app, r.id, 'REPORT.md');
   const ok = r.code === 0 && fs.existsSync(report);
   fs.renameSync(O('running', task.file), O(ok ? 'done' : 'failed', task.file));
-  let guard = null;
-  try { guard = runGuard(r.id); } catch (e) { log(`${r.id}: guard crashed: ${e.message}`); }
-  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report), guard }) + '\n');
-  log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)} guard=${guard}`);
+  let guard = null, guardRange = null;
+  try { ({ guard, guardRange } = runGuard(r.id, base, head)); } catch (e) { log(`${r.id}: guard crashed: ${e.message}`); }
+  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report), base, head, hook, guard, guardRange }) + '\n');
+  log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)} guard=${guard} guardRange=${guardRange}`);
 }

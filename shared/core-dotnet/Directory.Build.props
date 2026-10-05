@@ -1,0 +1,17 @@
+<Project>
+  <!--
+    Analyzer and format baseline for the pure C# core and its tests, so `dotnet test shared/core-dotnet` runs it on
+    every build. The analyzers ship with the .NET SDK (no package; a new package is an owner-reserved change). They are
+    off by default for netstandard2.1, the core's target, so they are switched on here. The rules and their severities
+    are in the repo-root .editorconfig.
+
+    Ratchet: everything starts as a warning, so the build stays green. Once a build shows 0 hits for a rule, promote it
+    here, for example <WarningsAsErrors>$(WarningsAsErrors);CA2242</WarningsAsErrors>, and never demote it again.
+  -->
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>
