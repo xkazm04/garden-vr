@@ -45,6 +45,10 @@ to have been held back by one. The A3 score stays advisory (below) until it is c
   every `dotnet test shared/core-dotnet` build. The promoted rules (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310)
   fail that build. The rest are warnings until a build shows 0 hits for them. Guard rule B1 stops a promoted rule from
   being demoted (`tools/guard/README.md`, analyzer section).
+- `shared/core-dotnet/GardenVR.Core.Tests/FormatRuleTests.cs` holds the `.editorconfig` layout on every C# file in the
+  repo, Unity app code included, on every `dotnet test shared/core-dotnet`. It checks spaces for indentation, trailing
+  whitespace, the final newline, Allman braces, `else`/`catch`/`finally` on their own line, and keyword spacing. A
+  drift fails the core tests locally and in CI (`tools/guard/README.md`, "Layout, held by a test on every C# file").
 - On `main`, where host and human commits land, the guard's H1 is an error until `core.hooksPath` points at
   `tools/guard/hooks`. Those commits face the same rules as an agent commit. The checkout cannot report green while
   they skip the hook.

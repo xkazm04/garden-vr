@@ -144,7 +144,34 @@ To promote a rule, add it to `WarningsAsErrors` and to `PROMOTED` in `check.mjs`
 | Warning | CA1305 | Known hits: `Sundial/StretchSession.cs` `Time.ToString("0.00")`, `Common/SaveStore.cs` `int.ToString()`, the tests' `Guid.ToString("N")`. Fix them, then promote |
 | Warning | CA1806, CA1065, IDE0055 | Not measured yet. Read the warning list of `dotnet build shared/core-dotnet` and promote each one that shows 0 hits |
 
-Pending, and not run yet: `dotnet format whitespace shared/core-dotnet/GardenVR.sln --verify-no-changes`. It joins the `## Commands`
+### Layout, held by a test on every C# file
+
+IDE0055 sees only the core build and is still a warning, and Unity reads none of `.editorconfig` when it compiles the
+apps. So the part of the layout a single line can show is held by
+`shared/core-dotnet/GardenVR.Core.Tests/FormatRuleTests.cs` instead. It runs in every `dotnet test shared/core-dotnet`:
+Definition of Done steps 3 and 8, the CI `core` job, whoever made the commit. It reads every `.cs` under
+`apps/<app>/Assets`, `shared/packages` and `shared/core-dotnet` (not `bin/`, `obj/`, `TextMesh Pro/` or `Samples/`)
+and fails on:
+
+| Finding | `.editorconfig` `[*.cs]` setting |
+|---|---|
+| `tab-indent` | `indent_style = space` |
+| `trailing-whitespace` | `trim_trailing_whitespace = true` |
+| `final-newline` | `insert_final_newline = true` |
+| `brace-indent`: a line holding only `{` or `}` off the 4-space grid | `indent_size = 4` |
+| `brace-same-line`: a line of code ending in `{` | `csharp_new_line_before_open_brace = all` |
+| `close-brace-continues`: `} else`, `} catch`, `} finally` | `csharp_new_line_before_else`, `_catch`, `_finally` |
+| `keyword-paren`: `if(`, `foreach(`, `using(` and the other control-flow keywords | `csharp_space_after_keywords_in_control_flow_statements = true` |
+
+Single-line blocks and statements stay allowed, because `.editorconfig` preserves them (`try { Kill(); } catch (Exception) { }`).
+So does an array initializer opened after `=` (the capture package's `BitmapFont.Data`), the one such line in the repo.
+Literals and trailing comments are removed before the brace and keyword rules read a line. A theory pins each finding
+on in-memory lines, and a third test fails when `.editorconfig` stops declaring a setting the test mirrors, so the two
+change together. A static read of all 209 C# files (2026-10-05) found 0 hits, so the test went in as an error with no
+reformat sweep of agent-owned code. A hit names `path:line finding`; fix it by hand or with `dotnet format whitespace`.
+
+Pending, and not run yet: `dotnet format whitespace shared/core-dotnet/GardenVR.sln --verify-no-changes`. It covers
+what the test does not, such as spacing inside a line, but only for the core build. It joins the `## Commands`
 block (AGENTS.md, CLAUDE.md and `.ai/manifest.yaml` together, or G1/G2 fail) and the `core` job of
 `.github/workflows/guard.yml` (with a matching `CI_REQUIRED` entry for C1) only after it has run green once. If it is
 red, do not reformat the core in one sweep: its sources are agent-owned and a whitespace sweep collides with live

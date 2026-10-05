@@ -71,7 +71,10 @@ Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Edit
   changed (`--range`), so `--no-verify` is caught. `dotnet test shared/core-dotnet` also runs
   `shared/core-dotnet/GardenVR.Core.Tests/ArchitectureRuleTests.cs`, which fails when an assembly other than
   GardenVR.Input references the Input System, when app runtime code sits outside an asmdef, when the core gains a
-  reference or package dependency, or when a user-facing string makes a medical claim (rule 6). A `W1` warning means you touched a path
+  reference or package dependency, or when a user-facing string makes a medical claim (rule 6). It also runs
+  `shared/core-dotnet/GardenVR.Core.Tests/FormatRuleTests.cs`, which fails when any `.cs` file, app code included,
+  breaks the `.editorconfig` layout (tabs, trailing whitespace, no final newline, a `{` that does not sit on its own line,
+  `} else`, `if(`). A `W1` warning means you touched a path
   you do not own; that is allowed only when the task's `touches:` names it, and your report must say so.
 - Finish by writing `orchestration/runs/<app>/<task-id>/REPORT.md`: what changed, commands run with their real
   output (trimmed), evidence paths (screenshots, side-by-sides, videos), what failed, what you would do next.
