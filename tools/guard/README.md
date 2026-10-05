@@ -222,10 +222,39 @@ on in-memory lines, and a third test fails when `.editorconfig` stops declaring 
 change together. A static read of all 209 C# files (2026-10-05) found 0 hits, so the test went in as an error with no
 reformat sweep of agent-owned code. A hit names `path:line finding`; fix it by hand or with `dotnet format whitespace`.
 
-Pending, and not run yet: `dotnet format whitespace shared/core-dotnet/GardenVR.sln --verify-no-changes`. It covers
-what the test does not, such as spacing inside a line, but only for the core build. It joins the `## Commands`
-block (AGENTS.md, CLAUDE.md and `.ai/manifest.yaml` together, or G1/G2 fail) and the `core` job of
-`.github/workflows/guard.yml` (with a matching `CI_REQUIRED` entry for C1) only after it has run green once. If it is
-red, do not reformat the core in one sweep: its sources are agent-owned and a whitespace sweep collides with live
-agent branches. Fix the hits as each owner touches a file, then promote IDE0055 through the ratchet. Until then IDE0055 shows as a build warning
-on every `dotnet test shared/core-dotnet`.
+### The formatter in CI
+
+`.github/workflows/format.yml` runs `dotnet format whitespace --folder` on every push and pull request. It covers what
+the test does not, such as spacing inside a line, and it reaches the app code Unity compiles, which no build here
+does. Folder mode needs no project file. Scope is the same as `FormatRuleTests` (`apps/<app>/Assets`, `shared/packages`,
+`shared/core-dotnet`, without `TextMesh Pro/`, `Samples/`, `bin/` and `obj/`). It has two steps:
+
+- **Changed files, a gate.** Every `.cs` in scope that the pushed commits added or modified (`<before>..<sha>` on a
+  push, `<base>..<merge>` on a pull request) must be clean. Otherwise the job fails and names the files. Fix with
+  `dotnet format whitespace . --folder --include <file>`. A new branch or a force push has no usable base, so the step
+  skips and says so.
+- **Whole tree, a report.** The same check over the whole scope writes the number of drifting files as a warning
+  annotation and lists them in the step summary. It fails only if the formatter cannot run.
+
+That split follows the rule above: do not reformat agent-owned code in one sweep, because a whitespace sweep collides
+with live agent branches. Each file is fixed when its owner next touches it, and the gate stops new drift. When the
+report shows 0 files, the owner can move the whole-tree check into the `core` job of `.github/workflows/guard.yml` with
+a matching `CI_REQUIRED` entry for C1, add it to the `## Commands` block (AGENTS.md, CLAUDE.md and `.ai/manifest.yaml`
+together, or G1/G2 fail), and promote IDE0055 through the ratchet. Until then IDE0055 shows as a build warning on every
+`dotnet test shared/core-dotnet`.
+
+The workflow uses no third-party action (its checkout is plain `git fetch`), so it adds nothing to pin.
+
+`install.mjs --check` does not belong in CI. The runner checks its own fresh clone, never a contributor's, which is
+why H1 reports nothing under GitHub Actions. A clone without the hook is caught at push time by `guard.yml` and this
+workflow.
+
+## Workflow and judge rules in the core test run
+
+Two more checks in `shared/core-dotnet/GardenVR.Core.Tests/` read repo files rather than code. They run in every
+`dotnet test shared/core-dotnet`, so the CI `core` job enforces them whoever made the commit:
+
+| Test | Rule | Fails when |
+|---|---|---|
+| `WorkflowPinTests` | Actions run from a commit, not a movable tag | a `uses:` in `.github/workflows/*.yml` is not `owner/repo[/path]@<40-hex sha> # vX.Y.Z` (a local `./` action needs no pin; a `docker://` image needs an `@sha256:` digest). `TagPinned` lists the 7 tag refs that were there when the rule went in. It may only shrink: an entry that is pinned or gone fails as stale. Pin one with `git ls-remote https://github.com/<owner>/<repo> 'refs/tags/<tag>^{}'` and remove its entry in the same commit. The `guard.yml` refs are the owner's, because that file is a gate. Dependabot keeps SHA pins and their version comments current |
+| `ArtJudgeGateTests` | The art judge stays advisory until owner agreement is shown (`docs/decisions/0004-art-judge-gate-criteria.md`) | a `tools/fidelity/judge/calibration-*.json` says `"advisory": false` without at least `kappa_min_labels` owner labels, at least 12 per frame, kappa at the packet floor with `ci95_low` of at least 0.4, raw `agreement` of at least 0.8, a per-frame inversion rate of at most 0.1 and a passing control gate; or an advisory record gives no reason; or a judge, ladder or control input is missing from the checkout and not on the `HostOnly` list of 8 host-side frames, which may only shrink |

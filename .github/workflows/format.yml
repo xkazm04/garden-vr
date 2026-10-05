@@ -1,0 +1,117 @@
+# The C# formatter, run on every push and pull request over every C# file a clone builds or Unity compiles: app code
+# under apps/<app>/Assets, the shared packages and the core (tools/guard/README.md, "C# analyzer and format baseline").
+#
+# FormatRuleTests holds the part of the .editorconfig layout one line can show; `dotnet format whitespace` holds all of
+# it, including spacing inside a line, which the test cannot see. Unity reads none of .editorconfig, and the commit hook
+# runs only in a clone that installed it, so this is where app code meets the formatter whoever wrote it.
+#
+#   - Changed files gate. Every .cs file the pushed commits added or modified, in that scope, must be clean; otherwise
+#     the job fails and names the files. Untouched files are not checked here, so the job is green on day one and a
+#     file is fixed when its owner next touches it (no reformat sweep across live agent branches).
+#   - Whole-tree report. The same check over the whole scope, as a warning annotation and a step-summary line. It never
+#     fails the job over drift; it fails only if the formatter itself cannot run.
+#
+# There is no third-party action here: the checkout is plain git, so there is no tag to pin (WorkflowPinTests). The
+# runner's preinstalled .NET SDK carries `dotnet format`.
+name: format
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    name: format (dotnet format whitespace)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the commit, and the one it is compared against
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$auth" fetch -q --no-tags --depth=1 origin "$GITHUB_SHA"
+          git checkout -q --detach FETCH_HEAD
+          # A new branch or a force push has no usable "before" (empty, all zeros, or gone); the gate then has nothing to
+          # compare against and the whole-tree report still runs.
+          if [ -n "${BASE//0/}" ] && git -c http.extraheader="$auth" fetch -q --no-tags --depth=1 origin "$BASE"; then
+            echo "BASE_SHA=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_ENV"
+          else
+            echo "no earlier commit to compare against"
+          fi
+          dotnet --version
+
+      - name: Changed C# files are formatted
+        shell: bash
+        run: |
+          set -uo pipefail
+          if [ -z "${BASE_SHA:-}" ]; then
+            echo "no earlier commit to compare against; the whole-tree report below still runs"
+            exit 0
+          fi
+          files=()
+          while IFS= read -r -d '' f; do
+            case "$f" in
+              apps/*/Assets/*|shared/packages/*|shared/core-dotnet/*) ;;
+              *) continue ;;
+            esac
+            case "/$f" in
+              */bin/*|*/obj/*|*"/TextMesh Pro/"*|*/Samples/*) continue ;;
+            esac
+            files+=("$f")
+          done < <(git diff -z --name-only --diff-filter=ACMR "$BASE_SHA" HEAD -- '*.cs')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "no changed C# file in scope"
+            exit 0
+          fi
+          printf 'checking %s\n' "${files[@]}"
+          dotnet format whitespace . --folder --verify-no-changes --verbosity normal --include "${files[@]}"
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            echo "::error title=Format::changed C# files are not formatted to .editorconfig (exit $code); run: dotnet format whitespace . --folder --include <file>"
+            {
+              echo "### Format: changed C# files drift from .editorconfig"
+              echo "Fix with \`dotnet format whitespace . --folder --include <file>\`, then commit."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "format: ${#files[@]} changed C# file(s) clean" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Whole-tree format report (advisory)
+        shell: bash
+        run: |
+          set -uo pipefail
+          report="$RUNNER_TEMP/format-report"
+          mkdir -p "$report"
+          exclude=()
+          while IFS= read -r -d '' d; do exclude+=("$d"); done < <(
+            find apps/*/Assets shared/packages shared/core-dotnet -type d \
+              \( -name 'TextMesh Pro' -o -name Samples -o -name bin -o -name obj \) -prune -print0 2>/dev/null)
+          args=(whitespace . --folder --verify-no-changes --report "$report" --include apps/terrarium/Assets/ apps/sundial/Assets/ shared/packages/ shared/core-dotnet/)
+          if [ "${#exclude[@]}" -gt 0 ]; then args+=(--exclude "${exclude[@]}"); fi
+          dotnet format "${args[@]}"
+          code=$?
+          json="$report/format-report.json"
+          count=0
+          if [ -f "$json" ]; then
+            count=$(node -e 'const r=require(process.argv[1]); console.log(new Set(r.map((x) => x.FilePath)).size)' "$json")
+          fi
+          if [ "$count" -gt 0 ]; then
+            echo "::warning title=Format::dotnet format whitespace would change $count C# file(s) across the tree; each is fixed when its owner next touches it, and the changed-files step above holds new drift out"
+            {
+              echo "### Format: $count C# file(s) drift from .editorconfig (advisory)"
+              node -e 'const r=require(process.argv[1]); const root=process.cwd()+"/"; for (const f of [...new Set(r.map((x) => x.FilePath))].sort().slice(0, 50)) console.log("- " + f.replace(root, ""))' "$json"
+            } >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" -ne 0 ]; then
+            echo "::error title=Format::dotnet format could not run (exit $code)"
+            exit 1
+          else
+            echo "format: the whole tree is clean" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
