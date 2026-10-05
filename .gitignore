@@ -55,3 +55,12 @@ orchestration/runs/host/
 /.claude/rules/ai-registry-access.md
 /.ai/skill-runs.local.jsonl
 # END ai-registry linked skills
+
+# Internal process, not the app: agent orchestration state, run logs and reports, contest and research
+# material, audition and fidelity-lab experiments, and sweep ledgers. They stay on disk, untracked.
+/orchestration/
+/docs/contest/
+/docs/research/
+/docs/audio/audition/
+/tools/fidelity/lab/
+/.claude/scan-history/
