@@ -24,6 +24,7 @@ const LEDGER = 'docs/knowledge/verifications.jsonl';
 const HOOKS = 'tools/guard/hooks';
 const BUILD_PROPS = 'shared/core-dotnet/Directory.Build.props';
 const EDITORCONFIG = '.editorconfig';
+const PROMPTS = 'tools/orchestrate/prompts/';
 const EM_DASH = '—';
 
 // Analyzer rules promoted to errors in the core build (B1). The ratchet only moves one way: add an id here and to
@@ -202,6 +203,34 @@ function checkRatchet(props, editorconfig) {
   return out;
 }
 
+// P1: the prompt library is versioned (tools/orchestrate/prompts/README.md). Each prompt file opens with front matter
+// `prompt: <its file name>` and an integer `prompt_version`, which the agent loop records per task with the file's blob
+// sha. A change to a prompt must raise that version, so a change in what agents are told is never silent. `before` is
+// the file at the commit being compared against (HEAD for --staged, <base> for --range), or null for a new file.
+const isPrompt = (p) => p.startsWith(PROMPTS) && p.endsWith('.md') && !p.slice(PROMPTS.length).includes('/') && !p.endsWith('/README.md');
+function promptHeader(text) {
+  const m = (text || '').replace(/\r/g, '').match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
+  if (!m) return null;
+  const get = (k) => (m[1].match(new RegExp(`^${k}:[ \\t]*(\\S.*?)[ \\t]*$`, 'm')) || [])[1];
+  return { prompt: get('prompt'), version: get('prompt_version') };
+}
+function checkPrompt(p, text, before = null) {
+  const name = p.split('/').pop().replace(/\.md$/, '');
+  const h = promptHeader(text);
+  if (!h) return [finding(p, 0, 'P1', `no front matter; a prompt opens with "---", "prompt: ${name}", "prompt_version: <n>", "---"`)];
+  const out = [];
+  if (h.prompt !== name) out.push(finding(p, 0, 'P1', `front matter must say "prompt: ${name}" (found: ${h.prompt || 'none'})`));
+  if (!/^\d+$/.test(h.version || '')) {
+    out.push(finding(p, 0, 'P1', `prompt_version must be an integer (found: ${h.version || 'none'})`));
+    return out;
+  }
+  const was = before == null ? null : promptHeader(before);
+  const prev = was && /^\d+$/.test(was.version || '') ? Number(was.version) : null;
+  if (prev !== null && before.replace(/\r/g, '') !== text.replace(/\r/g, '') && Number(h.version) <= prev)
+    out.push(finding(p, 0, 'P1', `changed without a version bump (prompt_version was ${prev}, now ${h.version}); raise it so runs on the new text are told apart`));
+  return out;
+}
+
 // V1: the verification ledger, one host verdict per line (docs/AI_HARNESS.md, Definition of Done). It is the committed
 // record that the Definition of Done was checked, so a "verified" line must show every check passed or not applicable:
 // "not run" is never a pass (registry unmeasured-is-not-a-pass).
@@ -254,13 +283,16 @@ function checkMergeRecords(merges, ledgerText, level = 'error') {
 }
 
 // The path, ownership and content rules over a list of changed files, plus G1/G2 and V1 when their files changed.
-// `show(p)` returns the file's content at the state being checked (the index for --staged, <head> for --range).
-function checkFiles(branch, files, show) {
+// `show(p)` returns the file's content at the state being checked (the index for --staged, <head> for --range);
+// `before(p)`, when given, returns it at the state compared against (HEAD, <base>), for P1's version bump.
+function checkFiles(branch, files, show, before = null) {
   const get = (p) => { try { return show(p) || ''; } catch { return ''; } };
+  const prev = (p) => { if (!before) return null; try { const t = before(p); return typeof t === 'string' ? t : null; } catch { return null; } };
   const out = [];
   for (const p of files) {
     out.push(...checkPath(p), ...checkOwnership(branch, p));
     if (readsContent(p)) out.push(...checkContent(p, get(p)));
+    if (isPrompt(p)) out.push(...checkPrompt(p, get(p), prev(p)));
   }
   if (['CLAUDE.md', 'AGENTS.md', MANIFEST].some((p) => files.includes(p)))
     out.push(...checkGuidance(get('CLAUDE.md'), get('AGENTS.md')), ...checkManifest(get(MANIFEST), get('AGENTS.md')));
@@ -288,7 +320,7 @@ const showAt = (ref, p) => { try { return git(['show', `${ref}:${p}`]).toString(
 
 function staged() {
   const files = zlist(git(['diff', '--cached', '--name-only', '-z', '--diff-filter=ACMR']));
-  return checkFiles(currentBranch(), files, (p) => git(['show', ':' + p]).toString('utf8'));
+  return checkFiles(currentBranch(), files, (p) => git(['show', ':' + p]).toString('utf8'), (p) => git(['show', 'HEAD:' + p]).toString('utf8'));
 }
 
 function range(spec, asBranch) {
@@ -304,7 +336,7 @@ function range(spec, asBranch) {
   }
   console.log(`range ${spec}: ${files.length} changed file(s)`);
   const branch = asBranch || currentBranch();
-  const out = checkFiles(branch, files, (p) => git(['show', `${head}:${p}`]).toString('utf8'));
+  const out = checkFiles(branch, files, (p) => git(['show', `${head}:${p}`]).toString('utf8'), (p) => git(['show', `${base}:${p}`]).toString('utf8'));
   out.push(...checkHook(hooksPath(), branch === 'main' ? 'error' : 'warn'));
   return out;
 }
@@ -316,6 +348,7 @@ function all() {
   for (const p of files) {
     out.push(...checkPath(p));
     if (readsContent(p)) { const text = read(p); if (text !== null) out.push(...checkContent(p, text)); }
+    if (isPrompt(p)) { const text = read(p); if (text !== null) out.push(...checkPrompt(p, text)); }
   }
   if (!files.includes(CORE_ASMDEF)) out.push(finding(CORE_ASMDEF, 0, 'R4', 'core asmdef is not tracked; the engine-free flag cannot be checked'));
   out.push(...checkGuidance(read('CLAUDE.md') || '', read('AGENTS.md') || ''));
@@ -354,6 +387,9 @@ function selfTest() {
   const editorconfig = (sev = () => 'warning') =>
     'root = true\n\n[*.cs]\n# NaN compared with ==\n' + ['CA1305', ...PROMOTED].map((id) => `dotnet_diagnostic.${id}.severity = ${sev(id)}\n`).join('');
   const [FIRST] = PROMOTED;
+  const PROMPT = PROMPTS + 'agent-task.md';
+  const pf = (version, body = 'You are the {{app}} agent.', name = 'agent-task') =>
+    `---\nprompt: ${name}\nprompt_version: ${version}\nused-by: tools/orchestrate/agent-loop.mjs\n---\n${body}\n`;
   const MERGE = 'c3d4e5f';
   const verdict = (o) => JSON.stringify({
     task: 'T-TER-045', app: 'terrarium', verdict: 'verified', reason: null, base: 'a1b2c3d', head: 'b2c3d4e', merge: MERGE,
@@ -439,6 +475,23 @@ function selfTest() {
     ['range: the ratchet in sync after a props change', checkFiles('main', [BUILD_PROPS],
       (p) => ({ [BUILD_PROPS]: props(PROMOTED), [EDITORCONFIG]: editorconfig() })[p]), null],
     ['range: a clean change', checkFiles('agent/sundial', ['apps/sundial/Assets/Scripts/Dial.cs'], () => 'class Dial {}'), null],
+    ['P1 a prompt with its header', checkPrompt(PROMPT, pf(1)), null],
+    ['P1 CRLF header', checkPrompt(PROMPT, pf(3).replace(/\n/g, '\r\n')), null],
+    ['P1 a new prompt needs no bump', checkPrompt(PROMPT, pf(1), null), null],
+    ['P1 a change with a bump', checkPrompt(PROMPT, pf(2, 'Read AGENTS.md first.'), pf(1)), null],
+    ['P1 a line-ending-only change needs no bump', checkPrompt(PROMPT, pf(1), pf(1).replace(/\n/g, '\r\n')), null],
+    ['P1 no front matter', checkPrompt(PROMPT, 'You are the agent.\n'), 'P1'],
+    ['P1 front matter names another prompt', checkPrompt(PROMPT, pf(1, 'x', 'agent-continue')), 'P1'],
+    ['P1 version not an integer', checkPrompt(PROMPT, pf('1.2')), 'P1'],
+    ['P1 version missing', checkPrompt(PROMPT, '---\nprompt: agent-task\n---\nbody\n'), 'P1'],
+    ['P1 a change without a bump', checkPrompt(PROMPT, pf(1, 'Read AGENTS.md first.'), pf(1)), 'P1'],
+    ['P1 a change that lowers the version', checkPrompt(PROMPT, pf(1, 'Read AGENTS.md first.'), pf(2)), 'P1'],
+    ['range: a prompt changed without a bump', checkFiles('main', [PROMPT], () => pf(1, 'new text'), () => pf(1)), 'P1'],
+    ['range: a prompt changed with a bump', checkFiles('main', [PROMPT], () => pf(2, 'new text'), () => pf(1)), null],
+    ['range: a new prompt file', checkFiles('main', [PROMPT], () => pf(1), () => { throw new Error('absent at base'); }), null],
+    ['range: a prompt header is checked with no before reader', checkFiles('main', [PROMPT], () => 'no header'), 'P1'],
+    ['range: the prompts README is not a prompt', checkFiles('main', [PROMPTS + 'README.md'], () => '# prompts'), null],
+    ['range: a prompt in a subfolder is not a prompt', checkFiles('main', [PROMPTS + 'old/agent-task.md'], () => 'no header'), null],
     ['V1 empty ledger', checkLedger(''), null],
     ['V1 a verified line', checkLedger(verdict({}) + '\n'), null],
     ['V1 CRLF and blank lines', checkLedger(`${verdict({})}\r\n\r\n${verdict({ task: 'T-SUN-002', app: 'sundial' })}\r\n`), null],

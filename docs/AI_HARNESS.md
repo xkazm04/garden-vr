@@ -8,7 +8,7 @@ version and points there.
 
 ## Components
 - [x] Evals and golden tests for AI-generated output
-- [ ] A versioned prompt and agent library the team reuses (partial: see below)
+- [x] A versioned prompt and agent library the team reuses (below; the older A3 judge scripts stay pinned by blob)
 - [x] Agent runbooks for recurring tasks
 - [x] A review gate and Definition of Done for AI changes (below)
 
@@ -41,16 +41,28 @@ version and points there.
 **Prompt and agent library**
 - `AGENTS.md` is the agent spec every agent reads first, and it is the canonical guidance (`.ai/manifest.yaml`).
   `CLAUDE.md` is the Claude adapter.
-- The task-file schema (id, app, depends, touches, plus Goal, Steps, Acceptance, Evidence and Out of scope) is in
-  PLAN section 5, Task lifecycle.
+- `tools/orchestrate/prompts/` holds the versioned prompts (`README.md` there):
+  - `agent-task.md` is the dispatch prompt every engine gets;
+  - `agent-continue.md` is the same-session resume;
+  - `task-template.md` is the task-file skeleton (id, app, title, priority, depends, estimate_min, touches, plus Goal,
+    Read first, Steps, Acceptance, Evidence and Out of scope; PLAN section 5, Task lifecycle).
+- Each prompt file carries `prompt_version`.
+  - Guard rule P1 refuses a commit that changes a prompt without raising it.
+  - `tools/orchestrate/agent-loop.mjs` sends only these files. Per task, it writes the exact text to
+    `orchestration/runs/<app>/<id>/prompt.txt` and the version and git blob sha of each prompt to the task's
+    `tasks.jsonl` line (`prompts`). So a change in agent behaviour can be checked against a change in its prompt.
 - `tools/orchestrate/agent-loop.mjs` runs each agent with a pinned model and effort.
 - The per-app plans are in `docs/plans/`.
-- Not yet versioned: the judge prompts sit inline in each judge script (for example the `PROMPT` constant in
-  `sprint_t050_rubric.py`). There is no shared prompt file with a version yet. Until there is, each verdict line that
-  used the judge records the script's git blob sha (`judge.blob`), which pins the exact prompt that run used, so drift
-  between two runs is visible. Lifting the prompts into one versioned file is the open item behind the unticked box.
-- The scan-sweep lenses come from the `scan-sweep` skill (`.ai/manifest.yaml` `skills:`). Its prompts are versioned in
-  the ai-registry, not here. Its bug-hunting lens found the most real defects so far: the `fix(core-*)` commits.
+- The art-fidelity judge prompts are the versioned packet `tools/fidelity/judge/packet-v1/` (instructions, rubrics,
+  schemas, `manifest.json`); a new judge prompt is a new packet version.
+- The older A3 judge scripts keep their prompt inline (for example the `PROMPT` constant in `sprint_t050_rubric.py`).
+  They are app-owned and are not lifted. Each verdict line that used one records the script's git blob sha
+  (`judge.blob`, checked by V1), which pins the exact prompt that run used.
+- The scan-sweep lenses come from the `scan-sweep` skill (`.ai/manifest.yaml` `skills:`).
+  - Its prompts are versioned in the ai-registry, not here, because every adopting repo shares them.
+  - `.ai/manifest.yaml` `skillVersions:` pins the release this repo runs against (4.4.0, the version in the skill's
+    `SKILL.md`; the registry's `catalog.json` still lists 4.3.0, which is the registry's to fix).
+  - Its bug-hunting lens found the most real defects so far: the `fix(core-*)` commits.
 
 **Runbooks for recurring agent tasks**
 - The hourly host check is in PLAN section 5: observe, verify, merge, queue, STATUS.

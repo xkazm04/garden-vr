@@ -27,6 +27,7 @@ alone exit 0.
 | V2 | error on `main`, warning elsewhere | Every first-parent `Merge branch 'agent/<app>'` on `main` since the ledger was added has a line in `main`'s ledger whose `merge` is that commit. Off `main` (the agent loop's runs) it is a warning, so a host lapse shows in every `guard.txt` without failing the agent | `docs/AI_HARNESS.md`, Definition of Done |
 | W1 | warning | On branch `agent/<app>` (or `--as agent/<app>`), a staged or changed path that the other agent owns or the host owns (PLAN section 5 ownership table) | PLAN section 5 |
 | B1 | error | The analyzer ratchet never demotes. Every id in `PROMOTED` (CA2242, CA2200, CA2241, CA2245, CA1304, CA1310) stays in `<WarningsAsErrors>` of `shared/core-dotnet/Directory.Build.props`, stays out of `<NoWarn>`, and keeps a `dotnet_diagnostic.<id>.severity` of `warning` or `error` in `.editorconfig` (that line is what switches the rule on) | this file, "C# analyzer and format baseline" |
+| P1 | error | Every prompt file in `tools/orchestrate/prompts/` (`*.md` except `README.md`) opens with front matter `prompt: <its file name>` and an integer `prompt_version`. A commit or range that changes a prompt's text must raise its `prompt_version` (compared with `HEAD` for `--staged`, with `<base>` for `--range`); a new file and a line-ending-only change need no bump. The agent loop records each prompt's version and blob sha per task in `tasks.jsonl`, so a change in what agents are told is never silent | `tools/orchestrate/prompts/README.md` |
 | H1 | error on `main`, warning elsewhere | `core.hooksPath` is not `tools/guard/hooks`, so commits and merges in this checkout skip the guard. On `main`, where host and human commits land, a checkout without the hook cannot report green. Elsewhere it is a warning, because the agent loop wires the hook for agent commits through the environment, which the worktree config never shows | this file, "Installing the hooks" |
 
 W1 is a warning because PLAN section 5 allows a non-owned path when the task's `touches:` names it. The agent must
@@ -38,8 +39,9 @@ Full-line comments are ignored. If a rule fires on code that is legitimately cor
 for that case to `--self-test`. Do not bypass the hook with `--no-verify`.
 
 `--staged` and `--range` run G1 and G2 only when `AGENTS.md`, `CLAUDE.md` or `.ai/manifest.yaml` changed, V1 only
-when the ledger changed, and B1 only when `Directory.Build.props` or `.editorconfig` changed. `--all` always runs G1,
-G2, V1, V2 and B1. H1 runs in `--all` and `--range`; its level follows the branch (`--as` counts for `--range`).
+when the ledger changed, B1 only when `Directory.Build.props` or `.editorconfig` changed, and P1 on each changed prompt
+file (header and version bump). `--all` always runs G1, G2, V1, V2 and B1, and P1's header check on every prompt file
+(it has no earlier state, so it cannot check a bump). H1 runs in `--all` and `--range`; its level follows the branch (`--as` counts for `--range`).
 
 ## Where it runs
 

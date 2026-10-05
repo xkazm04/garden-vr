@@ -144,7 +144,9 @@ records it in `STATUS.md`, and commits one verdict line to `docs/knowledge/verif
 never merges an unverified task**, and a rejected upstream sends its dependants back to `queue/`.
 
 Each task file carries `id, app, title, depends, estimate_min, touches` and the sections Goal, Read first, Steps,
-Acceptance (Windows commands), Evidence, Out of scope. Cross-queue dependencies are allowed (`depends: [T-SUN-002]` in a
+Acceptance (Windows commands), Evidence, Out of scope. New tasks are cut from `tools/orchestrate/prompts/task-template.md`,
+which records its `prompt_version` in the task. The prompts the loop sends are versioned beside it (README there, guard
+rule P1). Cross-queue dependencies are allowed (`depends: [T-SUN-002]` in a
 Terrarium task).
 
 At dispatch the loop records the base commit (`base` in `tasks.jsonl`, with the task's `head`); verification reads the work as `git diff <base>..agent/<app>`, not

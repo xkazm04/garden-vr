@@ -11,7 +11,9 @@
 // `node tools/guard/check.mjs --all` and `--range <base>..<head>` run in the worktree after the task (advisory; the host
 // rejects in the Definition of Done). Every commit the agent makes runs tools/guard/hooks/pre-commit: the loop sets
 // core.hooksPath for the agent's process tree only, through git's GIT_CONFIG_* environment (git 2.31+), so the shared
-// config stays the owner's call. Idle: polls every 2 min for new tasks.
+// config stays the owner's call. The prompts it sends are the versioned files in tools/orchestrate/prompts/ (README
+// there); each task's rendered prompt goes to runs/<app>/<id>/prompt.txt and the prompt versions and git blob shas to
+// its tasks.jsonl line. Idle: polls every 2 min for new tasks.
 // Stop: create orchestration/STOP-<app> (finishes the current task first).
 import fs from 'node:fs';
 import path from 'node:path';
@@ -39,6 +41,30 @@ const HOOKS_DIR = path.join(wt, 'tools', 'guard', 'hooks').replace(/\\/g, '/');
 const hookConfigured = () => /(^|\/)tools\/guard\/hooks\/?$/.test((gitWt('config', '--get', 'core.hooksPath') || '').replace(/\\/g, '/'));
 const hookAvailable = () => fs.existsSync(path.join(HOOKS_DIR, 'pre-commit'));
 
+// The prompt library (tools/orchestrate/prompts/README.md). Read once at start, so a running loop sends one known
+// version; relaunch.sh picks up a new one. Each prompt is pinned by its `prompt_version` and its git blob sha, which
+// every tasks.jsonl line records, so a change in agent behaviour can be checked against a change in the prompt.
+function loadPrompt(name) {
+  const file = path.join(here, 'prompts', name + '.md');
+  const text = fs.readFileSync(file, 'utf8').replace(/\r/g, '');
+  const m = text.match(/^---\n([\s\S]*?)\n---\n?/);
+  const get = (k) => m && (m[1].match(new RegExp(`^${k}:[ \\t]*(\\S.*?)[ \\t]*$`, 'm')) || [])[1];
+  if (!m || get('prompt') !== name || !/^\d+$/.test(get('prompt_version') || ''))
+    throw new Error(`${file}: front matter needs "prompt: ${name}" and an integer "prompt_version" (guard rule P1)`);
+  const h = spawnSync('git', ['-C', main, 'hash-object', file], { encoding: 'utf8', windowsHide: true });
+  return { name, version: Number(get('prompt_version')), blob: h.status === 0 ? h.stdout.trim() : null,
+    body: text.slice(m[0].length).replace(/^\n+/, '').replace(/\s+$/, '') };
+}
+// Fills {{name}} placeholders; a placeholder left unfilled is a bug in the loop or the prompt, so it refuses.
+function render(p, vars) {
+  const out = p.body.replace(/\{\{(\w+)\}\}/g, (all, k) => (Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : all));
+  const left = out.match(/\{\{\w+\}\}/);
+  if (left) throw new Error(`prompt ${p.name}@v${p.version}: unfilled placeholder ${left[0]}`);
+  return out;
+}
+const PROMPTS = { task: loadPrompt('agent-task'), continue: loadPrompt('agent-continue') };
+const promptPins = () => Object.fromEntries(Object.entries(PROMPTS).map(([k, p]) => [k, { version: p.version, blob: p.blob }]));
+
 const front = (txt) => {
   const m = txt.match(/^---\r?\n([\s\S]*?)\r?\n---/); const f = {};
   if (m) for (const l of m[1].split(/\r?\n/)) { const k = l.match(/^(\w+):\s*(.*)$/); if (k) f[k[1]] = k[2]; }
@@ -65,16 +91,12 @@ async function runGrok(task) {
   const id = task.id || task.file.replace(/\.md$/, '');
   const runDir = O('runs', app, id); fs.mkdirSync(runDir, { recursive: true });
   const taskPath = O('running', task.file);
-  const prompt = [
-    `You are the Garden VR ${app} agent. Your git worktree (work ONLY here): ${wt} on branch agent/${app}.`,
-    `First read ${wt}/AGENTS.md, then your task file ${taskPath} (read-only; do not move or edit it).`,
-    `Execute the task completely and verify it. Commit atomically on agent/${app} in ${wt} (never push).`,
-    `Finish by writing ${wt}/orchestration/runs/${app}/${id}/REPORT.md with the evidence the task asks for, and commit it.`,
-    `If you are blocked, still write REPORT.md explaining exactly what blocked you, with the error output.`,
-  ].join('\n');
+  // tools/orchestrate/prompts/agent-task.md; the exact text sent is kept beside the engine output.
+  const prompt = render(PROMPTS.task, { app, wt, taskPath, id });
+  const continuePrompt = render(PROMPTS.continue, {});
+  fs.writeFileSync(path.join(runDir, 'prompt.txt'), prompt + '\n');
   const report = path.join(wt, 'orchestration', 'runs', app, id, 'REPORT.md');
   const AGY = process.env.AGY || path.join(process.env.LOCALAPPDATA, 'agy', 'bin', 'agy.exe');
-  const extra = 'Run every long process (Unity, Blender) in the FOREGROUND and read its log before you continue. Do not end your turn while a process runs.';
   // One engine call. grok: Grok Build CLI. agy: Antigravity CLI (Gemini), which must skip permissions headless or every
   // write_file is auto-denied (measured 2026-10-04: T-TER-042/043 "SUCCESS" with denied write_file and no output).
   const once = (eng, text, resumeId, tag) => new Promise((resolve) => {
@@ -113,11 +135,11 @@ async function runGrok(task) {
   // Run one engine with up to two same-session continuations when it exits without REPORT.md (headless agents end their
   // run when they end a turn, e.g. while "waiting" for Unity: measured on both Grok and Gemini).
   const attempt = async (eng) => {
-    let code = await once(eng, prompt + '\n' + extra, null, '');
+    let code = await once(eng, prompt, null, '');
     let sid = sessionOf(eng, '');
     for (let n = 1; n <= 2 && code === 0 && !fs.existsSync(report) && sid && !limited(eng); n++) {
       log(`${id}: ${eng} exited without REPORT.md, resuming (continuation ${n})`);
-      code = await once(eng, 'Continue the task. Your previous turn ended while you were waiting on a process (likely Unity), so nothing after that ran. Check whether it finished (read its log; if still running, wait in the FOREGROUND), then finish the remaining steps, verify, commit, and write REPORT.md. Do not end your turn until REPORT.md is committed.', sid, `.cont${n}`);
+      code = await once(eng, continuePrompt, sid, `.cont${n}`);
       sid = sessionOf(eng, `.cont${n}`) || sid;
     }
     return code;
@@ -160,6 +182,7 @@ function runGuard(id, base, head) {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 log(`loop start: engine=${engineState.primary} claude=${claudeModel}@${claudeEffort} grok=${model} agy=${agyModel} worktree=${wt}`);
+log(`prompts: ${Object.values(PROMPTS).map((p) => `${p.name}@v${p.version} ${p.blob ? p.blob.slice(0, 10) : 'blob?'}`).join(', ')}`);
 if (!hookAvailable()) log('WARNING: no tools/guard/hooks/pre-commit on this branch; agent commits are not gated until main is merged in');
 if (!hookConfigured()) log(`commit hooks: agent commits run ${HOOKS_DIR}/pre-commit through GIT_CONFIG_* env; host commits and merges skip the guard until the owner runs: git config core.hooksPath tools/guard/hooks`);
 while (true) {
@@ -183,6 +206,6 @@ while (true) {
   fs.renameSync(O('running', task.file), O(ok ? 'done' : 'failed', task.file));
   let guard = null, guardRange = null;
   try { ({ guard, guardRange } = runGuard(r.id, base, head)); } catch (e) { log(`${r.id}: guard crashed: ${e.message}`); }
-  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report), base, head, hook, guard, guardRange }) + '\n');
+  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report), base, head, hook, guard, guardRange, prompts: promptPins() }) + '\n');
   log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)} guard=${guard} guardRange=${guardRange}`);
 }
