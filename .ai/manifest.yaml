@@ -1,0 +1,10 @@
+schema: ai-manifest
+schemaVersion: 0.1.0
+repo:
+  name: garden-vr
+  purpose: "Two Unity 6.6 URP seated-VR garden apps (terrarium, sundial) sharing C# packages; PC-first, keyboard/mouse stands in for hands"
+  languages: [csharp, python, javascript]
+registry:
+  local: ../ai-registry
+skills:
+  - scan-sweep

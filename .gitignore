@@ -48,3 +48,10 @@ orchestration/running/
 orchestration/runs/*/T-*/grok.*
 orchestration/runs/*/loop.*
 orchestration/runs/host/
+
+# BEGIN ai-registry linked skills (managed by ai-registry/scripts/link-registry.mjs)
+# Links are machine state; the declarations live in .ai/manifest.yaml (`skills:` and `knowledge.domains`).
+/.claude/skills/scan-sweep
+/.claude/rules/ai-registry-access.md
+/.ai/skill-runs.local.jsonl
+# END ai-registry linked skills

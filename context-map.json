@@ -1,0 +1,852 @@
+{
+  "version": 1,
+  "project": "garden-vr",
+  "generator": "manual context scan (git ls-files code files)",
+  "generated_at": "2026-10-05T08:23:23.078Z",
+  "groups": [
+    {
+      "name": "Shared Core",
+      "contexts": [
+        {
+          "id": "gvr-1",
+          "name": "core-common-breath",
+          "group": "Shared Core",
+          "description": "Pure C# rules shared by both apps: common types, breath pacing, assembly root. No UnityEngine. AGENTS rule 4: rules live in core; honest habits (growth only rises).",
+          "file_paths": [
+            "shared/packages/com.gardenvr.core/Runtime/Breath/BreathSession.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Breath/PinchDetector.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Breath/SimulatedHand.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Common/GardenDay.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Common/Json.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Common/Ledger.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Common/SaveStore.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Common/SettingsRegistry.cs",
+            "shared/packages/com.gardenvr.core/Runtime/GardenVR.Core.asmdef"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.core/Runtime/Breath/BreathSession.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Breath/PinchDetector.cs"
+          ],
+          "keywords": [
+            "rules",
+            "breath",
+            "growth",
+            "pure-c#"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-2",
+          "name": "core-terrarium-rules",
+          "group": "Shared Core",
+          "description": "Terrarium domain rules in pure C#: plant growth, moisture, ritual state.",
+          "file_paths": [
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/Companions.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/Garden.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/LookBack.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/OneWord.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/Season.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/TerrariumSave.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/TerrariumSaveMigrations.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/TerrariumState.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/ThreeGoodThings.cs"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/Companions.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Terrarium/Garden.cs"
+          ],
+          "keywords": [
+            "terrarium",
+            "growth",
+            "state"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-3",
+          "name": "core-sundial-rules",
+          "group": "Shared Core",
+          "description": "Sundial domain rules in pure C#: dial, ritual, tending state.",
+          "file_paths": [
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/Arc.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/ArcCapacity.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/ArcTimes.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/FocusBlock.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/GratitudeRecord.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/Growth.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/PlantState.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/RimScrub.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/StretchSession.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/SundialRules.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/SundialState.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/WeekDial.cs"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/Arc.cs",
+            "shared/packages/com.gardenvr.core/Runtime/Sundial/ArcCapacity.cs"
+          ],
+          "keywords": [
+            "sundial",
+            "dial",
+            "ritual"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-4",
+          "name": "core-tests-dotnet",
+          "group": "Shared Core",
+          "description": "dotnet test project for com.gardenvr.core (the rules gate).",
+          "file_paths": [
+            "shared/core-dotnet/GardenVR.Core.Tests/ArcTimesTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/CommonTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/FocusTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/GratitudeTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/LookBackTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/MultiHabitTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/OneWordTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/RimScrubTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/SeasonTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/StretchTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/SundialTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/TerrariumCompanionTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/TerrariumCoreTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/TerrariumInvariantTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/TerrariumSaveTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/ThreeGoodThingsTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/WeekDialTests.cs"
+          ],
+          "entry_points": [
+            "shared/core-dotnet/GardenVR.Core.Tests/ArcTimesTests.cs",
+            "shared/core-dotnet/GardenVR.Core.Tests/CommonTests.cs"
+          ],
+          "keywords": [
+            "dotnet",
+            "tests",
+            "xunit"
+          ],
+          "category": "code"
+        }
+      ]
+    },
+    {
+      "name": "Shared Packages",
+      "contexts": [
+        {
+          "id": "gvr-5",
+          "name": "pkg-input",
+          "group": "Shared Packages",
+          "description": "Hands-first intents (Pinch, PinchHold, Release, Poke, Look, PalmOpen) with the keyboard/mouse provider, mapping, playback and targets. AGENTS rule 1: only the provider reads Input/Keyboard/Mouse.",
+          "file_paths": [
+            "shared/packages/com.gardenvr.input/Runtime/GardenVR.Input.asmdef",
+            "shared/packages/com.gardenvr.input/Runtime/HandIntent.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Mapping/HandModes.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Mapping/KbmIntentMapper.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Mapping/PinchStrengthRamp.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Mapping/RawKbm.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Playback/ScriptedIntentSource.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Providers/KeyboardMouseHeadPose.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Providers/KeyboardMouseIntentSource.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Targets/IntentTarget.cs",
+            "shared/packages/com.gardenvr.input/Runtime/Targets/IntentTargetRegistry.cs"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.input/Runtime/GardenVR.Input.asmdef",
+            "shared/packages/com.gardenvr.input/Runtime/HandIntent.cs"
+          ],
+          "keywords": [
+            "input",
+            "intents",
+            "hands",
+            "keyboard-mouse"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-6",
+          "name": "pkg-capture",
+          "group": "Shared Packages",
+          "description": "Runtime and editor capture of screenshots and video for side-by-side art comparison.",
+          "file_paths": [
+            "shared/packages/com.gardenvr.capture/Editor/CaptureCli.Sweep.cs",
+            "shared/packages/com.gardenvr.capture/Editor/CaptureCli.cs",
+            "shared/packages/com.gardenvr.capture/Editor/GardenVR.Capture.Editor.asmdef",
+            "shared/packages/com.gardenvr.capture/Runtime/BitmapFont.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/BudgetMeasure.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/CaptureJson.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/CaptureState.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/FrameGrab.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/Framing.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/GardenVR.Capture.asmdef",
+            "shared/packages/com.gardenvr.capture/Runtime/ICaptureState.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/ImageCheck.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/ImageOps.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/JsonMini.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/PlaybackHarness.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/RgbaImage.cs",
+            "shared/packages/com.gardenvr.capture/Runtime/SequenceRecorder.cs"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.capture/Editor/CaptureCli.Sweep.cs",
+            "shared/packages/com.gardenvr.capture/Editor/CaptureCli.cs"
+          ],
+          "keywords": [
+            "capture",
+            "screenshot",
+            "evidence"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-7",
+          "name": "pkg-room",
+          "group": "Shared Packages",
+          "description": "Shared room/environment runtime and editor build tooling.",
+          "file_paths": [
+            "shared/packages/com.gardenvr.room/Editor/GardenVR.Room.Editor.asmdef",
+            "shared/packages/com.gardenvr.room/Editor/RoomSetup.cs",
+            "shared/packages/com.gardenvr.room/Runtime/GardenVR.Room.asmdef",
+            "shared/packages/com.gardenvr.room/Runtime/IPlacementProvider.cs",
+            "shared/packages/com.gardenvr.room/Runtime/IRoomProvider.cs",
+            "shared/packages/com.gardenvr.room/Runtime/PcDeskAnchor.cs",
+            "shared/packages/com.gardenvr.room/Runtime/PcRoomPlate.cs",
+            "shared/packages/com.gardenvr.room/Runtime/RoomPlateMesh.cs",
+            "shared/packages/com.gardenvr.room/Runtime/SeatedRig.cs"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.room/Editor/GardenVR.Room.Editor.asmdef",
+            "shared/packages/com.gardenvr.room/Editor/RoomSetup.cs"
+          ],
+          "keywords": [
+            "room",
+            "plates",
+            "environment"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-8",
+          "name": "pkg-fx-shaders",
+          "group": "Shared Packages",
+          "description": "Shared FX runtime and URP shaders.",
+          "file_paths": [
+            "shared/packages/com.gardenvr.fx/Runtime/GardenVR.Fx.asmdef",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FCard.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FGlass.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FGlow.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FLeaf.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FOverdraw.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FPlate.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FShadowCatcher.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FSoilMound.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FToon.shader",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/GlassCommon.hlsl"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.fx/Runtime/GardenVR.Fx.asmdef",
+            "shared/packages/com.gardenvr.fx/Runtime/Shaders/FCard.shader"
+          ],
+          "keywords": [
+            "fx",
+            "shader",
+            "urp",
+            "hlsl"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-9",
+          "name": "pkg-audio",
+          "group": "Shared Packages",
+          "description": "Shared audio runtime (ambience, cues).",
+          "file_paths": [
+            "shared/packages/com.gardenvr.audio/Runtime/AudioCueService.cs",
+            "shared/packages/com.gardenvr.audio/Runtime/CueLog.cs",
+            "shared/packages/com.gardenvr.audio/Runtime/CueManifest.cs",
+            "shared/packages/com.gardenvr.audio/Runtime/GardenVR.Audio.asmdef"
+          ],
+          "entry_points": [
+            "shared/packages/com.gardenvr.audio/Runtime/AudioCueService.cs",
+            "shared/packages/com.gardenvr.audio/Runtime/CueLog.cs"
+          ],
+          "keywords": [
+            "audio",
+            "ambience"
+          ],
+          "category": "code"
+        }
+      ]
+    },
+    {
+      "name": "Terrarium App",
+      "contexts": [
+        {
+          "id": "gvr-10",
+          "name": "terrarium-jar",
+          "group": "Terrarium App",
+          "description": "Terrarium jar scene runtime: the glass jar, soil, plants, interaction.",
+          "file_paths": [
+            "apps/terrarium/Assets/Scripts/GardenVR.Terrarium.asmdef",
+            "apps/terrarium/Assets/Scripts/Jar/CompanionGarden.cs",
+            "apps/terrarium/Assets/Scripts/Jar/GardenJourney.cs",
+            "apps/terrarium/Assets/Scripts/Jar/JarView.cs",
+            "apps/terrarium/Assets/Scripts/Jar/S3MossShells.cs",
+            "apps/terrarium/Assets/Scripts/Jar/S4Fiddle.cs",
+            "apps/terrarium/Assets/Scripts/Jar/SeasonDetails.cs"
+          ],
+          "entry_points": [
+            "apps/terrarium/Assets/Scripts/GardenVR.Terrarium.asmdef",
+            "apps/terrarium/Assets/Scripts/Jar/CompanionGarden.cs"
+          ],
+          "keywords": [
+            "jar",
+            "glass",
+            "moss",
+            "cork"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-11",
+          "name": "terrarium-ritual",
+          "group": "Terrarium App",
+          "description": "Terrarium ritual flow, UI and session loop (under ten minutes, seated).",
+          "file_paths": [
+            "apps/terrarium/Assets/Scripts/Ritual/BoxPaceMarks.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/CompanionHabits.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/EtchContrast.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/EtchedLettering.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/FirstRunDirector.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/FirstRunSteps.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/GardenService.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/GhostHandLook.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/GladRitual.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/HabitDesk.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/JarRitualController.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/OneWordRitual.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/SettingsPebbles.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/VoiceGuide.cs"
+          ],
+          "entry_points": [
+            "apps/terrarium/Assets/Scripts/Ritual/BoxPaceMarks.cs",
+            "apps/terrarium/Assets/Scripts/Ritual/CompanionHabits.cs"
+          ],
+          "keywords": [
+            "ritual",
+            "session",
+            "ui"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-12",
+          "name": "terrarium-shaders",
+          "group": "Terrarium App",
+          "description": "Terrarium URP shaders (glass, moss, soil).",
+          "file_paths": [
+            "apps/terrarium/Assets/Art/Shaders/FiddleFuzz.shader",
+            "apps/terrarium/Assets/Art/Shaders/FrondBacklit.shader",
+            "apps/terrarium/Assets/Art/Shaders/GhostHand.shader",
+            "apps/terrarium/Assets/Art/Shaders/JarGlass.shader",
+            "apps/terrarium/Assets/Art/Shaders/Moss.shader",
+            "apps/terrarium/Assets/Art/Shaders/MossShell.shader",
+            "apps/terrarium/Assets/Art/Shaders/MossVelvet.shader"
+          ],
+          "entry_points": [
+            "apps/terrarium/Assets/Art/Shaders/FiddleFuzz.shader",
+            "apps/terrarium/Assets/Art/Shaders/FrondBacklit.shader"
+          ],
+          "keywords": [
+            "shader",
+            "glass",
+            "hlsl"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-13",
+          "name": "terrarium-editor-tools",
+          "group": "Terrarium App",
+          "description": "Editor build, capture and audio-import tooling for the terrarium project.",
+          "file_paths": [
+            "apps/terrarium/Assets/Audio/Editor/GardenAudioImportSettings.cs",
+            "apps/terrarium/Assets/Editor/Build.cs",
+            "apps/terrarium/Assets/Editor/CompanionImport.cs",
+            "apps/terrarium/Assets/Editor/EtchFontSetup.cs",
+            "apps/terrarium/Assets/Editor/GardenBootstrap.cs",
+            "apps/terrarium/Assets/Editor/JarSetup.cs",
+            "apps/terrarium/Assets/Editor/RitualSetup.cs",
+            "apps/terrarium/Assets/Editor/S2Bake.cs",
+            "apps/terrarium/Assets/Editor/S5Probe.cs",
+            "apps/terrarium/Assets/Editor/SceneSetup.cs"
+          ],
+          "entry_points": [
+            "apps/terrarium/Assets/Audio/Editor/GardenAudioImportSettings.cs",
+            "apps/terrarium/Assets/Editor/Build.cs"
+          ],
+          "keywords": [
+            "editor",
+            "batchmode",
+            "build"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-14",
+          "name": "terrarium-tests",
+          "group": "Terrarium App",
+          "description": "EditMode and PlayMode tests for the terrarium app.",
+          "file_paths": [
+            "apps/terrarium/Assets/Tests/EditMode/AtmosphereVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/AudioCueServiceTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/BacklitFrondsVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/EtchContrastTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/GardenVR.Terrarium.Tests.EditMode.asmdef",
+            "apps/terrarium/Assets/Tests/EditMode/IntentTargetTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/KbmIntentMapperTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/MossInTheJarVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/RoomRigTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/ScriptedIntentPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/SprintCompositeVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/StructuredGlassVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/ThickGlassVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/UrpMsaaTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/BoxBreathingPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/DaysPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/FirstRunPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/GardenVR.Terrarium.Tests.PlayMode.asmdef",
+            "apps/terrarium/Assets/Tests/PlayMode/GatePlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/HabitsPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/JourneyTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/OneWordPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/RitualPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/RitualRecordTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/SeasonPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/ThreeGoodThingsPlaybackTests.cs",
+            "apps/terrarium/Assets/Tests/PlayMode/VoiceGuideTests.cs"
+          ],
+          "entry_points": [
+            "apps/terrarium/Assets/Tests/EditMode/AtmosphereVariantTests.cs",
+            "apps/terrarium/Assets/Tests/EditMode/AudioCueServiceTests.cs"
+          ],
+          "keywords": [
+            "tests",
+            "playmode",
+            "editmode"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-15",
+          "name": "terrarium-art-scripts",
+          "group": "Terrarium App",
+          "description": "Blender/Unity/python art pipeline scripts under Art/Scripts.",
+          "file_paths": [
+            "apps/terrarium/Art/Scripts/compare_crops.py",
+            "apps/terrarium/Art/Scripts/compose_jar_detail.py",
+            "apps/terrarium/Art/Scripts/compose_mist.py",
+            "apps/terrarium/Art/Scripts/compose_moss.py",
+            "apps/terrarium/Art/Scripts/compose_nb.py",
+            "apps/terrarium/Art/Scripts/compose_soil.py",
+            "apps/terrarium/Art/Scripts/droplet_normal.py",
+            "apps/terrarium/Art/Scripts/key_alpha.py",
+            "apps/terrarium/Art/Scripts/refine_soil.py",
+            "apps/terrarium/Art/Scripts/s1_structured_glass.py",
+            "apps/terrarium/Art/Scripts/s2_budget.py",
+            "apps/terrarium/Art/Scripts/s2_judge.py",
+            "apps/terrarium/Art/Scripts/s2_metrics.py",
+            "apps/terrarium/Art/Scripts/s2_sheet.py",
+            "apps/terrarium/Art/Scripts/s2_shots.py",
+            "apps/terrarium/Art/Scripts/s3_moss_judge.py",
+            "apps/terrarium/Art/Scripts/s3_moss_metrics.py",
+            "apps/terrarium/Art/Scripts/s3_moss_shots.py",
+            "apps/terrarium/Art/Scripts/s3_moss_textures.py",
+            "apps/terrarium/Art/Scripts/s4_frond_textures.py",
+            "apps/terrarium/Art/Scripts/s4_judge.py",
+            "apps/terrarium/Art/Scripts/s4_metrics.py",
+            "apps/terrarium/Art/Scripts/s4_shots.py",
+            "apps/terrarium/Art/Scripts/s5_judge.py",
+            "apps/terrarium/Art/Scripts/s5_metrics.py",
+            "apps/terrarium/Art/Scripts/s5_shots.py",
+            "apps/terrarium/Art/Scripts/s5_textures.py",
+            "apps/terrarium/Art/Scripts/s6_crop.py",
+            "apps/terrarium/Art/Scripts/s6_judge.py",
+            "apps/terrarium/Art/Scripts/s6_metrics.py",
+            "apps/terrarium/Art/Scripts/s6_shots.py",
+            "apps/terrarium/Art/Scripts/s6_sil.py",
+            "apps/terrarium/Art/Scripts/spec_anchor.py",
+            "apps/terrarium/Art/Scripts/sprint_judge.py",
+            "apps/terrarium/Art/Scripts/sprint_metrics.py",
+            "apps/terrarium/Art/Scripts/sprint_shots.py"
+          ],
+          "entry_points": [
+            "apps/terrarium/Art/Scripts/compare_crops.py",
+            "apps/terrarium/Art/Scripts/compose_jar_detail.py"
+          ],
+          "keywords": [
+            "art",
+            "pipeline",
+            "blender"
+          ],
+          "category": "code"
+        }
+      ]
+    },
+    {
+      "name": "Sundial App",
+      "contexts": [
+        {
+          "id": "gvr-16",
+          "name": "sundial-dial",
+          "group": "Sundial App",
+          "description": "Sundial dial scene runtime: gnomon, shadow, soil crescent, washes.",
+          "file_paths": [
+            "apps/sundial/Assets/Scripts/Dial/DialLayout.cs",
+            "apps/sundial/Assets/Scripts/Dial/DialView.cs",
+            "apps/sundial/Assets/Scripts/Dial/Halo2.cs",
+            "apps/sundial/Assets/Scripts/Dial/InkLetter.cs",
+            "apps/sundial/Assets/Scripts/Dial/LeafPlant.cs",
+            "apps/sundial/Assets/Scripts/Dial/LeafSpecies.cs",
+            "apps/sundial/Assets/Scripts/Dial/RoomLight.cs",
+            "apps/sundial/Assets/Scripts/Dial/SoilMound.cs",
+            "apps/sundial/Assets/Scripts/Dial/TileLabels.cs",
+            "apps/sundial/Assets/Scripts/GardenVR.Sundial.asmdef"
+          ],
+          "entry_points": [
+            "apps/sundial/Assets/Scripts/Dial/DialLayout.cs",
+            "apps/sundial/Assets/Scripts/Dial/DialView.cs"
+          ],
+          "keywords": [
+            "dial",
+            "gnomon",
+            "shadow",
+            "crescent"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-17",
+          "name": "sundial-ritual",
+          "group": "Sundial App",
+          "description": "Sundial ritual flow, UI and session loop.",
+          "file_paths": [
+            "apps/sundial/Assets/Scripts/Ritual/ArcTimesController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/DuskRitualController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/FocusBlockController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/GratitudeInk.cs",
+            "apps/sundial/Assets/Scripts/Ritual/GratitudeRitualController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/RimScrubController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/StretchRitualController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/SundialVoice.cs",
+            "apps/sundial/Assets/Scripts/Ritual/WeekDialController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/WeekPageInk.cs"
+          ],
+          "entry_points": [
+            "apps/sundial/Assets/Scripts/Ritual/ArcTimesController.cs",
+            "apps/sundial/Assets/Scripts/Ritual/DuskRitualController.cs"
+          ],
+          "keywords": [
+            "ritual",
+            "session",
+            "ui"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-18",
+          "name": "sundial-tend",
+          "group": "Sundial App",
+          "description": "Sundial tending interactions (plants, soil, watering).",
+          "file_paths": [
+            "apps/sundial/Assets/Scripts/Tend/ArcBeds.cs",
+            "apps/sundial/Assets/Scripts/Tend/FirstRunRecorder.cs",
+            "apps/sundial/Assets/Scripts/Tend/FirstRunWizard.cs",
+            "apps/sundial/Assets/Scripts/Tend/SeedCatalog.cs",
+            "apps/sundial/Assets/Scripts/Tend/SettingsTabs.cs",
+            "apps/sundial/Assets/Scripts/Tend/SundialController.cs",
+            "apps/sundial/Assets/Scripts/Tend/SundialSave.cs",
+            "apps/sundial/Assets/Scripts/Tend/SundialService.cs"
+          ],
+          "entry_points": [
+            "apps/sundial/Assets/Scripts/Tend/ArcBeds.cs",
+            "apps/sundial/Assets/Scripts/Tend/FirstRunRecorder.cs"
+          ],
+          "keywords": [
+            "tend",
+            "plants",
+            "soil"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-19",
+          "name": "sundial-editor-tools",
+          "group": "Sundial App",
+          "description": "Editor build, capture and audio-import tooling for the sundial project.",
+          "file_paths": [
+            "apps/sundial/Assets/Audio/Editor/GardenAudioImportSettings.cs",
+            "apps/sundial/Assets/Editor/Build.cs",
+            "apps/sundial/Assets/Editor/DialSetup.cs",
+            "apps/sundial/Assets/Editor/FirstRunCapture.cs",
+            "apps/sundial/Assets/Editor/GardenBootstrap.cs",
+            "apps/sundial/Assets/Editor/Halo2Setup.cs",
+            "apps/sundial/Assets/Editor/LayoutSetup.cs",
+            "apps/sundial/Assets/Editor/LeafPlantSetup.cs",
+            "apps/sundial/Assets/Editor/SceneSetup.cs",
+            "apps/sundial/Assets/Editor/SoilMoundSetup.cs"
+          ],
+          "entry_points": [
+            "apps/sundial/Assets/Audio/Editor/GardenAudioImportSettings.cs",
+            "apps/sundial/Assets/Editor/Build.cs"
+          ],
+          "keywords": [
+            "editor",
+            "batchmode",
+            "build"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-20",
+          "name": "sundial-tests",
+          "group": "Sundial App",
+          "description": "EditMode and PlayMode tests for the sundial app.",
+          "file_paths": [
+            "apps/sundial/Assets/Tests/EditMode/CaptureEditModeTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/GardenVR.Sundial.Tests.EditMode.asmdef",
+            "apps/sundial/Assets/Tests/EditMode/Halo2VariantTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/LayoutVariantTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/LeafPlantVariantTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/RoomLightVariantTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/SoilMoundVariantTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/SprintVariantTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/SundialAudioTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/WatercolourVariantTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/ArcTimesTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/DuskRitualTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/FirstRunTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/FocusBlockTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/GardenVR.Sundial.Tests.PlayMode.asmdef",
+            "apps/sundial/Assets/Tests/PlayMode/GatePlaybackTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/GratitudeRitualTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/JourneyTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/RecordTilesTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/ReviewPackPlaybackTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/RimScrubTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/StretchRitualTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/TendPlaybackTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/TendRecordTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/ThreeHabitsPerArcTests.cs",
+            "apps/sundial/Assets/Tests/PlayMode/WeekDialTests.cs"
+          ],
+          "entry_points": [
+            "apps/sundial/Assets/Tests/EditMode/CaptureEditModeTests.cs",
+            "apps/sundial/Assets/Tests/EditMode/GardenVR.Sundial.Tests.EditMode.asmdef"
+          ],
+          "keywords": [
+            "tests",
+            "playmode",
+            "editmode"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-21",
+          "name": "sundial-art-scripts",
+          "group": "Sundial App",
+          "description": "Blender/Unity/python art pipeline scripts under Art/Scripts (layout, refmask).",
+          "file_paths": [
+            "apps/sundial/Art/Scripts/compose_paint.py",
+            "apps/sundial/Art/Scripts/dial_face.mjs",
+            "apps/sundial/Art/Scripts/fit_notebook.py",
+            "apps/sundial/Art/Scripts/grade_a2.py",
+            "apps/sundial/Art/Scripts/halo_s5.py",
+            "apps/sundial/Art/Scripts/halo_s5_judge.py",
+            "apps/sundial/Art/Scripts/halo_s5_shots.py",
+            "apps/sundial/Art/Scripts/layout_t052_evidence.py",
+            "apps/sundial/Art/Scripts/layout_t052_face.py",
+            "apps/sundial/Art/Scripts/layout_t052_judge.py",
+            "apps/sundial/Art/Scripts/layout_t052_metrics.py",
+            "apps/sundial/Art/Scripts/layout_t052_refmask/refinner.py",
+            "apps/sundial/Art/Scripts/layout_t052_refmask/refmask.py",
+            "apps/sundial/Art/Scripts/layout_t052_refmask/refmask2.py",
+            "apps/sundial/Art/Scripts/layout_t052_refmask/refsoil.py",
+            "apps/sundial/Art/Scripts/layout_t052_shots.py",
+            "apps/sundial/Art/Scripts/leafplant_s3.py",
+            "apps/sundial/Art/Scripts/leafplant_s3_judge.py",
+            "apps/sundial/Art/Scripts/leafplant_s3_shots.py",
+            "apps/sundial/Art/Scripts/leafplant_s3b_post.py",
+            "apps/sundial/Art/Scripts/plants_freshen.py",
+            "apps/sundial/Art/Scripts/plants_halo.py",
+            "apps/sundial/Art/Scripts/plants_key.py",
+            "apps/sundial/Art/Scripts/plants_more.py",
+            "apps/sundial/Art/Scripts/roomlight_s2.py",
+            "apps/sundial/Art/Scripts/roomlight_s2_judge.py",
+            "apps/sundial/Art/Scripts/roomlight_s2_shots.py",
+            "apps/sundial/Art/Scripts/soilmound_s4.py",
+            "apps/sundial/Art/Scripts/soilmound_s4_judge.py",
+            "apps/sundial/Art/Scripts/soilmound_s4_shots.py",
+            "apps/sundial/Art/Scripts/soilmound_s4b.py",
+            "apps/sundial/Art/Scripts/soilmound_s4b_evidence.py",
+            "apps/sundial/Art/Scripts/soilmound_s4b_f2tally.py",
+            "apps/sundial/Art/Scripts/soilmound_s4b_shots.py",
+            "apps/sundial/Art/Scripts/sprint_t050_evidence.py",
+            "apps/sundial/Art/Scripts/sprint_t050_f1.py",
+            "apps/sundial/Art/Scripts/sprint_t050_f2tally.py",
+            "apps/sundial/Art/Scripts/sprint_t050_judge.py",
+            "apps/sundial/Art/Scripts/sprint_t050_rubric.py",
+            "apps/sundial/Art/Scripts/sprint_t050_shots.py",
+            "apps/sundial/Art/Scripts/watercolour_s1.py",
+            "apps/sundial/Art/Scripts/watercolour_s1_judge.py",
+            "apps/sundial/Art/Scripts/watercolour_s1_shots.py"
+          ],
+          "entry_points": [
+            "apps/sundial/Art/Scripts/compose_paint.py",
+            "apps/sundial/Art/Scripts/dial_face.mjs"
+          ],
+          "keywords": [
+            "art",
+            "pipeline",
+            "layout",
+            "refmask"
+          ],
+          "category": "code"
+        }
+      ]
+    },
+    {
+      "name": "Tooling",
+      "contexts": [
+        {
+          "id": "gvr-22",
+          "name": "tools-orchestrate",
+          "group": "Tooling",
+          "description": "Host/agent orchestration loop: queue, relaunch, agent-loop, task runner.",
+          "file_paths": [
+            "tools/agy/image.sh",
+            "tools/clean_unity_dirt.sh",
+            "tools/orchestrate/agent-loop.mjs",
+            "tools/orchestrate/relaunch.sh"
+          ],
+          "entry_points": [
+            "tools/agy/image.sh",
+            "tools/clean_unity_dirt.sh"
+          ],
+          "keywords": [
+            "orchestration",
+            "agents",
+            "queue",
+            "relaunch"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-23",
+          "name": "tools-blender",
+          "group": "Tooling",
+          "description": "Scripted Blender modelling and export pipeline.",
+          "file_paths": [
+            "tools/blender/blender_heroes.py",
+            "tools/blender/compose_hero_sbs.py",
+            "tools/blender/f4_align.py",
+            "tools/blender/f4_lib.py",
+            "tools/blender/finish_generated.py",
+            "tools/blender/from-iwsdk/dial_svg.mjs",
+            "tools/blender/make_plates.py",
+            "tools/blender/paint_textures.py",
+            "tools/blender/probe_f4.py",
+            "tools/blender/project_bake.py",
+            "tools/blender/run_f4.py",
+            "tools/blender/sundial_dial.py",
+            "tools/blender/sundial_hero.py",
+            "tools/blender/sundial_sbs.py",
+            "tools/blender/sundial_textures.py",
+            "tools/blender/terrarium_companions.py",
+            "tools/blender/terrarium_flower.py",
+            "tools/blender/terrarium_hero.py",
+            "tools/blender/terrarium_jar.py",
+            "tools/blender/terrarium_moss.py",
+            "tools/blender/terrarium_s2.py",
+            "tools/blender/terrarium_s3.py",
+            "tools/blender/terrarium_s4.py",
+            "tools/blender/terrarium_s6.py",
+            "tools/blender/terrarium_textures.py"
+          ],
+          "entry_points": [
+            "tools/blender/blender_heroes.py",
+            "tools/blender/compose_hero_sbs.py"
+          ],
+          "keywords": [
+            "blender",
+            "bpy",
+            "export"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-24",
+          "name": "tools-fidelity",
+          "group": "Tooling",
+          "description": "Fidelity lab: image comparison, judge, rungs and sweeps against the art reference.",
+          "file_paths": [
+            "tools/fidelity/fid.py",
+            "tools/fidelity/lab/__init__.py",
+            "tools/fidelity/lab/build_regions.py",
+            "tools/fidelity/lab/colour.py",
+            "tools/fidelity/lab/controls.py",
+            "tools/fidelity/lab/dial_wash.py",
+            "tools/fidelity/lab/images.py",
+            "tools/fidelity/lab/judge.py",
+            "tools/fidelity/lab/ladder.py",
+            "tools/fidelity/lab/metrics.py",
+            "tools/fidelity/lab/regions.py",
+            "tools/fidelity/lab/selftest.py",
+            "tools/fidelity/lab/sheet.py",
+            "tools/fidelity/lab/sweep.py"
+          ],
+          "entry_points": [
+            "tools/fidelity/fid.py",
+            "tools/fidelity/lab/__init__.py"
+          ],
+          "keywords": [
+            "fidelity",
+            "judge",
+            "python",
+            "cuda"
+          ],
+          "category": "code"
+        },
+        {
+          "id": "gvr-25",
+          "name": "tools-media-gen",
+          "group": "Tooling",
+          "description": "Paid-service generators: ElevenLabs audio (credit reserve), 3D gen, capture helpers. AGENTS: audio only via tools/audio/elevenlabs.mjs with credit reserve.",
+          "file_paths": [
+            "tools/audio/elevenlabs.mjs",
+            "tools/audio/mixdown.mjs",
+            "tools/capture/compose.py",
+            "tools/capture/evidence.py",
+            "tools/capture/grid.py",
+            "tools/capture/shot.mjs",
+            "tools/gen3d/arena_local.sh",
+            "tools/gen3d/contact_sheet.py",
+            "tools/gen3d/gen.py",
+            "tools/gen3d/install_trellis_host.py",
+            "tools/gen3d/tripo.py"
+          ],
+          "entry_points": [
+            "tools/audio/elevenlabs.mjs",
+            "tools/audio/mixdown.mjs"
+          ],
+          "keywords": [
+            "elevenlabs",
+            "credits",
+            "gen3d",
+            "capture"
+          ],
+          "category": "code"
+        }
+      ]
+    }
+  ]
+}
