@@ -181,8 +181,10 @@ namespace GardenVR.Core
                 int dusk = obj.Has("dusk") ? obj.Get("dusk").AsInt() : 18 * 60;
                 return From(boundary, morning, midday, dusk);
             }
-            catch (FormatException)
+            catch (Exception)
             {
+                // A member of the wrong type or past the long range throws InvalidOperationException or
+                // OverflowException, not only FormatException. Every unreadable schedule is the plan default.
                 return Default;
             }
         }
