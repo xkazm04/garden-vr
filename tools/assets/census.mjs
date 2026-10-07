@@ -1,0 +1,484 @@
+#!/usr/bin/env node
+// Asset census for Garden VR: the instrument every asset cut is measured against.
+//
+//   node tools/assets/census.mjs                  measure HEAD, write docs/assets/baseline.json and BASELINE.md
+//   node tools/assets/census.mjs --rev <commit>   measure another commit
+//   node tools/assets/census.mjs --out <dir>      write the two files somewhere else
+//
+// Reads only blobs tracked at the commit (git ls-tree, git cat-file), never the working tree, and changes no file
+// but its own two outputs. Those two outputs are left out of the totals, so committing a new baseline does not move
+// the numbers it records. Output is deterministic: two runs on the same commit are byte-identical.
+//
+// It reports bytes by extension and by the top three directory segments, the IHDR of every png, the guid and import
+// caps of every image under apps/*/Assets, duplicate blobs, and a reference state for each Assets image:
+//   referenced          its guid appears in a .mat/.prefab/.unity/.asset/.shadergraph/.shadersubgraph/.controller/
+//                       .anim/.spriteatlas under the same app or under shared/packages
+//   resources           it sits under a Resources folder (loadPathNamed says whether a .cs names its load path)
+//   no-reference-found  neither; code can still load it by a name this static scan cannot see, so it is never "unused"
+// Findings get a risk class: pixel-identical (bytes survive elsewhere in the repo and nothing names the path that goes
+// away), engine-equivalent (a downscale to the cap Unity already imports at, or 16 to 8 bits where every platform
+// imports compressed), visible-change (needs a render compare, which needs a Unity licence).
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(here, '..', '..');
+const OUTPUTS = ['docs/assets/baseline.json', 'docs/assets/BASELINE.md'];
+const CAP = 1024;
+const MIB = 1048576;
+const IMAGE_EXT = new Set(['.png', '.jpg', '.jpeg', '.tga', '.psd', '.exr', '.hdr', '.tif', '.tiff', '.bmp', '.gif', '.webp']);
+const ASSET_EXT = new Set([...IMAGE_EXT, '.fbx', '.glb', '.obj', '.blend', '.ttf', '.otf', '.mp3', '.ogg', '.wav']);
+const REF_EXT = new Set(['.mat', '.prefab', '.unity', '.asset', '.shadergraph', '.shadersubgraph', '.controller', '.anim', '.spriteatlas']);
+const CODE_EXT = new Set(['.cs', '.py', '.mjs', '.js', '.ts', '.sh', '.ps1', '.cmd', '.bat', '.json']);
+const DATA_EXT = new Set(['.json', '.txt', '.csv', '.xml', '.yaml', '.yml', '.bytes']);
+const NAME_TOKEN = /[A-Za-z0-9_.-]*[A-Za-z0-9_-]\.(?:png|jpe?g|tga|psd|exr|hdr|tiff?|bmp|gif|webp|fbx|glb|obj|blend|ttf|otf|mp3|ogg|wav)(?![A-Za-z0-9_])/gi;
+const QUOTED = /"[A-Za-z0-9_./-]{1,160}"|'[A-Za-z0-9_./-]{1,160}'/g;
+const COLOR_TYPES = { 0: 'grey', 2: 'rgb', 3: 'palette', 4: 'grey-alpha', 6: 'rgba' };
+
+function args(argv) {
+  const out = { _: [] };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith('--')) { const k = a.slice(2); const v = argv[i + 1]; if (v === undefined || v.startsWith('--')) out[k] = true; else { out[k] = v; i++; } }
+    else out._.push(a);
+  }
+  return out;
+}
+
+function git(argv, input) {
+  const r = spawnSync('git', argv, { cwd: root, input, maxBuffer: 1 << 30 });
+  if (r.error) throw r.error;
+  if (r.status !== 0) throw new Error(`git ${argv.join(' ')} failed: ${r.stderr.toString().trim()}`);
+  return r.stdout;
+}
+
+// One `git cat-file --batch` round trip for a list of blob shas.
+function readBlobs(shas) {
+  const unique = [...new Set(shas)];
+  const blobs = new Map();
+  if (!unique.length) return blobs;
+  const buf = git(['cat-file', '--batch'], unique.join('\n') + '\n');
+  let pos = 0;
+  while (pos < buf.length) {
+    const nl = buf.indexOf(10, pos);
+    const [sha, type, size] = buf.subarray(pos, nl).toString('latin1').split(' ');
+    if (type === 'missing') throw new Error(`blob ${sha} missing`);
+    const n = Number(size);
+    blobs.set(sha, buf.subarray(nl + 1, nl + 1 + n));
+    pos = nl + 1 + n + 1;
+  }
+  return blobs;
+}
+
+const ext = p => path.posix.extname(p).toLowerCase() || '(none)';
+const prefix3 = p => p.split('/').slice(0, -1).slice(0, 3).join('/') || '.';
+const appOf = p => (p.match(/^apps\/([^/]+)\/Assets\//) || [])[1] || null;
+const inScope = (p, app) => p.startsWith(`apps/${app}/`) || p.startsWith('shared/packages/');
+const byPath = (a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0);
+const sorted = it => [...it].sort();
+const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+function pngHeader(b) {
+  const sig = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  if (b.length < 33 || sig.some((v, i) => b[i] !== v) || b.toString('latin1', 12, 16) !== 'IHDR') return { error: 'no png signature or IHDR' };
+  return { width: b.readUInt32BE(16), height: b.readUInt32BE(20), bitDepth: b[24], colorType: b[25], colorTypeName: COLOR_TYPES[b[25]] || 'unknown' };
+}
+
+function jpegHeader(b) {
+  if (b[0] !== 0xff || b[1] !== 0xd8) return { error: 'no jpeg SOI' };
+  let i = 2;
+  while (i + 9 < b.length) {
+    if (b[i] !== 0xff) { i++; continue; }
+    const m = b[i + 1];
+    if (m === 0xff || m === 0x01 || (m >= 0xd0 && m <= 0xd9)) { i += 2; continue; }
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
+      return { width: b.readUInt16BE(i + 7), height: b.readUInt16BE(i + 5), bitDepth: b[i + 4], components: b[i + 9] };
+    }
+    i += 2 + b.readUInt16BE(i + 2);
+  }
+  return { error: 'no jpeg SOF' };
+}
+
+// TextureImporter .meta, read line by line: guid, the legacy top-level cap, and every platformSettings entry.
+function parseMeta(text) {
+  const num = re => { const m = text.match(re); return m ? Number(m[1]) : null; };
+  const guid = (text.match(/^guid: ([0-9a-f]{32})\s*$/m) || [])[1] || null;
+  const importer = (text.match(/^([A-Za-z]+Importer):\s*$/m) || [])[1] || null;
+  const platforms = [];
+  const lines = text.split(/\r?\n/);
+  let i = lines.indexOf('  platformSettings:');
+  if (i >= 0) {
+    let cur = null;
+    for (i++; i < lines.length; i++) {
+      const l = lines[i];
+      if (l.startsWith('  - ')) { cur = {}; platforms.push(cur); }
+      else if (!l.startsWith('    ')) break;
+      const m = l.match(/^  (?:- | {2})([A-Za-z0-9_]+): ?(.*)$/);
+      if (m && cur) cur[m[1]] = m[2].trim();
+    }
+  }
+  const plat = platforms.map(p => ({
+    buildTarget: p.buildTarget || '',
+    maxTextureSize: Number(p.maxTextureSize),
+    textureFormat: Number(p.textureFormat),
+    textureCompression: Number(p.textureCompression),
+    overridden: Number(p.overridden || 0),
+  })).sort((a, b) => (a.buildTarget < b.buildTarget ? -1 : a.buildTarget > b.buildTarget ? 1 : 0));
+  const legacyMax = num(/^ {2}maxTextureSize: (\d+)\s*$/m);
+  const def = plat.find(p => p.buildTarget === 'DefaultTexturePlatform');
+  // A platform entry only counts when overridden; otherwise the Default entry (or the legacy field) applies.
+  const effective = [def || { maxTextureSize: legacyMax, textureFormat: -1, textureCompression: null }, ...plat.filter(p => p !== def && p.overridden)];
+  const effectiveMax = Math.max(...effective.map(p => p.maxTextureSize ?? 0)) || null;
+  const compressedEverywhere = effective.every(p => p.textureFormat === -1 && p.textureCompression > 0);
+  return { guid, importer, maxTextureSize: legacyMax, platforms: plat, effectiveMaxTextureSize: effectiveMax, compressedEverywhere };
+}
+
+// Custom JSON layout: the top two levels pretty, every record below on one line, so diffs stay one line per record.
+function layout(v, depth = 0) {
+  if (depth >= 2 || v === null || typeof v !== 'object') return JSON.stringify(v);
+  const pad = '  '.repeat(depth + 1);
+  const end = '  '.repeat(depth);
+  if (Array.isArray(v)) return v.length ? `[\n${v.map(x => pad + layout(x, depth + 1)).join(',\n')}\n${end}]` : '[]';
+  const keys = Object.keys(v);
+  return keys.length ? `{\n${keys.map(k => `${pad}${JSON.stringify(k)}: ${layout(v[k], depth + 1)}`).join(',\n')}\n${end}}` : '{}';
+}
+
+const mib = b => Number((b / MIB).toFixed(1));
+const fmt = b => (b >= MIB ? `${(b / MIB).toFixed(2)} MiB` : `${(b / 1024).toFixed(1)} KiB`);
+
+function census(rev) {
+  const sha = git(['rev-parse', '--verify', `${rev}^{commit}`]).toString().trim();
+  const subject = git(['log', '-1', '--format=%s', sha]).toString().trim();
+
+  const entries = [];
+  const excluded = [];
+  for (const rec of git(['ls-tree', '-r', '-l', '-z', sha]).toString('utf8').split('\0')) {
+    if (!rec) continue;
+    const tab = rec.indexOf('\t');
+    const [, type, blob, size] = rec.slice(0, tab).split(/ +/);
+    const p = rec.slice(tab + 1);
+    if (type !== 'blob') continue;
+    const e = { path: p, blob, bytes: Number(size) };
+    if (OUTPUTS.includes(p)) excluded.push({ path: p, bytes: e.bytes });
+    else entries.push(e);
+  }
+  entries.sort(byPath);
+  const tracked = new Map(entries.map(e => [e.path, e]));
+
+  // (a) totals by extension and by top three directory segments.
+  const group = keyOf => {
+    const m = new Map();
+    for (const e of entries) { const k = keyOf(e.path); const g = m.get(k) || { files: 0, bytes: 0 }; g.files++; g.bytes += e.bytes; m.set(k, g); }
+    return [...m.keys()].sort().map(k => ({ key: k, files: m.get(k).files, bytes: m.get(k).bytes }));
+  };
+  const byExtension = group(ext).map(g => ({ ext: g.key, files: g.files, bytes: g.bytes }));
+  const byPrefix = group(prefix3).map(g => ({ prefix: g.key, files: g.files, bytes: g.bytes }));
+  const sum = (list, key = 'bytes') => list.reduce((s, e) => s + e[key], 0);
+
+  // Text the scans need: reference holders, image metas, code and data files.
+  const texts = new Map();
+  const wantText = entries.filter(e => {
+    const x = ext(e.path);
+    return (REF_EXT.has(x) && (e.path.startsWith('apps/') || e.path.startsWith('shared/packages/')))
+      || CODE_EXT.has(x) || DATA_EXT.has(x)
+      || (x === '.meta' && appOf(e.path) && ASSET_EXT.has(ext(e.path.slice(0, -5))));
+  });
+  const textBlobs = readBlobs(wantText.map(e => e.blob));
+  for (const e of wantText) texts.set(e.path, textBlobs.get(e.blob).toString('latin1'));
+
+  // guid -> files that name it, over every reference-holding file.
+  const guidRefs = new Map();
+  for (const e of wantText) {
+    if (!REF_EXT.has(ext(e.path)) || !(e.path.startsWith('apps/') || e.path.startsWith('shared/packages/'))) continue;
+    for (const g of new Set(texts.get(e.path).match(/(?<![0-9a-f])[0-9a-f]{32}(?![0-9a-f])/g) || [])) {
+      if (!guidRefs.has(g)) guidRefs.set(g, []);
+      guidRefs.get(g).push(e.path);
+    }
+  }
+
+  // Code files that name an asset: they spell its file name, or quote its stem (alone or as the last path segment),
+  // the way editor scripts build "Assets/Art/Textures/" + name + ".png". Keyed lower-case, matched by name, not path.
+  const mentions = new Map();
+  const note = (key, file) => { if (!mentions.has(key)) mentions.set(key, new Set()); mentions.get(key).add(file); };
+  for (const e of wantText) {
+    if (!CODE_EXT.has(ext(e.path))) continue;
+    const text = texts.get(e.path);
+    for (const t of text.match(NAME_TOKEN) || []) note(t.toLowerCase(), e.path);
+    for (const q of text.match(QUOTED) || []) note(`"${q.slice(1, -1).split('/').pop().toLowerCase()}"`, e.path);
+  }
+  const mentionsOf = p => {
+    const base = path.posix.basename(p).toLowerCase();
+    const stem = `"${base.replace(/\.[^.]+$/, '')}"`;
+    return sorted(new Set([...(mentions.get(base) || []), ...(mentions.get(stem) || [])].filter(f => f !== p)));
+  };
+
+  // Resources.Load naming: exact literal, or a directory literal plus the stem in a .cs or a data file of that app.
+  function loadPathNamed(p, app) {
+    const loadPath = p.slice(p.lastIndexOf('/Resources/') + '/Resources/'.length).replace(/\.[^./]+$/, '');
+    const lp = loadPath.toLowerCase();
+    const cs = [...texts.keys()].filter(f => f.endsWith('.cs') && inScope(f, app));
+    const exact = cs.filter(f => texts.get(f).toLowerCase().includes(`"${lp}"`));
+    if (exact.length) return { loadPath, named: 'exact', namedBy: sorted(exact) };
+    const dir = path.posix.dirname(lp);
+    if (dir !== '.') {
+      const dirFiles = cs.filter(f => { const t = texts.get(f).toLowerCase(); return t.includes(`"${dir}/`) || t.includes(`"${dir}"`); });
+      const stem = new RegExp(`(^|[^a-z0-9_-])${escapeRe(path.posix.basename(lp))}([^a-z0-9_-]|$)`);
+      const stemFiles = [...texts.keys()].filter(f => f !== p && f.startsWith(`apps/${app}/`)
+        && (f.endsWith('.cs') || (DATA_EXT.has(ext(f)) && f.startsWith(`apps/${app}/Assets/`) && !/\.(provenance|prompt)\.txt$/.test(f)))
+        && stem.test(texts.get(f).toLowerCase()));
+      const loadAll = dirFiles.filter(f => texts.get(f).includes('LoadAll'));
+      if (dirFiles.length && (stemFiles.length || loadAll.length)) return { loadPath, named: 'composed', namedBy: sorted(new Set([...dirFiles, ...stemFiles])) };
+    }
+    return { loadPath, named: 'none', namedBy: [] };
+  }
+
+  // Unity facts for any file under apps/*/Assets: guid, references, Resources, reference state.
+  function unityFacts(e) {
+    const app = appOf(e.path);
+    const metaEntry = tracked.get(`${e.path}.meta`);
+    const meta = metaEntry && texts.has(metaEntry.path) ? parseMeta(texts.get(metaEntry.path)) : null;
+    const referencedBy = meta && meta.guid ? sorted((guidRefs.get(meta.guid) || []).filter(f => inScope(f, app))) : [];
+    const underResources = e.path.includes('/Resources/');
+    const resources = underResources ? loadPathNamed(e.path, app) : null;
+    const state = referencedBy.length ? 'referenced' : underResources ? 'resources' : 'no-reference-found';
+    return { app, metaBytes: metaEntry ? metaEntry.bytes : 0, meta, referencedBy, resources, state };
+  }
+
+  // (b) (c) (e) every tracked image.
+  const imageEntries = entries.filter(e => IMAGE_EXT.has(ext(e.path)));
+  const imageBlobs = readBlobs(imageEntries.map(e => e.blob));
+  const facts = new Map();
+  const images = imageEntries.map(e => {
+    const b = imageBlobs.get(e.blob);
+    const x = ext(e.path);
+    const head = x === '.png' ? pngHeader(b) : x === '.jpg' || x === '.jpeg' ? jpegHeader(b) : { error: 'dimensions not read for this format' };
+    const rec = { path: e.path, blob: e.blob, bytes: e.bytes, format: x.slice(1), ...head, codeMentions: mentionsOf(e.path) };
+    if (appOf(e.path)) {
+      const f = unityFacts(e);
+      facts.set(e.path, f);
+      const side = Math.max(rec.width || 0, rec.height || 0);
+      rec.unity = {
+        app: f.app,
+        guid: f.meta ? f.meta.guid : null,
+        importer: f.meta ? f.meta.importer : null,
+        maxTextureSize: f.meta ? f.meta.maxTextureSize : null,
+        platforms: f.meta ? f.meta.platforms : [],
+        effectiveMaxTextureSize: f.meta ? f.meta.effectiveMaxTextureSize : null,
+        importedMaxSide: f.meta && f.meta.effectiveMaxTextureSize ? Math.min(side, f.meta.effectiveMaxTextureSize) : null,
+        state: f.state,
+        referencedBy: f.referencedBy,
+        resources: f.resources,
+      };
+    }
+    return rec;
+  });
+
+  // (d) exact duplicates.
+  const byBlob = new Map();
+  for (const e of entries) { if (!byBlob.has(e.blob)) byBlob.set(e.blob, []); byBlob.get(e.blob).push(e); }
+  const duplicates = [...byBlob.values()].filter(g => g.length > 1).map(g => ({
+    blob: g[0].blob, bytes: g[0].bytes, copies: g.length, wastedBytes: g[0].bytes * (g.length - 1), paths: g.map(e => e.path).sort(),
+  })).sort((a, b) => b.wastedBytes - a.wastedBytes || (a.blob < b.blob ? -1 : 1));
+  const isImageGroup = d => d.paths.some(p => IMAGE_EXT.has(ext(p)));
+
+  // Findings.
+  const findings = [];
+  const add = f => findings.push({ id: `${f.class}:${f.path}`, ...f });
+  const namedBy = p => {
+    const f = appOf(p) ? (facts.get(p) || unityFacts(tracked.get(p))) : null;
+    if (f && !facts.has(p)) facts.set(p, f);
+    const why = [];
+    if (f && f.state === 'referenced') why.push(`guid in ${f.referencedBy.length} file(s)`);
+    if (f && f.resources) why.push(`under Resources (load path ${f.resources.named})`);
+    const m = mentionsOf(p);
+    if (m.length) why.push(`name in ${m.join(', ')}`);
+    return why;
+  };
+
+  for (const d of duplicates) {
+    if (!d.paths.some(p => ASSET_EXT.has(ext(p)))) continue;
+    const ranked = d.paths.map(p => {
+      const f = appOf(p) ? (facts.get(p) || unityFacts(tracked.get(p))) : null;
+      const score = (f && f.state === 'referenced' ? 4 : 0) + (f && f.resources ? 2 : 0) + (mentionsOf(p).length ? 1 : 0);
+      return { p, score, assets: appOf(p) ? 1 : 0 };
+    }).sort((a, b) => b.score - a.score || b.assets - a.assets || (a.p < b.p ? -1 : 1));
+    const keep = ranked[0].p;
+    const remove = ranked.slice(1).map(r => r.p).sort();
+    const named = remove.map(p => ({ p, why: namedBy(p) })).filter(r => r.why.length);
+    const metaSaved = remove.reduce((s, p) => s + (appOf(p) && tracked.get(`${p}.meta`) ? tracked.get(`${p}.meta`).bytes : 0), 0);
+    const sources = remove.filter(p => /^apps\/[^/]+\/Art\/Source\//.test(p));
+    add({
+      class: 'duplicate-blob', path: remove[0], bytesSaved: d.wastedBytes + metaSaved, method: 'exact',
+      risk: named.length ? 'visible-change' : 'pixel-identical',
+      cut: 'remove the copies, keep one', keep, remove,
+      evidence: (named.length ? `named: ${named.map(r => `${r.p} (${r.why.join('; ')})`).join(' | ')}` : 'nothing names the copies that go')
+        + (sources.length ? `; ${sources.join(', ')} sits where PLAN section 7 keeps sources, so its sidecar needs repointing` : ''),
+    });
+  }
+
+  for (const r of images) {
+    const f = facts.get(r.path);
+    const metaBytes = f ? f.metaBytes : 0;
+    const side = Math.max(r.width || 0, r.height || 0);
+    if (f && side > CAP) {
+      const cap = r.unity.effectiveMaxTextureSize;
+      const target = cap && cap <= CAP ? cap : CAP;
+      const scale = target / side;
+      const kept = Math.max(1, Math.round(r.width * scale)) * Math.max(1, Math.round(r.height * scale));
+      add({
+        class: 'over-1024', path: r.path, bytesSaved: Math.round(r.bytes * (1 - kept / (r.width * r.height))), method: 'estimate-area',
+        risk: cap && cap <= CAP ? 'engine-equivalent' : 'visible-change',
+        cut: `downscale ${r.width}x${r.height} to a ${target} px side`,
+        evidence: cap ? `effective import cap ${cap}${cap <= CAP ? ', Unity already imports at that size' : `, Unity imports it at ${Math.min(side, cap)} px, over the ${CAP} px budget`}` : 'no TextureImporter cap read',
+      });
+    }
+    if (r.format === 'png' && r.bitDepth === 16) {
+      const ok = f && f.meta && f.meta.compressedEverywhere;
+      add({
+        class: 'png-16-bit', path: r.path, bytesSaved: Math.round(r.bytes / 2), method: 'estimate-half',
+        risk: ok ? 'engine-equivalent' : 'visible-change',
+        cut: 'requantise to 8 bits per sample',
+        evidence: !f ? 'outside Unity Assets; a source file, no import to match'
+          : ok ? 'every platform imports it compressed (8 bits per sample)'
+            : 'an effective platform imports it uncompressed or with an explicit format, so Unity can keep 16 bits per sample',
+      });
+    }
+    if (!f) continue;
+    const m = r.path.match(/^apps\/([^/]+)\/Assets\/(?:.*\/)?Art\/Source\/(.+)$/);
+    if (m) {
+      const target = `apps/${m[1]}/Art/Source/${m[2]}`;
+      const there = tracked.get(target);
+      const atTarget = !there ? 'free' : there.blob === r.blob ? 'same blob already there' : 'a different blob already there';
+      const why = namedBy(r.path);
+      add({
+        class: 'source-in-assets', path: r.path, bytesSaved: metaBytes + (there && there.blob === r.blob ? r.bytes : 0), method: 'exact',
+        risk: why.length ? 'visible-change' : 'pixel-identical',
+        cut: `move to ${target} with its sidecars (target: ${atTarget})`,
+        evidence: why.length ? `named: ${why.join('; ')}` : 'nothing names it; the bytes survive the move; sidecar .meta files drop too, not counted',
+      });
+    }
+    if (f.state === 'resources' && f.resources.named === 'none') {
+      add({
+        class: 'resources-ballast', path: r.path, bytesSaved: r.bytes + metaBytes, method: 'exact',
+        risk: 'visible-change', cut: 'remove, or move out of Resources',
+        evidence: `no .cs names load path "${f.resources.loadPath}" and no guid reference; ships in every build`,
+      });
+    }
+    if (f.state === 'no-reference-found') {
+      add({
+        class: 'no-reference-found', path: r.path, bytesSaved: r.bytes + metaBytes, method: 'exact',
+        risk: 'visible-change', cut: 'remove, or move to Art/Source outside Assets (saves only the .meta)',
+        evidence: r.codeMentions.length ? `no guid reference; name in ${r.codeMentions.join(', ')}` : 'no guid reference and no code names it; a composed name could still load it',
+      });
+    }
+  }
+  findings.sort((a, b) => b.bytesSaved - a.bytesSaved || (a.class < b.class ? -1 : a.class > b.class ? 1 : 0) || (a.path < b.path ? -1 : 1));
+  findings.forEach((f, i) => { f.rank = i + 1; });
+
+  const CLASSES = ['duplicate-blob', 'over-1024', 'png-16-bit', 'source-in-assets', 'resources-ballast', 'no-reference-found'];
+  const RISKS = ['pixel-identical', 'engine-equivalent', 'visible-change'];
+  const classes = CLASSES.map(c => {
+    const list = findings.filter(f => f.class === c);
+    return { class: c, findings: list.length, bytesSaved: sum(list, 'bytesSaved'), risk: Object.fromEntries(RISKS.map(k => [k, list.filter(f => f.risk === k).length])) };
+  });
+
+  const assetsImages = images.filter(r => r.unity);
+  const pngs = images.filter(r => r.format === 'png');
+  const imageDups = duplicates.filter(isImageGroup);
+  const result = {
+    schema: 'garden-vr/asset-census/1',
+    commit: { sha, subject },
+    excluded: excluded.sort(byPath),
+    totals: {
+      tracked: { files: entries.length, bytes: sum(entries), mib: mib(sum(entries)) },
+      png: { files: pngs.length, bytes: sum(pngs), mib: mib(sum(pngs)) },
+      images: { files: images.length, bytes: sum(images), mib: mib(sum(images)) },
+      assetsImages: { files: assetsImages.length, bytes: sum(assetsImages), mib: mib(sum(assetsImages)) },
+      assetsImagesOverCap: assetsImages.filter(r => Math.max(r.width || 0, r.height || 0) > CAP).length,
+      assetsImagesImportedOverCap: assetsImages.filter(r => (r.unity.importedMaxSide || 0) > CAP).length,
+      assetsArtSource: assetsImages.filter(r => /\/Art\/Source\//.test(r.path)).length,
+      png16Bit: pngs.filter(r => r.bitDepth === 16).length,
+      duplicates: { groups: duplicates.length, wastedBytes: sum(duplicates, 'wastedBytes'), mib: mib(sum(duplicates, 'wastedBytes')) },
+      imageDuplicates: { groups: imageDups.length, wastedBytes: sum(imageDups, 'wastedBytes'), mib: mib(sum(imageDups, 'wastedBytes')) },
+      states: Object.fromEntries(['referenced', 'resources', 'no-reference-found'].map(s => [s, assetsImages.filter(r => r.unity.state === s).length])),
+    },
+    classes,
+    byExtension,
+    byPrefix,
+    images,
+    duplicates,
+    findings: findings.map(f => ({ rank: f.rank, id: f.id, class: f.class, path: f.path, bytesSaved: f.bytesSaved, method: f.method, risk: f.risk, cut: f.cut, ...(f.keep ? { keep: f.keep, remove: f.remove } : {}), evidence: f.evidence })),
+  };
+  return result;
+}
+
+function markdown(r) {
+  const t = r.totals;
+  const row = cells => `| ${cells.join(' | ')} |`;
+  const top = (list, key) => [...list].sort((a, b) => b.bytes - a.bytes || (a[key] < b[key] ? -1 : 1));
+  const out = [];
+  out.push('# Asset census baseline', '');
+  out.push(`Generated by \`node tools/assets/census.mjs --rev ${r.commit.sha}\`. Do not edit by hand; rerun the tool.`, '');
+  out.push(`Commit measured: \`${r.commit.sha}\` (${r.commit.subject}).`, '');
+  out.push('Only blobs tracked at that commit are read. 1 MiB = 1048576 bytes.'
+    + (r.excluded.length ? ` The census's own outputs are left out of every total: ${r.excluded.map(e => `\`${e.path}\` (${e.bytes} bytes)`).join(', ')}.` : ''), '');
+  out.push('## Totals', '');
+  out.push(row(['Measure', 'Value']), row(['---', '---']));
+  out.push(row(['Tracked', `${t.tracked.files} files, ${t.tracked.bytes} bytes (${t.tracked.mib} MiB)`]));
+  out.push(row(['png', `${t.png.files} files, ${t.png.bytes} bytes (${t.png.mib} MiB)`]));
+  out.push(row(['All images', `${t.images.files} files, ${t.images.bytes} bytes (${t.images.mib} MiB)`]));
+  out.push(row(['Images under apps/*/Assets', `${t.assetsImages.files} files, ${t.assetsImages.bytes} bytes (${t.assetsImages.mib} MiB)`]));
+  out.push(row(['Assets images with a side over 1024 px', `${t.assetsImagesOverCap} (${t.assetsImagesImportedOverCap} still over 1024 px after the .meta import cap)`]));
+  out.push(row(['Assets images under Art/Source', String(t.assetsArtSource)]));
+  out.push(row(['16-bit png', String(t.png16Bit)]));
+  out.push(row(['Duplicate blobs, all files', `${t.duplicates.groups} groups, ${t.duplicates.wastedBytes} bytes wasted (${t.duplicates.mib} MiB)`]));
+  out.push(row(['Duplicate blobs, groups with an image', `${t.imageDuplicates.groups} groups, ${t.imageDuplicates.wastedBytes} bytes wasted (${t.imageDuplicates.mib} MiB)`]));
+  out.push(row(['Assets image reference states', Object.entries(t.states).map(([k, v]) => `${k} ${v}`).join(', ')]));
+  out.push('');
+  out.push('## Bytes by extension (top 15)', '');
+  out.push(row(['Extension', 'Files', 'Bytes', 'MiB']), row(['---', '---:', '---:', '---:']));
+  for (const g of top(r.byExtension, 'ext').slice(0, 15)) out.push(row([`\`${g.ext}\``, g.files, g.bytes, (g.bytes / MIB).toFixed(1)]));
+  out.push('');
+  out.push('## Bytes by top three directories (top 15)', '');
+  out.push(row(['Prefix', 'Files', 'Bytes', 'MiB']), row(['---', '---:', '---:', '---:']));
+  for (const g of top(r.byPrefix, 'prefix').slice(0, 15)) out.push(row([`\`${g.prefix}\``, g.files, g.bytes, (g.bytes / MIB).toFixed(1)]));
+  out.push('', 'The full tables, every image and every duplicate group are in `baseline.json`.', '');
+  out.push('## Findings per class', '');
+  out.push('A file can carry several classes, so the class totals overlap and do not add up. Bytes saved is the cut in tracked bytes: '
+    + '`exact` for removals and moves, `estimate-area` (bytes scaled by the pixels kept) for downscales, `estimate-half` for 16 to 8 bits.', '');
+  out.push(row(['Class', 'Findings', 'Bytes saved', 'pixel-identical', 'engine-equivalent', 'visible-change']), row(['---', '---:', '---:', '---:', '---:', '---:']));
+  for (const c of r.classes) out.push(row([c.class, c.findings, `${c.bytesSaved} (${fmt(c.bytesSaved)})`, c.risk['pixel-identical'], c.risk['engine-equivalent'], c.risk['visible-change']]));
+  out.push('');
+  out.push('Risk classes: `pixel-identical`, the bytes survive elsewhere in the repo and nothing names the path that goes away '
+    + '(a guid reference, a Resources folder, or a code file that names it, see below); `engine-equivalent`, a downscale to the import cap '
+    + 'Unity already applies, or 16 to 8 bits where every platform imports compressed; `visible-change`, needs a render compare, which needs '
+    + 'a Unity licence this machine lacks. `no-reference-found` never means unused: code can load an image by a composed name.', '');
+  out.push('A code file (.cs, .py, .mjs, .js, .ts, .sh, .ps1, .cmd, .bat, .json) names an asset when it spells its file name or quotes '
+    + 'its stem. The match is by name, not by path, so a name shared by several files counts for each of them; that only ever makes a '
+    + 'finding more cautious. A Resources load path is `exact` when a .cs quotes it whole, `composed` when a .cs quotes its folder and '
+    + 'a .cs or a data file of that app names the stem (or the folder is loaded with LoadAll).', '');
+  out.push('Duplicate groups of text, code and settings files are listed in `baseline.json` but raised as no finding: each Unity project keeps its own copy.', '');
+  out.push('## Findings ranked by bytes saved', '');
+  out.push(row(['#', 'Class', 'Path', 'Bytes saved', 'Method', 'Risk', 'Cut', 'Evidence']), row(['---:', '---', '---', '---:', '---', '---', '---', '---']));
+  const cell = s => String(s).replace(/\|/g, '\\|');
+  for (const f of r.findings) {
+    const p = f.keep ? `\`${f.remove.join('`, `')}\` (keep \`${f.keep}\`)` : `\`${f.path}\``;
+    out.push(row([f.rank, f.class, p, `${f.bytesSaved} (${fmt(f.bytesSaved)})`, f.method, f.risk, cell(f.cut), cell(f.evidence)]));
+  }
+  out.push('');
+  return out.join('\n');
+}
+
+const a = args(process.argv.slice(2));
+const result = census(typeof a.rev === 'string' ? a.rev : 'HEAD');
+const outDir = path.resolve(root, typeof a.out === 'string' ? a.out : 'docs/assets');
+fs.mkdirSync(outDir, { recursive: true });
+fs.writeFileSync(path.join(outDir, 'baseline.json'), layout(result) + '\n');
+fs.writeFileSync(path.join(outDir, 'BASELINE.md'), markdown(result));
+const t = result.totals;
+console.log(`commit ${result.commit.sha}`);
+console.log(`tracked ${t.tracked.files} files ${t.tracked.bytes} bytes (${t.tracked.mib} MiB); png ${t.png.files} files ${t.png.bytes} bytes (${t.png.mib} MiB)`);
+for (const c of result.classes) console.log(`${c.class}: ${c.findings} findings, ${c.bytesSaved} bytes`);
+console.log(`wrote ${path.relative(root, outDir).replace(/\\/g, '/')}/baseline.json and BASELINE.md`);
