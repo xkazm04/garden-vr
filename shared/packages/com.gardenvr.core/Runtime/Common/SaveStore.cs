@@ -65,7 +65,7 @@ namespace GardenVR.Core
 
         public DiskSaveIo(string directory)
         {
-            if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory");
+            if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory is null, empty or whitespace", nameof(directory));
             _dir = directory;
             Directory.CreateDirectory(_dir);
         }

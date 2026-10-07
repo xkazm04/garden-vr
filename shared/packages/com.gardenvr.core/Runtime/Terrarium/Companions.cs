@@ -43,7 +43,7 @@ namespace GardenVR.Core
         public static int LastKeptDay(Ledger ledger, string habitId)
         {
             if (ledger == null) throw new ArgumentNullException(nameof(ledger));
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             int last = int.MinValue;
             IReadOnlyList<TendEvent> events = ledger.Events;
             for (int i = 0; i < events.Count; i++)

@@ -146,7 +146,7 @@ namespace GardenVR.Core
 
         public int KeptDays(string habitId)
         {
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             var seen = new HashSet<int>();
             for (int i = 0; i < _events.Count; i++)
             {
@@ -159,7 +159,7 @@ namespace GardenVR.Core
         /// <summary>Live days in the inclusive window ending at <paramref name="today"/>. A 7-day window starts six days earlier.</summary>
         public int KeptDaysInWindow(string habitId, GardenDay today, int days)
         {
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             if (days < 1) throw new ArgumentOutOfRangeException(nameof(days));
             int start = today.Index - (days - 1);
             var seen = new HashSet<int>();
@@ -179,7 +179,7 @@ namespace GardenVR.Core
         /// </summary>
         public int KeptDaysFrom(string habitId, int firstDay)
         {
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             var seen = new HashSet<int>();
             for (int i = 0; i < _events.Count; i++)
             {
@@ -217,7 +217,7 @@ namespace GardenVR.Core
 
         static void Require(string habitId, IClock clock)
         {
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             if (clock == null) throw new ArgumentNullException(nameof(clock));
         }
     }
@@ -249,7 +249,7 @@ namespace GardenVR.Core
 
         public void Arm(string habitId, GardenDay day, TendSource source, IClock clock)
         {
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             if (clock == null) throw new ArgumentNullException(nameof(clock));
             if (_pending) throw new InvalidOperationException("a tend is already waiting to commit");
             _pending = true;

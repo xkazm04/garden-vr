@@ -59,7 +59,7 @@ namespace GardenVR.Core
 
         static JsonObject PlantJson(PlantState plant)
         {
-            if (plant == null) throw new ArgumentException("plant");
+            if (plant == null) throw new ArgumentException("plant is null", nameof(plant));
             var obj = new JsonObject();
             obj.Set("habit", JsonValue.String(plant.HabitId ?? ""));
             var window = new JsonArray();
