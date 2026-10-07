@@ -3,10 +3,13 @@
 
   python tools/assets/lossless.py                dry run: measure, write docs/assets/lossless.json and LOSSLESS.md
   python tools/assets/lossless.py --apply        also write the files that clear the threshold into the working tree
+  python tools/assets/lossless.py --ingest [paths...]
+                                                 dry run for working-tree pngs not committed yet; add --apply to write
   python tools/assets/lossless.py --verify       re-decode every applied file at HEAD against its blob at measuredAt
 
 Reads tracked blobs at --base (default: git merge-base HEAD main), never the working tree, so a dry run after an
-apply gives the same ledger. Only the IDAT data of a file changes: IHDR and every other chunk are copied byte for
+apply gives the same ledger. --ingest reads the working tree and writes no ledger: a png that never reached history
+costs no history to recompress, so it is written whenever the result is smaller at all. Only the IDAT data of a file changes: IHDR and every other chunk are copied byte for
 byte in their original order. Needs Python 3.12, Pillow and numpy; installs nothing.
 """
 import argparse, hashlib, io, json, re, struct, subprocess, sys, zlib
@@ -26,8 +29,9 @@ ROOTS = ('apps/sundial/Assets/', 'apps/terrarium/Assets/', 'apps/sundial/Art/', 
 CHERRY_PICK_SHAS = ('00b92d2', 'f3340bf', '146a176', 'e8e7e6c')
 CHERRY_PICK_DIRS = ('apps/sundial/Assets/Resources/LeafPlant/', 'apps/sundial/Art/Source/plants/leafplant/')
 WORKTREES = ('C:/Users/kazda/kiro/gvr-terrarium', 'C:/Users/kazda/kiro/gvr-sundial')
-# Files that snapshot a measurement at a past commit. A blob id in one of them is history, not a lock, so a png held
-# back only by these is reported as held back with its potential saving, and never applied.
+# Files that snapshot a measurement at a past commit. A hash in one of them records the file as of its measuredAt
+# commit and stays true when HEAD changes, so it does not pin a blob and rule (c) ignores a hit that comes only from
+# them. docs/assets/lossless.json is not added: it records pixel hashes, not file hashes, and rule (c) never reads it.
 SNAPSHOTS = ('docs/assets/baseline.json', 'docs/health/')
 REASONS = ('duplicate-group', 'cherry-pick-path', 'recorded-hash', 'dirty-in-worktree')
 HEX = re.compile(rb'(?<![0-9a-fA-F])(?:[0-9a-fA-F]{64}|[0-9a-fA-F]{40})(?![0-9a-fA-F])')
@@ -128,6 +132,17 @@ def candidates(data, chs):
     yield 'pillow-optimize', assemble(chs, trailing, b''.join(b for t, b in pchs if t == b'IDAT'))
 
 
+def text_tokens(files, blobs):
+    """hash -> tracked non-snapshot text files that record it (sha256 or blob id)."""
+    tokens = {}
+    for path, (oid, size) in files.items():
+        if path in (LEDGER_JSON, LEDGER_MD) or path.startswith(SNAPSHOTS) or path.lower().endswith('.png') or size == 0: continue
+        data = blobs.read(oid)
+        if b'\0' in data[:8000]: continue
+        for m in HEX.finditer(data): tokens.setdefault(m.group().lower().decode(), set()).add(path)
+    return tokens
+
+
 def exclusions(base, files, blobs):
     """(candidates, path -> list of reasons, path -> files that record its hash)."""
     cand = sorted(p for p in files if p.lower().endswith('.png') and p.startswith(ROOTS) and blobs.read(files[p][0])[:8] == SIG)
@@ -144,13 +159,7 @@ def exclusions(base, files, blobs):
         picked.update(x for x in git('show', '--name-only', '--format=', '-z', sha, raw=True).decode('utf8').split('\0') if x.lower().endswith('.png'))
     for p in cand:
         if p in picked or p.startswith(CHERRY_PICK_DIRS): why[p].append(REASONS[1])
-    # (c) a sha256 or blob id that appears in tracked text; collected once
-    tokens = {}
-    for path, (oid, size) in files.items():
-        if path in (LEDGER_JSON, LEDGER_MD) or path.lower().endswith('.png') or size == 0: continue
-        data = blobs.read(oid)
-        if b'\0' in data[:8000]: continue
-        for m in HEX.finditer(data): tokens.setdefault(m.group().lower().decode(), set()).add(path)
+    tokens = text_tokens(files, blobs)
     recorded = {}
     for p in cand:
         data = blobs.read(files[p][0])
@@ -172,7 +181,10 @@ def exclusions(base, files, blobs):
 
 
 def measure(base, files, blobs, path):
-    data = blobs.read(files[path][0])
+    return measure_data(path, blobs.read(files[path][0]))
+
+
+def measure_data(path, data):
     old = len(data)
     chs, _ = chunks(data)
     try:
@@ -197,6 +209,11 @@ def clears(e):
     return s > 0 and s * 100 >= MIN_PERCENT * e['oldBytes'] and s >= MIN_BYTES
 
 
+def net(e):
+    """The HEAD saving exceeds the history growth: git keeps the old blob, so a rewrite adds newBytes to history."""
+    return e['oldBytes'] - e['newBytes'] > e['newBytes']
+
+
 def run(args):
     base = args.base or git('merge-base', 'HEAD', 'main').strip()
     base = git('rev-parse', base).strip()
@@ -204,20 +221,16 @@ def run(args):
     blobs = Blobs()
     cand, why, recorded = exclusions(base, files, blobs)
     excluded = [dict(path=p, reasons=why[p], **({'recordedIn': recorded[p]} if p in recorded else {})) for p in cand if why[p]]
-    entries, writes, held = [], {}, []
-    for p in cand:
-        if why[p] == [REASONS[2]] and all(f.startswith(SNAPSHOTS) for f in recorded[p]):
-            e, _ = measure(base, files, blobs, p)
-            e['recordedIn'] = recorded[p]; held.append(e)
+    entries, writes = [], {}
     for p in cand:
         if why[p]: continue
         e, data = measure(base, files, blobs, p)
         if 'reason' in e:
             pass
-        elif data is None:
-            e['reason'] = 'no candidate is smaller'
-        elif not clears(e):
-            e['reason'] = f'saves under {MIN_PERCENT} percent or under {MIN_BYTES} bytes'
+        elif data is None or not clears(e):
+            e['reason'] = 'under threshold'
+        elif not net(e):
+            e['reason'] = 'history growth exceeds HEAD saving'
         elif args.apply:
             writes[p] = data; e['applied'] = True
         else:
@@ -228,7 +241,7 @@ def run(args):
     for p, data in writes.items(): (ROOT / p).write_bytes(data)
     doc = dict(schema=1, measuredAt=base,
                thresholds=dict(minPercent=MIN_PERCENT, minBytes=MIN_BYTES),
-               excluded=excluded, heldBack=held, files=entries)
+               excluded=excluded, files=entries)
     (ROOT / LEDGER_JSON).write_text(json.dumps(doc, indent=2) + '\n', encoding='utf8')
     (ROOT / LEDGER_MD).write_text(render(doc, len(cand), args.apply), encoding='utf8')
     print(f'wrote {LEDGER_JSON} and {LEDGER_MD}; {len(writes)} file(s) written', file=sys.stderr)
@@ -248,32 +261,70 @@ def render(doc, n_cand, applied_run):
     L = ['# Lossless PNG pass', '',
          f"Generated by `python tools/assets/lossless.py{' --apply' if applied_run else ''}` from `docs/assets/lossless.json`, measured at `{doc['measuredAt']}`. Do not edit by hand; rerun the tool.", '',
          'Only the IDAT data of a PNG changes. IHDR and every other chunk are copied byte for byte. A file is written only when the decoded mode, size, palette, transparency and the sha256 of the pixels are identical, and it saves at '
-         f"least {t['minPercent']} percent and {t['minBytes']} bytes (git keeps the old blob forever, so a small saving at HEAD costs more history than it saves).", '',
+         f"least {t['minPercent']} percent and {t['minBytes']} bytes and the saving at HEAD exceeds the new size (git keeps the old blob forever, so a rewrite adds newBytes to history and removes oldBytes minus newBytes from the checkout). "
+         'Files not yet committed are handled by `--ingest`, which has no threshold and writes no ledger.', '',
          '## Totals', '', '| Measure | Value |', '| --- | ---: |',
          f'| candidate pngs | {n_cand} |', f'| excluded | {len(doc["excluded"])} |']
     for r in REASONS: L.append(f'| excluded, first reason {r} | {exc.get(r, 0)} |')
     L += [f'| measured | {len(fs)} |',
-          f'| potential saving, every file that clears the threshold | {mib(sum(map(saving, would)))} in {len(would)} files |',
+          f'| files that clear {t["minPercent"]} percent and {t["minBytes"]} bytes | {len(would)} |',
+          f'| HEAD saving of those files | {mib(sum(map(saving, would)))} |',
+          f'| history growth if those files were applied (sum of newBytes) | {mib(sum(e["newBytes"] for e in would))} |',
+          f'| files that also clear the net-bytes test (saved > newBytes) | {sum(1 for e in would if net(e))} |',
           f'| potential saving, every smaller candidate with no threshold | {mib(sum(saving(e) for e in fs if saving(e) > 0))} in {sum(1 for e in fs if saving(e) > 0)} files |',
           f'| applied saving | {mib(sum(map(saving, app)))} in {len(app)} files |',
           f'| history growth (sum of newBytes over applied files) | {mib(sum(e["newBytes"] for e in app))} |',
           f'| proof failures | {len(failed)} |', '']
     if failed:
         L += ['## Proof failures', ''] + [f"- `{e['path']}`: {e['reason']}" for e in failed] + ['']
-    hb = doc['heldBack']
-    L += ['## Held back by snapshot files only', '',
-          f"{len(hb)} excluded pngs are named by the recorded-hash rule only through measurement snapshots ({', '.join(f'`{x}`' for x in SNAPSHOTS)}), which list the blob id of nearly every tracked file at a past commit. "
-          'They are excluded, as the brief says, and measured here so the owner can see the trade. Nothing in this table is applied.', '',
-          f"Potential if released: {mib(sum(map(saving, [e for e in hb if clears(e)])))} in {sum(1 for e in hb if clears(e))} files that clear the threshold; "
-          f"{mib(sum(max(0, saving(e)) for e in hb))} with no threshold.", '',
-          '| Path | Old | New | Saved | Method |', '| --- | ---: | ---: | ---: | --- |']
-    L += [f"| `{e['path']}` | {e['oldBytes']} | {e['newBytes']} | {saving(e)} | {e['method']} |" for e in sorted(hb, key=lambda e: (-saving(e), e['path'])) if saving(e) > 0]
     L += ['', '## Excluded', '', 'A path with several reasons is counted under the first in the order of the table above.', '', '| Path | Reasons |', '| --- | --- |']
     L += [f"| `{x['path']}` | {', '.join(x['reasons'])} |" for x in doc['excluded']]
     L += ['', '## Files', '', '| Path | Old | New | Saved | Method | Applied | Reason |', '| --- | ---: | ---: | ---: | --- | --- | --- |']
     for e in sorted(fs, key=lambda e: (-saving(e), e['path'])):
         L.append(f"| `{e['path']}` | {e['oldBytes']} | {e['newBytes']} | {saving(e)} | {e['method']} | {'yes' if e['applied'] else 'no'} | {e.get('reason', '')} |")
     return '\n'.join(L) + '\n'
+
+
+def ingest(args):
+    """Dry run (or --apply) over working-tree pngs whose content is not committed yet. Writes no ledger."""
+    if args.paths:
+        paths = [Path(x).resolve().relative_to(ROOT).as_posix() for x in args.paths]
+    else:
+        out = git('status', '--porcelain', '-z', '--untracked-files=all', raw=True).decode('utf8').split('\0')
+        paths, i = [], 0
+        while i < len(out):
+            rec = out[i]; i += 1
+            if len(rec) < 4: continue
+            if rec[0] in 'RC': i += 1
+            if rec[3:].lower().endswith('.png') and 'D' not in rec[:2]: paths.append(rec[3:])
+    base = git('rev-parse', 'HEAD').strip()
+    files = tree(base)
+    blobs = Blobs()
+    tokens = text_tokens(files, blobs)
+    blobs.close()
+    old_total = new_total = failed = 0
+    for p in sorted(set(paths)):
+        f = ROOT / p
+        if not f.is_file() or f.suffix.lower() != '.png':
+            print(f'{p}  skipped: not a png file'); continue
+        data = f.read_bytes()
+        digest = hashlib.sha256(data).hexdigest()
+        if tokens.get(digest):
+            print(f'{p}  skipped: sha256 recorded in {", ".join(sorted(tokens[digest]))}'); continue
+        if data[:8] != SIG:
+            print(f'{p}  skipped: no png signature'); continue
+        e, new = measure_data(p, data)
+        if 'PROOF FAILED' in e.get('reason', '') or 'decode failed' in e.get('reason', ''):
+            failed += 1
+            print(f"{p}  {e['oldBytes']} -> {e['oldBytes']}  {e['method']}  proof FAIL: {e['reason']}  (file untouched)"); continue
+        wrote = new is not None and e['newBytes'] < e['oldBytes']
+        if wrote and args.apply: f.write_bytes(new)
+        else: e['newBytes'] = e['oldBytes']
+        old_total += e['oldBytes']; new_total += e['newBytes']
+        state = ('written' if args.apply else 'would write') if wrote else 'no smaller candidate, unchanged'
+        print(f"{p}  {e['oldBytes']} -> {e['newBytes']}  {e['method']}  proof ok (mode, size, palette, transparency, pixel sha256 {e['pixelSha256'][:12]})  {state}")
+    print(f'total {old_total} -> {new_total}, saved {old_total - new_total} bytes; proof failures {failed}; {"applied" if args.apply else "dry run"}')
+    return 1 if failed else 0
 
 
 def verify():
@@ -301,5 +352,7 @@ if __name__ == '__main__':
     ap.add_argument('--apply', action='store_true', help='write the files that clear the threshold')
     ap.add_argument('--verify', action='store_true', help='check applied files at HEAD against the start sha')
     ap.add_argument('--base', help='commit whose blobs are measured (default: merge-base HEAD main)')
+    ap.add_argument('--ingest', action='store_true', help='recompress working-tree pngs not committed yet (dry run unless --apply)')
+    ap.add_argument('paths', nargs='*', help='with --ingest: pngs to process (default: untracked or modified pngs from git status)')
     a = ap.parse_args()
-    sys.exit(verify() if a.verify else run(a) or 0)
+    sys.exit(verify() if a.verify else ingest(a) if a.ingest else run(a) or 0)
