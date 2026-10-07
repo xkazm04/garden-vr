@@ -1,6 +1,6 @@
 {
   "schema": "garden-vr/duplicate-classification/1",
-  "measuredAt": "4ccb0bbec83cfc2c0da4a8387a010a9537d22bd5",
+  "measuredAt": "cc5467901faaf922648d9bb2f89f666024a478f2",
   "note": "Hand-authored verdicts for the duplicate groups that hold an asset extension at measuredAt. Risk is the census class of the cut. tools/assets/census.mjs reads this file from the measured commit.",
   "groups": [
     {
@@ -39,12 +39,12 @@
       "blob": "b8bef5b0dff052497b3f0f3500b350503ec9cff1",
       "bytes": 2139949,
       "paths": [
-        "apps/terrarium/Assets/Art/Source/moss_albedo.png",
+        "apps/terrarium/Art/Source/moss_albedo.png",
         "apps/terrarium/Assets/Art/Textures/moss_macro_b.png"
       ],
       "verdict": "both-stay",
       "keep": [
-        "apps/terrarium/Assets/Art/Source/moss_albedo.png",
+        "apps/terrarium/Art/Source/moss_albedo.png",
         "apps/terrarium/Assets/Art/Textures/moss_macro_b.png"
       ],
       "remove": [],
