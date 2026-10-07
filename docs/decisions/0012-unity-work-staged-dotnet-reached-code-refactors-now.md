@@ -3,6 +3,7 @@
 Date: 2026-10-07. Status: accepted. Parts (a) and (b) come from the owner (2026-10-07). Parts (c) and (d) are the App
 Master's, made under that answer on 2026-10-07; the owner may overrule them.
 Amended by 0013: it adds item 6 (Android ASTC 6x6 overrides) to (a), a Phase 2 exit for the plates to item 3, and a SundialSave Settings and Focus step B to item 4.
+Amended by 0014: it adds item 7 (`dial_paper.png` requantised to 8 bits only if item 5's compare shows no change) and item 8 (`moss-repaint.png` cut with item 2, and its two sweep variants removed).
 
 Source: the owner's answer of 2026-10-07 at 11:17Z to the App Master's ask 109debf1, "Can Unity run before 2026-10-16,
 here or anywhere?": "No Unity before the gate", and his note, "no Unity session before the 10-16 gate". And the base
