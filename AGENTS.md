@@ -56,6 +56,8 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 - **When `image_gen` is rate-limited or out of quota (HTTP 429, quota, limit), do not stop and do not fake it:** use
   `bash tools/agy/image.sh "<prompt>" <out.png> [<image to edit>]` (Gemini / Nano Banana via the Antigravity CLI,
   ~30 s per image, high quality). It writes the provenance sidecar for you. Run it in the foreground.
+- Before committing a new or changed `.png`, run `python tools/assets/lossless.py --ingest --apply <paths>`. A nonzero
+  exit means a pixel proof failed, and that png is not committed as written (decision 0011).
 
 ## Keys and credits
 - `ELEVENLABS_API_KEY` and `TRIPO_API_KEY` live in the git-ignored `.env` at the repo (and worktree) root. Never print or commit them. Tripo: log balance before/after every call; respect the task cap.
