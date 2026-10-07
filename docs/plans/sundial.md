@@ -27,8 +27,8 @@ Sources (relative to `C:\Users\kazda\kiro\personas\.contest\`):
 | Engine and ship form | IWSDK + IWER, hosted URL | Unity 6.6 URP, APK on the Competition channel | Decision 0001 |
 | Core | `core/*.ts`, Vitest | C# in `com.gardenvr.core/Runtime/{Common,Sundial}`, `dotnet test` | Rules in the shared core (`AGENTS.md` rule 4) |
 | Persistence | IndexedDB, eviction risk R5 | one JSON save in the app's private storage, atomic replace + backup | No browser storage on a native build |
-| Device first | Meta VR Glasses first, Quest certified | **Quest first** (Phase 2); glasses = post-MVP simulator profile | Glasses ship spring 2027 (TOOLING.md B); Unity APK targets Quest |
-| Look | eye gaze (glasses), head-gaze reticle fallback | `Look` intent: **mouse hover on PC**; on Quest 3 a hand ray or head reticle (no eye tracking), eye gaze on Pro | Intents abstraction (decision 0002) |
+| Device first | Meta VR Glasses first, Quest certified | **Quest 3 / 3S first** (Phase 2); glasses profile: not a target (decision 0010) | Glasses ship spring 2027 (TOOLING.md B); Unity APK targets Quest |
+| Look | eye gaze (glasses), head-gaze reticle fallback | `Look` intent: **mouse hover on PC**; on Quest 3 / 3S a hand ray or head reticle (no eye tracking); Pro eye gaze: not a target (decision 0010) | Intents abstraction (decision 0002) |
 | Placement | summoned with palm-up, never anchored (WebXR anchors [U]) | **on the desk**, anchored like the jar in Phase 2; PalmOpen dismisses / brings back | Unity has spatial anchors [V]; the reference frame shows it on the table |
 | Tests | Playwright + IWER, action capture | PlayMode playback of intents (`ScriptedIntentSource`), batchmode captures; XR Simulator + Operator in Phase 2 | Same seam: tests inject intents, not pixels |
 | Art | Daylight instrument (terracotta) in round 1; Field Notebook chosen in round 2 | Field Notebook pushed to anime linework: clean confident ink contours, flat cel with one shade step, watercolour only inside the dial, the room stays photographic | Owner: "its potential to combine hand-drawn/anime style into reality" |
@@ -98,7 +98,7 @@ Design targets; U1 is measured by PlayMode `FirstRun_FirstTendAndDusk`, U2 by th
 
 - **07:10 morning, 45 s**: the shadow is in the ochre arc; the Water plant has its waiting glow; look, pinch, tock.
 - **12:30 midday, 20 s**: a glance reads "morning kept, midday waiting"; pinch Top-3 plan. (The commute glance on Meta
-  VR Glasses is post-MVP and simulator-only.)
+  VR Glasses: not a target, decision 0010.)
 - **22:10 wind-down, 90 s**: three breaths at the dusk plant; the dial now shows the whole day.
 No notification is required: the shadow has moved every time the user looks.
 
@@ -120,7 +120,7 @@ The bindings are the shared provider's (`docs/plans/terrarium.md` section 4, own
 
 | Intent | Meaning in Sundial | Quest (Phase 2) | PC binding | Feel preserved because |
 |---|---|---|---|---|
-| `Look` | which plant / tile / packet is targeted: an inked halo after 150 ms dwell; never acts alone | head or hand ray (Quest 3), eye gaze (Pro, glasses sim) | **mouse hover** (cursor hidden over the dial; the halo is the cursor); **Tab / arrow keys** step between plants | Glance-to-target stays separate from select, like "look to target, tap to select" (TOOLING.md B [V]) |
+| `Look` | which plant / tile / packet is targeted: an inked halo after 150 ms dwell; never acts alone | head or hand ray (Quest 3 / 3S); Pro eye gaze and glasses sim: not a target (decision 0010) | **mouse hover** (cursor hidden over the dial; the halo is the cursor); **Tab / arrow keys** step between plants | Glance-to-target stays separate from select, like "look to target, tap to select" (TOOLING.md B [V]) |
 | `Pinch` | tend the looked-at plant; open a packet; confirm "Yes, it happened"; undo mark | quick pinch | **left click**, or **Enter / Space tap** on the focused plant | One gesture, one tend; undo within 6 s insures false pinches |
 | `PinchHold` / `Release` | the dusk ritual's in / out breath | pinch held | **hold Space** or **hold left mouse** on the dusk plant | Duration carries the breath, as in Terrarium |
 | `Poke` | tiles' "?" and the settings tab (Quest: near poke, the dial is within reach) | index fingertip | **F** at the cursor | Distinct from pinch for tests |
@@ -263,7 +263,7 @@ Full list and credits: `docs/audio/AUDIO-BIBLE.md` sections 3.2, 4, 5, 7. Summar
 | 2-3 habits per arc | Up to 9 plants, 63 tiles in one instanced draw | Look + Pinch | round-1 scope; art: more species |
 | Stretch reach (morning ritual, 20 s) | Reach to three inked marks around the dial; the morning plant stretches with you | Look + PalmOpen hold at each mark | round-1 "should" |
 | Rim scrub | Pinch-drag on the rim to read earlier today or this week; snaps back on release; read-only | Pinch-drag | round-1 gesture 3 |
-| Glasses glance | Commute moment: palm up, read in 2 s, pinch once, palm up to dismiss | PalmOpen, Look + Pinch | simulator profile only; ~70 deg FOV framing (round-1 FIG 7.2) |
+| Glasses glance | Commute moment: palm up, read in 2 s, pinch once, palm up to dismiss | PalmOpen, Look + Pinch | not a target (decision 0010); ~70 deg FOV framing (round-1 FIG 7.2) |
 | Gratitude at midday | Ink one of five small symbols into the midday arc | Pinch | no typing |
 | Focus block | A 25-minute "shadow hour": the gnomon's shadow is drawn slowly while you work | Pinch to start / end | productivity track fit |
 | Week dial | A second dial page for the last 4 weeks | PinchHold the page corner | record only, never a streak |
@@ -275,11 +275,11 @@ Full list and credits: `docs/audio/AUDIO-BIBLE.md` sections 3.2, 4, 5, 7. Summar
 
 | Seam | PC (now) | Quest (Phase 2) | Rule now |
 |---|---|---|---|
-| Look | mouse hover ray | Quest 3: hand ray or head reticle; Pro / glasses sim: eye gaze; dwell 150 ms unchanged | `Look` is an intent with a ray; nothing assumes eyes |
+| Look | mouse hover ray | Quest 3 / 3S: hand ray or head reticle; Pro eye gaze and glasses sim: not a target (decision 0010); dwell 150 ms unchanged | `Look` is an intent with a ray; nothing assumes eyes |
 | Pinch / poke | click / F | Interaction SDK pinch; near poke on the dial (within reach) | intents only (S1) |
 | Dial placement | `DeskAnchor` | MRUK table + spatial anchor; PalmOpen dismiss / return | `IPlacementProvider`; save never stores the anchor's content |
 | Hand over the dial | hand matte composite (dev captures only) | Depth API occlusion or a hand-mesh occluder (round-3 gap ledger: platform limit) | the dial shader keeps a depth-tested path |
 | Table shadow | `ShadowCatcher` on the plate's desk plane | `ShadowCatcher` on the scene desk plane | plane comes from `IPlacementProvider` |
 | Boil comfort | 10 fps jitter | check in stereo at H2 (round-3 IWSDK checklist item 10) | a setting turns it off |
-| Glasses profile | - | XR Simulator glasses profile only | post-MVP |
+| Glasses profile | - | not a target (decision 0010) | not a target (decision 0010) |
 | Tests | PlayMode playback | XR Simulator + Operator gestures (look + pinch), a `sundial_get_state` tool | keep `SundialState.ToJson()` as the oracle |

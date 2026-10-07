@@ -71,7 +71,7 @@ Never cut: the breath ritual, the answer, growth rules, life check-ins, pause/re
 
 Palm-flip menu (weakest gesture, round 1 cut #1), two-hand rotate (cut #2), the "three good things" ritual (post-MVP),
 streaks, scores, notifications, accounts, cloud sync, free-text habits (no keyboard in a hands-only evening), health
-data (no API, TOOLING.md B [U]), glasses layout (post-MVP, simulator only).
+data (no API, TOOLING.md B [U]), glasses layout (not a target, decision 0010).
 
 ## 3. The customer journey
 
@@ -125,7 +125,7 @@ The mapping lives in `com.gardenvr.input` (owner: terrarium; built in T-TER-001)
 | `PinchHold` | inhale (while held); pinch-hold the cork 2 s = look-back | thumb-index pinch held | **hold Space** or **hold left mouse** | A hold stays a hold: duration, not a click, carries the breath. The provider ramps strength 0 -> 1 over 120 ms on press and back on release, so the core `PinchDetector` hysteresis (engage 0.8, release 0.5) runs on the same kind of signal a hand gives |
 | `Release` | exhale | open the pinch | release Space / mouse | Released means released; no auto-release |
 | `Pinch` | select (a seed label, a packet, the shell, "Continue breathing?") | quick pinch at the looked-at target | **left click** (press < 300 ms) at the cursor, or **Enter** on the focused target | Same select-at-target semantics as look-and-pinch on Quest |
-| `Look` | which label or object is targeted (soft look ring) | head/hand ray (Quest 3 has no eye tracking), eye gaze on Pro or glasses | **mouse cursor ray**, ring after 150 ms dwell; **Tab / Shift+Tab** cycles targets for keyboard-only use | The cursor is the gaze point; hover never acts on its own |
+| `Look` | which label or object is targeted (soft look ring) | head/hand ray (Quest 3 / 3S have no eye tracking); Pro eye gaze and glasses: not a target (decision 0010) | **mouse cursor ray**, ring after 150 ms dwell; **Tab / Shift+Tab** cycles targets for keyboard-only use | The cursor is the gaze point; hover never acts on its own |
 | `Poke` | check in Today / Yesterday, the settings pebble | index fingertip touch on a flat target >= 3 cm | **F** at the cursor, or a click on a poke-only target | A distinct key keeps poke and pinch separable in tests |
 | `PalmOpen` | pause: the jar holds its breath | open palm toward the jar for 0.6 s | **hold P for 0.6 s** (or hold middle mouse) | The same 0.6 s commitment as the palm gesture |
 | head pose | look around while seated | HMD | **right-drag**: yaw +/- 40 deg, pitch +/- 25 deg, no translation; **R** recentres | Seated: rotation only |
@@ -293,7 +293,7 @@ Ordered by value to the daily ritual; each is one or two tasks once the gate is 
 | Look-back timelapse | The full replay if cut | PinchHold cork | cut-line item 1 |
 | Seasons | The jar's light warms over weeks (lifetime fronds) | - | growth only rises |
 | More companions | 6 species, 2 shapes each | - | art time |
-| Glasses form | Smaller jar, ring on the cork, breath only | Look + Pinch | Meta VR Glasses simulator profile only (TOOLING.md B) |
+| Glasses form | Smaller jar, ring on the cork, breath only | Look + Pinch | not a target (decision 0010) |
 | Export | Local JSON export after a confirm | Poke | no network |
 | Localisation | Czech, German, Japanese strings and narration | - | registry `localization` bundle; narration re-render cost in credits |
 
