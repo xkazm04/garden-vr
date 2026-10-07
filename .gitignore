@@ -64,3 +64,7 @@ orchestration/runs/host/
 /docs/audio/audition/
 /tools/fidelity/lab/
 /.claude/scan-history/
+
+# Python bytecode
+__pycache__/
+*.pyc
