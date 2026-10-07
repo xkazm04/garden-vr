@@ -537,6 +537,7 @@ function hotspots(rev) {
     rules,
     findings,
     findingsWithoutHotspot: orphans,
+    findingNotes: (findingsDoc && Array.isArray(findingsDoc.notes)) ? findingsDoc.notes : [],
     files: code.map(record1),
     testFiles: tests.map(record1),
   };
@@ -618,6 +619,7 @@ function markdown(r) {
   }
   out.push('');
   if (r.findingsWithoutHotspot.length) out.push(`Findings for files no longer in scope: ${r.findingsWithoutHotspot.map(p => `\`${p}\``).join(', ')}.`, '');
+  if (r.findingNotes.length) out.push(...r.findingNotes.map(n => `- ${n}`), '');
 
   const table = (list, withFinding) => {
     const head = ['#', 'File', 'Total lines', 'Code lines', 'Churn commits', 'Churn lines', 'Score', 'Tested', 'Methods', 'Longest method', 'Deepest nesting'];
