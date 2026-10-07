@@ -56,6 +56,8 @@ namespace GardenVR.Core
         public static bool operator !=(GardenDay a, GardenDay b) { return a.Index != b.Index; }
         public static bool operator <(GardenDay a, GardenDay b) { return a.Index < b.Index; }
         public static bool operator >(GardenDay a, GardenDay b) { return a.Index > b.Index; }
+        public static bool operator <=(GardenDay a, GardenDay b) { return a.Index <= b.Index; }
+        public static bool operator >=(GardenDay a, GardenDay b) { return a.Index >= b.Index; }
 
         static DateTimeOffset WallToOffset(TimeZoneInfo tz, DateTime wall)
         {
