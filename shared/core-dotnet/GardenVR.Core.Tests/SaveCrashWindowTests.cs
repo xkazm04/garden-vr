@@ -73,7 +73,7 @@ public class SaveCrashWindowTests
 
     sealed class Note { public string Name; }
 
-    sealed class MemoryIo : ISaveIo
+    internal sealed class MemoryIo : ISaveIo
     {
         readonly Dictionary<string, byte[]> _files = new Dictionary<string, byte[]>();
         public string FailMoveInto;

@@ -15,6 +15,8 @@ namespace GardenVR.Core
         public bool BackupAvailable;
         /// <summary>True when the file's schema is newer than this build. <see cref="ISaveStore{T}.Save"/> then refuses.</summary>
         public bool ReadOnly;
+        /// <summary>Set by <see cref="SaveStore{T}.Restore"/> to the file the document came from. Null on every Load result.</summary>
+        public string RestoredFrom;
     }
 
     public interface ISaveStore<T> where T : class
@@ -181,21 +183,10 @@ namespace GardenVR.Core
                 };
             }
 
-            string text;
-            try
-            {
-                text = Utf8.GetString(_io.ReadBytes(LiveName));
-                if (text.Length > 0 && text[0] == '\uFEFF') text = text.Substring(1);
-            }
-            catch (Exception) { return Fail("read"); }
-
             JsonObject obj;
-            try { obj = Json.ParseObject(text); }
-            catch (Exception) { return Fail("parse"); }
-
             int ver;
-            try { ver = RequireVersion(obj); }
-            catch (Exception) { return Fail("schema-version"); }
+            var readStep = ReadObject(LiveName, out obj, out ver);
+            if (readStep != null) return Fail(readStep);
 
             if (ver > _currentSchema)
             {
@@ -221,18 +212,8 @@ namespace GardenVR.Core
                 }
                 catch (Exception) { return Fail("snapshot"); }
 
-                int cursor = ver;
-                for (int i = 0; i < _steps.Length; i++)
-                {
-                    var step = _steps[i];
-                    if (step.FromVersion < cursor) continue;
-                    if (step.FromVersion != cursor) return Fail("missing-step-" + cursor.ToString());
-                    try { step.Apply(obj); }
-                    catch (Exception) { return Fail(step.Id); }
-                    cursor++;
-                    obj.Set("SchemaVersion", JsonValue.Number(cursor));
-                }
-                if (cursor != _currentSchema) return Fail("missing-step-" + cursor.ToString());
+                var migrateStep = Migrate(obj, ver);
+                if (migrateStep != null) return Fail(migrateStep);
                 try { WriteObjectAtomic(obj); }
                 catch (Exception) { return Fail("write-migrated"); }
                 T migrated;
@@ -261,6 +242,125 @@ namespace GardenVR.Core
             };
         }
 
+        /// <summary>
+        /// Brings back a record when <c>save.json</c> cannot be read. A readable live file is never replaced
+        /// (FailedStep <c>live-readable</c>). Otherwise the first of <c>save.prev1.json</c>, <c>save.prev2.json</c>
+        /// and <c>save.snapshot.json</c> that reads wins; a candidate from a newer schema is skipped and an older one
+        /// migrates in memory. The document is written at the current schema to the temp file, the unreadable live
+        /// file moves to <c>save.damaged.json</c> (or the next free <c>save.damaged.N.json</c>, never overwritten),
+        /// and the temp file moves to <c>save.json</c>. The previous copies and the snapshot are not rotated or
+        /// touched. When no candidate reads the result is Failed with <c>restore</c> and nothing is written.
+        /// <see cref="LoadResult{T}.RestoredFrom"/> names the source file.
+        /// </summary>
+        public LoadResult<T> Restore()
+        {
+            _readOnly = false;
+            if (_io.Exists(LiveName))
+            {
+                T liveDoc;
+                bool liveMigrated;
+                JsonObject liveObj;
+                int liveVer;
+                if (TryReadCandidate(LiveName, out liveDoc, out liveMigrated, out liveObj, out liveVer))
+                    return Fail("live-readable");
+            }
+
+            var names = new[] { Prev1Name, Prev2Name, SnapshotName };
+            for (int i = 0; i < names.Length; i++)
+            {
+                if (!_io.Exists(names[i])) continue;
+                T doc;
+                bool migrated;
+                JsonObject obj;
+                int ver;
+                if (!TryReadCandidate(names[i], out doc, out migrated, out obj, out ver)) continue;
+                if (ver > _currentSchema) continue;
+                try
+                {
+                    WriteTemp(obj);
+                    if (_io.Exists(LiveName)) _io.Move(LiveName, FreeDamagedName());
+                    _io.Move(TempName, LiveName);
+                }
+                catch (Exception) { return Fail("restore-write"); }
+                return new LoadResult<T>
+                {
+                    Outcome = migrated ? LoadOutcome.Migrated : LoadOutcome.Loaded,
+                    Doc = doc,
+                    FailedStep = null,
+                    BackupAvailable = Backup(),
+                    ReadOnly = false,
+                    RestoredFrom = names[i]
+                };
+            }
+            return Fail("restore");
+        }
+
+        /// <summary>Reads, strips the BOM, parses and reads the schema version. Returns the failed step, or null.</summary>
+        string ReadObject(string name, out JsonObject obj, out int ver)
+        {
+            obj = null;
+            ver = 0;
+            string text;
+            try
+            {
+                text = Utf8.GetString(_io.ReadBytes(name));
+                if (text.Length > 0 && text[0] == '\uFEFF') text = text.Substring(1);
+            }
+            catch (Exception) { return "read"; }
+
+            try { obj = Json.ParseObject(text); }
+            catch (Exception) { return "parse"; }
+
+            try { ver = RequireVersion(obj); }
+            catch (Exception) { return "schema-version"; }
+            return null;
+        }
+
+        /// <summary>Runs the migration chain on <paramref name="obj"/> in memory, from <paramref name="ver"/> to the current schema. Returns the failed step, or null.</summary>
+        string Migrate(JsonObject obj, int ver)
+        {
+            int cursor = ver;
+            for (int i = 0; i < _steps.Length; i++)
+            {
+                var step = _steps[i];
+                if (step.FromVersion < cursor) continue;
+                if (step.FromVersion != cursor) return "missing-step-" + cursor.ToString();
+                try { step.Apply(obj); }
+                catch (Exception) { return step.Id; }
+                cursor++;
+                obj.Set("SchemaVersion", JsonValue.Number(cursor));
+            }
+            if (cursor != _currentSchema) return "missing-step-" + cursor.ToString();
+            return null;
+        }
+
+        /// <summary>Reads one file fully in memory with no side effects. A newer schema reads as is; an older one migrates.</summary>
+        bool TryReadCandidate(string name, out T doc, out bool migrated, out JsonObject obj, out int ver)
+        {
+            doc = null;
+            migrated = false;
+            if (ReadObject(name, out obj, out ver) != null) return false;
+            if (ver < _currentSchema)
+            {
+                if (Migrate(obj, ver) != null) return false;
+                migrated = true;
+            }
+            try { doc = _read(obj); }
+            catch (Exception) { return false; }
+            return true;
+        }
+
+        string FreeDamagedName()
+        {
+            const string first = "save.damaged.json";
+            if (!_io.Exists(first)) return first;
+            for (int n = 2; ; n++)
+            {
+                var name = "save.damaged." + n.ToString() + ".json";
+                if (!_io.Exists(name)) return name;
+            }
+        }
+
         public void Save(T doc)
         {
             if (doc == null) throw new ArgumentNullException(nameof(doc));
@@ -275,7 +375,7 @@ namespace GardenVR.Core
             WriteObjectAtomic(obj);
         }
 
-        void WriteObjectAtomic(JsonObject obj)
+        void WriteTemp(JsonObject obj)
         {
             var bytes = Utf8.GetBytes(Json.Write(obj));
             using (var stream = _io.Create(TempName))
@@ -283,6 +383,11 @@ namespace GardenVR.Core
                 stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
             }
+        }
+
+        void WriteObjectAtomic(JsonObject obj)
+        {
+            WriteTemp(obj);
             if (_io.Exists(Prev2Name)) _io.Delete(Prev2Name);
             if (_io.Exists(Prev1Name)) _io.Move(Prev1Name, Prev2Name);
             if (_io.Exists(LiveName)) _io.Move(LiveName, Prev1Name);
