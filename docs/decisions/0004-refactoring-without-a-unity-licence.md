@@ -2,6 +2,7 @@
 
 Date: 2026-10-07. Status: accepted (App Master, 2026-10-07) under the owner's brief; the owner may overrule.
 `docs/PLAN.md:184` is not edited; its Unity compile is deferred, not dropped.
+Amended by 0012: an in-place app file or a core file may change on dotnet test alone under the conditions of 0012 (c).
 
 Source: `docs/architecture/review-2026-10.md` at `ce81b8f`, section 1 and section 6 (candidates 4, 5, 9; candidate 10
 follows from them). The review measured `main` at `89971d1`.
