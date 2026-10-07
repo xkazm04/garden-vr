@@ -17,6 +17,9 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
    (Pinch, PinchHold, Release, Poke, Look, PalmOpen). Never read `Input`/`Keyboard`/`Mouse` directly in app code; the
    keyboard/mouse provider is the only place that does. This is what makes the later Quest swap a provider change.
 2. **Seated, two-foot radius, under ten minutes** to a complete, satisfying moment. Fast start, clean pause/resume.
+   The PC player also needs a way to **quit from inside the app**. On the headset the system menu owns quit; the
+   borderless-fullscreen PC build has no menu, and Esc only raises `SystemPause`, so today the only exit is Alt+F4.
+   The quit path goes through the keyboard/mouse provider (rule 1) and saves the same way `OnApplicationQuit` does.
 3. **Honest habits.** Growth only rises; a missed day is quiet and recoverable; nothing shames, wilts to death or
    turns red. No streak counters.
 4. **Rules in `com.gardenvr.core`, pixels in the app.** Core is pure C# (no `UnityEngine`), tested with
