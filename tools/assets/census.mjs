@@ -6,6 +6,9 @@
 //   node tools/assets/census.mjs --out <dir>      write the two files somewhere else
 //   node tools/assets/census.mjs --only duplicates [--rev <commit>]
 //                                                 write only DUPLICATES.md (needs docs/assets/duplicates.json tracked at the commit)
+//   node tools/assets/census.mjs --only provenance [--rev <commit>]
+//                                                 write only A4-PROVENANCE.md: PLAN A4, one status per texture png
+//                                                 (sidecar, row, missing); skips the full census
 //
 // Reads only blobs tracked at the commit (git ls-tree, git cat-file), never the working tree, and changes no file
 // but its own two outputs. Those two outputs are left out of the totals, so committing a new baseline does not move
@@ -24,6 +27,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { provenanceReading, provenanceMarkdown } from './a4.mjs';
+import { totals as provenanceTotals } from './provenance.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..', '..');
@@ -621,6 +626,19 @@ function duplicatesMarkdown(r) {
 }
 
 const a = args(process.argv.slice(2));
+if (a.only === 'provenance') {
+  const reading = provenanceReading(typeof a.rev === 'string' ? a.rev : 'HEAD', git, readBlobs);
+  const dir = path.resolve(root, typeof a.out === 'string' ? a.out : 'docs/assets');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'A4-PROVENANCE.md'), provenanceMarkdown(reading));
+  const t = provenanceTotals(reading.records);
+  console.log(`commit ${reading.sha}`);
+  for (const app of reading.apps) console.log(`${app}: ${JSON.stringify(provenanceTotals(reading.records.filter(x => x.app === app)))}`);
+  console.log(`all: pngs ${t.pngs} sidecar ${t.sidecar} row ${t.row} missing ${t.missing} declared-derived ${t.derived}`);
+  for (const x of reading.records.filter(x => x.status === 'missing')) console.log(`missing: ${x.path}`);
+  console.log(`wrote ${path.relative(root, dir).replace(/\\/g, '/')}/A4-PROVENANCE.md`);
+  process.exit(0);
+}
 const result = census(typeof a.rev === 'string' ? a.rev : 'HEAD');
 const outDir = path.resolve(root, typeof a.out === 'string' ? a.out : 'docs/assets');
 fs.mkdirSync(outDir, { recursive: true });
