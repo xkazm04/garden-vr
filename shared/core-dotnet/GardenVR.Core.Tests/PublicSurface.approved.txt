@@ -313,6 +313,23 @@ GardenVR.Core.Ledger method public System.Int32 KeptDays(System.String habitId)
 GardenVR.Core.Ledger method public System.Int32 KeptDaysFrom(System.String habitId, System.Int32 firstDay)
 GardenVR.Core.Ledger method public System.Int32 KeptDaysInWindow(System.String habitId, GardenVR.Core.GardenDay today, System.Int32 days)
 GardenVR.Core.Ledger property get public System.Collections.Generic.IReadOnlyList<GardenVR.Core.TendEvent> Events
+GardenVR.Core.LedgerJson method public static GardenVR.Core.HabitDef ReadHabit(GardenVR.Core.JsonObject obj, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonObject WriteHabit(GardenVR.Core.HabitDef habit, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonObject WriteTend(GardenVR.Core.TendEvent tend, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
+GardenVR.Core.LedgerJson method public static GardenVR.Core.TendEvent ReadTend(GardenVR.Core.JsonObject obj, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static System.String RowKey(System.String id, System.Int32 index)
+GardenVR.Core.LedgerJson method public static System.String StringMember(GardenVR.Core.JsonObject obj, System.String key)
+GardenVR.Core.LedgerJson method public static System.String[] HabitKnown(GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static System.String[] TendKnown()
+GardenVR.Core.LedgerJson method public static System.Void KeepExtra(GardenVR.Core.JsonObject obj, System.String[] known, System.String key, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
+GardenVR.Core.LedgerJson method public static System.Void RestoreExtra(GardenVR.Core.JsonObject obj, System.String key, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
+GardenVR.Core.LedgerJson method public static T EnumMember<T>(GardenVR.Core.JsonObject obj, System.String key, T fallback)
+GardenVR.Core.LedgerJson.Choices field public GardenVR.Core.TendSource SourceFallback
+GardenVR.Core.LedgerJson.Choices field public GardenVR.Core.TendSource SourceFallback
+GardenVR.Core.LedgerJson.Choices field public System.Boolean NullGroupAsEmpty
+GardenVR.Core.LedgerJson.Choices field public System.Boolean NullGroupAsEmpty
+GardenVR.Core.LedgerJson.Choices field public System.Boolean RowKnown
+GardenVR.Core.LedgerJson.Choices field public System.Boolean RowKnown
 GardenVR.Core.LoadOutcome field public System.Int32 value__
 GardenVR.Core.LoadOutcome field public const GardenVR.Core.LoadOutcome Failed = 3
 GardenVR.Core.LoadOutcome field public const GardenVR.Core.LoadOutcome Fresh = 0
@@ -706,6 +723,7 @@ type public sealed class GardenVR.Core.WeekRecord
 type public static class GardenVR.Core.BreathProgress
 type public static class GardenVR.Core.Companions
 type public static class GardenVR.Core.Json
+type public static class GardenVR.Core.LedgerJson
 type public static class GardenVR.Core.LookBack
 type public static class GardenVR.Core.PacedHand
 type public static class GardenVR.Core.RimScrub
@@ -715,6 +733,8 @@ type public static class GardenVR.Core.TerrariumSaveMigrations
 type public struct GardenVR.Core.BreathEvent
 type public struct GardenVR.Core.GardenDay implements System.IComparable<GardenVR.Core.GardenDay>,System.IEquatable<GardenVR.Core.GardenDay>
 type public struct GardenVR.Core.GrowthAnswer
+type public struct GardenVR.Core.LedgerJson.Choices
+type public struct GardenVR.Core.LedgerJson.Choices
 type public struct GardenVR.Core.LookFrame
 type public struct GardenVR.Core.PinchSample
 type public struct GardenVR.Core.RimRead
