@@ -1,6 +1,6 @@
 {
   "schema": "garden-vr/duplicate-classification/1",
-  "measuredAt": "07debcf81b24ad87c725b6a1f824a16b05be5857",
+  "measuredAt": "cecee05d7acc95fca60bc1b4bc78a79e18ef7ed5",
   "note": "Hand-authored verdicts for the duplicate groups that hold an asset extension at measuredAt. Risk is the census class of the cut. tools/assets/census.mjs reads this file from the measured commit.",
   "groups": [
     {
@@ -127,13 +127,18 @@
         "shared/assets/seed-textures/moss_fuzz.png"
       ],
       "verdict": "cut",
-      "keep": "apps/terrarium/Assets/Art/Textures/moss_fuzz.png",
+      "keep": "shared/assets/seed-textures/moss_fuzz.png",
       "remove": [
-        "shared/assets/seed-textures/moss_fuzz.png"
+        "apps/terrarium/Assets/Art/Textures/moss_fuzz.png",
+        "apps/terrarium/Assets/Art/Textures/moss_fuzz.png.meta"
       ],
-      "reason": "The Assets copy is the one Unity binds: JarSetup.cs lists it in its texture table and throws if it is missing (retired, not bound). Nothing reads the seed copy by path; tools/blender/paint_textures.py writes to a tex/ directory and only apps/terrarium/Assets/Art/Textures/PROVENANCE.md names the seed path in prose.",
+      "reason": "The seed arrived with the contest seeds at a51a96e (decision 0001:11 keeps them as seeds in shared/assets/seed-textures/); the apps/terrarium copy was made from it at 6abf568 and PROVENANCE.md says \"via shared/assets/seed-textures/\". The seed is the source, and a source is never removed for matching its import. The app copy's guid appears in no .mat, .prefab, .unity or .asset file, and PROVENANCE.md marks it retired, not bound. The cut removes the app copy and its .meta, so it is an apps/ change that waits for a Unity session (decision 0004): JarSetup.cs throws when a texture it lists is missing, so the table entry (and the alpha rule at line 74) and the PROVENANCE row go in the same change.",
       "risk": "visible-change",
-      "repoints": []
+      "repoints": [
+        "apps/terrarium/Assets/Editor/JarSetup.cs:36",
+        "apps/terrarium/Assets/Editor/JarSetup.cs:74",
+        "apps/terrarium/Assets/Art/Textures/PROVENANCE.md:26"
+      ]
     },
     {
       "blob": "fd1e567b730fe72c1c01a949ca5a608b7b8475ce",
@@ -187,22 +192,6 @@
       "repoints": []
     },
     {
-      "blob": "c045d883c5a7431d175cb7ec6c4154947a537161",
-      "bytes": 383496,
-      "paths": [
-        "shared/assets/art-reference/A2-05-field-notebook-1.png",
-        "shared/assets/room-plates/A2-05-field-notebook-1.png"
-      ],
-      "verdict": "cut",
-      "keep": "shared/assets/art-reference/A2-05-field-notebook-1.png",
-      "remove": [
-        "shared/assets/room-plates/A2-05-field-notebook-1.png"
-      ],
-      "reason": "Dated records name the art-reference path and are evidence, never repointed: tools/fidelity/judge/calibration-2026-10-04.json and its .calls.jsonl, plus tools/fidelity/catalog.json and the ladders. Every script that reads this frame inside the repo spells shared/assets/art-reference/A2-05-field-notebook-1.png. No file spells the room-plates path in full; the plate builders (tools/blender/make_plates.py, paint_textures.py, tools/capture/compose.py) read it by bare name from a plates directory outside the repo.",
-      "risk": "visible-change",
-      "repoints": []
-    },
-    {
       "blob": "9cbd52aabbcfb95a013a35b8af01842a17f6d50e",
       "bytes": 359045,
       "paths": [
@@ -210,29 +199,17 @@
         "shared/assets/seed-textures/moss_tile.png"
       ],
       "verdict": "cut",
-      "keep": "apps/terrarium/Assets/Art/Textures/moss_tile.png",
+      "keep": "shared/assets/seed-textures/moss_tile.png",
       "remove": [
-        "shared/assets/seed-textures/moss_tile.png"
+        "apps/terrarium/Assets/Art/Textures/moss_tile.png",
+        "apps/terrarium/Assets/Art/Textures/moss_tile.png.meta"
       ],
-      "reason": "The Assets copy is the one Unity binds: JarSetup.cs lists it in its texture table and throws if it is missing (retired, not bound). Nothing reads the seed copy by path; tools/blender/paint_textures.py writes to a tex/ directory and only apps/terrarium/Assets/Art/Textures/PROVENANCE.md names the seed path in prose.",
+      "reason": "The seed arrived with the contest seeds at a51a96e (decision 0001:11 keeps them as seeds in shared/assets/seed-textures/); the apps/terrarium copy was made from it at 6abf568 and PROVENANCE.md says \"via shared/assets/seed-textures/\". The seed is the source, and a source is never removed for matching its import. The app copy's guid appears in no .mat, .prefab, .unity or .asset file, and PROVENANCE.md marks it retired, not bound. The cut removes the app copy and its .meta, so it is an apps/ change that waits for a Unity session (decision 0004): JarSetup.cs throws when a texture it lists is missing, so the table entry and the PROVENANCE row go in the same change.",
       "risk": "visible-change",
-      "repoints": []
-    },
-    {
-      "blob": "465a2375c957a48b0340987c115f1e7b48931705",
-      "bytes": 343048,
-      "paths": [
-        "shared/assets/art-reference/A2-05-field-notebook-2.png",
-        "shared/assets/room-plates/A2-05-field-notebook-2.png"
-      ],
-      "verdict": "cut",
-      "keep": "shared/assets/art-reference/A2-05-field-notebook-2.png",
-      "remove": [
-        "shared/assets/room-plates/A2-05-field-notebook-2.png"
-      ],
-      "reason": "Dated records name the art-reference path and are evidence, never repointed: tools/fidelity/judge/calibration-2026-10-04.json and its .calls.jsonl, plus tools/fidelity/catalog.json and the ladders. Every script that reads this frame inside the repo spells shared/assets/art-reference/A2-05-field-notebook-2.png. No file spells the room-plates path in full; the plate builders (tools/blender/make_plates.py, paint_textures.py, tools/capture/compose.py) read it by bare name from a plates directory outside the repo.",
-      "risk": "visible-change",
-      "repoints": []
+      "repoints": [
+        "apps/terrarium/Assets/Editor/JarSetup.cs:36",
+        "apps/terrarium/Assets/Art/Textures/PROVENANCE.md:29"
+      ]
     },
     {
       "blob": "8226c0d63f0603c5e8394ae3e1a52d4d7f07e07c",
@@ -242,13 +219,17 @@
         "shared/assets/seed-textures/moss_band.png"
       ],
       "verdict": "cut",
-      "keep": "apps/terrarium/Assets/Art/Textures/moss_band.png",
+      "keep": "shared/assets/seed-textures/moss_band.png",
       "remove": [
-        "shared/assets/seed-textures/moss_band.png"
+        "apps/terrarium/Assets/Art/Textures/moss_band.png",
+        "apps/terrarium/Assets/Art/Textures/moss_band.png.meta"
       ],
-      "reason": "The Assets copy is the one Unity binds: JarSetup.cs lists it in its texture table and throws if it is missing (retired, not bound). Nothing reads the seed copy by path; tools/blender/paint_textures.py writes to a tex/ directory and only apps/terrarium/Assets/Art/Textures/PROVENANCE.md names the seed path in prose.",
+      "reason": "The seed arrived with the contest seeds at a51a96e (decision 0001:11 keeps them as seeds in shared/assets/seed-textures/); the apps/terrarium copy was made from it at 6abf568 and PROVENANCE.md says \"via shared/assets/seed-textures/\". The seed is the source, and a source is never removed for matching its import. The app copy's guid appears in no .mat, .prefab, .unity or .asset file, and PROVENANCE.md marks it retired, not bound. The cut removes the app copy and its .meta, so it is an apps/ change that waits for a Unity session (decision 0004): JarSetup.cs throws when a texture it lists is missing, so the table entry and the PROVENANCE row go in the same change.",
       "risk": "visible-change",
-      "repoints": []
+      "repoints": [
+        "apps/terrarium/Assets/Editor/JarSetup.cs:36",
+        "apps/terrarium/Assets/Art/Textures/PROVENANCE.md:24"
+      ]
     },
     {
       "blob": "3fff9c23b0b318c2d2b4ea50cb65fc3c741bdb47",
@@ -258,47 +239,17 @@
         "shared/assets/seed-textures/moss_top.png"
       ],
       "verdict": "cut",
-      "keep": "apps/terrarium/Assets/Art/Textures/moss_top.png",
+      "keep": "shared/assets/seed-textures/moss_top.png",
       "remove": [
-        "shared/assets/seed-textures/moss_top.png"
+        "apps/terrarium/Assets/Art/Textures/moss_top.png",
+        "apps/terrarium/Assets/Art/Textures/moss_top.png.meta"
       ],
-      "reason": "The Assets copy is the one Unity binds: JarSetup.cs lists it in its texture table and throws if it is missing (not bound). Nothing reads the seed copy by path; tools/blender/paint_textures.py writes to a tex/ directory and only apps/terrarium/Assets/Art/Textures/PROVENANCE.md names the seed path in prose.",
+      "reason": "The seed arrived with the contest seeds at a51a96e (decision 0001:11 keeps them as seeds in shared/assets/seed-textures/); the apps/terrarium copy was made from it at 6abf568 and PROVENANCE.md says \"via shared/assets/seed-textures/\". The seed is the source, and a source is never removed for matching its import. The app copy's guid appears in no .mat, .prefab, .unity or .asset file, and PROVENANCE.md marks it not bound. The cut removes the app copy and its .meta, so it is an apps/ change that waits for a Unity session (decision 0004): JarSetup.cs throws when a texture it lists is missing, so the table entry and the PROVENANCE row go in the same change.",
       "risk": "visible-change",
       "repoints": [
+        "apps/terrarium/Assets/Editor/JarSetup.cs:36",
         "apps/terrarium/Assets/Art/Textures/PROVENANCE.md:30"
       ]
-    },
-    {
-      "blob": "ee34051fb108c26cc16229eb44547fee3226c8f8",
-      "bytes": 237031,
-      "paths": [
-        "shared/assets/art-reference/A1-03-night-moss-2.png",
-        "shared/assets/room-plates/A1-03-night-moss-2.png"
-      ],
-      "verdict": "cut",
-      "keep": "shared/assets/art-reference/A1-03-night-moss-2.png",
-      "remove": [
-        "shared/assets/room-plates/A1-03-night-moss-2.png"
-      ],
-      "reason": "Dated records name the art-reference path and are evidence, never repointed: tools/fidelity/judge/calibration-2026-10-04.json and its .calls.jsonl, plus tools/fidelity/catalog.json and the ladders. Every script that reads this frame inside the repo spells shared/assets/art-reference/A1-03-night-moss-2.png. No file spells the room-plates path in full; the plate builders (tools/blender/make_plates.py, paint_textures.py, tools/capture/compose.py) read it by bare name from a plates directory outside the repo.",
-      "risk": "visible-change",
-      "repoints": []
-    },
-    {
-      "blob": "8ec9dddc850fed23fcc693a4b02e19a176c7bda9",
-      "bytes": 229888,
-      "paths": [
-        "shared/assets/art-reference/A1-03-night-moss-1.png",
-        "shared/assets/room-plates/A1-03-night-moss-1.png"
-      ],
-      "verdict": "cut",
-      "keep": "shared/assets/art-reference/A1-03-night-moss-1.png",
-      "remove": [
-        "shared/assets/room-plates/A1-03-night-moss-1.png"
-      ],
-      "reason": "Dated records name the art-reference path and are evidence, never repointed: tools/fidelity/judge/calibration-2026-10-04.json and its .calls.jsonl, plus tools/fidelity/catalog.json and the ladders. Every script that reads this frame inside the repo spells shared/assets/art-reference/A1-03-night-moss-1.png. No file spells the room-plates path in full; the plate builders (tools/blender/make_plates.py, paint_textures.py, tools/capture/compose.py) read it by bare name from a plates directory outside the repo.",
-      "risk": "visible-change",
-      "repoints": []
     },
     {
       "blob": "fb45ccdbd344ab7f9f4ae98792521405e48cda3e",
@@ -517,16 +468,15 @@
         "apps/terrarium/Assets/Art/Textures/halo.png",
         "shared/assets/seed-textures/halo.png"
       ],
-      "verdict": "cut",
-      "keep": "apps/terrarium/Assets/Art/Textures/halo.png",
-      "remove": [
+      "verdict": "both-stay",
+      "keep": [
+        "apps/terrarium/Assets/Art/Textures/halo.png",
         "shared/assets/seed-textures/halo.png"
       ],
-      "reason": "The Assets copy is the one Unity binds: JarSetup.cs lists it in its texture table and throws if it is missing; Jar_Halo.mat, Jar_CoilHalo.mat and Jar_Spill.mat bind it by guid. Nothing reads the seed copy by path; tools/blender/paint_textures.py writes to a tex/ directory and only apps/terrarium/Assets/Art/Textures/PROVENANCE.md names the seed path in prose.",
+      "remove": [],
+      "reason": "Source pair. The seed arrived with the contest seeds at a51a96e (decision 0001:11 keeps them as seeds in shared/assets/seed-textures/); the apps/terrarium copy was made from it at 6abf568 and PROVENANCE.md says \"via shared/assets/seed-textures/\". The seed is the source, and a source is never removed for matching its import. Jar_Halo.mat, Jar_CoilHalo.mat and Jar_Spill.mat bind the app copy by guid, so it stays too; JarSetup.cs also lists it in its texture table.",
       "risk": "visible-change",
-      "repoints": [
-        "apps/terrarium/Assets/Art/Textures/PROVENANCE.md:22"
-      ]
+      "repoints": []
     },
     {
       "blob": "33c86f70224a590993469bae0ad8c2d1a848ca47",
@@ -535,16 +485,15 @@
         "apps/terrarium/Assets/Art/Textures/spore.png",
         "shared/assets/seed-textures/spore.png"
       ],
-      "verdict": "cut",
-      "keep": "apps/terrarium/Assets/Art/Textures/spore.png",
-      "remove": [
+      "verdict": "both-stay",
+      "keep": [
+        "apps/terrarium/Assets/Art/Textures/spore.png",
         "shared/assets/seed-textures/spore.png"
       ],
-      "reason": "The Assets copy is the one Unity binds: JarSetup.cs lists it in its texture table and throws if it is missing; Jar_Spore.mat binds it by guid. Nothing reads the seed copy by path; tools/blender/paint_textures.py writes to a tex/ directory and only apps/terrarium/Assets/Art/Textures/PROVENANCE.md names the seed path in prose.",
+      "remove": [],
+      "reason": "Source pair. The seed arrived with the contest seeds at a51a96e (decision 0001:11 keeps them as seeds in shared/assets/seed-textures/); the apps/terrarium copy was made from it at 6abf568 and PROVENANCE.md says \"via shared/assets/seed-textures/\". The seed is the source, and a source is never removed for matching its import. Jar_Spore.mat bind the app copy by guid, so it stays too; JarSetup.cs also lists it in its texture table.",
       "risk": "visible-change",
-      "repoints": [
-        "apps/terrarium/Assets/Art/Textures/PROVENANCE.md:36"
-      ]
+      "repoints": []
     }
   ]
 }
