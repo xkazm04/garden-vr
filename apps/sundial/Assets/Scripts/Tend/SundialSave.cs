@@ -28,7 +28,7 @@ namespace GardenVR.Sundial
     /// </summary>
     public sealed class SundialSave
     {
-        public int SchemaVersion = 1;
+        public int SchemaVersion = SundialService.SchemaVersion;
         public List<HabitDef> Habits = new List<HabitDef>();
         public List<TendEvent> Tends = new List<TendEvent>();
         public SundialSettings Settings = new SundialSettings();
@@ -55,21 +55,11 @@ namespace GardenVR.Sundial
             "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude", "Focus"
         };
 
-        static readonly string[] HabitKnown =
-        {
-            "Id", "PresetKey", "Group", "Species", "Kind", "Slot", "Row", "CreatedDay", "ArchivedDay"
-        };
-
-        static readonly string[] TendKnown =
-        {
-            "Id", "HabitId", "Tz", "Day", "AtUtcMs", "Source", "Late", "UndoneAtUtcMs"
-        };
-
         public static SundialSave Read(JsonObject obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             var save = new SundialSave();
-            save.SchemaVersion = obj.Has("SchemaVersion") ? obj.Get("SchemaVersion").AsInt() : 1;
+            save.SchemaVersion = obj.Has("SchemaVersion") ? obj.Get("SchemaVersion").AsInt() : SundialService.SchemaVersion;
             bool gratitudeArray = obj.Has("Gratitude") && !obj.Get("Gratitude").IsNull
                 && obj.Get("Gratitude").Kind == JsonKind.Array;
             save.Extra = obj.Passthrough(gratitudeArray ? RootKnownWithGratitude : RootKnown);
@@ -84,7 +74,7 @@ namespace GardenVR.Sundial
                 JsonArray habits = obj.Get("Habits").AsArray();
                 for (int i = 0; i < habits.Count; i++)
                 {
-                    HabitDef habit = ReadHabit(habits[i].AsObject(), save.HabitExtra);
+                    HabitDef habit = ReadHabit(habits[i].AsObject(), i, save.HabitExtra);
                     save.Habits.Add(habit);
                 }
             }
@@ -95,7 +85,7 @@ namespace GardenVR.Sundial
                 JsonArray tends = obj.Get("Tends").AsArray();
                 for (int i = 0; i < tends.Count; i++)
                 {
-                    TendEvent tend = ReadTend(tends[i].AsObject(), save.TendExtra);
+                    TendEvent tend = ReadTend(tends[i].AsObject(), i, save.TendExtra);
                     save.Tends.Add(tend);
                 }
             }
@@ -108,19 +98,19 @@ namespace GardenVR.Sundial
         {
             if (save == null) throw new ArgumentNullException(nameof(save));
             var obj = new JsonObject();
-            obj.Set("SchemaVersion", JsonValue.Number(save.SchemaVersion < 1 ? 1 : save.SchemaVersion));
+            obj.Set("SchemaVersion", JsonValue.Number(save.SchemaVersion < 1 ? SundialService.SchemaVersion : save.SchemaVersion));
             var habits = new JsonArray();
             if (save.Habits != null)
             {
                 for (int i = 0; i < save.Habits.Count; i++)
-                    habits.Add(WriteHabit(save.Habits[i], save.HabitExtra));
+                    habits.Add(WriteHabit(save.Habits[i], i, save.HabitExtra));
             }
             obj.Set("Habits", habits);
             var tends = new JsonArray();
             if (save.Tends != null)
             {
                 for (int i = 0; i < save.Tends.Count; i++)
-                    tends.Add(WriteTend(save.Tends[i], save.TendExtra));
+                    tends.Add(WriteTend(save.Tends[i], i, save.TendExtra));
             }
             obj.Set("Tends", tends);
             obj.Set("Settings", WriteSettings(save.Settings ?? new SundialSettings()));
@@ -164,78 +154,31 @@ namespace GardenVR.Sundial
             return obj;
         }
 
-        static HabitDef ReadHabit(JsonObject obj, Dictionary<string, Dictionary<string, JsonValue>> extras)
+        static readonly LedgerJson.Choices RowChoices = new LedgerJson.Choices
         {
-            var habit = new HabitDef();
-            habit.Id = StringMember(obj, "Id");
-            habit.PresetKey = StringMember(obj, "PresetKey");
-            habit.Group = StringMember(obj, "Group");
-            habit.Species = StringMember(obj, "Species");
-            habit.Kind = EnumMember(obj, "Kind", HabitKind.LifeCheckIn);
-            habit.Slot = obj.Has("Slot") ? obj.Get("Slot").AsInt() : 0;
-            habit.Row = obj.Has("Row") ? obj.Get("Row").AsInt() : 0;
-            habit.CreatedDay = obj.Has("CreatedDay") ? obj.Get("CreatedDay").AsInt() : 0;
-            if (obj.Has("ArchivedDay") && !obj.Get("ArchivedDay").IsNull)
-                habit.ArchivedDay = obj.Get("ArchivedDay").AsInt();
-            Dictionary<string, JsonValue> extra = obj.Passthrough(HabitKnown);
-            if (extra.Count > 0 && !string.IsNullOrEmpty(habit.Id) && extras != null)
-                extras[habit.Id] = extra;
-            return habit;
+            NullGroupAsEmpty = true,
+            SourceFallback = TendSource.Pinch,
+            RowKnown = true
+        };
+
+        static HabitDef ReadHabit(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
+        {
+            return LedgerJson.ReadHabit(obj, index, extras, RowChoices);
         }
 
-        static JsonObject WriteHabit(HabitDef habit, Dictionary<string, Dictionary<string, JsonValue>> extras)
+        static JsonObject WriteHabit(HabitDef habit, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            if (habit == null) habit = new HabitDef();
-            var obj = new JsonObject();
-            obj.Set("Id", JsonValue.String(habit.Id ?? ""));
-            obj.Set("PresetKey", JsonValue.String(habit.PresetKey ?? ""));
-            obj.Set("Group", JsonValue.String(habit.Group ?? ""));
-            obj.Set("Species", habit.Species == null ? JsonValue.Null() : JsonValue.String(habit.Species));
-            obj.Set("Kind", JsonValue.String(habit.Kind.ToString()));
-            obj.Set("Slot", JsonValue.Number(habit.Slot));
-            obj.Set("Row", JsonValue.Number(habit.Row));
-            obj.Set("CreatedDay", JsonValue.Number(habit.CreatedDay));
-            obj.Set("ArchivedDay", habit.ArchivedDay.HasValue ? JsonValue.Number(habit.ArchivedDay.Value) : JsonValue.Null());
-            Dictionary<string, JsonValue> extra;
-            if (extras != null && habit.Id != null && extras.TryGetValue(habit.Id, out extra))
-                obj.Restore(extra);
-            return obj;
+            return LedgerJson.WriteHabit(habit, index, extras, RowChoices);
         }
 
-        static TendEvent ReadTend(JsonObject obj, Dictionary<string, Dictionary<string, JsonValue>> extras)
+        static TendEvent ReadTend(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            var tend = new TendEvent();
-            tend.Id = StringMember(obj, "Id");
-            tend.HabitId = StringMember(obj, "HabitId");
-            tend.Tz = StringMember(obj, "Tz");
-            tend.Day = obj.Has("Day") ? obj.Get("Day").AsInt() : 0;
-            tend.AtUtcMs = obj.Has("AtUtcMs") ? obj.Get("AtUtcMs").AsLong() : 0L;
-            tend.Source = EnumMember(obj, "Source", TendSource.Pinch);
-            tend.Late = obj.Has("Late") && obj.Get("Late").AsBool();
-            if (obj.Has("UndoneAtUtcMs") && !obj.Get("UndoneAtUtcMs").IsNull)
-                tend.UndoneAtUtcMs = obj.Get("UndoneAtUtcMs").AsLong();
-            Dictionary<string, JsonValue> extra = obj.Passthrough(TendKnown);
-            if (extra.Count > 0 && !string.IsNullOrEmpty(tend.Id) && extras != null)
-                extras[tend.Id] = extra;
-            return tend;
+            return LedgerJson.ReadTend(obj, index, extras, RowChoices);
         }
 
-        static JsonObject WriteTend(TendEvent tend, Dictionary<string, Dictionary<string, JsonValue>> extras)
+        static JsonObject WriteTend(TendEvent tend, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            if (tend == null) tend = new TendEvent();
-            var obj = new JsonObject();
-            obj.Set("Id", JsonValue.String(tend.Id ?? ""));
-            obj.Set("HabitId", JsonValue.String(tend.HabitId ?? ""));
-            obj.Set("Tz", JsonValue.String(tend.Tz ?? ""));
-            obj.Set("Day", JsonValue.Number(tend.Day));
-            obj.Set("AtUtcMs", JsonValue.Number(tend.AtUtcMs));
-            obj.Set("Source", JsonValue.String(tend.Source.ToString()));
-            obj.Set("Late", JsonValue.Bool(tend.Late));
-            obj.Set("UndoneAtUtcMs", tend.UndoneAtUtcMs.HasValue ? JsonValue.Number(tend.UndoneAtUtcMs.Value) : JsonValue.Null());
-            Dictionary<string, JsonValue> extra;
-            if (extras != null && tend.Id != null && extras.TryGetValue(tend.Id, out extra))
-                obj.Restore(extra);
-            return obj;
+            return LedgerJson.WriteTend(tend, index, extras);
         }
 
         static List<GratitudeMark> ReadGratitude(JsonArray rows)
@@ -283,11 +226,11 @@ namespace GardenVR.Sundial
         {
             var snap = new FocusSnapshot();
             if (obj == null) return snap;
-            snap.Phase = StringMember(obj, "Phase");
+            snap.Phase = LedgerJson.StringMember(obj, "Phase");
             if (obj.Has("StartedUtcMs") && !obj.Get("StartedUtcMs").IsNull) snap.StartedUtcMs = obj.Get("StartedUtcMs").AsLong();
             if (obj.Has("PausedMs") && !obj.Get("PausedMs").IsNull) snap.PausedMs = obj.Get("PausedMs").AsLong();
             if (obj.Has("PauseUtcMs") && !obj.Get("PauseUtcMs").IsNull) snap.PauseUtcMs = obj.Get("PauseUtcMs").AsLong();
-            snap.Arc = StringMember(obj, "Arc");
+            snap.Arc = LedgerJson.StringMember(obj, "Arc");
             if (obj.Has("StartGnomonDeg") && !obj.Get("StartGnomonDeg").IsNull) snap.StartGnomonDeg = (float)obj.Get("StartGnomonDeg").AsDouble();
             snap.EndedEarly = obj.Has("EndedEarly") && !obj.Get("EndedEarly").IsNull && obj.Get("EndedEarly").AsBool();
             snap.TendPending = obj.Has("TendPending") && !obj.Get("TendPending").IsNull && obj.Get("TendPending").AsBool();
@@ -308,20 +251,6 @@ namespace GardenVR.Sundial
             obj.Set("TendPending", JsonValue.Bool(snap.TendPending));
             obj.Set("ElapsedSeconds", JsonValue.Number(snap.ElapsedSeconds));
             return obj;
-        }
-
-        static string StringMember(JsonObject obj, string key)
-        {
-            if (!obj.Has(key) || obj.Get(key).IsNull) return null;
-            return obj.Get(key).AsString();
-        }
-
-        static T EnumMember<T>(JsonObject obj, string key, T fallback) where T : struct
-        {
-            if (!obj.Has(key) || obj.Get(key).IsNull) return fallback;
-            T value;
-            if (Enum.TryParse(obj.Get(key).AsString(), false, out value)) return value;
-            return fallback;
         }
     }
 }

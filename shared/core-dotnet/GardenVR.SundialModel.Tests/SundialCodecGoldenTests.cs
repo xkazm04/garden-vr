@@ -7,7 +7,7 @@ using Xunit;
 public class SundialCodecGoldenTests
 {
     // Habit a: Id, Row 1, unknown member. Habit b: no Id, null Group. Tend a: Id, unknown member. Tend b: no Id, a Source that
-    // cannot be read. An id-less row carries no unknown member here: today it would be lost, and a test below pins that.
+    // cannot be read. An id-less row carries no unknown member here; a test below covers an id-less row that has one (kept since LedgerJson).
     const string Input =
         "{\"SchemaVersion\":1,\"Habits\":["
         + "{\"Id\":\"water\",\"PresetKey\":\"water\",\"Group\":\"morning\",\"Species\":\"fern\",\"Kind\":\"LifeCheckIn\",\"Slot\":1,\"Row\":1,\"CreatedDay\":9780,\"Future\":7},"
@@ -31,12 +31,12 @@ public class SundialCodecGoldenTests
     }
 
     [Fact]
-    public void An_unknown_member_of_a_row_with_no_id_is_lost_today()
+    public void An_unknown_member_of_a_habit_row_and_a_tend_row_with_no_id_is_kept()
     {
         string text = "{\"Habits\":[{\"PresetKey\":\"walk\",\"Later\":\"x\"}],\"Tends\":[{\"HabitId\":\"water\",\"Extra2\":\"y\"}]}";
         string written = Json.Write(SundialCodec.Write(SundialCodec.Read(Json.ParseObject(text))));
-        Assert.DoesNotContain("Later", written);
-        Assert.DoesNotContain("Extra2", written);
+        Assert.Contains("\"Later\":\"x\"", written);
+        Assert.Contains("\"Extra2\":\"y\"", written);
     }
 
     [Fact]
