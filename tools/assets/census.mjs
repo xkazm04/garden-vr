@@ -9,6 +9,10 @@
 //   node tools/assets/census.mjs --only provenance [--rev <commit>]
 //                                                 write only A4-PROVENANCE.md: PLAN A4, one status per texture png
 //                                                 (sidecar, row, missing); skips the full census
+//   node tools/assets/census.mjs --only texmem [--rev <commit>]
+//                                                 write only docs/budgets/TEXTURE-MEMORY.md and texture-memory.json: GPU
+//                                                 bytes of every Assets texture at ASTC 6x6 (texmem.mjs) against the ceiling
+//                                                 in docs/budgets/<app>.json at the same commit, pass or fail per app
 //
 // Reads only blobs tracked at the commit (git ls-tree, git cat-file), never the working tree, and changes no file
 // but its own two outputs. Those two outputs are left out of the totals, so committing a new baseline does not move
@@ -29,6 +33,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { provenanceReading, provenanceMarkdown } from './a4.mjs';
 import { totals as provenanceTotals } from './provenance.mjs';
+import { texmemReading, texmemMarkdown, texmemJson } from './budgets.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '..', '..');
@@ -640,6 +645,20 @@ if (a.only === 'provenance') {
   process.exit(0);
 }
 const result = census(typeof a.rev === 'string' ? a.rev : 'HEAD');
+if (a.only === 'texmem') {
+  const reading = texmemReading(result, git, readBlobs);
+  const dir = path.resolve(root, typeof a.out === 'string' ? a.out : 'docs/budgets');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'TEXTURE-MEMORY.md'), texmemMarkdown(reading));
+  fs.writeFileSync(path.join(dir, 'texture-memory.json'), texmemJson(reading));
+  console.log(`commit ${reading.sha}`);
+  for (const x of reading.apps) {
+    console.log(`${x.app}: counted ${x.shipped.count} textures ${x.shipped.bytes} bytes; no-reference-found ${x.noReferenceFound.count} textures ${x.noReferenceFound.bytes} bytes; `
+      + `ceiling ${x.ceiling && x.ceiling.hardBytes != null ? `${x.ceiling.hardBytes} bytes` : 'none'}: ${x.verdict}`);
+  }
+  console.log(`wrote ${path.relative(root, dir).replace(/\\/g, '/')}/TEXTURE-MEMORY.md and texture-memory.json`);
+  process.exit(0);
+}
 const outDir = path.resolve(root, typeof a.out === 'string' ? a.out : 'docs/assets');
 fs.mkdirSync(outDir, { recursive: true });
 if (a.only === 'duplicates') {

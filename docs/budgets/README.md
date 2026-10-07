@@ -50,3 +50,10 @@ reading, so it is not fitted to that reading. H2 replaces the four quarters with
 
 The PSS limit is the same on both headsets, so the texture ceiling is the same on both.
 
+
+## Readings
+
+`node tools/assets/census.mjs --only texmem [--rev <commit>]` writes `TEXTURE-MEMORY.md` and `texture-memory.json`
+here. It compares each app's imported texture bytes (ASTC 6x6, mip chain, the rules in `tools/assets/texmem.mjs`) with
+`textureMemory.hardBytes` in that app's file at the same commit, and prints pass or fail. It names the commit and the
+tree ids it read. Two runs at one commit are byte-identical.

@@ -1,0 +1,1080 @@
+{
+  "schema": "garden-vr/texture-memory/1",
+  "commit": "5cea8f4ee1de6c016f2105d810a40e567fd04884",
+  "subject": "budgets: milestone 4 budgets for Terrarium and Sundial on Quest 3 and Quest 3S",
+  "budgetsTree": "1e954c20a4bd2b25aa4dad95d9277b98c458cd2d",
+  "apps": [
+    {
+      "app": "sundial",
+      "assetsTree": "581cdb4b3f13a14266d18071eca6aef6dd15db82",
+      "textures": 168,
+      "shipped": {
+        "count": 160,
+        "bytes": 22808032
+      },
+      "noReferenceFound": {
+        "count": 8,
+        "bytes": 2004720
+      },
+      "unread": [],
+      "fromPackages": [],
+      "ceiling": {
+        "path": "docs/budgets/sundial.json",
+        "hardBytes": 1543503872,
+        "hardMiB": 1472,
+        "softMiB": 1177.6
+      },
+      "verdict": "pass",
+      "soft": "under soft cap",
+      "largest": [
+        {
+          "path": "apps/sundial/Assets/Art/Plates/plate-dial-seated.png",
+          "bytes": 1250704,
+          "imported": [
+            2048,
+            1024
+          ]
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_control.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_face.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_face_s1.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/gnomon_shadow.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        }
+      ],
+      "otherFormat": [
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_control.png",
+          "format": "ASTC_4x4",
+          "bytes": 626288,
+          "ownFormatBytes": 1398128,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_face_s1.png",
+          "format": "ASTC_4x4",
+          "bytes": 626288,
+          "ownFormatBytes": 1398128,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_paper_h.png",
+          "format": "ASTC_4x4",
+          "bytes": 158432,
+          "ownFormatBytes": 349552,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/room_cookie.png",
+          "format": "ASTC_4x4",
+          "bytes": 29584,
+          "ownFormatBytes": 65536,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Resources/Layout/dial_control_layout.png",
+          "format": "ASTC_4x4",
+          "bytes": 626288,
+          "ownFormatBytes": 1398128,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Resources/Layout/dial_face_layout_s1.png",
+          "format": "ASTC_4x4",
+          "bytes": 626288,
+          "ownFormatBytes": 1398128,
+          "state": "referenced"
+        }
+      ],
+      "overCap": [
+        {
+          "path": "apps/sundial/Assets/Art/Plates/plate-dial-seated.png",
+          "imported": [
+            2048,
+            1024
+          ],
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Plates/plate-dial.png",
+          "imported": [
+            2048,
+            1024
+          ],
+          "state": "no-reference-found"
+        }
+      ],
+      "uncompressed": [
+        {
+          "path": "apps/sundial/Assets/Art/Plates/plate-dial-seated.png",
+          "bytes": 1250704,
+          "ownFormatBytes": 11184812,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Plates/plate-dial.png",
+          "bytes": 1250704,
+          "ownFormatBytes": 11184812,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/bloom_dusk_bud.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/bloom_dusk_open.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/bloom_midday_bud.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/bloom_midday_open.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/bloom_sunrise_bud.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/bloom_sunrise_open.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_face.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/dial_paper.png",
+          "bytes": 10512,
+          "ownFormatBytes": 87380,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/gnomon.png",
+          "bytes": 158448,
+          "ownFormatBytes": 1398108,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/gnomon_shadow.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_dusk_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_dusk_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_dusk_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_dusk_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_dusk_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_midday_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_midday_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_midday_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_midday_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_midday_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_bell_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_bell_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_bell_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_bell_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_bell_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_clover_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_clover_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_clover_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_clover_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_clover_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_dusk_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_dusk_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_dusk_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_dusk_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_dusk_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_midday_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_midday_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_midday_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_midday_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_midday_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_page_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_page_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_page_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_page_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_page_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_reed_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_reed_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_reed_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_reed_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_reed_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sprig_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sprig_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sprig_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sprig_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sprig_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_vine_full.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_vine_leafy.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_vine_seed.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_vine_sprout.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/plant_vine_young.png",
+          "bytes": 79696,
+          "ownFormatBytes": 699052,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/room_shadow_wash.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/soil.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/soil_bed.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Art/Textures/tiles_atlas.png",
+          "bytes": 158448,
+          "ownFormatBytes": 1398108,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/sundial/Assets/Resources/Layout/dial_face_layout.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        }
+      ]
+    },
+    {
+      "app": "terrarium",
+      "assetsTree": "923758977232ffee9ef8ab114bb28ca2e1a63342",
+      "textures": 45,
+      "shipped": {
+        "count": 32,
+        "bytes": 12136864
+      },
+      "noReferenceFound": {
+        "count": 13,
+        "bytes": 5804304
+      },
+      "unread": [],
+      "fromPackages": [],
+      "ceiling": {
+        "path": "docs/budgets/terrarium.json",
+        "hardBytes": 1543503872,
+        "hardMiB": 1472,
+        "softMiB": 1177.6
+      },
+      "verdict": "pass",
+      "soft": "under soft cap",
+      "largest": [
+        {
+          "path": "apps/terrarium/Assets/Art/Plates/plate-jar-seated.png",
+          "bytes": 1250704,
+          "imported": [
+            2048,
+            1024
+          ]
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/cork_side.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/cork_top.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/fern_albedo.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/fern_emission.png",
+          "bytes": 626288,
+          "imported": [
+            1024,
+            1024
+          ]
+        }
+      ],
+      "otherFormat": [],
+      "overCap": [
+        {
+          "path": "apps/terrarium/Assets/Art/Plates/plate-jar-seated.png",
+          "imported": [
+            2048,
+            1024
+          ],
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Plates/plate-jar.png",
+          "imported": [
+            2048,
+            1024
+          ],
+          "state": "no-reference-found"
+        }
+      ],
+      "uncompressed": [
+        {
+          "path": "apps/terrarium/Assets/Art/Plates/plate-jar-seated.png",
+          "bytes": 1250704,
+          "ownFormatBytes": 11184812,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Plates/plate-jar.png",
+          "bytes": 1250704,
+          "ownFormatBytes": 11184812,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/condensation.png",
+          "bytes": 417360,
+          "ownFormatBytes": 3727820,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/cork_side.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/cork_top.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/droplet_normal.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/fern_albedo.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/fern_emission.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/fiddle_hairs.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/halo.png",
+          "bytes": 40096,
+          "ownFormatBytes": 349524,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/mist.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss-repaint.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_band.png",
+          "bytes": 158448,
+          "ownFormatBytes": 1398108,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_card.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_fuzz.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_macro.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_macro_b.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_tile.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/moss_top.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "no-reference-found"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/petal.png",
+          "bytes": 314992,
+          "ownFormatBytes": 2796204,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/ring.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s1_drops.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s1_studio.png",
+          "bytes": 45056,
+          "ownFormatBytes": 393216,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s2_refract_strip.png",
+          "bytes": 69120,
+          "ownFormatBytes": 614400,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s3_strand.png",
+          "bytes": 158432,
+          "ownFormatBytes": 1398100,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s3_strata.png",
+          "bytes": 158448,
+          "ownFormatBytes": 1398108,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s4_frond_albedo.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/s4_frond_thick.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/soil_band.png",
+          "bytes": 626288,
+          "ownFormatBytes": 5592404,
+          "state": "referenced"
+        },
+        {
+          "path": "apps/terrarium/Assets/Art/Textures/spore.png",
+          "bytes": 2768,
+          "ownFormatBytes": 21844,
+          "state": "referenced"
+        }
+      ]
+    }
+  ],
+  "records": [
+    {"path":"apps/sundial/Assets/Art/Plates/plate-dial-seated.png","app":"sundial","pkg":null,"state":"referenced","source":[1824,1024],"npot":[2048,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[2048,1024],"mipmaps":true,"levels":12,"bytes":1250704,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":11184812},
+    {"path":"apps/sundial/Assets/Art/Plates/plate-dial.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[1824,1024],"npot":[2048,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[2048,1024],"mipmaps":true,"levels":12,"bytes":1250704,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":11184812},
+    {"path":"apps/sundial/Assets/Art/Textures/bloom_dusk_bud.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/bloom_dusk_open.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/bloom_midday_bud.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/bloom_midday_open.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/bloom_sunrise_bud.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/bloom_sunrise_open.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/dial_control.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":"ASTC_4x4","androidFormat":"ASTC_4x4","ownFormatBytes":1398128},
+    {"path":"apps/sundial/Assets/Art/Textures/dial_face.png","app":"sundial","pkg":null,"state":"referenced","source":[2048,2048],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/sundial/Assets/Art/Textures/dial_face_s1.png","app":"sundial","pkg":null,"state":"referenced","source":[2048,2048],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":"ASTC_4x4","androidFormat":"ASTC_4x4","ownFormatBytes":1398128},
+    {"path":"apps/sundial/Assets/Art/Textures/dial_paper.png","app":"sundial","pkg":null,"state":"referenced","source":[128,128],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[128,128],"mipmaps":true,"levels":8,"bytes":10512,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":87380},
+    {"path":"apps/sundial/Assets/Art/Textures/dial_paper_h.png","app":"sundial","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":"ASTC_4x4","androidFormat":"ASTC_4x4","ownFormatBytes":349552},
+    {"path":"apps/sundial/Assets/Art/Textures/gnomon.png","app":"sundial","pkg":null,"state":"referenced","source":[256,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,1024],"mipmaps":true,"levels":11,"bytes":158448,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398108},
+    {"path":"apps/sundial/Assets/Art/Textures/gnomon_shadow.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_dusk_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_dusk_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_dusk_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_dusk_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_dusk_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_midday_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_midday_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_midday_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_midday_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_midday_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_sunrise_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_sunrise_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_sunrise_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_sunrise_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/halo_sunrise_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/packet-midday.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[377,377],"npot":[256,256],"maxTextureSize":2048,"maxFrom":"Default","imported":[256,256],"mipmaps":true,"levels":9,"bytes":40096,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Art/Textures/packet-morning.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[377,377],"npot":[256,256],"maxTextureSize":2048,"maxFrom":"Default","imported":[256,256],"mipmaps":true,"levels":9,"bytes":40096,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Art/Textures/packet-winddown.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[377,377],"npot":[256,256],"maxTextureSize":2048,"maxFrom":"Default","imported":[256,256],"mipmaps":true,"levels":9,"bytes":40096,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_bell_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_bell_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_bell_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_bell_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_bell_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_clover_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_clover_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_clover_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_clover_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_clover_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_dusk_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_dusk_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_dusk_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_dusk_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_dusk_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_midday_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_midday_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_midday_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_midday_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_midday_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_page_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_page_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_page_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_page_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_page_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_reed_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_reed_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_reed_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_reed_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_reed_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sprig_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sprig_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sprig_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sprig_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sprig_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sunrise_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sunrise_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sunrise_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sunrise_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_sunrise_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_vine_full.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_vine_leafy.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_vine_seed.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_vine_sprout.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/plant_vine_young.png","app":"sundial","pkg":null,"state":"referenced","source":[256,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,512],"mipmaps":true,"levels":10,"bytes":79696,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":699052},
+    {"path":"apps/sundial/Assets/Art/Textures/room_cookie.png","app":"sundial","pkg":null,"state":"referenced","source":[256,256],"npot":null,"maxTextureSize":256,"maxFrom":"Android override","imported":[256,256],"mipmaps":false,"levels":1,"bytes":29584,"androidOverrideFormat":"ASTC_4x4","androidFormat":"ASTC_4x4","ownFormatBytes":65536},
+    {"path":"apps/sundial/Assets/Art/Textures/room_shadow_wash.png","app":"sundial","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":512,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/sundial/Assets/Art/Textures/soil.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/sundial/Assets/Art/Textures/soil_bed.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/sundial/Assets/Art/Textures/sparkle_ring_1.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Art/Textures/sparkle_ring_2.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Art/Textures/sparkle_ring_3.png","app":"sundial","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Art/Textures/tiles_atlas.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,256],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[1024,256],"mipmaps":true,"levels":11,"bytes":158448,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398108},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_bell_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_bell_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_bell_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_bell_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_bell_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_clover_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_clover_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_clover_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_clover_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_clover_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_full__bloom_dusk_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_full__bloom_dusk_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy__bloom_dusk_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy__bloom_dusk_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_seed__bloom_dusk_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_seed__bloom_dusk_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout__bloom_dusk_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout__bloom_dusk_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_young__bloom_dusk_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_dusk_young__bloom_dusk_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_full__bloom_midday_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_full__bloom_midday_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_leafy__bloom_midday_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_leafy__bloom_midday_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_seed__bloom_midday_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_seed__bloom_midday_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_sprout__bloom_midday_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_sprout__bloom_midday_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_young__bloom_midday_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_midday_young__bloom_midday_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_page_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_page_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_page_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_page_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_page_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_reed_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_reed_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_reed_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_reed_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_reed_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sprig_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sprig_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sprig_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sprig_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sprig_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_full__bloom_sunrise_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_full__bloom_sunrise_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy__bloom_sunrise_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy__bloom_sunrise_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed__bloom_sunrise_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed__bloom_sunrise_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout__bloom_sunrise_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout__bloom_sunrise_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_young__bloom_sunrise_bud.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_sunrise_young__bloom_sunrise_open.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_vine_full.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_vine_leafy.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_vine_seed.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_vine_sprout.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Halo2/plant_vine_young.png","app":"sundial","pkg":null,"state":"resources","source":[640,449],"npot":null,"maxTextureSize":512,"maxFrom":"Android override","imported":[512,359],"mipmaps":true,"levels":10,"bytes":110448,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/Layout/dial_control_layout.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":"ASTC_4x4","androidFormat":"ASTC_4x4","ownFormatBytes":1398128},
+    {"path":"apps/sundial/Assets/Resources/Layout/dial_face_layout.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/sundial/Assets/Resources/Layout/dial_face_layout_s1.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":"ASTC_4x4","androidFormat":"ASTC_4x4","ownFormatBytes":1398128},
+    {"path":"apps/sundial/Assets/Resources/LeafPlant/evening-parts.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/LeafPlant/midday-parts.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/LeafPlant/morning-parts.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/sundial/Assets/Resources/SoilMound/soil_mound.png","app":"sundial","pkg":null,"state":"referenced","source":[1024,736],"npot":null,"maxTextureSize":1024,"maxFrom":"Android override","imported":[1024,736],"mipmaps":true,"levels":11,"bytes":450768,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Plates/plate-jar-seated.png","app":"terrarium","pkg":null,"state":"referenced","source":[1824,1024],"npot":[2048,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[2048,1024],"mipmaps":true,"levels":12,"bytes":1250704,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":11184812},
+    {"path":"apps/terrarium/Assets/Art/Plates/plate-jar.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[1824,1024],"npot":[2048,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[2048,1024],"mipmaps":true,"levels":12,"bytes":1250704,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":11184812},
+    {"path":"apps/terrarium/Assets/Art/Textures/condensation.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1536],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[683,1024],"mipmaps":true,"levels":11,"bytes":417360,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":3727820},
+    {"path":"apps/terrarium/Assets/Art/Textures/cork.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/cork_side.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/cork_top.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/droplet_normal.png","app":"terrarium","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/fern_a_albedo.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[605,1024],"npot":[512,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[512,1024],"mipmaps":true,"levels":11,"bytes":314992,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/fern_a_emission.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[605,1024],"npot":[512,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[512,1024],"mipmaps":true,"levels":11,"bytes":314992,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/fern_albedo.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/fern_b_albedo.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[771,1024],"npot":[1024,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/fern_b_emission.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[771,1024],"npot":[1024,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/fern_emission.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/fiddle_hairs.png","app":"terrarium","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/halo.png","app":"terrarium","pkg":null,"state":"referenced","source":[256,256],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[256,256],"mipmaps":true,"levels":9,"bytes":40096,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":349524},
+    {"path":"apps/terrarium/Assets/Art/Textures/mist.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss-repaint.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_band.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[1024,256],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,256],"mipmaps":true,"levels":11,"bytes":158448,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398108},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_card.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_fuzz.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_macro.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_macro_b.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_tile.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_top.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/moss_tuft.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[679,499],"npot":[512,512],"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/petal.png","app":"terrarium","pkg":null,"state":"referenced","source":[512,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,1024],"mipmaps":true,"levels":11,"bytes":314992,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":2796204},
+    {"path":"apps/terrarium/Assets/Art/Textures/ring.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/s1_drops.png","app":"terrarium","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/s1_studio.png","app":"terrarium","pkg":null,"state":"referenced","source":[768,128],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[768,128],"mipmaps":false,"levels":1,"bytes":45056,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":393216},
+    {"path":"apps/terrarium/Assets/Art/Textures/s2_refract_strip.png","app":"terrarium","pkg":null,"state":"referenced","source":[960,160],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[960,160],"mipmaps":false,"levels":1,"bytes":69120,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":614400},
+    {"path":"apps/terrarium/Assets/Art/Textures/s3_strand.png","app":"terrarium","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398100},
+    {"path":"apps/terrarium/Assets/Art/Textures/s3_strata.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,256],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,256],"mipmaps":true,"levels":11,"bytes":158448,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":1398108},
+    {"path":"apps/terrarium/Assets/Art/Textures/s4_frond_albedo.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/s4_frond_thick.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/s5_contact.png","app":"terrarium","pkg":null,"state":"referenced","source":[512,512],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/s5_desk_streak.png","app":"terrarium","pkg":null,"state":"referenced","source":[256,256],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[256,256],"mipmaps":true,"levels":9,"bytes":40096,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/s5_steam.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":1024,"maxFrom":"Default","imported":[1024,1024],"mipmaps":false,"levels":1,"bytes":467856,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/soil.png","app":"terrarium","pkg":null,"state":"no-reference-found","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Art/Textures/soil_band.png","app":"terrarium","pkg":null,"state":"referenced","source":[1024,1024],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[1024,1024],"mipmaps":true,"levels":11,"bytes":626288,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":5592404},
+    {"path":"apps/terrarium/Assets/Art/Textures/spore.png","app":"terrarium","pkg":null,"state":"referenced","source":[64,64],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[64,64],"mipmaps":true,"levels":7,"bytes":2768,"androidOverrideFormat":null,"androidFormat":"Automatic, compression off (Default): RGBA32","ownFormatBytes":21844},
+    {"path":"apps/terrarium/Assets/Resources/Companions/sprig_glow.png","app":"terrarium","pkg":null,"state":"resources","source":[590,781],"npot":[512,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[512,1024],"mipmaps":false,"levels":1,"bytes":235296,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Resources/Companions/sprig_gold.png","app":"terrarium","pkg":null,"state":"resources","source":[600,785],"npot":[512,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[512,1024],"mipmaps":false,"levels":1,"bytes":235296,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Resources/Companions/sprig_moon.png","app":"terrarium","pkg":null,"state":"resources","source":[606,789],"npot":[512,1024],"maxTextureSize":2048,"maxFrom":"Default","imported":[512,1024],"mipmaps":false,"levels":1,"bytes":235296,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Resources/Ghost/hand-open.png","app":"terrarium","pkg":null,"state":"resources","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null},
+    {"path":"apps/terrarium/Assets/Resources/Ghost/hand-pinch.png","app":"terrarium","pkg":null,"state":"resources","source":[512,512],"npot":null,"maxTextureSize":2048,"maxFrom":"Default","imported":[512,512],"mipmaps":true,"levels":10,"bytes":158432,"androidOverrideFormat":null,"androidFormat":null,"ownFormatBytes":null}
+  ]
+}
