@@ -173,6 +173,22 @@ namespace GardenVR.Core
             return seen.Count;
         }
 
+        /// <summary>
+        /// Distinct live days on or after <paramref name="firstDay"/>, with no upper bound.
+        /// A day after today still counts, so setting the wall clock back cannot lower it. An undone tend does not count.
+        /// </summary>
+        public int KeptDaysFrom(string habitId, int firstDay)
+        {
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            var seen = new HashSet<int>();
+            for (int i = 0; i < _events.Count; i++)
+            {
+                var e = _events[i];
+                if (e.HabitId == habitId && !e.UndoneAtUtcMs.HasValue && e.Day >= firstDay) seen.Add(e.Day);
+            }
+            return seen.Count;
+        }
+
         TendEvent FindLive(string habitId, int day)
         {
             for (int i = 0; i < _events.Count; i++)

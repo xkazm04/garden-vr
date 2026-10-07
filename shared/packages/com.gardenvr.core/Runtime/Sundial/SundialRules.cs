@@ -148,6 +148,27 @@ namespace GardenVR.Core
             return ledger.Backfill(habit.Id, yesterday, today, clock);
         }
 
+        /// <summary>
+        /// <see cref="Plant(HabitDef, Ledger, GardenDay, int)"/> with a stage that only rises (Growth.cs).
+        /// Lifetime counts every live day from <see cref="HabitDef.CreatedDay"/>, including days after today,
+        /// so setting the wall clock back does not shrink it. The value stays derived from the ledger and is never stored
+        /// (PlantState.cs). Undo still removes a day.
+        /// </summary>
+        public static PlantState PlantMonotone(HabitDef habit, Ledger ledger, GardenDay today, int nowMin)
+        {
+            return PlantMonotone(habit, ledger, today, nowMin, null);
+        }
+
+        /// <summary>Same as <see cref="PlantMonotone(HabitDef, Ledger, GardenDay, int)"/>, with due read from <paramref name="times"/>.</summary>
+        public static PlantState PlantMonotone(HabitDef habit, Ledger ledger, GardenDay today, int nowMin, ArcTimes times)
+        {
+            PlantState state = Plant(habit, ledger, today, nowMin, times);
+            int lifetime = ledger.KeptDaysFrom(habit.Id, habit.CreatedDay);
+            state.LifetimeKept = lifetime;
+            state.Stage = StageFor(lifetime);
+            return state;
+        }
+
         static int LifetimeKept(Ledger ledger, HabitDef habit, GardenDay today)
         {
             long span = (long)today.Index - habit.CreatedDay + 1;
