@@ -1,0 +1,223 @@
+{
+  "schema": "garden-vr/budgets/1",
+  "app": "terrarium",
+  "measuredOnDevice": false,
+  "note": "Not measured on a headset. H2 (2026-11-03, docs/PLAN.md:67) is the first headset reading.",
+  "targets": {
+    "headsets": [
+      "Quest 3",
+      "Quest 3S"
+    ],
+    "rule": "a budget holds on both; where they differ the lower binds",
+    "sources": [
+      "decision-0010"
+    ]
+  },
+  "frameTime": {
+    "defaultHz": 72,
+    "ratesOnBoth": [
+      72,
+      80,
+      90,
+      100,
+      120
+    ],
+    "quest3Only": "above 120 Hz, up to 240 Hz; not on Quest 3S, so not a target rate (the lower binds)",
+    "perRate": [
+      {
+        "hz": 72,
+        "ms": 13.9,
+        "quest3": true,
+        "quest3s": true,
+        "derivation": "1000 ms / 72 Hz = 13.8889 ms, shown to 0.1 ms",
+        "measuredOnDevice": false
+      },
+      {
+        "hz": 80,
+        "ms": 12.5,
+        "quest3": true,
+        "quest3s": true,
+        "derivation": "1000 ms / 80 Hz = 12.5000 ms, shown to 0.1 ms",
+        "measuredOnDevice": false
+      },
+      {
+        "hz": 90,
+        "ms": 11.1,
+        "quest3": true,
+        "quest3s": true,
+        "derivation": "1000 ms / 90 Hz = 11.1111 ms, shown to 0.1 ms",
+        "measuredOnDevice": false
+      },
+      {
+        "hz": 100,
+        "ms": 10,
+        "quest3": true,
+        "quest3s": true,
+        "derivation": "1000 ms / 100 Hz = 10.0000 ms, shown to 0.1 ms",
+        "measuredOnDevice": false
+      },
+      {
+        "hz": 120,
+        "ms": 8.3,
+        "quest3": true,
+        "quest3s": true,
+        "derivation": "1000 ms / 120 Hz = 8.3333 ms, shown to 0.1 ms",
+        "measuredOnDevice": false
+      }
+    ],
+    "sources": [
+      "meta-refresh-rates"
+    ]
+  },
+  "gpuFrameTimeMs": null,
+  "appMemory": {
+    "basis": "PSS (Proportional Set Size) of the app process",
+    "quest3MiB": 5888,
+    "quest3sMiB": 5888,
+    "binds": "equal on both",
+    "hardMiB": 5888,
+    "hardBytes": 6174015488,
+    "softMiB": 4710.4,
+    "derivation": "5.75 GiB x 1024 = 5888 MiB (6174015488 bytes); soft = 0.8 x 5888 = 4710.4 MiB (PLAN A5: soft caps at 80%). The hard value is the platform kill limit and Meta says to target well below it; the soft value is where this project starts to act.",
+    "sources": [
+      "meta-memory-ram",
+      "meta-quick-start",
+      "plan-a5"
+    ],
+    "measuredOnDevice": false
+  },
+  "textureMemory": {
+    "basis": "GPU bytes of imported textures (ASTC 6x6 blocks, mip chain where enabled), as `node tools/assets/census.mjs --only texmem` counts them",
+    "share": 0.25,
+    "hardMiB": 1472,
+    "hardBytes": 1543503872,
+    "softMiB": 1177.6,
+    "derivation": "0.25 x 5888 MiB = 1472 MiB (1543503872 bytes); soft = 0.8 x 1472 = 1177.6 MiB",
+    "justification": "Textures share the PSS pool with everything else the process keeps (registry render-submission-economy), so their ceiling is a share of the app ceiling, stated with the headroom it leaves (registry shader-budget-authoring). These apps keep four resident classes: the engine and managed heap; render targets (two eye buffers and the passthrough composition); meshes and audio; textures. With no device reading of any of them, each class gets an equal quarter of the hard ceiling: textures consume at most 25%, and 75% is left for the other three. The share was set before any texture-memory reading was taken and is not fitted to one; H2 replaces the quarters with measured PSS.",
+    "sources": [
+      "registry-render-submission-economy",
+      "registry-shader-budget-authoring",
+      "meta-memory-ram",
+      "plan-a5"
+    ],
+    "measuredOnDevice": false
+  },
+  "display": {
+    "quest3PerEye": [
+      2064,
+      2208
+    ],
+    "quest3sPerEye": [
+      1832,
+      1920
+    ],
+    "gpu": "Snapdragon XR2 Gen 2 on both",
+    "binds": "Quest 3 for fill: the same GPU shades more pixels per eye. No fill budget is stated here.",
+    "sources": [
+      "meta-compare-devices"
+    ],
+    "measuredOnDevice": false
+  },
+  "caps": {
+    "draws": {
+      "hard": 40,
+      "soft": 32,
+      "measuredOnDevice": false
+    },
+    "tris": {
+      "hard": 60000,
+      "soft": 48000,
+      "measuredOnDevice": false
+    },
+    "transparentLayersOverJar": {
+      "hard": 1.5,
+      "soft": 1.2,
+      "basis": "mean transparent layers over the jar",
+      "measuredOnDevice": false
+    },
+    "textureMaxSidePx": {
+      "hard": 1024,
+      "soft": null,
+      "reason": "soft: 80% of 1024 px is 819.2 px, which is no import size Unity offers, and PLAN A5 states none",
+      "measuredOnDevice": false
+    },
+    "postProcessing": {
+      "allowed": false,
+      "measuredOnDevice": false
+    },
+    "derivation": "soft = 0.8 x hard (PLAN A5); the headsets do not enter these caps, they are the same on both",
+    "sources": [
+      "plan-a5"
+    ]
+  },
+  "nulls": [
+    {
+      "path": "caps.textureMaxSidePx.soft",
+      "reason": "80% of 1024 px is 819.2 px, no import size Unity offers; PLAN A5 states none"
+    },
+    {
+      "path": "gpuFrameTimeMs",
+      "reason": "no upstream document or registry subject splits the frame between CPU and GPU for these headsets; it needs the H2 OVR Metrics reading"
+    }
+  ],
+  "sources": {
+    "meta-memory-ram": {
+      "kind": "upstream",
+      "title": "Meta Horizon developer docs, Unity: Memory / RAM",
+      "url": "https://developers.meta.com/vr/documentation/unity/po-memory-ram/",
+      "pageUpdated": "2025-08-12",
+      "read": "2026-10-07",
+      "quote": "Quest 3, Quest 3S: 5.75 GiB ... these limits are checked against your app's PSS, or Proportional Set Size"
+    },
+    "meta-quick-start": {
+      "kind": "upstream",
+      "title": "Meta Horizon developer docs: Quick start guide",
+      "url": "https://developers.meta.com/horizon/essentials/quick-start/",
+      "pageUpdated": "2026-09-09",
+      "read": "2026-10-07",
+      "quote": "Proportional Set Size (PSS) kill limits are 4.4 GiB (Quest 2, Quest Pro) and 5.75 GiB (Meta VR Glasses, Quest 3, Quest 3S). Target well below these limits."
+    },
+    "meta-refresh-rates": {
+      "kind": "upstream",
+      "title": "Meta Horizon developer docs, Unity: Set display refresh rates",
+      "url": "https://developers.meta.com/vr/documentation/unity/unity-set-disp-freq/",
+      "pageUpdated": "2026-10-01",
+      "read": "2026-10-07",
+      "quote": "The default display refresh rate for apps is 72 Hz. Quest 3 and Quest 3S: 72, 80, 90, 100, 120 Hz; Quest 3 also above 120 Hz, up to 240 Hz, \"not available on Meta Quest 3S\". Frame budget 13.9 ms at 72 Hz, 8.3 ms at 120 Hz."
+    },
+    "meta-compare-devices": {
+      "kind": "upstream",
+      "title": "Meta Horizon developer docs: Compare devices",
+      "url": "https://developers.meta.com/vr/resources/compare-devices/",
+      "pageUpdated": "2026-09-30",
+      "read": "2026-10-07",
+      "quote": "Quest 3 and Quest 3S: 8 GB, Snapdragon XR2 Gen 2, 120 Hz; per eye 2064x2208 (Quest 3), 1832x1920 (Quest 3S)"
+    },
+    "plan-a5": {
+      "kind": "project",
+      "file": "docs/PLAN.md:112",
+      "quote": "Budgets (hard caps; soft caps at 80%): Terrarium scene <= 40 draws, <= 60k tris, mean transparent layers over the jar <= 1.5; Sundial scene <= 30 draws, <= 30k tris; textures <= 1024 px; no post-processing"
+    },
+    "decision-0010": {
+      "kind": "project",
+      "file": "docs/decisions/0010-target-headsets-are-quest-3-and-quest-3s.md",
+      "quote": "A budget must hold on both, so where they differ, the lower one binds."
+    },
+    "registry-render-submission-economy": {
+      "kind": "registry",
+      "subject": "render-submission-economy",
+      "index": "ai-registry/knowledge/game-production/index.json",
+      "file": "knowledge/game-production/engine-integration/render-submission-economy/render-submission-economy.md",
+      "read": "2026-10-07",
+      "quote": "Residency is memory: every texture page, render target and font atlas the game keeps on the device, in a memory pool that the graphics processor shares with everything else the process holds."
+    },
+    "registry-shader-budget-authoring": {
+      "kind": "registry",
+      "subject": "shader-budget-authoring",
+      "index": "ai-registry/knowledge/game-production/index.json",
+      "file": "knowledge/game-production/asset-production/surface-and-imagery/shader-budget-authoring/shader-budget-authoring.md",
+      "read": "2026-10-07",
+      "quote": "state the budget for a class, state the share it is expected to consume, and state the headroom left over."
+    }
+  }
+}
