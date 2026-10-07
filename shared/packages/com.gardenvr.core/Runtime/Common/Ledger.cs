@@ -144,17 +144,7 @@ namespace GardenVR.Core
 
         public bool IsKept(string habitId, int day) { return FindLive(habitId, day) != null; }
 
-        public int KeptDays(string habitId)
-        {
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
-            var seen = new HashSet<int>();
-            for (int i = 0; i < _events.Count; i++)
-            {
-                var e = _events[i];
-                if (e.HabitId == habitId && !e.UndoneAtUtcMs.HasValue) seen.Add(e.Day);
-            }
-            return seen.Count;
-        }
+        public int KeptDays(string habitId) { return KeptDaysFrom(habitId, int.MinValue); }
 
         /// <summary>Live days in the inclusive window ending at <paramref name="today"/>. A 7-day window starts six days earlier.</summary>
         public int KeptDaysInWindow(string habitId, GardenDay today, int days)
