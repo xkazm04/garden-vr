@@ -1,6 +1,6 @@
 {
   "schema": "garden-vr/duplicate-classification/1",
-  "measuredAt": "cecee05d7acc95fca60bc1b4bc78a79e18ef7ed5",
+  "measuredAt": "c8007ad42b99a5bc57386116a5a962d4b9d2b66f",
   "note": "Hand-authored verdicts for the duplicate groups that hold an asset extension at measuredAt. Risk is the census class of the cut. tools/assets/census.mjs reads this file from the measured commit.",
   "groups": [
     {
