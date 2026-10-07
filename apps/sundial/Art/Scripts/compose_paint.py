@@ -9,7 +9,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.normpath(os.path.join(HERE, "..", "..", "Assets", "Art", "Textures"))
-SRC = os.path.normpath(os.path.join(HERE, "..", "..", "Assets", "Art", "Source", "paint"))
+SRC = os.path.normpath(os.path.join(HERE, "..", "..", "Art", "Source", "paint"))
 
 S = 2048
 C = S / 2

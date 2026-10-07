@@ -1,6 +1,6 @@
 """Compose Field Notebook hero textures from generated plates.
 
-Sources live in apps/sundial/Assets/Art/Source (png + .prompt.txt).
+Sources live in apps/sundial/Art/Source (png + .prompt.txt).
 Game textures land in apps/sundial/Assets/Art/Textures with a .provenance.txt
 sidecar each. Nothing is sampled from shared/assets/art-reference.
 
@@ -18,7 +18,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SRC = os.path.join(ROOT, "apps", "sundial", "Assets", "Art", "Source")
+SRC = os.path.join(ROOT, "apps", "sundial", "Art", "Source")
 TEX = os.path.join(ROOT, "apps", "sundial", "Assets", "Art", "Textures")
 RUN = os.path.join(ROOT, "orchestration", "runs", "sundial", "T-SUN-013")
 REFS = [

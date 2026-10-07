@@ -4,7 +4,7 @@ Interim art for the drawn dial. Nothing in this folder that the dial uses is tak
 
 | File | Note |
 |---|---|
-| dial_face.png | fitted by fit_notebook.py fit_face from Assets/Art/Source/dial_face_nb.png (prompt dial_face_nb.png.prompt.txt), then grade_a2.py: dusk wash shifted for the warm key light, painted rim cleared. Dial_Face draws the ink ring |
+| dial_face.png | fitted by fit_notebook.py fit_face from Art/Source/dial_face_nb.png (prompt dial_face_nb.png.prompt.txt), then grade_a2.py: dusk wash shifted for the warm key light, painted rim cleared. Dial_Face draws the ink ring |
 | soil.png | painted by code (IWSDK seat SVG), interim |
 | plant_sunrise_0.png | removed. Interim IWSDK seat card, replaced by plant_sunrise_seed/sprout/young/leafy/full |
 | plant_sunrise_1.png | removed. Interim IWSDK seat card |
@@ -30,8 +30,8 @@ Interim art for the drawn dial. Nothing in this folder that the dial uses is tak
 | dial_paper.png | painted by code, paper grain for the rim, interim |
 | gnomon.png | painted by code, apps/sundial/Art/Scripts/dial_face.mjs, ink shaft, gold collar, nib |
 | gnomon_shadow.png | painted by code. fit_notebook.py paint_shadow and compose_paint.py both write this path. Soft brown wash, straight alpha |
-| soil_bed.png | fitted by fit_notebook.py fit_soil from Assets/Art/Source/soil_bed_nb.png (prompt soil_bed_nb.png.prompt.txt) |
-| tiles_atlas.png | fitted by fit_notebook.py fit_tiles from Assets/Art/Source/tiles_nb.png (prompt tiles_nb.png.prompt.txt), then grade_a2.py on the dusk column |
+| soil_bed.png | fitted by fit_notebook.py fit_soil from Art/Source/soil_bed_nb.png (prompt soil_bed_nb.png.prompt.txt) |
+| tiles_atlas.png | fitted by fit_notebook.py fit_tiles from Art/Source/tiles_nb.png (prompt tiles_nb.png.prompt.txt), then grade_a2.py on the dusk column |
 | packet-{morning,midday,winddown}.png | generated. Crop of Art/Source/packets/packet-sheet.png, white keyed out. Prompts in Art/Source/packets/ |
 
 Reference candidates for A/2-05-F1 and A/2-05-F2 are generated images under `apps/sundial/Art/Source/ref-candidates/`. They are not anchors. The owner picks anchors at R2.

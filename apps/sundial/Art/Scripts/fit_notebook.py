@@ -12,7 +12,7 @@ from PIL import Image, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEX = os.path.normpath(os.path.join(HERE, "..", "..", "Assets", "Art", "Textures"))
-SRC = os.path.normpath(os.path.join(HERE, "..", "..", "Assets", "Art", "Source"))
+SRC = os.path.normpath(os.path.join(HERE, "..", "..", "Art", "Source"))
 
 S = 2048
 # Soil mesh UV radius. sundial_dial.py: uv = 0.5 + x / (2 * FACE_R), SOIL_R 0.068, FACE_R 0.1472.

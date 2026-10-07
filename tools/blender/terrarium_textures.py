@@ -1,6 +1,6 @@
 """Turn generated Night Moss plates into game textures.
 
-Sources land in apps/terrarium/Assets/Art/Source with a .prompt.txt sidecar.
+Sources land in apps/terrarium/Art/Source with a .prompt.txt sidecar.
 Processed textures (<= 1024 px) land in apps/terrarium/Assets/Art/Textures.
 
 Nothing is sampled from shared/assets/art-reference. Run from the repo root:
@@ -20,7 +20,7 @@ GEN = (
     r"\C%3A%5CUsers%5Ckazda%5Ckiro%5Cgvr-terrarium"
     r"\01a0fe1e-8ee2-7823-b038-086bc81b42e2\images"
 )
-SRC = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source")
+SRC = os.path.join(ROOT, "apps", "terrarium", "Art", "Source")
 TEX = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures")
 REFS = [
     os.path.join(ROOT, "shared", "assets", "art-reference", "A1-03-night-moss-1.png"),

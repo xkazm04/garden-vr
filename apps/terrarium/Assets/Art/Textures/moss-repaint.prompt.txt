@@ -1,6 +1,6 @@
 variant: moss-repaint
 generator: project_bake.py from a Nano Banana repaint of the JarG1 flat mound
-style: docs/art/terrarium-style.md palette, apps/terrarium/Assets/Art/Source/moss_macro.png
+style: docs/art/terrarium-style.md palette, apps/terrarium/Art/Source/moss_macro.png
 not conditioned on shared/assets/art-reference/
 previous texels: apps/terrarium/Assets/Art/Textures/moss_macro.png
 Jar_Moss.mat was not changed. The moss look stays locked.

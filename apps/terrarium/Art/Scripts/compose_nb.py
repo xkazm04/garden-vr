@@ -1,7 +1,6 @@
 """Compose the T-TER-017 Nano Banana plates into the bound jar textures.
 
-Sources are the agy images under apps/terrarium/Art/Source (and Assets/Art/Source
-if a plate was saved there). Nothing is sampled from the reference frames.
+Sources are the agy images under apps/terrarium/Art/Source. Nothing is sampled from the reference frames.
 
     python apps/terrarium/Art/Scripts/compose_nb.py
 """
@@ -16,7 +15,6 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
 SRC_CANDIDATES = [
     os.path.join(ROOT, "apps", "terrarium", "Art", "Source"),
-    os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source"),
 ]
 TEX = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures")
 RUN = os.path.join(ROOT, "orchestration", "runs", "terrarium", "T-TER-017")

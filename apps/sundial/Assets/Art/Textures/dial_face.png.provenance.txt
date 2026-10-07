@@ -1,4 +1,4 @@
 asset: dial_face.png
-method: painted plate fitted by code, then graded. apps/sundial/Art/Scripts/fit_notebook.py fit_face reads apps/sundial/Assets/Art/Source/dial_face_nb.png. apps/sundial/Art/Scripts/grade_a2.py shifts the dusk wash and clears the painted rim.
-note: Prompt apps/sundial/Assets/Art/Source/dial_face_nb.png.prompt.txt. Disc, ticks, and the left-right flip are in fit_notebook.py. The dusk pale wash is multiplied in linear space so the warm key light lands near ref-1 #BFA1BC. The painted rim ink is cleared. Dial_Face draws that ring in the shader. Not copied from the art reference.
+method: painted plate fitted by code, then graded. apps/sundial/Art/Scripts/fit_notebook.py fit_face reads apps/sundial/Art/Source/dial_face_nb.png. apps/sundial/Art/Scripts/grade_a2.py shifts the dusk wash and clears the painted rim.
+note: Prompt apps/sundial/Art/Source/dial_face_nb.png.prompt.txt. Disc, ticks, and the left-right flip are in fit_notebook.py. The dusk pale wash is multiplied in linear space so the warm key light lands near ref-1 #BFA1BC. The painted rim ink is cleared. Dial_Face draws that ring in the shader. Not copied from the art reference.
 derived_from_art_reference: no

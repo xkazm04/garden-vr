@@ -15,7 +15,7 @@ import numpy as np
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
-SRC = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source")
+SRC = os.path.join(ROOT, "apps", "terrarium", "Art", "Source")
 TEX = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures")
 RUN = os.path.join(ROOT, "orchestration", "runs", "terrarium", "T-TER-015")
 GRID = 8

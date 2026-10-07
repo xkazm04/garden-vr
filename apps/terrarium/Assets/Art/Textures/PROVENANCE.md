@@ -1,6 +1,6 @@
 # Jar textures
 
-Origins for the maps `JarView` binds. A generated plate is an `image_gen` or `image_edit` file under `Assets/Art/Source/` with a `.prompt.txt` sidecar. Code in `apps/terrarium/Art/Scripts/` only composes, keys, or grades those plates. Nothing bound here is sampled from the A1-03 reference frames.
+Origins for the maps `JarView` binds. A generated plate is an `image_gen` or `image_edit` file under `apps/terrarium/Art/Source/` with a `.prompt.txt` sidecar. Code in `apps/terrarium/Art/Scripts/` only composes, keys, or grades those plates. Nothing bound here is sampled from the A1-03 reference frames.
 
 The T-TER-013 generated maps stay in this folder. `JarView` binds the names in the status column.
 

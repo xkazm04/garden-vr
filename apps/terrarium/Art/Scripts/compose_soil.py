@@ -1,6 +1,6 @@
 """Fine loam for the soil band.
 
-The generated soil plate (Assets/Art/Source/soil.png) was wrapped once around
+The generated soil plate (Art/Source/soil.png) was wrapped once around
 the short cylinder, so its crumbs stretched into horizontal rings ("stacked
 coins"). This keeps that plate, throws away anything larger than a crumb, and
 writes a seamless fine grain. Nothing is sampled from the reference frames.
@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
-SRC = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source", "soil.png")
+SRC = os.path.join(ROOT, "apps", "terrarium", "Art", "Source", "soil.png")
 TEX = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures", "soil_band.png")
 RUN = os.path.join(ROOT, "orchestration", "runs", "terrarium", "T-TER-015")
 # Dark loam, a step above the crushed #0D231D so the grain still reads under the moss.

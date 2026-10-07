@@ -26,7 +26,7 @@ BLENDER = r"C:\Program Files\Blender Foundation\Blender 4.2\blender.exe"
 GIT_BASH = r"C:\Program Files\Git\bin\bash.exe"
 HERE = os.path.dirname(os.path.abspath(__file__))
 MACRO = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures", "moss_macro.png")
-STYLE = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source", "moss_macro.png")
+STYLE = os.path.join(ROOT, "apps", "terrarium", "Art", "Source", "moss_macro.png")
 
 PROMPT = (
     "Repaint only the moss in this flat render. Keep every silhouette and every edge exactly where it is. "
@@ -137,18 +137,17 @@ def _swap_guid(text):
 def write_unity_metas(source_png, texture_png, texture_note):
     """New guids. Texture settings match the approved moss macro (sRGB, mipmaps)."""
     tex_template = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures", "moss_macro.png.meta")
-    text_template = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source", "moss_macro.prompt.txt.meta")
+    text_template = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures", "moss-repaint.prompt.txt.meta")
     with open(tex_template, "r", encoding="utf-8") as handle:
         tex = handle.read()
     with open(text_template, "r", encoding="utf-8") as handle:
         text = handle.read()
-    for png in (source_png, texture_png):
-        with open(png + ".meta", "w", encoding="utf-8", newline="\n") as handle:
-            handle.write(_swap_guid(tex))
-    for sidecar in (source_png + ".prompt.txt", texture_note):
-        if os.path.isfile(sidecar):
-            with open(sidecar + ".meta", "w", encoding="utf-8", newline="\n") as handle:
-                handle.write(_swap_guid(text))
+    # The source plate lives in apps/terrarium/Art/Source, outside Assets/: Unity never sees it, so no meta.
+    with open(texture_png + ".meta", "w", encoding="utf-8", newline="\n") as handle:
+        handle.write(_swap_guid(tex))
+    if os.path.isfile(texture_note):
+        with open(texture_note + ".meta", "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(_swap_guid(text))
 
 
 def main():
@@ -248,7 +247,7 @@ def main():
         os.path.join(bake_out, "run.log"),
     )
     # Ship the gate repaint and the baked variant. Do not touch Jar_Moss.mat.
-    source = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Source", "moss-repaint.png")
+    source = os.path.join(ROOT, "apps", "terrarium", "Art", "Source", "moss-repaint.png")
     texture = os.path.join(ROOT, "apps", "terrarium", "Assets", "Art", "Textures", "moss-repaint.png")
     shutil.copyfile(os.path.join(out, "repaint", "raw-gate.png"), source)
     prompt_src = os.path.join(out, "repaint", "raw-gate.png.prompt.txt")
@@ -260,7 +259,7 @@ def main():
         handle.write(
             "variant: moss-repaint\n"
             "generator: project_bake.py from a Nano Banana repaint of the JarG1 flat mound\n"
-            "style: docs/art/terrarium-style.md palette, apps/terrarium/Assets/Art/Source/moss_macro.png\n"
+            "style: docs/art/terrarium-style.md palette, apps/terrarium/Art/Source/moss_macro.png\n"
             "not conditioned on shared/assets/art-reference/\n"
             "previous texels: apps/terrarium/Assets/Art/Textures/moss_macro.png\n"
             "Jar_Moss.mat was not changed. The moss look stays locked.\n"
