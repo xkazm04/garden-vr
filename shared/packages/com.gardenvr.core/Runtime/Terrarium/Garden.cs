@@ -56,6 +56,17 @@ namespace GardenVR.Core
             return VitalityForGap(DaysSinceRitual(today));
         }
 
+        /// <summary>True when the garden is drooping on <paramref name="today"/>: a gap of more than one day, so Vitality is below 1.</summary>
+        public bool Drooping(int today) => Vitality(today) < 1f;
+
+        /// <summary>
+        /// True when a ritual was completed on exactly <paramref name="today"/>. False on a fresh garden and false when the clock
+        /// was set back before the last ritual (that day is not today). This is the definition JarView.cs:588 (Waiting is its
+        /// negation) and JarRitualController.cs:969 use. JarRitualController.cs:1366 differs: it tests DaysSinceRitual(today) &gt; 0,
+        /// which is false on a fresh garden and false after a clock set back (the gap clamps to 0), so there it reads as "done".
+        /// </summary>
+        public bool RitualDoneOn(int today) => LastRitualDay.HasValue && LastRitualDay.Value == today;
+
         /// <summary>The one droop curve: full through a one-day gap, then 0.15 lower per further day, floored.</summary>
         public static float VitalityForGap(int gap)
         {
@@ -73,7 +84,7 @@ namespace GardenVR.Core
         {
             if (!AcceptsDay(today))
                 throw new ArgumentException("clock went backwards; the core refuses to rewrite history");
-            bool drooping = Vitality(today) < 1f;
+            bool drooping = Drooping(today);
             bool newDay = LastRitualDay != today;
             RitualsCompleted++;
             if (!newDay)

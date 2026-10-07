@@ -31,6 +31,19 @@ namespace GardenVR.Core
         /// <summary>How long the exhale side lasts before the empty hold. 0 skips that gate.</summary>
         public float IdealExhaleSeconds = 0f;
 
+        /// <summary>The session config the ritual settings ask for. Null gives the defaults; a count outside <see cref="RitualSettings.BreathChoices"/> becomes 6.</summary>
+        public static BreathConfig From(RitualSettings s)
+        {
+            var config = new BreathConfig();
+            if (s == null) return config;
+            int breaths = s.Breaths;
+            if (Array.IndexOf(RitualSettings.BreathChoices, breaths) < 0) breaths = RitualSettings.DefaultBreaths;
+            if (s.BoxPace) return Box(breaths);
+            config.TargetBreaths = breaths;
+            if (s.InhaleSec >= 1.2d) config.IdealInhaleSeconds = (float)s.InhaleSec;
+            return config;
+        }
+
         /// <summary>Four equal sides. The free-pace defaults for fidgets and fog stay.</summary>
         public static BreathConfig Box(int targetBreaths)
         {

@@ -13,6 +13,8 @@ namespace GardenVR.Core
         public const double DefaultInhaleSec = 4d;
         public const double DefaultExhaleSec = 6d;
         public const string DefaultHoldMode = "Hold";
+        /// <summary>The breath counts the settings pebbles offer. Any other count falls back to <see cref="DefaultBreaths"/>.</summary>
+        public static readonly int[] BreathChoices = { 3, 4, 6, 8 };
 
         public int Breaths = DefaultBreaths;
         public double InhaleSec = DefaultInhaleSec;
