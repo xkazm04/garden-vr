@@ -155,16 +155,6 @@ namespace GardenVR.Core
             "Breaths", "InhaleSec", "ExhaleSec", "AutoPace", "VoiceGuide", "NightBed", "ReducedMotion", "Mute", "HoldMode", "BoxPace"
         };
 
-        static readonly string[] HabitKnown =
-        {
-            "Id", "PresetKey", "Group", "Species", "Kind", "Slot", "CreatedDay", "ArchivedDay"
-        };
-
-        static readonly string[] TendKnown =
-        {
-            "Id", "HabitId", "Tz", "Day", "AtUtcMs", "Source", "Late", "UndoneAtUtcMs"
-        };
-
         static RitualSettings ReadSettings(JsonObject obj, out Dictionary<string, JsonValue> extra)
         {
             var settings = new RitualSettings();
@@ -261,102 +251,31 @@ namespace GardenVR.Core
             return array;
         }
 
+        static readonly LedgerJson.Choices RowChoices = new LedgerJson.Choices
+        {
+            NullGroupAsEmpty = false,
+            SourceFallback = TendSource.Ritual,
+            RowKnown = false
+        };
+
         static HabitDef ReadHabit(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            var habit = new HabitDef();
-            habit.Id = StringMember(obj, "Id");
-            habit.PresetKey = StringMember(obj, "PresetKey");
-            habit.Group = StringMember(obj, "Group");
-            habit.Species = StringMember(obj, "Species");
-            habit.Kind = EnumMember(obj, "Kind", HabitKind.LifeCheckIn);
-            habit.Slot = obj.Has("Slot") ? obj.Get("Slot").AsInt() : 0;
-            habit.CreatedDay = obj.Has("CreatedDay") ? obj.Get("CreatedDay").AsInt() : 0;
-            if (obj.Has("ArchivedDay") && !obj.Get("ArchivedDay").IsNull)
-                habit.ArchivedDay = obj.Get("ArchivedDay").AsInt();
-            KeepExtra(obj, HabitKnown, HabitKey(habit.Id, index), extras);
-            return habit;
+            return LedgerJson.ReadHabit(obj, index, extras, RowChoices);
         }
 
         static JsonObject WriteHabit(HabitDef habit, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            if (habit == null) habit = new HabitDef();
-            var obj = new JsonObject();
-            obj.Set("Id", JsonValue.String(habit.Id ?? ""));
-            obj.Set("PresetKey", JsonValue.String(habit.PresetKey ?? ""));
-            obj.Set("Group", habit.Group == null ? JsonValue.Null() : JsonValue.String(habit.Group));
-            obj.Set("Species", habit.Species == null ? JsonValue.Null() : JsonValue.String(habit.Species));
-            obj.Set("Kind", JsonValue.String(habit.Kind.ToString()));
-            obj.Set("Slot", JsonValue.Number(habit.Slot));
-            obj.Set("CreatedDay", JsonValue.Number(habit.CreatedDay));
-            obj.Set("ArchivedDay", habit.ArchivedDay.HasValue ? JsonValue.Number(habit.ArchivedDay.Value) : JsonValue.Null());
-            RestoreExtra(obj, HabitKey(habit.Id, index), extras);
-            return obj;
+            return LedgerJson.WriteHabit(habit, index, extras, RowChoices);
         }
 
         static TendEvent ReadTend(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            var tend = new TendEvent();
-            tend.Id = StringMember(obj, "Id");
-            tend.HabitId = StringMember(obj, "HabitId");
-            tend.Tz = StringMember(obj, "Tz");
-            tend.Day = obj.Has("Day") ? obj.Get("Day").AsInt() : 0;
-            tend.AtUtcMs = obj.Has("AtUtcMs") ? obj.Get("AtUtcMs").AsLong() : 0L;
-            tend.Source = EnumMember(obj, "Source", TendSource.Ritual);
-            tend.Late = obj.Has("Late") && obj.Get("Late").AsBool();
-            if (obj.Has("UndoneAtUtcMs") && !obj.Get("UndoneAtUtcMs").IsNull)
-                tend.UndoneAtUtcMs = obj.Get("UndoneAtUtcMs").AsLong();
-            KeepExtra(obj, TendKnown, HabitKey(tend.Id, index), extras);
-            return tend;
+            return LedgerJson.ReadTend(obj, index, extras, RowChoices);
         }
 
         static JsonObject WriteTend(TendEvent tend, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {
-            if (tend == null) tend = new TendEvent();
-            var obj = new JsonObject();
-            obj.Set("Id", JsonValue.String(tend.Id ?? ""));
-            obj.Set("HabitId", JsonValue.String(tend.HabitId ?? ""));
-            obj.Set("Tz", JsonValue.String(tend.Tz ?? ""));
-            obj.Set("Day", JsonValue.Number(tend.Day));
-            obj.Set("AtUtcMs", JsonValue.Number(tend.AtUtcMs));
-            obj.Set("Source", JsonValue.String(tend.Source.ToString()));
-            obj.Set("Late", JsonValue.Bool(tend.Late));
-            obj.Set("UndoneAtUtcMs", tend.UndoneAtUtcMs.HasValue ? JsonValue.Number(tend.UndoneAtUtcMs.Value) : JsonValue.Null());
-            RestoreExtra(obj, HabitKey(tend.Id, index), extras);
-            return obj;
-        }
-
-        static void KeepExtra(JsonObject obj, string[] known, string key, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            Dictionary<string, JsonValue> extra = obj.Passthrough(known);
-            if (extra.Count > 0 && extras != null && !string.IsNullOrEmpty(key))
-                extras[key] = extra;
-        }
-
-        static void RestoreExtra(JsonObject obj, string key, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            Dictionary<string, JsonValue> extra;
-            if (extras != null && key != null && extras.TryGetValue(key, out extra))
-                obj.Restore(extra);
-        }
-
-        static string HabitKey(string id, int index)
-        {
-            if (!string.IsNullOrEmpty(id)) return id;
-            return "#" + index.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        }
-
-        static string StringMember(JsonObject obj, string key)
-        {
-            if (!obj.Has(key) || obj.Get(key).IsNull) return null;
-            return obj.Get(key).AsString();
-        }
-
-        static T EnumMember<T>(JsonObject obj, string key, T fallback) where T : struct
-        {
-            if (!obj.Has(key) || obj.Get(key).IsNull) return fallback;
-            T value;
-            if (Enum.TryParse(obj.Get(key).AsString(), false, out value)) return value;
-            return fallback;
+            return LedgerJson.WriteTend(tend, index, extras);
         }
     }
 }
