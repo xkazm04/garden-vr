@@ -193,7 +193,8 @@ function census(rev) {
 
   // Text the scans need: reference holders, image metas, code and data files.
   const texts = new Map();
-  const wantText = entries.filter(e => {
+  // The classification names every duplicate path by design, so it is read as data and never as a code file that names an asset.
+  const wantText = entries.filter(e => e.path !== CLASSIFICATION).filter(e => {
     const x = ext(e.path);
     return (REF_EXT.has(x) && (e.path.startsWith('apps/') || e.path.startsWith('shared/packages/')))
       || CODE_EXT.has(x) || DATA_EXT.has(x)
