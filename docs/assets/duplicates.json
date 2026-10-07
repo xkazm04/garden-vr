@@ -252,25 +252,6 @@
       ]
     },
     {
-      "blob": "fb45ccdbd344ab7f9f4ae98792521405e48cda3e",
-      "bytes": 214772,
-      "paths": [
-        "apps/sundial/Assets/Art/Fonts/PatrickHand-Regular.ttf",
-        "apps/sundial/Assets/Resources/FirstRunHand.ttf"
-      ],
-      "verdict": "cut",
-      "keep": "apps/sundial/Assets/Resources/FirstRunHand.ttf",
-      "remove": [
-        "apps/sundial/Assets/Art/Fonts/PatrickHand-Regular.ttf"
-      ],
-      "reason": "InkLetter.cs loads the Resources copy (ResourceName \"FirstRunHand\"), so it ships; nothing loads or binds the Art/Fonts copy. Fonts/PROVENANCE.md already says the Resources file is the same font, not a second design. OFL.txt stays in Art/Fonts, so the licence is not separated from the font by this cut; the PROVENANCE rewrite should name the Resources file.",
-      "risk": "pixel-identical",
-      "repoints": [
-        "apps/sundial/Assets/Art/Fonts/PROVENANCE.md:5",
-        "apps/sundial/Assets/Art/Fonts/PROVENANCE.md:8"
-      ]
-    },
-    {
       "blob": "e8a97f3c87b148d9bd0a328da913f5628fd9f184",
       "bytes": 206080,
       "paths": [
