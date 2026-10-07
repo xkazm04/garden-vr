@@ -281,6 +281,7 @@ in `orchestration/queue/` are the first ~2.5 days each.
 | D7 | Sundial habits per arc (MVP) | **One per arc** (3 plants, 21 tiles) | Matches the references and the 15-draw dial; 2-3 per arc is post-MVP | 1-3 per arc (round 1) |
 | D8 | Room on PC | Room plates from `shared/assets/room-plates/` for development and parity; never shipped on Quest (passthrough replaces them) | Passthrough cannot be captured on PC | Generated room plates (added for variety in art tasks) |
 | D9 | One competition entry | Garden VR is the planned entry; Mage Arena VR replaces it only if it proves the better product; the pick, and which Garden app carries it, is made on product quality nearer the deadline; both apps stay in the plan until then | Official rules Section 2 allow one entry per individual; owner's answer 2026-10-07 (`docs/decisions/0006-one-competition-entry.md`) | Two separate entries (barred by the rules) |
+| D10 | Target headsets | Quest 3 and Quest 3S; a budget must hold on both (the lower binds); no eye tracking, so `Look` is a hand ray or head reticle; Quest Pro eye gaze and the glasses simulator are not targets | Owner's answer 2026-10-07 (`docs/decisions/0010-target-headsets-are-quest-3-and-quest-3s.md`); milestone 4 budgets need a device | Quest Pro (eye gaze); Meta VR Glasses simulator (kept out before 11-18) |
 
 ## 9. Host actions before and around the first queues
 
