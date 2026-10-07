@@ -280,7 +280,7 @@ in `orchestration/queue/` are the first ~2.5 days each.
 | D6 | Narration default | First ritual is voiceless (the jar teaches); the voice guide is offered after the first answer and remembered | Registry `voice-ux-integration` (discoverable but quiet) | Voice on by default |
 | D7 | Sundial habits per arc (MVP) | **One per arc** (3 plants, 21 tiles) | Matches the references and the 15-draw dial; 2-3 per arc is post-MVP | 1-3 per arc (round 1) |
 | D8 | Room on PC | Room plates from `shared/assets/room-plates/` for development and parity; never shipped on Quest (passthrough replaces them) | Passthrough cannot be captured on PC | Generated room plates (added for variety in art tasks) |
-| D9 | Both apps entered | Two separate competition entries | Owner's two-app decision | Whether one team may enter twice is not in `COMPETITION.md`: verify; fallback is to enter the stronger app |
+| D9 | One competition entry | Garden VR is the planned entry; Mage Arena VR replaces it only if it proves the better product; the pick, and which Garden app carries it, is made on product quality nearer the deadline; both apps stay in the plan until then | Official rules Section 2 allow one entry per individual; owner's answer 2026-10-07 (`docs/decisions/0006-one-competition-entry.md`) | Two separate entries (barred by the rules) |
 
 ## 9. Host actions before and around the first queues
 
@@ -292,7 +292,7 @@ in `orchestration/queue/` are the first ~2.5 days each.
 | Each check | Mark verified tasks `verified: <sha>` in `orchestration/done/`; a rejected upstream re-queues its dependants (DV5 in `docs/knowledge/registry-consult.md`) | safe merges |
 | By Thu 10-08 | Queue the next tasks per app from the plans' M2-M6 rows (Terrarium: look-back, settings pebble, reduced motion, string census, gate pack; Sundial: settings tab, PalmOpen dismiss, reduced motion, string census, gate pack) | M5-M6 |
 | Fri 10-09, 10-16, 10-23 | Prepare the owner review packs (R1, R2, G) and record the outcomes as decisions | gate |
-| Before 10-23 | Verify in the official rules whether one team may submit two entries (D9) | Phase 3 plan |
+| Before 10-23 | ~~Verify in the official rules whether one team may submit two entries (D9)~~ Done: verified 2026-10-07 (`docs/research/stack-opportunities-2026-10.md`, Finding 1) | Phase 3 plan |
 
 ## 10. Risks
 
@@ -308,6 +308,6 @@ in `orchestration/queue/` are the first ~2.5 days each.
 | Quest phase too short (19 days) for passthrough, anchors, perf | medium | high | Quest-readiness notes keep every device seam behind a provider; round 2/3 already built APKs with hand tracking + passthrough (`habit-garden-r2-r3/.../variant-1/index.html` section 07) | host from 10-24 |
 | Unity on Windows workarounds re-bite (MSI admin, EPERM package cache, Gamma colour, Operator layer twice, Vulkan dzn crash, JDK missing) | medium | medium | The 12 workarounds in `arena/habit-garden-r2/entries/claude-claude-opus-5-5_high-v1/variant-1/index.html` section 04 and its `RUNBOOK.md`; reuse, do not rediscover | Phase 2 tasks |
 | Wellness copy drifts into claims | low | high | No medical words in any string or narration; host greps every string list at the gate | host, owner |
-| Two entries not allowed | unknown | medium | Verify with the official rules before 10-23 (D9) | owner |
+| Two entries not allowed | known (rules Section 2: one entry per individual) | medium | One entry in total; mitigated by `docs/decisions/0006-one-competition-entry.md` (D9) | owner |
 | Boiling line reads as flicker in stereo | medium | low | Boil only plants and rim at 10 fps; a setting turns it off; H2 check | owner H2 |
 | Hand in front of the drawn dial is not occluded on Quest | high | medium | Depth API / hand-mesh occluder planned in Phase 2; PC captures composite the hand matte (dev only) | Phase 2 |
