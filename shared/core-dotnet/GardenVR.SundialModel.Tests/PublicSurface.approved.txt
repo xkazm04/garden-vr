@@ -1,0 +1,144 @@
+GardenVR.Sundial.FirstRunSteps field public const System.String Appear = fr.appear
+GardenVR.Sundial.FirstRunSteps field public const System.String Breaths = fr.breaths
+GardenVR.Sundial.FirstRunSteps field public const System.String BreathsOffer = fr.breaths.offer
+GardenVR.Sundial.FirstRunSteps field public const System.String Caption = fr.caption
+GardenVR.Sundial.FirstRunSteps field public const System.String Done = fr.done
+GardenVR.Sundial.FirstRunSteps field public const System.String Drop = fr.drop
+GardenVR.Sundial.FirstRunSteps field public const System.String FirstTend = fr.firsttend
+GardenVR.Sundial.FirstRunSteps field public const System.String Packets = fr.packets
+GardenVR.Sundial.FirstRunSteps field public const System.String PickMidday = fr.pick.midday
+GardenVR.Sundial.FirstRunSteps field public const System.String PickMorning = fr.pick.morning
+GardenVR.Sundial.FirstRunSteps field public const System.String PickWinddown = fr.pick.winddown
+GardenVR.Sundial.FirstRunSteps field public const System.String Sweep = fr.sweep
+GardenVR.Sundial.FirstRunSteps method public static System.Boolean IsResume(System.String step)
+GardenVR.Sundial.FirstRunSteps method public static System.Boolean WaitsForIntent(System.String step)
+GardenVR.Sundial.FirstRunSteps method public static System.Int32 Index(System.String step)
+GardenVR.Sundial.FirstRunSteps method public static System.String Next(System.String step)
+GardenVR.Sundial.FirstRunSteps method public static System.String PickArc(System.String step)
+GardenVR.Sundial.SeedCatalog field public const System.String BreathOffer = Try three breaths?
+GardenVR.Sundial.SeedCatalog field public const System.String DayCaption = This is your day.
+GardenVR.Sundial.SeedCatalog field public const System.String RestoreAction = Restore the previous page
+GardenVR.Sundial.SeedCatalog field public const System.String RestoreTitle = This page didn't load.
+GardenVR.Sundial.SeedCatalog field public static readonly GardenVR.Sundial.SeedPreset[] All
+GardenVR.Sundial.SeedCatalog method public static GardenVR.Sundial.SeedPreset Find(System.String arc, System.String key)
+GardenVR.Sundial.SeedCatalog method public static GardenVR.Sundial.SeedPreset NextFree(System.String arc, System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits)
+GardenVR.Sundial.SeedCatalog method public static System.Collections.Generic.List<GardenVR.Sundial.SeedPreset> ForArc(System.String arc)
+GardenVR.Sundial.SeedCatalog method public static System.String PacketId(System.String arc)
+GardenVR.Sundial.SeedCatalog method public static System.String PresetId(GardenVR.Sundial.SeedPreset preset)
+GardenVR.Sundial.SeedPreset ctor public ()
+GardenVR.Sundial.SeedPreset field public GardenVR.Core.HabitKind Kind
+GardenVR.Sundial.SeedPreset field public System.String Arc
+GardenVR.Sundial.SeedPreset field public System.String Cue
+GardenVR.Sundial.SeedPreset field public System.String Group
+GardenVR.Sundial.SeedPreset field public System.String HabitId
+GardenVR.Sundial.SeedPreset field public System.String Key
+GardenVR.Sundial.SeedPreset field public System.String Title
+GardenVR.Sundial.SteppingClock ctor public (GardenVR.Core.IClock inner)
+GardenVR.Sundial.SteppingClock field public System.Single TimeScale
+GardenVR.Sundial.SteppingClock method public System.Void AddDays(System.Int32 days)
+GardenVR.Sundial.SteppingClock method public System.Void JumpTo(System.DateTimeOffset instant)
+GardenVR.Sundial.SteppingClock method public System.Void Step(System.Single dt)
+GardenVR.Sundial.SteppingClock property get public System.DateTimeOffset Now
+GardenVR.Sundial.SteppingClock property get public System.TimeZoneInfo Zone
+GardenVR.Sundial.SundialArcs method public static System.Boolean TryPlant(System.String id, out System.String arc)
+GardenVR.Sundial.SundialArcs method public static System.Boolean TryPlant(System.String id, out System.String arc, out System.Int32 row)
+GardenVR.Sundial.SundialArcs method public static System.Boolean TryUndo(System.String id, out System.String arc)
+GardenVR.Sundial.SundialArcs method public static System.Int32 Index(System.String key)
+GardenVR.Sundial.SundialArcs method public static System.Int32 TileDigit(GardenVR.Core.TileState state)
+GardenVR.Sundial.SundialArcs method public static System.String FromIndex(System.Int32 index)
+GardenVR.Sundial.SundialArcs method public static System.String Key(System.String group)
+GardenVR.Sundial.SundialArcs method public static System.String PlantId(System.String arc, System.Int32 row)
+GardenVR.Sundial.SundialArcs method public static System.String TileId(System.String arc, System.Int32 row, System.Int32 day)
+GardenVR.Sundial.SundialCodec method public static GardenVR.Core.JsonObject Write(GardenVR.Sundial.SundialSave save)
+GardenVR.Sundial.SundialCodec method public static GardenVR.Sundial.SundialSave Read(GardenVR.Core.JsonObject obj)
+GardenVR.Sundial.SundialSave ctor public ()
+GardenVR.Sundial.SundialSave field public GardenVR.Core.FocusSnapshot Focus
+GardenVR.Sundial.SundialSave field public GardenVR.Sundial.SundialSettings Settings
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue> Extra
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> HabitExtra
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> TendExtra
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.GratitudeMark> Gratitude
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.HabitDef> Habits
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.TendEvent> Tends
+GardenVR.Sundial.SundialSave field public System.Int32 SchemaVersion
+GardenVR.Sundial.SundialSave field public System.String FirstRunStep
+GardenVR.Sundial.SundialService ctor public (GardenVR.Core.IClock clock, System.String directory)
+GardenVR.Sundial.SundialService field public const System.Int32 SchemaVersion = 1
+GardenVR.Sundial.SundialService field public const System.String DevSeedStep = dev-seed
+GardenVR.Sundial.SundialService field public static System.Boolean DevSeedOnFresh
+GardenVR.Sundial.SundialService field public static System.Nullable<System.Boolean> FreshReducedMotion
+GardenVR.Sundial.SundialService method public GardenVR.Core.GardenDay Today()
+GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef HabitAt(System.String arcKey, System.Int32 row)
+GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef HabitForArc(System.String arcKey)
+GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef PlantPreset(GardenVR.Sundial.SeedPreset preset)
+GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef TryAdmit(GardenVR.Sundial.SeedPreset preset)
+GardenVR.Sundial.SundialService method public GardenVR.Core.PlantState PlantFor(GardenVR.Core.HabitDef habit)
+GardenVR.Sundial.SundialService method public GardenVR.Core.TendEvent Flush()
+GardenVR.Sundial.SundialService method public GardenVR.Core.TendResult BackfillYesterday(GardenVR.Core.HabitDef habit)
+GardenVR.Sundial.SundialService method public GardenVR.Core.TendResult InkGratitude(System.Int32 symbol)
+GardenVR.Sundial.SundialService method public GardenVR.Core.TendResult TendRitual(System.String habitId)
+GardenVR.Sundial.SundialService method public System.Boolean BackfillOffered(GardenVR.Core.HabitDef habit)
+GardenVR.Sundial.SundialService method public System.Boolean Cancel()
+GardenVR.Sundial.SundialService method public System.Boolean DragArcEdge(GardenVR.Core.ArcEdge edge, System.Single gnomonDeg)
+GardenVR.Sundial.SundialService method public System.Boolean PauseFocus()
+GardenVR.Sundial.SundialService method public System.Boolean ResumeFocus()
+GardenVR.Sundial.SundialService method public System.Boolean TryEndFocus()
+GardenVR.Sundial.SundialService method public System.Boolean TryRestoreBackup()
+GardenVR.Sundial.SundialService method public System.Boolean TryShiftDay(System.Int32 delta)
+GardenVR.Sundial.SundialService method public System.Boolean TryStartFocus()
+GardenVR.Sundial.SundialService method public System.Int32 LiveCount(System.String habitId)
+GardenVR.Sundial.SundialService method public System.Int32 LiveInArc(System.String arcKey)
+GardenVR.Sundial.SundialService method public System.Void Arm(System.String habitId)
+GardenVR.Sundial.SundialService method public System.Void JumpTo(System.DateTimeOffset instant)
+GardenVR.Sundial.SundialService method public System.Void SetBeds(System.Boolean on)
+GardenVR.Sundial.SundialService method public System.Void SetFirstRunStep(System.String step)
+GardenVR.Sundial.SundialService method public System.Void SetMute(System.Boolean on)
+GardenVR.Sundial.SundialService method public System.Void SetReducedMotion(System.Boolean on)
+GardenVR.Sundial.SundialService method public System.Void SetScrubbing(System.Boolean on)
+GardenVR.Sundial.SundialService method public System.Void SetVoice(System.Boolean on)
+GardenVR.Sundial.SundialService method public System.Void Step(System.Single dt)
+GardenVR.Sundial.SundialService method public System.Void ToggleFast()
+GardenVR.Sundial.SundialService property get public GardenVR.Core.ArcTimes ArcSchedule
+GardenVR.Sundial.SundialService property get public GardenVR.Core.FocusBlock Focus
+GardenVR.Sundial.SundialService property get public GardenVR.Core.GratitudeRecord Gratitude
+GardenVR.Sundial.SundialService property get public GardenVR.Core.IClock Clock
+GardenVR.Sundial.SundialService property get public GardenVR.Core.Ledger Ledger
+GardenVR.Sundial.SundialService property get public GardenVR.Core.LoadOutcome Outcome
+GardenVR.Sundial.SundialService property get public GardenVR.Core.SundialState State
+GardenVR.Sundial.SundialService property get public GardenVR.Sundial.SundialSave Save
+GardenVR.Sundial.SundialService property get public System.Boolean BackupAvailable
+GardenVR.Sundial.SundialService property get public System.Boolean Beds
+GardenVR.Sundial.SundialService property get public System.Boolean Boil
+GardenVR.Sundial.SundialService property get public System.Boolean FastClock
+GardenVR.Sundial.SundialService property get public System.Boolean IsPending
+GardenVR.Sundial.SundialService property get public System.Boolean Mute
+GardenVR.Sundial.SundialService property get public System.Boolean ReducedMotion
+GardenVR.Sundial.SundialService property get public System.Boolean Scrubbing
+GardenVR.Sundial.SundialService property get public System.Boolean StateChanged
+GardenVR.Sundial.SundialService property get public System.Boolean Voice
+GardenVR.Sundial.SundialService property get public System.String FailedStep
+GardenVR.Sundial.SundialService property get public System.String PendingHabitId
+GardenVR.Sundial.SundialService property get public System.String StateJson
+GardenVR.Sundial.SundialSettings ctor public ()
+GardenVR.Sundial.SundialSettings field public System.Boolean Beds
+GardenVR.Sundial.SundialSettings field public System.Boolean Boil
+GardenVR.Sundial.SundialSettings field public System.Boolean Mute
+GardenVR.Sundial.SundialSettings field public System.Boolean ReducedMotion
+GardenVR.Sundial.SundialSettings field public System.Boolean Voice
+GardenVR.Sundial.SundialSettings field public System.Int32 BoundaryMin
+GardenVR.Sundial.SundialSettings field public System.Int32 DuskMin
+GardenVR.Sundial.SundialSettings field public System.Int32 MiddayMin
+GardenVR.Sundial.SundialSettings field public System.Int32 MorningMin
+GardenVR.Sundial.SundialSpecies field public static readonly System.String[] Keys
+GardenVR.Sundial.SundialSpecies method public static System.Int32 Index(System.String key)
+GardenVR.Sundial.SundialSpecies method public static System.String ForPreset(System.String preset)
+type public sealed class GardenVR.Sundial.SeedPreset
+type public sealed class GardenVR.Sundial.SteppingClock implements GardenVR.Core.IClock
+type public sealed class GardenVR.Sundial.SundialSave
+type public sealed class GardenVR.Sundial.SundialService
+type public sealed class GardenVR.Sundial.SundialSettings
+type public static class GardenVR.Sundial.FirstRunSteps
+type public static class GardenVR.Sundial.SeedCatalog
+type public static class GardenVR.Sundial.SundialArcs
+type public static class GardenVR.Sundial.SundialCodec
+type public static class GardenVR.Sundial.SundialSpecies
