@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { divergence } from './divergence.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const main = path.resolve(here, '..', '..');
@@ -122,6 +123,9 @@ while (true) {
   if (fs.existsSync(O('STOP-' + app))) { log('STOP file present, exiting'); break; }
   const task = nextTask();
   if (!task) { await sleep(120000); continue; }
+  // Fail closed: hundreds of commits ahead of main means main was rewritten under this branch.
+  const div = divergence(wt);
+  if (div.over) { log(`${div.ahead} commits ahead of main (limit ${div.max}): not merging main, task stays queued; see tools/orchestrate/REANCHOR.md`); break; }
   // Pull in whatever the host merged since the last task (shared packages, the other agent's work).
   await new Promise((res) => { const g = spawn('git', ['-C', wt, 'merge', '--no-edit', 'main'], { windowsHide: true });
     let o = ''; g.stdout.on('data', (d) => (o += d)); g.stderr.on('data', (d) => (o += d));
