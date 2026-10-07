@@ -121,7 +121,7 @@ namespace GardenVR.Sundial
         public SundialService(IClock clock, string directory)
         {
             if (clock == null) throw new ArgumentNullException(nameof(clock));
-            if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory");
+            if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory is null, empty or whitespace", nameof(directory));
             _clock = new SteppingClock(clock);
             _store = new SaveStore<SundialSave>(new DiskSaveIo(directory), SchemaVersion, CreateFresh, SundialCodec.Read, SundialCodec.Write, null);
             LoadResult<SundialSave> result = _store.Load();
@@ -330,7 +330,7 @@ namespace GardenVR.Sundial
         public TendResult TendRitual(string habitId)
         {
             if (Scrubbing) return TendResult.Refused("reading");
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             TendResult result = _ledger.Tend(habitId, Today(), TendSource.Ritual, _clock);
             if (result.Ok && !result.AlreadyKept) Persist();
             Recompute();
@@ -449,7 +449,7 @@ namespace GardenVR.Sundial
         public void Arm(string habitId)
         {
             if (Scrubbing) return;
-            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId");
+            if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             if (_deferred.IsPending) throw new InvalidOperationException("a tend is already waiting to commit");
             _deferred.Arm(habitId, Today(), TendSource.Pinch, _clock);
             PendingHabitId = habitId;
