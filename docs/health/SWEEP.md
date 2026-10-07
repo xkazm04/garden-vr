@@ -8,6 +8,7 @@ file:line, the blob it was read at, the finding, the class and the commit or the
 - **Base commit:** `00c2e4cee61e9cb55b8779a5f39729b75fdbbb2b` (design: game-design conformance read for Terrarium and
   Sundial). Every finding was read at its blob in that commit.
 - **Fix commit:** `1a990718f551c88d34db7f963f55f59fb883c8e7` (test projects only).
+- **Unclassified findings: 0 in each half.** The asset half is the last section of this file. The line below is the code half.
 - **Unclassified findings (code half): 0.** 842 records: 51 fixed, 15 filed as 4 ideas, and 776 deliberate (24 of those
   staged for the first Unity session, 0012 (a)).
 
@@ -162,3 +163,79 @@ The Unity-only C# under `apps/*/Assets` (all but the six in-place files) is outs
 `shared/packages/com.gardenvr.*/Editor` and `com.gardenvr.capture`. An analyzer, format or clone run cannot read that
 code without a Unity compile, so it was not analysed. It is **staged for the first Unity session, 0012 (a)**, as one
 ledger line (`SW-C0842`), not one finding per file. No Unity run was made, and no Unity compile is claimed.
+
+## Asset half
+
+The census findings of the milestone-3 lean sweep, classified into the same ledger (`docs/health/sweep.json`, records
+`SW-A0001` to `SW-A0057`, `half` "assets"). **Unclassified: 0 in the asset half, 0 in the code half, 0 overall** (899
+records: 842 code, 57 assets).
+
+- **Measured at:** `8670dd1ab3ee88b5cdccf5509272c16725bc0406` (decisions: 0013), with `node tools/assets/census.mjs --rev 8670dd1 --out <temp dir outside the repo>`.
+  The run printed `tracked 2378 files 251368912 bytes; png 410 files 222942403 bytes` and `unclassified duplicate groups: 0`.
+  `git status` showed nothing under `docs/assets/` or `docs/budgets/` afterwards.
+- **Same as M2-READING.** Every class count equals the "After, `c3b8e3e`" table of `docs/assets/M2-READING-2026-10-07.md`
+  (duplicate-blob 25, over-1024 7, png-16-bit 2, no-reference-found 21, source-in-assets 0, resources-ballast 0), and the
+  bytes equal too. No difference to report. The census also printed 8 groups whose hand verdict differs from its keep rule
+  and 2 whose hand risk differs from the census; both are existing census notes, and the hand verdict in
+  `docs/assets/duplicates.json` is the one used here.
+- **Not re-counted.** The lossless ledger (`LOSSLESS.md`, 0011) and A4 provenance (`A4-PROVENANCE.md`) are separate
+  ledgers. Each has one scope record (`SW-A0056`, `SW-A0057`), like `SW-C0842` in the code half.
+
+### Per class
+
+All 55 findings come from `node tools/assets/census.mjs --rev 8670dd1`. A file can carry several classes, so the rows
+overlap (the 4 plates are in three classes).
+
+| Class | Findings | Bytes (census "saved") | Fixed | Idea | Deliberate | of which staged |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| duplicate-blob | 25 | 12655460 (12.07 MiB) | 0 | 0 | 25 (16 keep, 9 cut) | 9 |
+| over-1024 | 7 | 9859922 (9.40 MiB) | 0 | 0 | 7 (4 plates, 3 script inputs) | 4 |
+| png-16-bit | 2 | 2098328 (2.00 MiB) | 0 | 2 | 0 | 0 |
+| no-reference-found | 21 | 17079142 (16.29 MiB) | 0 | 0 | 21 | 6 |
+| source-in-assets | 0 | 0 | 0 | 0 | 0 | 0 |
+| resources-ballast | 0 | 0 | 0 | 0 | 0 | 0 |
+| census total | 55 | 41692792 (39.76 MiB) | 0 | 2 | 53 | 19 |
+| scope (lossless, A4) | - | - | 0 | 0 | 2 | 0 |
+| **Asset half** | **57** | | **0** | **2** | **55** | **19** |
+
+Nothing was fixed: this run writes only `docs/health/`, and every change to an asset is a `visible-change` that needs a
+render compare, which needs a Unity licence this machine lacks.
+
+### Deliberate, by rule
+
+- **duplicate-blob, keep (16 groups, 4625470 bytes).** Each has a keep reason in `docs/assets/duplicates.json`
+  (source pairs under `Art/Source`, seed pairs under `shared/assets/seed-textures`, halo masks that are pixel-equal by
+  accident). The record cites that reason.
+- **duplicate-blob, cut (9 groups, 9613545 bytes), staged.** Decided as cut and not cut: the 4 plates, `moss_fuzz`,
+  `moss_tile`, `moss_band`, `moss_top` and `sprig.fbx`. Cited: 0012 (a) item 2 (the cut) and item 5 (the render
+  compare).
+- **over-1024, the 4 plates, staged.** They import at 1824 px under an effective cap of 2048. 0012 (a) item 3 and 0013 (c):
+  they leave the Quest build in Phase 2 and are not downscaled.
+- **over-1024, the 3 script inputs.** `dial_face`, `dial_face_s1` (cap 1024) and `condensation` (cap 1024) are read by
+  scripts at full size, and the census reads the effective import cap 1024 from their `.meta`.
+- **no-reference-found, all 21.** A search of `.cs`, `.py`, `.mjs`, `.shader`, `.json` and `.txt` found, for every one, a
+  script that loads or composes the file by name. The census guid scan cannot see that. The file:line is in each record:
+  `tools/blender/terrarium_hero.py:1097-1100, :1235-1241` (6 terrarium textures: both fern albedos and emissions,
+  `moss_tuft`, `cork`, `soil`), `JarSetup.cs:36` (`moss_fuzz`, `moss_tile`, `moss_band`, `moss_top`), `DialSetup.cs:39`
+  (sundial `soil`), `DuskRitualController.cs:538` (3 sparkle rings), `FirstRunWizard.cs:425` (3 packets),
+  `SceneSetup.cs` (`plate-dial`, `plate-jar`) and `tools/fidelity/sweeps/jar-moss.json:11` (`moss-repaint`, a variant
+  that a sweep binds by name). The 6 that 0012 (a) item 2 cuts (the two plates and four moss textures) are staged. None is
+  left for an owner call, so no idea is filed for this class. The owner may still judge a file unwanted (for example the
+  `moss-repaint` variant); nothing was deleted or moved.
+
+### Ideas
+
+- **I5. Assets: two 16-bit pngs, an owner call on requantising.** `apps/terrarium/Assets/Art/Textures/moss-repaint.png`
+  (4110297 bytes on disk; census estimate to save 2053436) and `apps/sundial/Assets/Art/Textures/dial_paper.png`
+  (estimate 44892). Both are `visible-change` at the census. 0011's measured arithmetic covers a lossless rewrite (moss-repaint: 4106871 to
+  3872607 bytes, which adds 3872607 to history to save 234264; dial_paper: under the threshold), not a requantise to 8
+  bits, and the `.meta` of both imports through `textureFormat -1`, `textureCompression 0`, so neither gives a reason to
+  keep 16 bits. Neither is named in 0012 or 0013, so neither is staged. The owner decides per file.
+
+No other idea: the rule for `no-reference-found` files with no loader found had zero cases.
+
+### Check
+
+`git diff --name-only 8670dd1..HEAD` lists `docs/health/sweep.json` and `docs/health/SWEEP.md` only. The 842 code records
+are byte-identical as parsed JSON (`JSON.stringify` of the `half: "code"` findings before and after, equal). The three
+`counts` blocks (`counts`, `counts.perHalf.code`, `counts.perHalf.assets`) show `unclassified` 0.
