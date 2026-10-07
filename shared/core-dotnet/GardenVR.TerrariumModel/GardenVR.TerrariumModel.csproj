@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Why this exists: these app files are engine-free but live under apps/, where only Unity compiled them. They compile in
+       place here until step B moves them into com.gardenvr.core. This build is the rule-4 tripwire: an engine import in any
+       listed file breaks it. Files are named one by one; there is no glob over apps/. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>GardenVR.TerrariumModel</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../../apps/terrarium/Assets/Scripts/Ritual/CompanionHabits.cs" />
+    <Compile Include="../../../apps/terrarium/Assets/Scripts/Jar/GardenJourney.cs" />
+    <Compile Include="../../../apps/terrarium/Assets/Scripts/Ritual/FirstRunSteps.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../GardenVR.Core/GardenVR.Core.csproj" />
+  </ItemGroup>
+</Project>
