@@ -1,0 +1,19 @@
+{
+  "schema": "garden-vr/dotnet-test-record/1",
+  "command": "dotnet test shared/core-dotnet",
+  "commit": "0ada0cccbbc1d90fd3b2cf4abb51730939787f7c",
+  "subject": "feat(tools/health): print the notes findings.json carries under the top 10",
+  "date": "2026-10-07",
+  "sdk": "9.0.308",
+  "exitCode": 0,
+  "outcome": "Completed",
+  "total": 195,
+  "executed": 195,
+  "passed": 195,
+  "failed": 0,
+  "skipped": 0,
+  "trees": {
+    "shared/core-dotnet": "28ba54abea3e10081b2a08256f09ee6c1ed50fdd",
+    "shared/packages/com.gardenvr.core": "cacbd976bd16ba971a6afb04aa633348719600f5"
+  }
+}
