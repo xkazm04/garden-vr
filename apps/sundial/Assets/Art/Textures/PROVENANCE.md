@@ -33,5 +33,6 @@ Interim art for the drawn dial. Nothing in this folder that the dial uses is tak
 | soil_bed.png | fitted by fit_notebook.py fit_soil from Art/Source/soil_bed_nb.png (prompt soil_bed_nb.png.prompt.txt) |
 | tiles_atlas.png | fitted by fit_notebook.py fit_tiles from Art/Source/tiles_nb.png (prompt tiles_nb.png.prompt.txt), then grade_a2.py on the dusk column |
 | packet-{morning,midday,winddown}.png | generated. Crop of Art/Source/packets/packet-sheet.png, white keyed out. Prompts in Art/Source/packets/ |
+| room_shadow_wash.png | painted by code. apps/sundial/Art/Scripts/roomlight_s2.py: a procedural wedge (soft edge, darker dried rim, low-frequency mottle), added in 6897436 and retuned in 68b3889 (softer wedges, fade to zero at the far end). Bound by guid on Dial_RoomShadow.mat. Not from a reference frame |
 
 Reference candidates for A/2-05-F1 and A/2-05-F2 are generated images under `apps/sundial/Art/Source/ref-candidates/`. They are not anchors. The owner picks anchors at R2.
