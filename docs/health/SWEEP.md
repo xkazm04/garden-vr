@@ -9,8 +9,10 @@ file:line, the blob it was read at, the finding, the class and the commit or the
   Sundial). Every finding was read at its blob in that commit.
 - **Fix commit:** `1a990718f551c88d34db7f963f55f59fb883c8e7` (test projects only).
 - **Unclassified findings: 0 in each half.** The asset half is the last section of this file. The line below is the code half.
-- **Unclassified findings (code half): 0.** 842 records: 51 fixed, 15 filed as 4 ideas, and 776 deliberate (24 of those
-  staged for the first Unity session, 0012 (a)).
+- **Unclassified findings (code half): 0.** 867 records after the closure re-run: 66 fixed, 3 filed as 2 ideas (I6, I7), and
+  798 deliberate (24 of those staged for the first Unity session, 0012 (a)). The base run had 842 records (51 fixed, 15
+  idea, 776 deliberate); I1 to I4 are closed (a576eb7, c2e05b6, 37541f0, 85973ea) and 25 records were added at 37541f0.
+  See "Closure re-run (37541f0)" at the end of this file.
 
 ## Commands and tool versions
 
@@ -33,7 +35,8 @@ Exit 2 from `dotnet format --verify-no-changes` means it found changes it would 
 
 ## Counts
 
-Per tool. "Reported" counts unique sites (rule, file, line, column). A file compiled by two projects would count once,
+This table and the sections down to "Duplication" are the base run, kept as they were read at 00c2e4c. The counts after the
+closure re-run are in "Closure re-run (37541f0)" at the end of this file. Per tool. "Reported" counts unique sites (rule, file, line, column). A file compiled by two projects would count once,
 but none is: every `Compile` item belongs to one project, and the Model projects reference `GardenVR.Core` rather than
 compiling its sources. A site that two tools report is one record, with both tools in `seenBy`.
 
@@ -73,26 +76,38 @@ count. The diff adds and removes no `[Fact]`, `[Theory]` or `InlineData`.
 
 ## Ideas (the app and core are closed to this run)
 
+**I1 to I4 are closed.** Each delivery is on main and its analyzer site is gone at 37541f0 (see the closure section). I6 and I7
+are new, from the closure re-run.
+
 None of these repeats T1 to T11 (`docs/design/CONFORMANCE-terrarium.md`) or S1 to S14 (`CONFORMANCE-sundial.md`), and
 none repeats a hotspot finding in `docs/health/findings.json`.
 
-- **I1. Core: argument checks name the parameter.** Eight core guards throw `new ArgumentException("habitId")` (also
+- **I1. Core: argument checks name the parameter.** *Closed by a576eb729a95b8e628a1d2c954d55be5d5f383b1.* Eight core guards throw `new ArgumentException("habitId")` (also
   "directory" and "plant"). The parameter name becomes the message and ParamName stays null (CA2208; `Ledger.cs:149`,
   `:162`, `:182`, `:220`, `:252`, `SaveStore.cs:68`, `SundialState.cs:62`, `Companions.cs:46`). Throw
   `new ArgumentException("<what is wrong>", nameof(habitId))` and keep the exception type. No signature changes, so it
   qualifies under 0012 (c), with a dotnet test that pins ParamName.
-- **I2. Sundial: SundialService argument checks name the parameter.** The same CA2208 shape is in the in-place app file
+- **I2. Sundial: SundialService argument checks name the parameter.** *Closed by c2e05b649c8eeb6455b4d1345c20014d402968ca.* The same CA2208 shape is in the in-place app file
   `SundialService.cs:124` (directory) and `:333` and `:452` (habitId). The fix is the same as I1. The file is one of the
   six that 0012 (c) lets change on dotnet test alone, with a test that pins ParamName and the Unity-only callers listed.
-- **I3. Core: GardenDay gets <= and >= beside < and >.** `GardenDay` implements `IComparable<GardenDay>` and defines `==`,
+- **I3. Core: GardenDay gets <= and >= beside < and >.** *Closed by 37541f067357d462af87ed3376173e500e38befb.* `GardenDay` implements `IComparable<GardenDay>` and defines `==`,
   `!=`, `<` and `>` (`GardenDay.cs:55-58`), but not `<=` and `>=` (CA1036). A caller has to write `a.Index <= b.Index` or
   `!(a > b)`. Adding the two operators is purely additive (step A, 0004), with a dotnet test.
-- **I4. Core: LedgerJson reads and writes the whole Habits and Tends arrays.** After b7ed44f the row codec has one
+- **I4. Core: LedgerJson reads and writes the whole Habits and Tends arrays.** *Closed by 85973eaa972e4996ca4b12958e41a75dc79d7de9.* After b7ed44f the row codec has one
   owner, but the loops around it are still typed twice. `SundialSave.cs:69-87` and `TerrariumSave.cs:83-98` read the
   Habits and Tends arrays row by row, and `SundialSave.cs:101-116` and `TerrariumSave.cs:121-136` write them (jscpd,
   118 to 201 tokens each). A pair of LedgerJson methods, `ReadHabits`/`ReadTends` and `WriteHabits`/`WriteTends`, would
   be a step A that lets both saves drop the loops. The SundialSave half then lands under 0012 (c), with the golden row
   tests (f11db8f). It continues findings #12 and #14.
+- **I6. Tests: constructor-guard tests discard the new object.** *New at 37541f0.* `ArgumentGuardParamNameTests.cs:39`
+  (`new DiskSaveIo(directory)`) and `SundialServiceGuardTests.cs:32` (`new SundialService(_clock, directory)`) build an
+  object only to see its constructor throw, so CA1806 flags the unused instance (SW-C0854, SW-C0855). Assign each to a
+  discard (`_ = new ...`). Test code only. Both files are the guard tests that I1 and I2 added.
+- **I7. Core: KeptDays and KeptDaysFrom share one guard-and-loop.** *New at 37541f0.* `Ledger.cs:147-154` against
+  `:180-187` (jscpd, 8 lines, 113 tokens; SW-C0866). The two methods differ by one condition (`e.Day >= firstDay`). It is
+  not in the base run. The guard text is the one line I1 (a576eb7) changed in these two blocks, and it added
+  `nameof(habitId)` to each, which plausibly lifted the stretch over the 70-token minimum (not run at a576eb7). A private
+  helper removes it; no signature changes, so it qualifies under 0012 (c) with the existing Ledger tests.
 
 ## Deliberate, by rule
 
@@ -164,11 +179,17 @@ The Unity-only C# under `apps/*/Assets` (all but the six in-place files) is outs
 code without a Unity compile, so it was not analysed. It is **staged for the first Unity session, 0012 (a)**, as one
 ledger line (`SW-C0842`), not one finding per file. No Unity run was made, and no Unity compile is claimed.
 
+Two bare-name `ArgumentException` guards (the CA2208 shape of I1 and I2) sit in this unanalysed code and are listed in
+`SW-C0842` as `knownSites`. Both are staged as step B under 0012 (a):
+
+- `apps/terrarium/Assets/Scripts/Ritual/GardenService.cs:69`
+- `shared/packages/com.gardenvr.capture/Runtime/PlaybackHarness.cs:45`
+
 ## Asset half
 
 The census findings of the milestone-3 lean sweep, classified into the same ledger (`docs/health/sweep.json`, records
-`SW-A0001` to `SW-A0057`, `half` "assets"). **Unclassified: 0 in the asset half, 0 in the code half, 0 overall** (899
-records: 842 code, 57 assets).
+`SW-A0001` to `SW-A0057`, `half` "assets"). **Unclassified: 0 in the asset half, 0 in the code half, 0 overall** (924
+records after the closure re-run: 867 code, 57 assets).
 
 - **Measured at:** `8670dd1ab3ee88b5cdccf5509272c16725bc0406` (decisions: 0013), with `node tools/assets/census.mjs --rev 8670dd1 --out <temp dir outside the repo>`.
   The run printed `tracked 2378 files 251368912 bytes; png 410 files 222942403 bytes` and `unclassified duplicate groups: 0`.
@@ -225,7 +246,11 @@ render compare, which needs a Unity licence this machine lacks.
 
 ### Ideas
 
-- **I5. Assets: two 16-bit pngs, an owner call on requantising.** `apps/terrarium/Assets/Art/Textures/moss-repaint.png`
+- **I5. Assets: two 16-bit pngs, an owner call on requantising.** *Closed by decision 0014 (c) and (d).* `SW-A0033`
+  (`moss-repaint.png`) is deliberate and staged by 0014 (d): item 8 of 0012 (a), cut at the first Unity session with item 2.
+  `SW-A0034` (`dial_paper.png`) is deliberate and staged by 0014 (c): item 7 of 0012 (a), requantised only if the render
+  compare shows no change. The paragraph below is the idea as filed; the per-class table above is as measured at 8670dd1,
+  before 0014, so its "Idea" column reads 2 where the ledger now reads 0 and its "staged" column 19 where the ledger reads 21. `apps/terrarium/Assets/Art/Textures/moss-repaint.png`
   (4110297 bytes on disk; census estimate to save 2053436) and `apps/sundial/Assets/Art/Textures/dial_paper.png`
   (estimate 44892). Both are `visible-change` at the census. 0011's measured arithmetic covers a lossless rewrite (moss-repaint: 4106871 to
   3872607 bytes, which adds 3872607 to history to save 234264; dial_paper: under the threshold), not a requantise to 8
@@ -239,3 +264,169 @@ No other idea: the rule for `no-reference-found` files with no loader found had 
 `git diff --name-only 8670dd1..HEAD` lists `docs/health/sweep.json` and `docs/health/SWEEP.md` only. The 842 code records
 are byte-identical as parsed JSON (`JSON.stringify` of the `half: "code"` findings before and after, equal). The three
 `counts` blocks (`counts`, `counts.perHalf.code`, `counts.perHalf.assets`) show `unclassified` 0.
+
+## Closure re-run (37541f0)
+
+The closing run of the sweep. It re-ran the code-half tools at `37541f067357d462af87ed3376173e500e38befb` (I3 merged, after
+I1 a576eb7, I2 c2e05b6 and I4 85973ea), closed I1 to I4 and I5 in the ledger, and classified what the re-run showed that the
+ledger did not. It edits only `docs/health/SWEEP.md` and `docs/health/sweep.json`. No code, test, config or other doc changed, no
+analyzer config, `.editorconfig`, `Directory.Build.props`, csproj, package.json or lock file was touched, and every tool wrote its
+output to a temp directory outside the repo. Same SDK (9.0.308) and jscpd 4.3.0 as the base run. No Unity run was made, and no
+Unity compile is claimed.
+
+### Commands at 37541f0
+
+| # | Command | Exit | Result |
+| --- | --- | ---: | --- |
+| 1a | `dotnet build shared/core-dotnet/GardenVR.sln --no-incremental` | 0 | 0 warnings, 0 errors |
+| 1b | `dotnet build shared/core-dotnet/GardenVR.sln --no-incremental -p:AnalysisLevel=latest-recommended` | 0 | 512 warnings (512 unique sites), 0 errors |
+| 2a | `dotnet format analyzers shared/core-dotnet/GardenVR.sln --verify-no-changes --severity info --report <temp>/fmt-analyzers` | 2 | made no change |
+| 2b | `dotnet format style shared/core-dotnet/GardenVR.sln --verify-no-changes --severity info --report <temp>/fmt-style` | 2 | made no change |
+| 2c | Name grep for the four members the Core approved surface gained since 00c2e4c: `LedgerJson.ReadHabits`, `ReadTends`, `WriteHabits`, `WriteTends`. Same method as the base run (whole word, every tracked `.cs` under `apps/` and `shared/`, comments stripped, string literals kept). The operators are left out, as 2c does. | - | All four are referenced from `SundialSave.cs` (app) and `TerrariumSave.cs` (core) as well as from `LedgerJsonTests.cs`: ReadHabits and ReadTends 5 occurrences each (2 in tests), WriteHabits and WriteTends 6 each (3 in tests). No finding, no record. |
+| 3 | `npx --yes jscpd@4 --min-tokens 70 --format csharp --reporters json,console --output <temp>/jscpd-out --absolute shared/packages/com.gardenvr.core/Runtime` plus the six in-place files, run from a temp directory | 0 | 39 files, 6161 lines, 63540 tokens; 2 clones, 14 duplicated lines (0.23%), 257 tokens (0.4%) |
+| test | `dotnet test shared/core-dotnet` | 0 | 335 of 335 passed (Core 285, SundialModel 36, TerrariumModel 14), 0 failed |
+
+The 512 unique build sites are 190 production and 322 test. The default level still reports no warning, and no compiler (CS) warning.
+
+### Build rules, before and after
+
+Default level (1a): 0 warnings after 1a99071 (the base after the test fix), 0 at 37541f0.
+
+`latest-recommended` (1b): 510 after 1a99071 (308 test + 202 production), 512 at 37541f0 (322 test + 190 production).
+
+| Rule | After 1a99071 | At 37541f0 | Change |
+| --- | ---: | ---: | ---: |
+| CA1707 | 302 | 313 | +11 |
+| CA1051 | 161 | 161 | 0 |
+| CA1861 | 6 | 7 | +1 |
+| CA1825 | 5 | 5 | 0 |
+| CA1305 | 6 | 6 | 0 |
+| CA1822 | 5 | 5 | 0 |
+| CA1805 | 3 | 3 | 0 |
+| CA1720 | 3 | 3 | 0 |
+| CA2249 | 3 | 3 | 0 |
+| CA1716 | 2 | 2 | 0 |
+| CA2211 | 2 | 2 | 0 |
+| CA2208 | 11 | 0 | -11 |
+| CA1036 | 1 | 0 | -1 |
+| CA1806 | 0 | 2 | +2 |
+| **Total** | 510 | 512 | +2 |
+
+The predicted drops hold: **CA2208 production sites 11 to 0** (8 by a576eb7, 3 by c2e05b6) and **CA1036 1 to 0** (37541f0). The test side
+rose by 14: the guard tests that I1 and I2 added and the I4 codec tests add 11 CA1707 sites, 2 CA1806 and 1 CA1861 (all recorded below).
+The production count fell from 202 to 190, exactly the 12 sites fixed, and each other production rule is unchanged.
+
+Format (2a, 2b): per (rule, file), the re-run site count was compared with the not-fixed records for the pair. Four rules differ:
+
+| Rule | Ledger (not fixed) | At 37541f0 | Why |
+| --- | ---: | ---: | --- |
+| IDE0028 | 7 | 9 | +2 in LedgerJsonTests.cs (the I4 codec tests) |
+| IDE0090 | 54 | 56 | +2, one each in the I1 and I2 guard test files |
+| IDE0300 | 35 | 30 | -5, the five `new T[0]` sites that 1a99071 rewrote to `Array.Empty<T>()` |
+| IDE0301 | 0 | 5 | +5, the same five sites, now flagged as an empty collection |
+
+### jscpd, before and after
+
+| | Base run (00c2e4c) | At 37541f0 |
+| --- | ---: | ---: |
+| Clones | 4 | 2 |
+| Duplicated lines | 51 (0.82%) | 14 (0.23%) |
+| Duplicated tokens | 683 (1.07%) | 257 (0.4%) |
+| Files, lines, tokens | 39, 6203, 63980 | 39, 6161, 63540 |
+
+The delivery predicted 4 clones to 1. The re-run found 2, and neither is one of the four base clones. SW-C0838 to SW-C0840 (the
+array loops) are gone, as I4 predicted. SW-C0841 (the four one-line wrappers) is gone too, because 85973ea deleted the wrappers and
+the saves now call `LedgerJson.ReadHabits` and `ReadTends` directly. The two clones that remain are new records (SW-C0866 and
+SW-C0867, below). The (rule, file) pair `clone`, `SundialSave.cs` has one not-fixed record (SW-C0841) and one site at 37541f0, so a
+count comparison alone would call it line drift. The site is a different clone (8 lines, 144 tokens at `SundialSave.cs:69-76`
+against `TerrariumSave.cs:83-90`, not 23 lines, 246 tokens at `:162-184`), so it got a record, and SW-C0841 is listed as vanished.
+
+### New records (25)
+
+Each was read at its file's blob at 37541f0, in the same fields as the existing records. None is `fixed`.
+
+| Id | Rule | File:line | Class | Basis |
+| --- | --- | --- | --- | --- |
+| SW-C0843 | CA1707 | `GardenVR.Core.Tests/LedgerJsonTests.cs:128` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0844 | CA1707 | `GardenVR.Core.Tests/LedgerJsonTests.cs:140` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0845 | CA1707 | `GardenVR.Core.Tests/LedgerJsonTests.cs:149` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0846 | CA1707 | `GardenVR.Core.Tests/LedgerJsonTests.cs:158` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0847 | CA1707 | `GardenVR.Core.Tests/LedgerJsonTests.cs:173` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0848 | CA1707 | `GardenVR.Core.Tests/ArgumentGuardParamNameTests.cs:21` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0849 | CA1707 | `GardenVR.Core.Tests/ArgumentGuardParamNameTests.cs:37` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0850 | CA1707 | `GardenVR.Core.Tests/ArgumentGuardParamNameTests.cs:43` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0851 | CA1707 | `GardenVR.Core.Tests/ArgumentGuardParamNameTests.cs:53` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0852 | CA1707 | `GardenVR.SundialModel.Tests/SundialServiceGuardTests.cs:30` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0853 | CA1707 | `GardenVR.SundialModel.Tests/SundialServiceGuardTests.cs:38` | deliberate | test naming convention (CA1707 rule) |
+| SW-C0854 | CA1806 | `GardenVR.Core.Tests/ArgumentGuardParamNameTests.cs:39` | idea | idea I6 |
+| SW-C0855 | CA1806 | `GardenVR.SundialModel.Tests/SundialServiceGuardTests.cs:32` | idea | idea I6 |
+| SW-C0856 | CA1861 | `GardenVR.Core.Tests/LedgerJsonTests.cs:164` | deliberate | expected value of one assertion (CA1861 rule) |
+| SW-C0857 | IDE0028 | `GardenVR.Core.Tests/LedgerJsonTests.cs:133` | deliberate | IDE style rule, test |
+| SW-C0858 | IDE0028 | `GardenVR.Core.Tests/LedgerJsonTests.cs:145` | deliberate | IDE style rule, test |
+| SW-C0859 | IDE0090 | `GardenVR.Core.Tests/ArgumentGuardParamNameTests.cs:10` | deliberate | IDE style rule, test |
+| SW-C0860 | IDE0090 | `GardenVR.SundialModel.Tests/SundialServiceGuardTests.cs:13` | deliberate | IDE style rule, test |
+| SW-C0861 | IDE0301 | `GardenVR.Core.Tests/WeekDialTests.cs:115` | deliberate | IDE style rule, test; the Array.Empty<T>() of 1a99071 |
+| SW-C0862 | IDE0301 | `GardenVR.Core.Tests/SundialTests.cs:32` | deliberate | IDE style rule, test; the Array.Empty<T>() of 1a99071 |
+| SW-C0863 | IDE0301 | `GardenVR.Core.Tests/SaveCrashWindowTests.cs:73` | deliberate | IDE style rule, test; the Array.Empty<T>() of 1a99071 |
+| SW-C0864 | IDE0301 | `GardenVR.Core.Tests/SaveRestoreTests.cs:241` | deliberate | IDE style rule, test; the Array.Empty<T>() of 1a99071 |
+| SW-C0865 | IDE0301 | `GardenVR.Core.Tests/RimScrubTests.cs:146` | deliberate | IDE style rule, test; the Array.Empty<T>() of 1a99071 |
+| SW-C0866 | clone | `core/Common/Ledger.cs:147` | idea | idea I7 |
+| SW-C0867 | clone | `sundial/SundialSave.cs:69` | deliberate | successor of the SW-C0841 wrappers (clone rule) |
+
+By class: 11 CA1707, 1 CA1861 and 9 IDE-style test sites (2 IDE0028, 2 IDE0090, 5 IDE0301) are deliberate by rule, and so is 1 clone
+(SW-C0867). Three are ideas: SW-C0854 and SW-C0855 (CA1806, idea I6) and SW-C0866 (the Ledger.cs clone, idea I7). The five IDE0301
+records are not caused by I1 to I4: 1a99071 wrote `Array.Empty<T>()` at the five CA1825 test sites, which IDE0300 then stopped flagging
+and IDE0301 began to.
+
+### Vanished sites
+
+Explained by step 1 (the records are now `fixed`):
+
+| Rule | Sites | Removed by |
+| --- | --- | --- |
+| CA2208 | 8 (Ledger.cs 5, SaveStore.cs 1, SundialState.cs 1, Companions.cs 1) | a576eb729a95b8e628a1d2c954d55be5d5f383b1 (I1) |
+| CA2208 | 3 (SundialService.cs) | c2e05b649c8eeb6455b4d1345c20014d402968ca (I2) |
+| CA1036 | 1 (GardenDay.cs) | 37541f067357d462af87ed3376173e500e38befb (I3) |
+| clone | 3 (SW-C0838 to SW-C0840) | 85973eaa972e4996ca4b12958e41a75dc79d7de9 (I4) |
+
+Not explained by step 1. These records are unchanged (they keep their base line and blob). Each pair is listed with the commit that
+removed the site:
+
+| Pair | Record | Removed by |
+| --- | --- | --- |
+| IDE0300, SundialTests.cs | SW-C0782 (line 30) | 1a990718f551c88d34db7f963f55f59fb883c8e7 |
+| IDE0300, SaveCrashWindowTests.cs | SW-C0776 (line 71) | 1a990718f551c88d34db7f963f55f59fb883c8e7 |
+| IDE0300, SaveRestoreTests.cs | SW-C0778 (line 239) | 1a990718f551c88d34db7f963f55f59fb883c8e7 |
+| IDE0300, WeekDialTests.cs | SW-C0794 (line 113) | 1a990718f551c88d34db7f963f55f59fb883c8e7 |
+| IDE0300, RimScrubTests.cs | SW-C0774 (line 144) | 1a990718f551c88d34db7f963f55f59fb883c8e7 |
+| clone, SundialSave.cs | SW-C0841 (23 lines, 246 tokens, `:162-184`) | 85973eaa972e4996ca4b12958e41a75dc79d7de9 (the wrappers it described were deleted) |
+
+The base ledger read the five IDE0300 pairs before 1a99071 rewrote `new T[0]` to `Array.Empty<T>()` at the lines named in "Fixed (1a99071)",
+so those records describe sites the fix commit removed.
+
+### Counts after the closure
+
+| Block | Records | Fixed | Idea | Deliberate | Staged | Unclassified |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| code | 867 | 66 | 3 | 798 | 24 | 0 |
+| assets | 57 | 0 | 0 | 57 | 21 | 0 |
+| **all** | **924** | **66** | **3** | **855** | **45** | **0** |
+
+Before the new records the code half read fixed 66, idea 0, deliberate 776 (24 staged) and the asset half deliberate 57 (21 staged),
+idea 0, as expected. The 25 new records leave the staged count unchanged. The machine-readable record of this run is the `closure`
+object in `sweep.json` (commit, the exit code of each tool, and the per-rule counts).
+
+### Check
+
+```
+existing records 899: 881 identical (JSON.stringify per id), 18 of the 18 named changed only in their step 1 fields, 0 unexpected, 0 missing
+added records 25: SW-C0843 to SW-C0867; order of existing ids kept: true
+counts: records 924, fixed 66, idea 3, deliberate 855, staged 45, unclassified 0; counts block equals the recount: true
+counts.perHalf.code: records 867, fixed 66, idea 3, deliberate 798, staged 24, unclassified 0; counts block equals the recount: true
+counts.perHalf.assets: records 57, fixed 0, idea 0, deliberate 57, staged 21, unclassified 0; counts block equals the recount: true
+perTool equals the recount: true
+ideas I1 to I4 closed with a full SHA, I5 closed by 0014: true ; ideas listed: I1 I2 I3 I4 I5 I6 I7
+```
+
+The check is a node script run in a temp directory against `git show HEAD:docs/health/sweep.json` (the file as it was before this
+commit) and the working file. `git diff --name-only 37541f0..HEAD` lists `docs/health/SWEEP.md` and `docs/health/sweep.json` only.
