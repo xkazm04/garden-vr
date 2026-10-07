@@ -35,6 +35,7 @@ const CODE_EXT = new Set(['.cs', '.py', '.mjs', '.js', '.ts', '.sh', '.ps1', '.c
 const DATA_EXT = new Set(['.json', '.txt', '.csv', '.xml', '.yaml', '.yml', '.bytes']);
 const NAME_TOKEN = /[A-Za-z0-9_.-]*[A-Za-z0-9_-]\.(?:png|jpe?g|tga|psd|exr|hdr|tiff?|bmp|gif|webp|fbx|glb|obj|blend|ttf|otf|mp3|ogg|wav)(?![A-Za-z0-9_])/gi;
 const QUOTED = /"[A-Za-z0-9_./-]{1,160}"|'[A-Za-z0-9_./-]{1,160}'/g;
+const GLOB = /["'][A-Za-z0-9_./-]*[*?][A-Za-z0-9_.*?/-]*["']/g;
 const COLOR_TYPES = { 0: 'grey', 2: 'rgb', 3: 'palette', 4: 'grey-alpha', 6: 'rgba' };
 
 function args(argv) {
@@ -101,7 +102,8 @@ function jpegHeader(b) {
   return { error: 'no jpeg SOF' };
 }
 
-// TextureImporter .meta, read line by line: guid, the legacy top-level cap, and every platformSettings entry.
+// TextureImporter .meta, read line by line: guid, the legacy top-level cap, the Default platform entry and every
+// overridden one (an entry with overridden: 0 is inert, Unity uses Default for that platform).
 function parseMeta(text) {
   const num = re => { const m = text.match(re); return m ? Number(m[1]) : null; };
   const guid = (text.match(/^guid: ([0-9a-f]{32})\s*$/m) || [])[1] || null;
@@ -131,8 +133,10 @@ function parseMeta(text) {
   // A platform entry only counts when overridden; otherwise the Default entry (or the legacy field) applies.
   const effective = [def || { maxTextureSize: legacyMax, textureFormat: -1, textureCompression: null }, ...plat.filter(p => p !== def && p.overridden)];
   const effectiveMax = Math.max(...effective.map(p => p.maxTextureSize ?? 0)) || null;
-  const compressedEverywhere = effective.every(p => p.textureFormat === -1 && p.textureCompression > 0);
-  return { guid, importer, maxTextureSize: legacyMax, platforms: plat, effectiveMaxTextureSize: effectiveMax, compressedEverywhere };
+  // Automatic format with compression on gives an 8-bit block format; anything else can keep 16 bits per sample.
+  const notCompressed = effective.filter(p => !(p.textureFormat === -1 && p.textureCompression > 0))
+    .map(p => `${p.buildTarget || 'legacy'} textureFormat ${p.textureFormat} textureCompression ${p.textureCompression}`);
+  return { guid, importer, maxTextureSize: legacyMax, platforms: effective.filter(p => p.buildTarget), effectiveMaxTextureSize: effectiveMax, notCompressed };
 }
 
 // Custom JSON layout: the top two levels pretty, every record below on one line, so diffs stay one line per record.
@@ -198,20 +202,34 @@ function census(rev) {
     }
   }
 
-  // Code files that name an asset: they spell its file name, or quote its stem (alone or as the last path segment),
-  // the way editor scripts build "Assets/Art/Textures/" + name + ".png". Keyed lower-case, matched by name, not path.
+  // Code files that name an asset: they spell its file name; quote its stem, alone or as the last path segment (editor
+  // scripts build "Assets/Art/Textures/" + name + ".png"); quote a prefix ending in - or _ ("packet-" + arc + ".png");
+  // or quote a glob ("mist_wisp_*.png"). Prefixes and glob heads need 3+ literal characters, so bare globs ("*.png")
+  // and directory listings stay unread. Matched by name, not path, lower-case.
   const mentions = new Map();
+  const patterns = [];
   const note = (key, file) => { if (!mentions.has(key)) mentions.set(key, new Set()); mentions.get(key).add(file); };
   for (const e of wantText) {
     if (!CODE_EXT.has(ext(e.path))) continue;
     const text = texts.get(e.path);
     for (const t of text.match(NAME_TOKEN) || []) note(t.toLowerCase(), e.path);
-    for (const q of text.match(QUOTED) || []) note(`"${q.slice(1, -1).split('/').pop().toLowerCase()}"`, e.path);
+    for (const q of text.match(QUOTED) || []) {
+      const last = q.slice(1, -1).split('/').pop().toLowerCase();
+      note(`"${last}"`, e.path);
+      if (/^[a-z0-9_.-]{3,}[-_]$/.test(last)) patterns.push({ re: new RegExp(`^${escapeRe(last)}`), file: e.path });
+    }
+    for (const g of text.match(GLOB) || []) {
+      const last = g.slice(1, -1).split('/').pop().toLowerCase();
+      if (!/^[^*?]{3,}/.test(last)) continue;
+      const re = last.split(/([*?])/).map(x => (x === '*' ? '.*' : x === '?' ? '.' : escapeRe(x))).join('');
+      patterns.push({ re: new RegExp(`^${re}$`), file: e.path });
+    }
   }
   const mentionsOf = p => {
     const base = path.posix.basename(p).toLowerCase();
     const stem = `"${base.replace(/\.[^.]+$/, '')}"`;
-    return sorted(new Set([...(mentions.get(base) || []), ...(mentions.get(stem) || [])].filter(f => f !== p)));
+    const matched = patterns.filter(m => m.re.test(base)).map(m => m.file);
+    return sorted(new Set([...(mentions.get(base) || []), ...(mentions.get(stem) || []), ...matched].filter(f => f !== p)));
   };
 
   // Resources.Load naming: exact literal, or a directory literal plus the stem in a .cs or a data file of that app.
@@ -253,8 +271,11 @@ function census(rev) {
   const images = imageEntries.map(e => {
     const b = imageBlobs.get(e.blob);
     const x = ext(e.path);
-    const head = x === '.png' ? pngHeader(b) : x === '.jpg' || x === '.jpeg' ? jpegHeader(b) : { error: 'dimensions not read for this format' };
-    const rec = { path: e.path, blob: e.blob, bytes: e.bytes, format: x.slice(1), ...head, codeMentions: mentionsOf(e.path) };
+    // The bytes decide the format; a few files carry another format's extension.
+    const kind = b.length >= 8 && b.readUInt32BE(0) === 0x89504e47 ? 'png' : b.length >= 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff ? 'jpeg' : null;
+    const head = kind === 'png' ? pngHeader(b) : kind === 'jpeg' ? jpegHeader(b) : { error: 'dimensions not read for this format' };
+    const named = { '.png': 'png', '.jpg': 'jpeg', '.jpeg': 'jpeg' }[x] || x.slice(1);
+    const rec = { path: e.path, blob: e.blob, bytes: e.bytes, format: kind || named, misnamed: Boolean(kind) && kind !== named, ...head, codeMentions: mentionsOf(e.path) };
     if (appOf(e.path)) {
       const f = unityFacts(e);
       facts.set(e.path, f);
@@ -335,14 +356,14 @@ function census(rev) {
       });
     }
     if (r.format === 'png' && r.bitDepth === 16) {
-      const ok = f && f.meta && f.meta.compressedEverywhere;
+      const ok = f && f.meta && !f.meta.notCompressed.length;
       add({
         class: 'png-16-bit', path: r.path, bytesSaved: Math.round(r.bytes / 2), method: 'estimate-half',
         risk: ok ? 'engine-equivalent' : 'visible-change',
         cut: 'requantise to 8 bits per sample',
         evidence: !f ? 'outside Unity Assets; a source file, no import to match'
           : ok ? 'every platform imports it compressed (8 bits per sample)'
-            : 'an effective platform imports it uncompressed or with an explicit format, so Unity can keep 16 bits per sample',
+            : `${f.meta ? f.meta.notCompressed.join(', ') : 'no .meta read'}: Unity can import it at 16 bits per sample`,
       });
     }
     if (!f) continue;
@@ -385,7 +406,7 @@ function census(rev) {
   });
 
   const assetsImages = images.filter(r => r.unity);
-  const pngs = images.filter(r => r.format === 'png');
+  const pngs = images.filter(r => ext(r.path) === '.png');
   const imageDups = duplicates.filter(isImageGroup);
   const result = {
     schema: 'garden-vr/asset-census/1',
@@ -399,7 +420,8 @@ function census(rev) {
       assetsImagesOverCap: assetsImages.filter(r => Math.max(r.width || 0, r.height || 0) > CAP).length,
       assetsImagesImportedOverCap: assetsImages.filter(r => (r.unity.importedMaxSide || 0) > CAP).length,
       assetsArtSource: assetsImages.filter(r => /\/Art\/Source\//.test(r.path)).length,
-      png16Bit: pngs.filter(r => r.bitDepth === 16).length,
+      png16Bit: images.filter(r => r.format === 'png' && r.bitDepth === 16).length,
+      misnamed: images.filter(r => r.misnamed).map(r => r.path),
       duplicates: { groups: duplicates.length, wastedBytes: sum(duplicates, 'wastedBytes'), mib: mib(sum(duplicates, 'wastedBytes')) },
       imageDuplicates: { groups: imageDups.length, wastedBytes: sum(imageDups, 'wastedBytes'), mib: mib(sum(imageDups, 'wastedBytes')) },
       states: Object.fromEntries(['referenced', 'resources', 'no-reference-found'].map(s => [s, assetsImages.filter(r => r.unity.state === s).length])),
@@ -427,12 +449,13 @@ function markdown(r) {
   out.push('## Totals', '');
   out.push(row(['Measure', 'Value']), row(['---', '---']));
   out.push(row(['Tracked', `${t.tracked.files} files, ${t.tracked.bytes} bytes (${t.tracked.mib} MiB)`]));
-  out.push(row(['png', `${t.png.files} files, ${t.png.bytes} bytes (${t.png.mib} MiB)`]));
+  out.push(row(['png (by extension)', `${t.png.files} files, ${t.png.bytes} bytes (${t.png.mib} MiB)`]));
   out.push(row(['All images', `${t.images.files} files, ${t.images.bytes} bytes (${t.images.mib} MiB)`]));
   out.push(row(['Images under apps/*/Assets', `${t.assetsImages.files} files, ${t.assetsImages.bytes} bytes (${t.assetsImages.mib} MiB)`]));
   out.push(row(['Assets images with a side over 1024 px', `${t.assetsImagesOverCap} (${t.assetsImagesImportedOverCap} still over 1024 px after the .meta import cap)`]));
   out.push(row(['Assets images under Art/Source', String(t.assetsArtSource)]));
   out.push(row(['16-bit png', String(t.png16Bit)]));
+  out.push(row(['Images whose bytes are not the format their extension says', t.misnamed.length ? t.misnamed.map(p => `\`${p}\``).join(', ') : 'none']));
   out.push(row(['Duplicate blobs, all files', `${t.duplicates.groups} groups, ${t.duplicates.wastedBytes} bytes wasted (${t.duplicates.mib} MiB)`]));
   out.push(row(['Duplicate blobs, groups with an image', `${t.imageDuplicates.groups} groups, ${t.imageDuplicates.wastedBytes} bytes wasted (${t.imageDuplicates.mib} MiB)`]));
   out.push(row(['Assets image reference states', Object.entries(t.states).map(([k, v]) => `${k} ${v}`).join(', ')]));
@@ -455,10 +478,11 @@ function markdown(r) {
     + '(a guid reference, a Resources folder, or a code file that names it, see below); `engine-equivalent`, a downscale to the import cap '
     + 'Unity already applies, or 16 to 8 bits where every platform imports compressed; `visible-change`, needs a render compare, which needs '
     + 'a Unity licence this machine lacks. `no-reference-found` never means unused: code can load an image by a composed name.', '');
-  out.push('A code file (.cs, .py, .mjs, .js, .ts, .sh, .ps1, .cmd, .bat, .json) names an asset when it spells its file name or quotes '
-    + 'its stem. The match is by name, not by path, so a name shared by several files counts for each of them; that only ever makes a '
-    + 'finding more cautious. A Resources load path is `exact` when a .cs quotes it whole, `composed` when a .cs quotes its folder and '
-    + 'a .cs or a data file of that app names the stem (or the folder is loaded with LoadAll).', '');
+  out.push('A code file (.cs, .py, .mjs, .js, .ts, .sh, .ps1, .cmd, .bat, .json) names an asset when it spells its file name, quotes '
+    + 'its stem, quotes a prefix of it ending in - or _ (`"packet-" + arc + ".png"`), or quotes a glob that matches it (`"mist_wisp_*.png"`). '
+    + 'The match is by name, not by path, so a name shared by several files counts for each of them; that only ever makes a finding more '
+    + 'cautious. Bare globs (`"*.png"`) and directory listings are not resolved. A Resources load path is `exact` when a .cs quotes it '
+    + 'whole, `composed` when a .cs quotes its folder and a .cs or a data file of that app names the stem (or the folder is loaded with LoadAll).', '');
   out.push('Duplicate groups of text, code and settings files are listed in `baseline.json` but raised as no finding: each Unity project keeps its own copy.', '');
   out.push('## Findings ranked by bytes saved', '');
   out.push(row(['#', 'Class', 'Path', 'Bytes saved', 'Method', 'Risk', 'Cut', 'Evidence']), row(['---:', '---', '---', '---:', '---', '---', '---', '---']));
