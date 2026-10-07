@@ -1,6 +1,6 @@
 {
   "schema": "garden-vr/code-health-findings/1",
-  "about": "One finding per top-10 hotspot, written by reading the file at the blob named, not from its numbers. tools/health/hotspots.mjs joins these to the ranking and marks a finding stale when the file's blob changes.",
+  "about": "One finding per hotspot read: the top 10 of the ranking, then #12 and #14 for milestone 3 (decision 0012 (d)), each written by reading the file at the blob named, not from its numbers. tools/health/hotspots.mjs joins these to the ranking and marks a finding stale when the file's blob changes.",
   "readAt": "0ada0cccbbc1d90fd3b2cf4abb51730939787f7c",
   "findings": [
     {"path": "apps/sundial/Assets/Scripts/Dial/DialView.cs", "blob": "ce7cc6bb3d20da46da4b05bc4dbf42224614528a", "line": 1502, "kind": "god class", "finding": "one MonoBehaviour is the dial renderer plus every art spike as a `variant=` look (watercolour, roomlight, leafplant, soilmound, halo2, layout, and sprint, which stacks them) parsed in ApplyKey and switched by HasVariant :865, each spike with its own Apply step and fields, beside CPU halo-mask baking (BakeHaloMask :1896) and prefab mesh building (Build :1225, 166 lines); Apply :289 (140 lines) runs every step on every frame from SundialController.Update", "backlog": null},
