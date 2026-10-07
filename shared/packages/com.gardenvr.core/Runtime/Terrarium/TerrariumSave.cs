@@ -81,22 +81,10 @@ namespace GardenVR.Core
             Dictionary<string, JsonValue> settingsExtra;
             save.Settings = ReadSettings(obj.Has("Settings") && !obj.Get("Settings").IsNull ? obj.Get("Settings").AsObject() : null, out settingsExtra);
             save.SettingsExtra = settingsExtra;
-            save.Habits = new List<HabitDef>();
             save.HabitExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
-            if (obj.Has("Habits") && !obj.Get("Habits").IsNull)
-            {
-                JsonArray habits = obj.Get("Habits").AsArray();
-                for (int i = 0; i < habits.Count; i++)
-                    save.Habits.Add(ReadHabit(habits[i].AsObject(), i, save.HabitExtra));
-            }
-            save.Tends = new List<TendEvent>();
+            save.Habits = LedgerJson.ReadHabits(obj, save.HabitExtra, RowChoices);
             save.TendExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
-            if (obj.Has("Tends") && !obj.Get("Tends").IsNull)
-            {
-                JsonArray tends = obj.Get("Tends").AsArray();
-                for (int i = 0; i < tends.Count; i++)
-                    save.Tends.Add(ReadTend(tends[i].AsObject(), i, save.TendExtra));
-            }
+            save.Tends = LedgerJson.ReadTends(obj, save.TendExtra, RowChoices);
             if (obj.Has("FirstRunStep") && !obj.Get("FirstRunStep").IsNull)
                 save.FirstRunStep = obj.Get("FirstRunStep").AsString();
             if (obj.Has("RitualOpen")) save.RitualOpen = obj.Get("RitualOpen").AsBool();
@@ -119,20 +107,8 @@ namespace GardenVR.Core
             obj.Set("LastRitualDay", save.LastRitualDay.HasValue ? JsonValue.Number(save.LastRitualDay.Value) : JsonValue.Null());
             obj.Set("Returns", JsonValue.Number(save.Returns));
             obj.Set("RitualsCompleted", JsonValue.Number(save.RitualsCompleted));
-            var habits = new JsonArray();
-            if (save.Habits != null)
-            {
-                for (int i = 0; i < save.Habits.Count; i++)
-                    habits.Add(WriteHabit(save.Habits[i], i, save.HabitExtra));
-            }
-            obj.Set("Habits", habits);
-            var tends = new JsonArray();
-            if (save.Tends != null)
-            {
-                for (int i = 0; i < save.Tends.Count; i++)
-                    tends.Add(WriteTend(save.Tends[i], i, save.TendExtra));
-            }
-            obj.Set("Tends", tends);
+            obj.Set("Habits", LedgerJson.WriteHabits(save.Habits, save.HabitExtra, RowChoices));
+            obj.Set("Tends", LedgerJson.WriteTends(save.Tends, save.TendExtra));
             JsonObject settings = WriteSettings(save.Settings ?? new RitualSettings(), save.SettingsExtra);
             if (settings.Count > 0) obj.Set("Settings", settings);
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
@@ -257,25 +233,5 @@ namespace GardenVR.Core
             SourceFallback = TendSource.Ritual,
             RowKnown = false
         };
-
-        static HabitDef ReadHabit(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.ReadHabit(obj, index, extras, RowChoices);
-        }
-
-        static JsonObject WriteHabit(HabitDef habit, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.WriteHabit(habit, index, extras, RowChoices);
-        }
-
-        static TendEvent ReadTend(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.ReadTend(obj, index, extras, RowChoices);
-        }
-
-        static JsonObject WriteTend(TendEvent tend, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.WriteTend(tend, index, extras);
-        }
     }
 }

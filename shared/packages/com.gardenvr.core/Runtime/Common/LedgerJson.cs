@@ -116,6 +116,56 @@ namespace GardenVR.Core
             return obj;
         }
 
+        /// <summary>Reads the "Habits" array of <paramref name="root"/>. A missing key or JSON null reads as an empty list.</summary>
+        public static List<HabitDef> ReadHabits(JsonObject root, Dictionary<string, Dictionary<string, JsonValue>> extras, Choices choices)
+        {
+            var habits = new List<HabitDef>();
+            if (root.Has("Habits") && !root.Get("Habits").IsNull)
+            {
+                JsonArray rows = root.Get("Habits").AsArray();
+                for (int i = 0; i < rows.Count; i++)
+                    habits.Add(ReadHabit(rows[i].AsObject(), i, extras, choices));
+            }
+            return habits;
+        }
+
+        /// <summary>Writes <paramref name="habits"/> as an array. A null list writes an empty array.</summary>
+        public static JsonArray WriteHabits(List<HabitDef> habits, Dictionary<string, Dictionary<string, JsonValue>> extras, Choices choices)
+        {
+            var array = new JsonArray();
+            if (habits != null)
+            {
+                for (int i = 0; i < habits.Count; i++)
+                    array.Add(WriteHabit(habits[i], i, extras, choices));
+            }
+            return array;
+        }
+
+        /// <summary>Reads the "Tends" array of <paramref name="root"/>. A missing key or JSON null reads as an empty list.</summary>
+        public static List<TendEvent> ReadTends(JsonObject root, Dictionary<string, Dictionary<string, JsonValue>> extras, Choices choices)
+        {
+            var tends = new List<TendEvent>();
+            if (root.Has("Tends") && !root.Get("Tends").IsNull)
+            {
+                JsonArray rows = root.Get("Tends").AsArray();
+                for (int i = 0; i < rows.Count; i++)
+                    tends.Add(ReadTend(rows[i].AsObject(), i, extras, choices));
+            }
+            return tends;
+        }
+
+        /// <summary>Writes <paramref name="tends"/> as an array. A null list writes an empty array.</summary>
+        public static JsonArray WriteTends(List<TendEvent> tends, Dictionary<string, Dictionary<string, JsonValue>> extras)
+        {
+            var array = new JsonArray();
+            if (tends != null)
+            {
+                for (int i = 0; i < tends.Count; i++)
+                    array.Add(WriteTend(tends[i], i, extras));
+            }
+            return array;
+        }
+
         /// <summary>Keeps the members of <paramref name="obj"/> not in <paramref name="known"/> under <paramref name="key"/>. Nothing is kept when there are none.</summary>
         public static void KeepExtra(JsonObject obj, string[] known, string key, Dictionary<string, Dictionary<string, JsonValue>> extras)
         {

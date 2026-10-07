@@ -1,4 +1,8 @@
 GardenVR.Core.ArcDef ctor public ()
+GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonArray WriteHabits(System.Collections.Generic.List<GardenVR.Core.HabitDef> habits, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonArray WriteTends(System.Collections.Generic.List<GardenVR.Core.TendEvent> tends, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
+GardenVR.Core.LedgerJson method public static System.Collections.Generic.List<GardenVR.Core.HabitDef> ReadHabits(GardenVR.Core.JsonObject root, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static System.Collections.Generic.List<GardenVR.Core.TendEvent> ReadTends(GardenVR.Core.JsonObject root, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
 GardenVR.Core.ArcDef field public GardenVR.Core.ArcId Id
 GardenVR.Core.ArcDef field public System.Int32 EndMin
 GardenVR.Core.ArcDef field public System.Int32 StartMin

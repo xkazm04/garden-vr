@@ -67,28 +67,10 @@ namespace GardenVR.Sundial
             if (obj.Has("Focus") && !obj.Get("Focus").IsNull && obj.Get("Focus").Kind == JsonKind.Object)
                 save.Focus = ReadFocus(obj.Get("Focus").AsObject());
             save.Settings = ReadSettings(obj.Has("Settings") && !obj.Get("Settings").IsNull ? obj.Get("Settings").AsObject() : null);
-            save.Habits = new List<HabitDef>();
             save.HabitExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
-            if (obj.Has("Habits") && !obj.Get("Habits").IsNull)
-            {
-                JsonArray habits = obj.Get("Habits").AsArray();
-                for (int i = 0; i < habits.Count; i++)
-                {
-                    HabitDef habit = ReadHabit(habits[i].AsObject(), i, save.HabitExtra);
-                    save.Habits.Add(habit);
-                }
-            }
-            save.Tends = new List<TendEvent>();
+            save.Habits = LedgerJson.ReadHabits(obj, save.HabitExtra, RowChoices);
             save.TendExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
-            if (obj.Has("Tends") && !obj.Get("Tends").IsNull)
-            {
-                JsonArray tends = obj.Get("Tends").AsArray();
-                for (int i = 0; i < tends.Count; i++)
-                {
-                    TendEvent tend = ReadTend(tends[i].AsObject(), i, save.TendExtra);
-                    save.Tends.Add(tend);
-                }
-            }
+            save.Tends = LedgerJson.ReadTends(obj, save.TendExtra, RowChoices);
             if (obj.Has("FirstRunStep") && !obj.Get("FirstRunStep").IsNull)
                 save.FirstRunStep = obj.Get("FirstRunStep").AsString();
             return save;
@@ -99,20 +81,8 @@ namespace GardenVR.Sundial
             if (save == null) throw new ArgumentNullException(nameof(save));
             var obj = new JsonObject();
             obj.Set("SchemaVersion", JsonValue.Number(save.SchemaVersion < 1 ? SundialService.SchemaVersion : save.SchemaVersion));
-            var habits = new JsonArray();
-            if (save.Habits != null)
-            {
-                for (int i = 0; i < save.Habits.Count; i++)
-                    habits.Add(WriteHabit(save.Habits[i], i, save.HabitExtra));
-            }
-            obj.Set("Habits", habits);
-            var tends = new JsonArray();
-            if (save.Tends != null)
-            {
-                for (int i = 0; i < save.Tends.Count; i++)
-                    tends.Add(WriteTend(save.Tends[i], i, save.TendExtra));
-            }
-            obj.Set("Tends", tends);
+            obj.Set("Habits", LedgerJson.WriteHabits(save.Habits, save.HabitExtra, RowChoices));
+            obj.Set("Tends", LedgerJson.WriteTends(save.Tends, save.TendExtra));
             obj.Set("Settings", WriteSettings(save.Settings ?? new SundialSettings()));
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
             if (save.Gratitude != null && save.Gratitude.Count > 0)
@@ -160,26 +130,6 @@ namespace GardenVR.Sundial
             SourceFallback = TendSource.Pinch,
             RowKnown = true
         };
-
-        static HabitDef ReadHabit(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.ReadHabit(obj, index, extras, RowChoices);
-        }
-
-        static JsonObject WriteHabit(HabitDef habit, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.WriteHabit(habit, index, extras, RowChoices);
-        }
-
-        static TendEvent ReadTend(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.ReadTend(obj, index, extras, RowChoices);
-        }
-
-        static JsonObject WriteTend(TendEvent tend, int index, Dictionary<string, Dictionary<string, JsonValue>> extras)
-        {
-            return LedgerJson.WriteTend(tend, index, extras);
-        }
 
         static List<GratitudeMark> ReadGratitude(JsonArray rows)
         {

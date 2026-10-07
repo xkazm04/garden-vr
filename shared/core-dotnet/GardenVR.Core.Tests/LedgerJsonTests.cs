@@ -120,4 +120,65 @@ public class LedgerJsonTests
         Assert.Equal(TendSource.Poke, LedgerJson.EnumMember(row, "B", TendSource.Poke));
         Assert.Equal(TendSource.Poke, LedgerJson.EnumMember(row, "Missing", TendSource.Poke));
     }
+
+    [Theory]
+    [InlineData("{}")]
+    [InlineData("{\"Habits\":null}")]
+    [InlineData("{\"Habits\":[]}")]
+    public void Habits_missing_null_or_empty_read_as_an_empty_list_and_write_as_an_empty_array(string root)
+    {
+        var extras = NewExtras();
+        Assert.Empty(LedgerJson.ReadHabits(Json.ParseObject(root), extras, Sundial));
+        Assert.Empty(extras);
+        Assert.Equal("[]", Json.Write(LedgerJson.WriteHabits(new List<HabitDef>(), extras, Sundial)));
+    }
+
+    [Theory]
+    [InlineData("{}")]
+    [InlineData("{\"Tends\":null}")]
+    [InlineData("{\"Tends\":[]}")]
+    public void Tends_missing_null_or_empty_read_as_an_empty_list_and_write_as_an_empty_array(string root)
+    {
+        var extras = NewExtras();
+        Assert.Empty(LedgerJson.ReadTends(Json.ParseObject(root), extras, Terrarium));
+        Assert.Empty(extras);
+        Assert.Equal("[]", Json.Write(LedgerJson.WriteTends(new List<TendEvent>(), extras)));
+    }
+
+    [Fact]
+    public void A_null_list_writes_an_empty_array()
+    {
+        Assert.Equal("[]", Json.Write(LedgerJson.WriteHabits(null, null, Terrarium)));
+        Assert.Equal("[]", Json.Write(LedgerJson.WriteTends(null, null)));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Habits_round_trip_keeps_an_unknown_row_member_through_extras(bool sundial)
+    {
+        LedgerJson.Choices choices = sundial ? Sundial : Terrarium;
+        var extras = NewExtras();
+        JsonObject root = Json.ParseObject("{\"Habits\":[{\"Id\":\"a\",\"Future\":7},{\"Id\":\"b\"}]}");
+        List<HabitDef> habits = LedgerJson.ReadHabits(root, extras, choices);
+        Assert.Equal(new[] { "a", "b" }, new[] { habits[0].Id, habits[1].Id });
+        Assert.Single(extras);
+        JsonArray written = LedgerJson.WriteHabits(habits, extras, choices);
+        Assert.Equal(2, written.Count);
+        Assert.Equal(7, written[0].AsObject().Get("Future").AsInt());
+        Assert.False(written[1].AsObject().Has("Future"));
+    }
+
+    [Fact]
+    public void Tends_round_trip_keeps_an_unknown_row_member_through_extras()
+    {
+        var extras = NewExtras();
+        JsonObject root = Json.ParseObject("{\"Tends\":[{\"Id\":\"t\",\"Future\":\"x\"},{\"Id\":\"u\"}]}");
+        List<TendEvent> tends = LedgerJson.ReadTends(root, extras, Terrarium);
+        Assert.Equal(2, tends.Count);
+        Assert.Single(extras);
+        JsonArray written = LedgerJson.WriteTends(tends, extras);
+        Assert.Equal("x", written[0].AsObject().Get("Future").AsString());
+        Assert.False(written[1].AsObject().Has("Future"));
+    }
 }
