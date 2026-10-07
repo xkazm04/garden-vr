@@ -4,6 +4,8 @@ using System.IO;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class SaveCrashWindowTests
 {
     // Save rotates live -> prev1 and only then moves the finished temp file into place. A crash between those
@@ -68,7 +70,7 @@ public class SaveCrashWindowTests
                 obj.Set("Name", JsonValue.String(doc.Name));
                 return obj;
             },
-            new MigrationStep[0]);
+            Array.Empty<MigrationStep>());
     }
 
     sealed class Note { public string Name; }

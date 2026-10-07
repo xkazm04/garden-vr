@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class StretchTests
 {
     [Fact]

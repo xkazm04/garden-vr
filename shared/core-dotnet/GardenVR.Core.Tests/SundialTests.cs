@@ -3,6 +3,8 @@ using System.Globalization;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class SundialTests
 {
     const int Seed = 20261002;
@@ -27,7 +29,7 @@ public class SundialTests
     public void Arc_at_0559_is_before_morning()
     {
         Assert.False(SundialRules.ArcAt(5 * 60 + 59).HasValue);
-        var state = SundialState.Capture(new HabitDef[0], new Ledger(), new GardenDay(10000), 5 * 60 + 59);
+        var state = SundialState.Capture(Array.Empty<HabitDef>(), new Ledger(), new GardenDay(10000), 5 * 60 + 59);
         Assert.False(state.Arc.HasValue);
         Assert.Contains("\"arc\":null", state.ToJson());
     }

@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class RimScrubTests
 {
     const int Now = 14 * 60 + 20;
@@ -141,7 +143,7 @@ public class RimScrubTests
     public void A_null_ledger_is_refused_and_an_empty_list_stays_quiet()
     {
         var today = new GardenDay(40);
-        Assert.Throws<ArgumentNullException>(() => RimScrub.Query(new HabitDef[0], null, today, RimScrub.FromDrag(Now, 0f)));
+        Assert.Throws<ArgumentNullException>(() => RimScrub.Query(Array.Empty<HabitDef>(), null, today, RimScrub.FromDrag(Now, 0f)));
 
         SundialState none = RimScrub.Query(null, new Ledger(), today, RimScrub.FromDrag(Now, 90f));
         Assert.Empty(none.Plants);

@@ -5,6 +5,8 @@ using System.Text;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class CommonTests
 {
     static readonly TimeSpan Boundary = GardenDay.DefaultBoundary;

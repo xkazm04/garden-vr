@@ -3,6 +3,8 @@ using GardenVR.Core;
 using GardenVR.Terrarium;
 using Xunit;
 
+namespace GardenVR.TerrariumModel.Tests;
+
 // Line numbers cite apps/terrarium/Assets/Scripts/Ritual/CompanionHabits.cs.
 public class CompanionHabitsTests
 {

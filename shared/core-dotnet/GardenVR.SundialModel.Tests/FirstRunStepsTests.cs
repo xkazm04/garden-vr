@@ -1,6 +1,8 @@
 using GardenVR.Sundial;
 using Xunit;
 
+namespace GardenVR.SundialModel.Tests;
+
 // SeedCatalog.cs FirstRunSteps (lines 146-203): the order of the wizard and what it waits for.
 public class FirstRunStepsTests
 {

@@ -3,6 +3,8 @@ using System.Globalization;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 /// <summary>Companion leaves, yesterday, and the 6 second undo. T-TER-009.</summary>
 public class TerrariumCompanionTests
 {

@@ -3,6 +3,8 @@ using GardenVR.Core;
 using GardenVR.Sundial;
 using Xunit;
 
+namespace GardenVR.SundialModel.Tests;
+
 // SundialSave.cs: the codec Read and Write pair (lines 68-134).
 public class SundialSaveTests
 {

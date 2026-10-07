@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class OneWordTests
 {
     const int Day0 = 9770;

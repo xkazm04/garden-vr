@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class PlantMonotoneTests
 {
     const int Now = 14 * 60 + 20;

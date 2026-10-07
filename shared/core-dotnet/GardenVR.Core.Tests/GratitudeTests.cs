@@ -2,6 +2,8 @@ using System.Reflection;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class GratitudeTests
 {
     [Fact]
@@ -40,7 +42,7 @@ public class GratitudeTests
         Assert.True(record.TryInk(10, GratitudeRecord.ParseKey("leaf")));
         Assert.True(record.Done(10));
         Assert.Equal(1, record.SymbolOn(10));
-        Assert.Equal(1, record.Marks.Count);
+        Assert.Single(record.Marks);
         Assert.Equal(10, record.Marks[0].Day);
         Assert.Equal(1, record.Marks[0].Symbol);
         Assert.True(record.TendAuthorised);
@@ -59,7 +61,7 @@ public class GratitudeTests
         Assert.False(record.TryInk(4, 3));
         Assert.False(record.TryInk(4, 0));
         Assert.Equal(0, record.SymbolOn(4));
-        Assert.Equal(1, record.Marks.Count);
+        Assert.Single(record.Marks);
         Assert.False(record.TendAuthorised);
         Assert.False(record.ConsumeTend());
     }

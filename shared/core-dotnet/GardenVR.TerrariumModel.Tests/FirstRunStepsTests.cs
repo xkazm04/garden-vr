@@ -2,6 +2,8 @@ using GardenVR.Core;
 using GardenVR.Terrarium;
 using Xunit;
 
+namespace GardenVR.TerrariumModel.Tests;
+
 // FirstRunSteps.cs: ShouldRun (line 45) decides whether the tour starts, resumes or stays out of the way.
 public class FirstRunStepsTests
 {

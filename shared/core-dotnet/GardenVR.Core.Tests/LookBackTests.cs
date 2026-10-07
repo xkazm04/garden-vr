@@ -1,6 +1,8 @@
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class LookBackTests
 {
     [Fact]

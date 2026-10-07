@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class ThreeGoodThingsTests
 {
     const int Day0 = 9770;

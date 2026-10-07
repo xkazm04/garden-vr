@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class SettingsNonFiniteTests
 {
     // Define already refuses a NaN or infinite default because JSON cannot hold one. Set must hold the same line,

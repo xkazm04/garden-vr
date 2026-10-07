@@ -4,6 +4,8 @@ using GardenVR.Core;
 using Xunit;
 using Xunit.Abstractions;
 
+namespace GardenVR.Core.Tests;
+
 public class BreathRitualTests
 {
     readonly ITestOutputHelper _out;

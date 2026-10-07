@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class VitalityParityTests
 {
     // Companions.Vitality says it has the same curve and floor as Garden.Vitality. Both now read

@@ -5,6 +5,8 @@ using GardenVR.Core;
 using GardenVR.Sundial;
 using Xunit;
 
+namespace GardenVR.SundialModel.Tests;
+
 // Line numbers cite apps/sundial/Assets/Scripts/Tend/SundialService.cs at the sha these tests were written on.
 public sealed class SundialServiceTests : IDisposable
 {

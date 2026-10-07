@@ -1,6 +1,8 @@
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class BreathPauseTests
 {
     // A released inhale that was long enough is a breath the moment its exhale has lasted MinExhaleSeconds.

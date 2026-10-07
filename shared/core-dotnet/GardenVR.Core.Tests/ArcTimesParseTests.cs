@@ -1,6 +1,8 @@
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class ArcTimesParseTests
 {
     // ArcTimes.Parse promises the plan default for anything it cannot read. A member of the wrong type or a

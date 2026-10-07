@@ -5,6 +5,8 @@ using GardenVR.Core;
 using GardenVR.Sundial;
 using Xunit;
 
+namespace GardenVR.SundialModel.Tests;
+
 // SundialService.TryRestoreBackup hands the restore to SaveStore.Restore. These use real files in a temp directory.
 public sealed class SundialRestoreTests : IDisposable
 {

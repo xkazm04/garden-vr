@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 // LedgerJson: the habit and tend row codec. Each of its three choices is exercised both ways.
 public class LedgerJsonTests
 {

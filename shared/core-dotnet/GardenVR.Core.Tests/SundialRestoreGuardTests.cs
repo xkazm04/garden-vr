@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class SundialRestoreGuardTests
 {
     // A snapshot that says Running or Paused with no start instant is not an hour in progress. Restoring it

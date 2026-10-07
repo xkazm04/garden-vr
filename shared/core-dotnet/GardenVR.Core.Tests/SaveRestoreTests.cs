@@ -3,6 +3,8 @@ using System.Text;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class SaveRestoreTests
 {
     // Restore brings a record back from prev1, prev2 or the snapshot when save.json cannot be read. It never
@@ -219,16 +221,16 @@ public class SaveRestoreTests
         store.Save(new Note { Name = second });
     }
 
-    static void Put(ISaveIo io, string name, string text)
+    static void Put(SaveCrashWindowTests.MemoryIo io, string name, string text)
     {
         if (io.Exists(name)) io.Delete(name);
         var bytes = Encoding.UTF8.GetBytes(text);
         using (var stream = io.Create(name)) { stream.Write(bytes, 0, bytes.Length); }
     }
 
-    static string Text(ISaveIo io, string name) { return Encoding.UTF8.GetString(io.ReadBytes(name)); }
+    static string Text(SaveCrashWindowTests.MemoryIo io, string name) { return Encoding.UTF8.GetString(io.ReadBytes(name)); }
 
-    static string Snapshot(ISaveIo io)
+    static string Snapshot(SaveCrashWindowTests.MemoryIo io)
     {
         var sb = new StringBuilder();
         foreach (var name in AllNames)
@@ -236,7 +238,7 @@ public class SaveRestoreTests
         return sb.ToString();
     }
 
-    static SaveStore<Note> Store(ISaveIo io) { return Build(io, 1, new MigrationStep[0]); }
+    static SaveStore<Note> Store(ISaveIo io) { return Build(io, 1, Array.Empty<MigrationStep>()); }
 
     static SaveStore<Note> StoreV2(ISaveIo io)
     {

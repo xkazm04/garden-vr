@@ -3,6 +3,8 @@ using GardenVR.Core;
 using GardenVR.Terrarium;
 using Xunit;
 
+namespace GardenVR.TerrariumModel.Tests;
+
 // GardenJourney.cs: the four posed gardens (Build, line 27) the captures and the day tests share.
 public class GardenJourneyTests
 {

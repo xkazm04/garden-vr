@@ -1,6 +1,8 @@
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 // Pins the exact text TerrariumSave.ToJson writes for habit and tend rows, before the row codec moves to one owner.
 public class RowCodecGoldenTests
 {

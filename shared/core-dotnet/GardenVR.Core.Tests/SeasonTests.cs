@@ -3,6 +3,8 @@ using System.Globalization;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 /// <summary>Season is lifetime fronds only. It pauses on a quiet week and it never runs backwards.</summary>
 public class SeasonTests
 {

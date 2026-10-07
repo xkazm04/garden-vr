@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class CompanionPresetDriftTests
 {
     // PresetKeys and the TryPreset switch are two hand-kept lists. The existing test names six keys by hand,

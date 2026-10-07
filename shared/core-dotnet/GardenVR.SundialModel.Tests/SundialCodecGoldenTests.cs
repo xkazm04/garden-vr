@@ -3,6 +3,8 @@ using GardenVR.Core;
 using GardenVR.Sundial;
 using Xunit;
 
+namespace GardenVR.SundialModel.Tests;
+
 // Pins the exact text SundialCodec.Write produces for one full document, before the row codec moves to one owner in core.
 public class SundialCodecGoldenTests
 {

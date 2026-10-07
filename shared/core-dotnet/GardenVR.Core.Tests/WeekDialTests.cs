@@ -2,6 +2,8 @@ using System;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class WeekDialTests
 {
     [Fact]
@@ -110,7 +112,7 @@ public class WeekDialTests
     [Fact]
     public void A_null_ledger_is_refused()
     {
-        Assert.Throws<ArgumentNullException>(() => WeekDial.Read(new HabitDef[0], null, new GardenDay(1)));
+        Assert.Throws<ArgumentNullException>(() => WeekDial.Read(Array.Empty<HabitDef>(), null, new GardenDay(1)));
         Assert.Throws<ArgumentNullException>(() => SundialRules.TileOn(null, new Ledger(), 1, 1));
     }
 

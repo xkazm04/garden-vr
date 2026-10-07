@@ -3,6 +3,8 @@ using System.IO;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 public class TerrariumSaveTests
 {
     [Fact]
@@ -169,7 +171,7 @@ public class TerrariumSaveTests
             LoadResult<TerrariumSave> loaded = store.Load();
             Assert.Equal(LoadOutcome.Loaded, loaded.Outcome);
             Assert.True(loaded.ReadOnly);
-            Assert.False(loaded.Doc == null);
+            Assert.NotNull(loaded.Doc);
             Assert.Equal(2, loaded.Doc.SchemaVersion);
             Assert.Equal(5, loaded.Doc.FrondDays[0]);
             Assert.Equal(1, loaded.Doc.DewToday);

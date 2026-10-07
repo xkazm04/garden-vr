@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 // Unity-compiled app code (Terrarium and Sundial) compiles against the GardenVR.Core surface.
 // Every type and member that is not private is listed in PublicSurface.approved.txt, one sorted line each. A change to that
 // list is a change a Unity-compiled caller can see, so it is made by editing the approved file in the same commit.

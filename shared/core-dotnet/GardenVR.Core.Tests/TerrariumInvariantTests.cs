@@ -4,6 +4,8 @@ using System.Globalization;
 using GardenVR.Core;
 using Xunit;
 
+namespace GardenVR.Core.Tests;
+
 /// <summary>Invariants added when the spike core became the Terrarium-owned rules (D5 and the state oracle).</summary>
 public class TerrariumInvariantTests
 {
