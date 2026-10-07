@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using GardenVR.Core;
 
 namespace GardenVR.Sundial
@@ -69,7 +68,6 @@ namespace GardenVR.Sundial
 
         readonly SteppingClock _clock;
         readonly SaveStore<SundialSave> _store;
-        readonly string _directory;
         bool _readOnly;
         SundialSave _save;
         Ledger _ledger;
@@ -124,7 +122,6 @@ namespace GardenVR.Sundial
         {
             if (clock == null) throw new ArgumentNullException(nameof(clock));
             if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory");
-            _directory = directory;
             _clock = new SteppingClock(clock);
             _store = new SaveStore<SundialSave>(new DiskSaveIo(directory), SchemaVersion, CreateFresh, SundialCodec.Read, SundialCodec.Write, null);
             LoadResult<SundialSave> result = _store.Load();
@@ -402,17 +399,15 @@ namespace GardenVR.Sundial
             return habit;
         }
 
-        /// <summary>Copies the newest backup over the live file. The caller reloads to read it.</summary>
+        /// <summary>
+        /// Asks the store to bring a backup back over an unreadable live file. True when a record was restored.
+        /// This service keeps its own state (Outcome stays as loaded, writes stay refused); the caller reloads to read the result.
+        /// </summary>
         public bool TryRestoreBackup()
         {
-            if (!BackupAvailable || string.IsNullOrEmpty(_directory)) return false;
-            string live = Path.Combine(_directory, "save.json");
-            string prev = Path.Combine(_directory, "save.prev1.json");
-            if (!File.Exists(prev)) prev = Path.Combine(_directory, "save.prev2.json");
-            if (!File.Exists(prev)) prev = Path.Combine(_directory, "save.snapshot.json");
-            if (!File.Exists(prev)) return false;
-            File.Copy(prev, live, true);
-            return true;
+            if (!BackupAvailable || _store == null) return false;
+            LoadResult<SundialSave> restored = _store.Restore();
+            return restored.Outcome == LoadOutcome.Loaded || restored.Outcome == LoadOutcome.Migrated;
         }
 
         public void SetReducedMotion(bool on) { EditSettings(s => s.ReducedMotion = on); }
