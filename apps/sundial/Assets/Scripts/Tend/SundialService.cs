@@ -70,7 +70,7 @@ namespace GardenVR.Sundial
         readonly SteppingClock _clock;
         readonly SaveStore<SundialSave> _store;
         readonly string _directory;
-        readonly bool _readOnly;
+        bool _readOnly;
         SundialSave _save;
         Ledger _ledger;
         DeferredTend _deferred;
@@ -128,6 +128,12 @@ namespace GardenVR.Sundial
             _clock = new SteppingClock(clock);
             _store = new SaveStore<SundialSave>(new DiskSaveIo(directory), SchemaVersion, CreateFresh, SundialCodec.Read, SundialCodec.Write, null);
             LoadResult<SundialSave> result = _store.Load();
+            Bind(result);
+        }
+
+        /// <summary>Takes a load result into the outcome fields, the document, ledger, gratitude, deferred tend and focus.</summary>
+        void Bind(LoadResult<SundialSave> result)
+        {
             Outcome = result.Outcome;
             BackupAvailable = result.BackupAvailable;
             FailedStep = result.FailedStep;
