@@ -1,3 +1,4 @@
 asset: dial_face_layout.png
 method: polar remap of apps/sundial/Assets/Art/Textures/dial_face.png by apps/sundial/Art/Scripts/layout_t052_face.py (wash disc 0.731 -> 0.82, band 0.82..1, ticks at 50% contrast, warm toning and a seeded pencil hatch on the outer band)
 derived_from_art_reference: no (only the layout ratios were measured from it)
+box-downscaled 2048 to 1024 to the import cap on 2026-10-07 (exact 2x2 box average, engine-equivalent, not pixel-identical); a rerun of apps/sundial/Art/Scripts/layout_t052_face.py re-inflates it to 2048.

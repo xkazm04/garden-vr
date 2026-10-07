@@ -41,3 +41,5 @@ The T-TER-013 generated maps stay in this folder. `JarView` binds the names in t
 | s4_frond_thick.png | derived | T-TER-043 `s4_frond_textures.py`. Linear. R is thickness: thin at the pinna margins (distance to the silhouette), thick on the rachis and veins. Drives `(1 - thickness)` in the `Fidelity/FrondBacklit` transmission term. | sampled by variant `s4` and `s4f` |
 
 | s2_refract_strip.png | baked | T-TER-044 `S2Bake.Bake` (Editor, `s2_shots.py bake`). Six 160 px faces rendered from the cavity centre (jar origin + 6 cm) with the glass hidden, the JarG1 plate in place and the JarG1 state, laid out +X, -X, +Y, -Y, +Z, -Z for `SampleRefractStrip` in `GlassCommon.hlsl`. It is a render of the project scene, not a photo and not sampled from the reference frames. | bound on `Jar_Glass` as `_RefractStrip`. Sampled only by variant `s2b1` |
+
+mist.png: box-downscaled 2048 to 1024 to the import cap on 2026-10-07 (exact 2x2 box average, engine-equivalent, not pixel-identical); a rerun of apps/terrarium/Art/Scripts/compose_mist.py (or tools/blender/paint_textures.py) re-inflates it to 2048.

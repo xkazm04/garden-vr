@@ -2,3 +2,4 @@ asset: soil_bed.png
 method: painted plate fitted by code. apps/sundial/Art/Scripts/fit_notebook.py fit_soil reads apps/sundial/Assets/Art/Source/soil_bed_nb.png
 note: Prompt apps/sundial/Assets/Art/Source/soil_bed_nb.png.prompt.txt. This census did not re-run the script. Not copied from the art reference.
 derived_from_art_reference: no
+box-downscaled 2048 to 1024 to the import cap on 2026-10-07 (exact 2x2 box average, engine-equivalent, not pixel-identical); a rerun of apps/sundial/Art/Scripts/fit_notebook.py re-inflates it to 2048.
