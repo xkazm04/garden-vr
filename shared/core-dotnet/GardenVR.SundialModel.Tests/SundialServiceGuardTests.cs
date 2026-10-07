@@ -29,7 +29,7 @@ public sealed class SundialServiceGuardTests : IDisposable
     [InlineData("  ")]
     public void The_constructor_names_directory(string directory)
     {
-        Names("directory", () => new SundialService(_clock, directory));
+        Names("directory", () => _ = new SundialService(_clock, directory));
     }
 
     [Theory]

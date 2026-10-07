@@ -36,7 +36,7 @@ public class ArgumentGuardParamNameTests
     [InlineData("   ")]
     public void DiskSaveIo_names_directory(string directory)
     {
-        Names("directory", () => new DiskSaveIo(directory));
+        Names("directory", () => _ = new DiskSaveIo(directory));
     }
 
     [Fact]
