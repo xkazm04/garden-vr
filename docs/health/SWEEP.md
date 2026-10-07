@@ -9,10 +9,10 @@ file:line, the blob it was read at, the finding, the class and the commit or the
   Sundial). Every finding was read at its blob in that commit.
 - **Fix commit:** `1a990718f551c88d34db7f963f55f59fb883c8e7` (test projects only).
 - **Unclassified findings: 0 in each half.** The asset half is the last section of this file. The line below is the code half.
-- **Unclassified findings (code half): 0.** 867 records after the closure re-run: 66 fixed, 3 filed as 2 ideas (I6, I7), and
-  798 deliberate (24 of those staged for the first Unity session, 0012 (a)). The base run had 842 records (51 fixed, 15
-  idea, 776 deliberate); I1 to I4 are closed (a576eb7, c2e05b6, 37541f0, 85973ea) and 25 records were added at 37541f0.
-  See "Closure re-run (37541f0)" at the end of this file.
+- **Unclassified findings (code half): 0.** 867 records after the second closure re-run: 69 fixed, 0 idea, and 798
+  deliberate (24 of those staged for the first Unity session, 0012 (a)). The base run had 842 records (51 fixed, 15
+  idea, 776 deliberate); I1 to I4 are closed (a576eb7, c2e05b6, 37541f0, 85973ea), 25 records were added at 37541f0, and
+  I6 and I7 are closed (e02ce5e, 8a875b6). See "Closure re-run (37541f0)" and "Second closure re-run (8a875b6)" at the end of this file.
 
 ## Commands and tool versions
 
@@ -76,8 +76,7 @@ count. The diff adds and removes no `[Fact]`, `[Theory]` or `InlineData`.
 
 ## Ideas (the app and core are closed to this run)
 
-**I1 to I4 are closed.** Each delivery is on main and its analyzer site is gone at 37541f0 (see the closure section). I6 and I7
-are new, from the closure re-run.
+**I1 to I4, I6 and I7 are closed.** Each delivery is on main and its analyzer site is gone at 37541f0 (I1 to I4) or at 8a875b6 (I6, I7); see the closure sections.
 
 None of these repeats T1 to T11 (`docs/design/CONFORMANCE-terrarium.md`) or S1 to S14 (`CONFORMANCE-sundial.md`), and
 none repeats a hotspot finding in `docs/health/findings.json`.
@@ -99,11 +98,11 @@ none repeats a hotspot finding in `docs/health/findings.json`.
   118 to 201 tokens each). A pair of LedgerJson methods, `ReadHabits`/`ReadTends` and `WriteHabits`/`WriteTends`, would
   be a step A that lets both saves drop the loops. The SundialSave half then lands under 0012 (c), with the golden row
   tests (f11db8f). It continues findings #12 and #14.
-- **I6. Tests: constructor-guard tests discard the new object.** *New at 37541f0.* `ArgumentGuardParamNameTests.cs:39`
+- **I6. Tests: constructor-guard tests discard the new object.** *Closed by e02ce5e534c4fda233e31a0d06fe305f1c986590.* `ArgumentGuardParamNameTests.cs:39`
   (`new DiskSaveIo(directory)`) and `SundialServiceGuardTests.cs:32` (`new SundialService(_clock, directory)`) build an
   object only to see its constructor throw, so CA1806 flags the unused instance (SW-C0854, SW-C0855). Assign each to a
   discard (`_ = new ...`). Test code only. Both files are the guard tests that I1 and I2 added.
-- **I7. Core: KeptDays and KeptDaysFrom share one guard-and-loop.** *New at 37541f0.* `Ledger.cs:147-154` against
+- **I7. Core: KeptDays and KeptDaysFrom share one guard-and-loop.** *Closed by 8a875b6e868133030925e63b5b63ce072fbf06fb.* `Ledger.cs:147-154` against
   `:180-187` (jscpd, 8 lines, 113 tokens; SW-C0866). The two methods differ by one condition (`e.Day >= firstDay`). It is
   not in the base run. The guard text is the one line I1 (a576eb7) changed in these two blocks, and it added
   `nameof(habitId)` to each, which plausibly lifted the stretch over the 70-token minimum (not run at a576eb7). A private
@@ -430,3 +429,78 @@ ideas I1 to I4 closed with a full SHA, I5 closed by 0014: true ; ideas listed: I
 
 The check is a node script run in a temp directory against `git show HEAD:docs/health/sweep.json` (the file as it was before this
 commit) and the working file. `git diff --name-only 37541f0..HEAD` lists `docs/health/SWEEP.md` and `docs/health/sweep.json` only.
+
+## Second closure re-run (8a875b6e868133030925e63b5b63ce072fbf06fb)
+
+Delivers I6 (`e02ce5e534c4fda233e31a0d06fe305f1c986590`, test code only) and I7 (`8a875b6e868133030925e63b5b63ce072fbf06fb`, core `Ledger.cs`: `KeptDays(habitId)` now returns
+`KeptDaysFrom(habitId, int.MinValue)`; no signature, no other member and no doc comment changed; it joins the compile debt of
+0012 (a) item 1), then re-runs the code-half tools at the I7 commit and closes the three records. The run edits `Ledger.cs`, the two
+guard test files, `docs/health/SWEEP.md` and `docs/health/sweep.json` only. No analyzer config, `.editorconfig`,
+`Directory.Build.props`, csproj, package.json or lock file was touched; every tool wrote to a temp directory outside the repo. Same
+SDK (9.0.308) and jscpd 4.3.0 as before. No Unity run was made, and no Unity compile is claimed.
+
+### Commands at 8a875b6
+
+| # | Command | Exit | Result |
+| --- | --- | ---: | --- |
+| 1a | `dotnet build shared/core-dotnet/GardenVR.sln --no-incremental` | 0 | 0 warnings, 0 errors |
+| 1b | `dotnet build shared/core-dotnet/GardenVR.sln --no-incremental -p:AnalysisLevel=latest-recommended` | 0 | 510 warnings (510 unique sites: 190 production, 320 test), 0 errors |
+| 2a | `dotnet format analyzers shared/core-dotnet/GardenVR.sln --verify-no-changes --severity info --report <temp>/fmt-analyzers` | 2 | made no change |
+| 2b | `dotnet format style shared/core-dotnet/GardenVR.sln --verify-no-changes --severity info --report <temp>/fmt-style` | 2 | made no change |
+| 3 | `npx --yes jscpd@4 --min-tokens 70 --format csharp --reporters json,console --output <temp>/jscpd-out --absolute shared/packages/com.gardenvr.core/Runtime` plus the six in-place files, run from a temp directory | 0 | 39 files, 6151 lines, 63421 tokens; 1 clone, 7 duplicated lines (0.11%), 144 tokens (0.23%) |
+| test | `dotnet test shared/core-dotnet` | 0 | 335 of 335 passed (Core 285, SundialModel 36, TerrariumModel 14), 0 failed; no test added, removed or renamed |
+
+### Per rule, before and after
+
+Closure head (37541f0) against this head. Every other rule is unchanged from the closure table above, and the default level stays at 0.
+
+| Rule | At 37541f0 | At 8a875b6 | Change |
+| --- | ---: | ---: | ---: |
+| CA1806 | 2 | 0 | -2 |
+| clone (jscpd) | 2 | 1 | -1 |
+| **Build total (1b)** | 512 | 510 | -2 |
+| of which test | 322 | 320 | -2 |
+| of which production | 190 | 190 | 0 |
+
+### jscpd, before and after
+
+| | At 37541f0 | At 8a875b6 |
+| --- | ---: | ---: |
+| Clones | 2 | 1 |
+| Duplicated lines | 14 (0.23%) | 7 (0.11%) |
+| Duplicated tokens | 257 (0.4%) | 144 (0.23%) |
+| Files, lines, tokens | 39, 6161, 63540 | 39, 6151, 63421 |
+
+The one clone left is `SundialSave.cs:69-76` against `TerrariumSave.cs:83-90` (SW-C0867, deliberate). The Ledger.cs clone (SW-C0866) is gone.
+
+### New or vanished records
+
+New records: none. Every site the re-run shows is covered by an existing record. Vanished sites, all explained by this run:
+SW-C0854 and SW-C0855 (CA1806, removed by `e02ce5e534c4fda233e31a0d06fe305f1c986590`) and SW-C0866 (clone, removed by `8a875b6e868133030925e63b5b63ce072fbf06fb`). The three records are now `fixed`
+with those commits. The other production sites in `Ledger.cs` moved up by the lines I7 removed; their records keep the line they were read at.
+
+App Master, wake 8f68c68e: SW-C0867 is confirmed deliberate (each save keeps its own root fields; the shared lines are calls to the one owner, LedgerJson), and the five vanished IDE0300 records stay as written.
+
+### Counts after this run
+
+| Block | Records | Fixed | Idea | Deliberate | Staged | Unclassified |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| code | 867 | 69 | 0 | 798 | 24 | 0 |
+| assets | 57 | 0 | 0 | 57 | 21 | 0 |
+| **all** | **924** | **69** | **0** | **855** | **45** | **0** |
+
+The machine-readable record is the `closure2` object in `sweep.json` (same shape as `closure`; `closure` is unchanged). Its
+`perRule` compares the closure head (`closureHead`) with this head (`head`).
+
+### Check
+
+```
+existing records 924: 921 identical (JSON.stringify per id), 3 of the 3 named changed only in class and commit, 0 unexpected, 0 missing; added 0; order kept: true
+closure unchanged: true
+counts all: {"records":924,"fixed":69,"idea":0,"deliberate":855,"staged":45,"unclassified":0}; block equals the recount: true
+counts code: {"records":867,"fixed":69,"idea":0,"deliberate":798,"staged":24,"unclassified":0}; block equals the recount: true
+counts assets: {"records":57,"fixed":0,"idea":0,"deliberate":57,"staged":21,"unclassified":0}; block equals the recount: true
+ideas closed: I1=a576eb7 I2=c2e05b6 I3=37541f0 I4=85973ea I5=decisio I6=e02ce5e I7=8a875b6
+```
+
+The check is a node script run in a temp directory against `git show HEAD:docs/health/sweep.json` (the file before the ledger commit) and the working file.
