@@ -1,0 +1,6577 @@
+{
+  "schema": 1,
+  "measuredAt": "cc5467901faaf922648d9bb2f89f666024a478f2",
+  "thresholds": {
+    "minPercent": 10,
+    "minBytes": 65536
+  },
+  "excluded": [
+    {
+      "path": "apps/sundial/Art/Scripts/ref_soil_mask.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/dial_face_nb.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/halo2/contact.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/packets/packet-midday.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/packets/packet-morning.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/packets/packet-sheet.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/packets/packet-winddown.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/soil.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/wash_dusk.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/wash_midday.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/wash_morning.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paper.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_dusk.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_dusk_bloom.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_midday.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_midday_bloom.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_sunrise.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_sunrise_bloom.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/leafplant/evening-parts-sheet-v1.png",
+      "reasons": [
+        "cherry-pick-path",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/leafplant/morning-parts-sheet-v1.png",
+      "reasons": [
+        "cherry-pick-path",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/leafplant/parts-sheet-v1.png",
+      "reasons": [
+        "cherry-pick-path",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plate-dial-seated.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-3.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-4.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-3.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-4.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/contact-sheet.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2-first.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2-second.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2-third.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/preview-2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/preview.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/template-2-first.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/template-2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/template.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil_bed_nb.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/sparkle/sparkle_ring_1.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/sparkle/sparkle_ring_2.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/sparkle/sparkle_ring_3.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/tiles_nb.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/wash_dusk.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/wash_midday.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/wash_morning.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Plates/plate-dial-seated.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Plates/plate-dial.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_sunrise_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_control.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_face.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_face_s1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_paper.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_paper_h.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/gnomon.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/gnomon_shadow.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/packet-midday.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/packet-morning.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/packet-winddown.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/room_cookie.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/room_shadow_wash.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/soil.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/sparkle_ring_1.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/sparkle_ring_2.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/sparkle_ring_3.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/tiles_atlas.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_full__bloom_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_full__bloom_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy__bloom_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy__bloom_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_seed__bloom_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_seed__bloom_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout__bloom_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout__bloom_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_young__bloom_dusk_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_young__bloom_dusk_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_full__bloom_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_full__bloom_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_leafy__bloom_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_leafy__bloom_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_seed__bloom_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_seed__bloom_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_sprout__bloom_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_sprout__bloom_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_young__bloom_midday_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_young__bloom_midday_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_full__bloom_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_full__bloom_sunrise_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy__bloom_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy__bloom_sunrise_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed__bloom_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed__bloom_sunrise_open.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout__bloom_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout__bloom_sunrise_open.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_young__bloom_sunrise_bud.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_young__bloom_sunrise_open.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_full.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_leafy.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_seed.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_sprout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_young.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Layout/dial_control_layout.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/LeafPlant/evening-parts.png",
+      "reasons": [
+        "cherry-pick-path",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/LeafPlant/midday-parts.png",
+      "reasons": [
+        "cherry-pick-path",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/LeafPlant/morning-parts.png",
+      "reasons": [
+        "cherry-pick-path",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/SoilMound/soil_mound.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/companions/sprig_glow.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/companions/sprig_gold.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/companions/sprig_moon.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/companions/sprigs-contact.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/condensation.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/condensation_beads.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/cork.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/cork_macro.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/cork_top_macro.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_a.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_b.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_nb_a.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_nb_b.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_v0.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_v1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_v2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fiddle_nb.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/inputs_sheet.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/moss_clump.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/mushroom.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/pebble_set.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ghost-hand-open.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ghost-hand-pinch.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_0.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_3.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_4.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_5.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_6.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_7.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss-repaint.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_albedo.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_carpet_nb.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_cushion.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_macro.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tile.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_0.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_3.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_4.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_5.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_0.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_3.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_4.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_5.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft_0.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft_1.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft_2.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/petal_macro.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/plate-jar-seated.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-01.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-02.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-03.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-04.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-01.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-02.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-03.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-04.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/contact.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/soil.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/soil_nb.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Plates/plate-jar-seated.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Plates/plate-jar.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/condensation.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/cork.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/cork_side.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/cork_top.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/droplet_normal.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_a_albedo.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_a_emission.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_albedo.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_b_albedo.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_b_emission.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_emission.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fiddle_hairs.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/halo.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss-repaint.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_band.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_card.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_fuzz.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_macro.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_macro_b.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_tile.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_top.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_tuft.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/petal.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/ring.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s1_drops.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s1_studio.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s2_refract_strip.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s3_strand.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s3_strata.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s4_frond_albedo.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s4_frond_thick.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s5_contact.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s5_desk_streak.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s5_steam.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/soil.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/soil_band.png",
+      "reasons": [
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/spore.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Resources/Companions/sprig_glow.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Resources/Companions/sprig_gold.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Resources/Companions/sprig_moon.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Resources/Ghost/hand-open.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Resources/Ghost/hand-pinch.png",
+      "reasons": [
+        "duplicate-group",
+        "recorded-hash"
+      ],
+      "recordedIn": [
+        "docs/assets/baseline.json",
+        "docs/assets/duplicates.json"
+      ]
+    }
+  ],
+  "heldBack": [
+    {
+      "path": "apps/sundial/Art/Scripts/ref_soil_mask.png",
+      "oldBytes": 4907,
+      "newBytes": 3114,
+      "pixelSha256": "e88b88c9c6914bea69b779885215cafc7e097cd4d850fafc764fea0669f761eb",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/dial_face_nb.png",
+      "oldBytes": 1208364,
+      "newBytes": 1180125,
+      "pixelSha256": "cacf671899b3b19ce1cced87e048317583c85033d9db852b4c773fcc83ffe00a",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/halo2/contact.png",
+      "oldBytes": 468881,
+      "newBytes": 467322,
+      "pixelSha256": "40d9123440fe85eb4e8dfe3abd1ad76fe9f44ec845508f625957f807e07dd90c",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/packets/packet-sheet.png",
+      "oldBytes": 1004454,
+      "newBytes": 961433,
+      "pixelSha256": "8f0b0f561319663fd7daf28c804123fe267e29369dd232e1e81061d6bc41c6ab",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/soil.png",
+      "oldBytes": 1717409,
+      "newBytes": 1676230,
+      "pixelSha256": "38b5d9ff93291de021ad2fdce13cc9c03563a604870626a43e353d84b33afc40",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/wash_dusk.png",
+      "oldBytes": 1401784,
+      "newBytes": 1378078,
+      "pixelSha256": "36914aaf808a4e41dfdf3c15bd071106b2e345b7245e15d1d43f44ac12e2f78d",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/wash_midday.png",
+      "oldBytes": 1589546,
+      "newBytes": 1556966,
+      "pixelSha256": "d8fac4de4b134aae5dc2b9cdf1705f8c3f110d70574db166911f364c57d2d63e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paint/wash_morning.png",
+      "oldBytes": 1411692,
+      "newBytes": 1369989,
+      "pixelSha256": "586fadea797d9cc48b667bd9a47fefd0739c01f48ff1352a6ab3fbd8c5f235db",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/paper.png",
+      "oldBytes": 1119603,
+      "newBytes": 1082476,
+      "pixelSha256": "7095b011095280c3130ee807954a6dfbbf8c83076e15a31d4b8054fd0e540a93",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_dusk.png",
+      "oldBytes": 655311,
+      "newBytes": 631595,
+      "pixelSha256": "69439c349b296eac4e82d18dbb9b5a468dfeb0fb88d3820c68a6784f8a7acf9f",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_dusk_bloom.png",
+      "oldBytes": 708230,
+      "newBytes": 674709,
+      "pixelSha256": "90077358a11051c21d36ea9c81136f07c9d36d89d963256a2c284162a71d0e6f",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_midday.png",
+      "oldBytes": 524712,
+      "newBytes": 509172,
+      "pixelSha256": "4fa120c9789bf56a4dbf2921b7f63d49757a40d6b41347e69515945f2ce97599",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_midday_bloom.png",
+      "oldBytes": 650862,
+      "newBytes": 630366,
+      "pixelSha256": "733110fbee1c2fa6ae6bdb3b719622d3aeb6ccbbbd8ff24d568b1555132f637b",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_sunrise.png",
+      "oldBytes": 749389,
+      "newBytes": 714403,
+      "pixelSha256": "b7347d7bd6bcb35b31bb8af61d16d2673624f34429b74dafffc1fc0979e08e00",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plant_sunrise_bloom.png",
+      "oldBytes": 744209,
+      "newBytes": 705208,
+      "pixelSha256": "28b27448c1585f273ff6378a3dde4d31a6e93fb89acdbb38eb0fb80d11dd6b6c",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_bud.png",
+      "oldBytes": 753813,
+      "newBytes": 731997,
+      "pixelSha256": "b25d2ab4fe7e819dd31070752a71512980b46124e5f4d81d5b9bac6b1f95be34",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_full.png",
+      "oldBytes": 783683,
+      "newBytes": 757375,
+      "pixelSha256": "566fc8d6c04a36ecca27b7cb74724a2003800f6f96c39dbfb2488ea481f75f50",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_leafy.png",
+      "oldBytes": 551529,
+      "newBytes": 530383,
+      "pixelSha256": "f7b541f6c54e1d703769ab65a49d7d6f24649269d4a6f25be3a5b6db892e1e8e",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_open.png",
+      "oldBytes": 727282,
+      "newBytes": 714682,
+      "pixelSha256": "cc6b3425229b27272bc3a4fa33e7ce870a5fd3bc53e7b3a4e8df24a11f357548",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_seed.png",
+      "oldBytes": 243379,
+      "newBytes": 224992,
+      "pixelSha256": "6c1ae57f66a2a6dbf2457beb4f889aa02342915b1b0a70969ef75d1b5dc3d4e2",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_sprout.png",
+      "oldBytes": 272552,
+      "newBytes": 257400,
+      "pixelSha256": "3ab2a3b9ad1d37f7f4a381511565d4b057b3235331d54a6d587dcd4c8890f5d8",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_dusk_young.png",
+      "oldBytes": 394932,
+      "newBytes": 379328,
+      "pixelSha256": "8a93fada72609ed40867084171b5b3e875d1e23ab85b22e00715b9de79517004",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_bud.png",
+      "oldBytes": 646649,
+      "newBytes": 635247,
+      "pixelSha256": "f2442f6cd8f4ae2b2a2a856fe4b292ee2418b3836375863f5eadb2e199c28374",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_full.png",
+      "oldBytes": 562409,
+      "newBytes": 556767,
+      "pixelSha256": "489850ad59e886f1ce8f18ed3908f77c8d55184f8e3f91390e5b6497a37509e0",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_leafy.png",
+      "oldBytes": 407660,
+      "newBytes": 398062,
+      "pixelSha256": "35486109be30104291b6124c52b78661b935a60a8f88bb2b9c5601bacadb6fee",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_open.png",
+      "oldBytes": 786524,
+      "newBytes": 773241,
+      "pixelSha256": "203ecea54ff9884020349b1b73d9521e7e2ec926a7cdee38406dceafc8aefe28",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_seed.png",
+      "oldBytes": 147229,
+      "newBytes": 139143,
+      "pixelSha256": "5a2dc242e28148002b671e6616fbed42090cb67474cadc33b2c6e6cacb6aa87d",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_sprout.png",
+      "oldBytes": 221759,
+      "newBytes": 213105,
+      "pixelSha256": "3ef356c1d40be5c0625cbb47c35e90b9267c2adb5491b0793d8c9e9ebe41e2c7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_midday_young.png",
+      "oldBytes": 199807,
+      "newBytes": 186857,
+      "pixelSha256": "535ace69ffecd5f9eb1fea98032af07918d66c75e1e97a2b27c23a9443c21ffa",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_bud.png",
+      "oldBytes": 744733,
+      "newBytes": 722576,
+      "pixelSha256": "1fc2e304c294ada7783daccbc4659105919861f45c34239ecacc845c07ad9062",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_full.png",
+      "oldBytes": 707672,
+      "newBytes": 691372,
+      "pixelSha256": "75f294b647a6f30933ea1d46c900906e239408eb293e7918a14f90ada29d2bac",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_leafy.png",
+      "oldBytes": 432076,
+      "newBytes": 422860,
+      "pixelSha256": "cb884bb71bc789cc901467bebf04e4050bb9bb8282a3f376c81fe2f0a5038f46",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_open.png",
+      "oldBytes": 837339,
+      "newBytes": 812828,
+      "pixelSha256": "6d25f75de4f06672f4cf665e147ab59228e6214698b0217ca3e25fe15b97c8f0",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_seed.png",
+      "oldBytes": 254499,
+      "newBytes": 238929,
+      "pixelSha256": "fbed28fbf0f071f3285839943f25491ef8472cfc9184b65e2c7cdbce6032e6fd",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_sprout.png",
+      "oldBytes": 396858,
+      "newBytes": 377865,
+      "pixelSha256": "2b1a3bbe860a13697fae5a14e27fc6cbef4807bbfe58a1dc9b4eec9d8883eb1a",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plants/src_sunrise_young.png",
+      "oldBytes": 317609,
+      "newBytes": 304477,
+      "pixelSha256": "98117632d85197252cc021f3ffb17fdb2b18cb1931f2601ac27b96c18c6bd51e",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/plate-dial-seated.png",
+      "oldBytes": 2831538,
+      "newBytes": 1547397,
+      "pixelSha256": "d7d64d58c92b7e33302e960be68a0cbf54b9807919cb4141ace577193edcf7dc",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-1.png",
+      "oldBytes": 915740,
+      "newBytes": 881270,
+      "pixelSha256": "a45a159ebf0869675bf2c4ebfc3f7a80debd6038cf40193f0fd7cafa80d305ca",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-2.png",
+      "oldBytes": 982702,
+      "newBytes": 950796,
+      "pixelSha256": "17a30ecc925d82632e066867b687bfc9431157705493677d32a53de1e427c116",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-3.png",
+      "oldBytes": 1110754,
+      "newBytes": 1083939,
+      "pixelSha256": "823510fdff9c903208607b603e836b7d2c968a6029caf09f9549ff71daa78b73",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f1-4.png",
+      "oldBytes": 993531,
+      "newBytes": 959855,
+      "pixelSha256": "47d77105aa2629f26661b348191570982ab71e38914292b561221d66d8a553b0",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-1.png",
+      "oldBytes": 1101163,
+      "newBytes": 1070801,
+      "pixelSha256": "0e87c1b1c3d66bf2eb3b08696bda03fad0ad189d5a651276ca73475fa1087336",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-2.png",
+      "oldBytes": 1100836,
+      "newBytes": 1063998,
+      "pixelSha256": "2a50940b24ab26dc9ddb1249746b3a7a48e7dad6eb16f435da2136a3c777a3a6",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-3.png",
+      "oldBytes": 1141679,
+      "newBytes": 1111623,
+      "pixelSha256": "dd33ed0a1d0927be3ee9f3a3b94ccbf0c9d80773aaa6b29757e181c0a7792cdb",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/a2-05-f2-4.png",
+      "oldBytes": 1080490,
+      "newBytes": 1051222,
+      "pixelSha256": "cfb7d189b7e24af86da50f10b3f0223c214359ae2efbdf688aae6a0c9102d5d4",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/ref-candidates/contact-sheet.png",
+      "oldBytes": 2573176,
+      "newBytes": 2503104,
+      "pixelSha256": "7c2d29d1600122a175a31bc613ada57833470ed8d29bd9e30af4bd0e90cee71f",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil.png",
+      "oldBytes": 1643200,
+      "newBytes": 1623184,
+      "pixelSha256": "2bd91098114611ebac59e51590645f7ee57e7fbbca302102d96f8695383116b0",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-1.png",
+      "oldBytes": 1893260,
+      "newBytes": 1542509,
+      "pixelSha256": "b03cc27fea3328dccbf03f6c7ad25f960e89d12bfa282bfbccae65545a5e4585",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2-first.png",
+      "oldBytes": 808745,
+      "newBytes": 799181,
+      "pixelSha256": "66a0297aa37f6b22211e45a063e31e11d132bae978348323809f97caa1db949c",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2-second.png",
+      "oldBytes": 1058277,
+      "newBytes": 1028596,
+      "pixelSha256": "1195189221938f6d74b97a7b10d4dd121a09eb3ca82ae74fe2f23bedbd877afe",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2-third.png",
+      "oldBytes": 1479335,
+      "newBytes": 1456400,
+      "pixelSha256": "0b692cc2e6de46e50ee479b259cd3f48e88eeb4d0ff0d19fe6bed0d49d82bde9",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/gen-2.png",
+      "oldBytes": 1086105,
+      "newBytes": 1053444,
+      "pixelSha256": "dcab50ebf00fa436debbc0e4eacf193dccb4ed4f5e40262e8f1ad7ccaf658fb7",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/preview-2.png",
+      "oldBytes": 1050897,
+      "newBytes": 1007822,
+      "pixelSha256": "3b64a3be059929c4918f588d7d4298783622c0560b4f0608012186583d5f106f",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/preview.png",
+      "oldBytes": 1592434,
+      "newBytes": 1532731,
+      "pixelSha256": "aef09638ab9e3f9333c1857e941848989d270cabff128b739570a6ea5aa7f332",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/template-2-first.png",
+      "oldBytes": 370331,
+      "newBytes": 301615,
+      "pixelSha256": "8becbabcb7b736ebd051a3d7152d30059d7e7f0886887544d3e33d6b10fb855b",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/template-2.png",
+      "oldBytes": 244525,
+      "newBytes": 202275,
+      "pixelSha256": "f095770adf783fc81f0bd0312c97ee01b26590b3102941f2590f06087b9d5da7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil/template.png",
+      "oldBytes": 24781,
+      "newBytes": 20980,
+      "pixelSha256": "5549ff8b609ca0a2f984962921dd9996b8ed7ea327ebeef91be5d1e74a4f6446",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/soil_bed_nb.png",
+      "oldBytes": 1520775,
+      "newBytes": 1311100,
+      "pixelSha256": "98b35034580d49aae754edf0d5522d56a7283b18fd048317785e419123427f0c",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/tiles_nb.png",
+      "oldBytes": 664412,
+      "newBytes": 549335,
+      "pixelSha256": "25b1b21baf58ff17df63280be1895d280d8228f8e27ea54f208cd964b6f369c8",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/wash_dusk.png",
+      "oldBytes": 1133963,
+      "newBytes": 1115528,
+      "pixelSha256": "9d5a529f3f1f6f27458535bcc485e3d7c6df6d328299d59f71b42aca3e8aaa23",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/wash_midday.png",
+      "oldBytes": 1273967,
+      "newBytes": 1255421,
+      "pixelSha256": "9a989f4b29e11fcb17534127aca7cb18ae34f632f51febc60f0f64986f552b44",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Art/Source/wash_morning.png",
+      "oldBytes": 1431914,
+      "newBytes": 1379437,
+      "pixelSha256": "c7d401c5078d8b79092bc4c083e66a1df79b232511d87c2438b8dc435495835f",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_dusk_bud.png",
+      "oldBytes": 105071,
+      "newBytes": 102526,
+      "pixelSha256": "ea357152ede05e720b468156abb956a008904201f0cfd6bd66bf6b81743ea6aa",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_dusk_open.png",
+      "oldBytes": 92878,
+      "newBytes": 91614,
+      "pixelSha256": "a233f134106c765317484bfc63f238d9e5296e276ddc17aee5e603008775a148",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_midday_bud.png",
+      "oldBytes": 77560,
+      "newBytes": 74468,
+      "pixelSha256": "9658aa9fd18785b9c99ed17c277a70d099cfbb82dd9d24afd0e43db2189863f0",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_midday_open.png",
+      "oldBytes": 93091,
+      "newBytes": 89681,
+      "pixelSha256": "cd491ea626c060699e7df96681a5b52f7a4a9dacd19f6e6db77ffafa68292841",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_sunrise_bud.png",
+      "oldBytes": 129147,
+      "newBytes": 126319,
+      "pixelSha256": "5a428e4779fba74528555703b53427a1bdc630b710c771a7c531f7a1e6044086",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/bloom_sunrise_open.png",
+      "oldBytes": 142043,
+      "newBytes": 139067,
+      "pixelSha256": "5991d408b5710c08758dcb4858d0d82cb8a8112d4cd9c8ee52dacdaad835df0d",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_control.png",
+      "oldBytes": 344096,
+      "newBytes": 289722,
+      "pixelSha256": "eb28fb173c51fe7d1ed7d52dcb9f71b5a0eab28c53f08c6ab9bc48a5e8715b33",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_face.png",
+      "oldBytes": 3256711,
+      "newBytes": 3079884,
+      "pixelSha256": "a0b092b7df3e02b84b0ed4267f02d93a1d0868213a7abd3f0db38e41fe936e7c",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_face_s1.png",
+      "oldBytes": 3216700,
+      "newBytes": 3043659,
+      "pixelSha256": "7c33c74aa3e6c0e35e5c8d695ae55e73028b87de390c5f6c99bdea0b08b37c77",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_paper.png",
+      "oldBytes": 89783,
+      "newBytes": 84171,
+      "pixelSha256": "14390b537109d4d716514c495d4e2c92807b0dbf07c7fc8caa61e1aa91255306",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/dial_paper_h.png",
+      "oldBytes": 191025,
+      "newBytes": 190146,
+      "pixelSha256": "e7f4cf4bc1a2f80b8554d9c3347c84dbee1994358e8954770a1ec9a0443e52e5",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/gnomon.png",
+      "oldBytes": 281112,
+      "newBytes": 278481,
+      "pixelSha256": "1fe6f4ee68c072dd1d7f74391f814e46edc3af4521362c5bac08081e6fad83b6",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/gnomon_shadow.png",
+      "oldBytes": 79083,
+      "newBytes": 69206,
+      "pixelSha256": "69f233b1bbff241ceaf004e2789ae5dc11aaec972e232615633c1ce44eb7839e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_full.png",
+      "oldBytes": 26670,
+      "newBytes": 26618,
+      "pixelSha256": "ed333e017e63cd602f7ea7b1a78352f7a7550feb0401f76f0e053a2d8dbd6814",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_leafy.png",
+      "oldBytes": 18969,
+      "newBytes": 18948,
+      "pixelSha256": "3b9fbf550821397590514e0a32dfcd9540edc9a37eac59a3ead456857088cd7a",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_seed.png",
+      "oldBytes": 5962,
+      "newBytes": 5935,
+      "pixelSha256": "28eaa01554d9eb0e0916d7bf499f0c6b00a01bdcf82f958dcb627b41edf81721",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_sprout.png",
+      "oldBytes": 9842,
+      "newBytes": 9726,
+      "pixelSha256": "e92079505e5f4fd6cd1a9fec248ab9c84c530c73d3b17a0110d27ff7f7b17453",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_dusk_young.png",
+      "oldBytes": 12859,
+      "newBytes": 12744,
+      "pixelSha256": "36d6e05575fb1fe491675e61a1e6e4a56110e5020aeadde121ad31d0cab92ba9",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_full.png",
+      "oldBytes": 28622,
+      "newBytes": 28622,
+      "pixelSha256": "0e959f26984cee7a991afd1710d9c72f93f48e66ba185b0379eea1d39e2d5bf4",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_leafy.png",
+      "oldBytes": 23803,
+      "newBytes": 23803,
+      "pixelSha256": "2736929595b622dd375f6ccdc8c0737a463125026ababc6489c99d7ad1ac2d5f",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_seed.png",
+      "oldBytes": 6125,
+      "newBytes": 6105,
+      "pixelSha256": "d403851feafeaa1e2fb7e6349883e4e68d94f9e802768c599e91df104ad3e556",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_sprout.png",
+      "oldBytes": 11806,
+      "newBytes": 11749,
+      "pixelSha256": "10b1714332f08224f062dacac74443283b30e2131612f20ae7ed2e5a440abf19",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_midday_young.png",
+      "oldBytes": 9690,
+      "newBytes": 9640,
+      "pixelSha256": "c677ff6f013348cfe53d175c2367311d4dc36994f29f518349f71baccf59dd96",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_full.png",
+      "oldBytes": 37462,
+      "newBytes": 37457,
+      "pixelSha256": "36b0cea56b0fdbcb900edcaca7c2aaba59c794cc97fe3c4a217cf1c394e73d39",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_leafy.png",
+      "oldBytes": 20868,
+      "newBytes": 20868,
+      "pixelSha256": "10f78e65523b5f7446da6e3605f045c27add566a1d1a18e6a4a30a4951ffdc7d",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_seed.png",
+      "oldBytes": 9273,
+      "newBytes": 9249,
+      "pixelSha256": "b3cc2ccf5ce74d89360e261c5aaef33bfd095b1f84599e1234d67527227ced4a",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_sprout.png",
+      "oldBytes": 14893,
+      "newBytes": 14857,
+      "pixelSha256": "c51f638581e7abdad9f457c69b33f6da3a97ce016588f387e6c54378143491c2",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/halo_sunrise_young.png",
+      "oldBytes": 20369,
+      "newBytes": 20341,
+      "pixelSha256": "697c01f2d0a24f11ebbd4e00bad06ebb701417a1a73ac211231a57da41189252",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_full.png",
+      "oldBytes": 84449,
+      "newBytes": 82487,
+      "pixelSha256": "635eedb4040e4bcc6acfe8ab4e488d8e7581a15e09853f9b1661afaa90cde031",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_leafy.png",
+      "oldBytes": 47366,
+      "newBytes": 45881,
+      "pixelSha256": "d0352f0a19142395800a1c47c5789e5bf81caa79b7530d997f1d122267fb1f4f",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_seed.png",
+      "oldBytes": 19429,
+      "newBytes": 18676,
+      "pixelSha256": "376f87c338c1b899e3ef36b7ce54f4fdb7204ac2f62dabd961c5149c160fd4c7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_sprout.png",
+      "oldBytes": 19076,
+      "newBytes": 18591,
+      "pixelSha256": "ce7d4551b13f537ba5fa6cf9acadf3001beec8ac0633e1c2686903bbd6405b50",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_bell_young.png",
+      "oldBytes": 29995,
+      "newBytes": 29315,
+      "pixelSha256": "7f1d909fa7bbaa3b9daeb50899ed0651dfd9ce0088c361a7d198538368a67db8",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_full.png",
+      "oldBytes": 87049,
+      "newBytes": 83825,
+      "pixelSha256": "afcade37923ca5678ea5da4cd8955df5b276877c6e4fe93ef716201409e0b277",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_leafy.png",
+      "oldBytes": 67443,
+      "newBytes": 64991,
+      "pixelSha256": "96a24cf6fb7f8877c0c72a4eb976a4d86502e3cb9d7f58063adff767a5bcd038",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_seed.png",
+      "oldBytes": 31361,
+      "newBytes": 29885,
+      "pixelSha256": "0a72f5957c60817a55ac98895854205bf51ea5fc02918550c81efba9e0b8665b",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_sprout.png",
+      "oldBytes": 46868,
+      "newBytes": 44606,
+      "pixelSha256": "df2a692d0308de6b4eda95d6a833059df3bda1e6fdc7a3dff17b44e4b6488fbe",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_clover_young.png",
+      "oldBytes": 49023,
+      "newBytes": 47336,
+      "pixelSha256": "4516d0c88c9ce9b57a99422ee2d9183f3c640322d61e486e477d99c2c93c9569",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_full.png",
+      "oldBytes": 113006,
+      "newBytes": 111075,
+      "pixelSha256": "86c5e1af6ea98055eac12752ce16b513ae6fa073cfced4775e21685cc8524d96",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_leafy.png",
+      "oldBytes": 81482,
+      "newBytes": 77897,
+      "pixelSha256": "e8730e8c7fc71dff3c513f8231e5b415634e308ebc1a06182d31e02b31bd90b5",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_seed.png",
+      "oldBytes": 43362,
+      "newBytes": 40459,
+      "pixelSha256": "69e09f2676839e99017c51ebb5e07e1588820db4ed33eb85220dd53a6776c1cc",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_sprout.png",
+      "oldBytes": 45541,
+      "newBytes": 42935,
+      "pixelSha256": "0213ed4092c777677ad3166619e0d4b5337dd1d846eebe12020557cbd644754a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_dusk_young.png",
+      "oldBytes": 61252,
+      "newBytes": 58668,
+      "pixelSha256": "1ac81a330d7007aff36ed3a522ea6235e7c56feab0dc483803085d5b059dea1d",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_full.png",
+      "oldBytes": 70494,
+      "newBytes": 68367,
+      "pixelSha256": "a70d0ddb5e546c9ebe40bdef4fa257b8bc529a630e7713de97e195bb14837f0f",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_leafy.png",
+      "oldBytes": 54744,
+      "newBytes": 52443,
+      "pixelSha256": "d4b2b0f5a46e127b80bdd5652d1923b7ded615eb51c6f8cf23478f26b6ac854c",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_seed.png",
+      "oldBytes": 28716,
+      "newBytes": 26703,
+      "pixelSha256": "160af71cde3870679abc0a374f8d412a2d903632e9337d9040cd9f3cc7631aad",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_sprout.png",
+      "oldBytes": 32029,
+      "newBytes": 30411,
+      "pixelSha256": "985c722472802f3758b16edd037b543d8100531f08f3fdf73fb4e2e718f2df45",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_midday_young.png",
+      "oldBytes": 41007,
+      "newBytes": 38503,
+      "pixelSha256": "661d1de1f39e6122d3589e9df1a0833df0b4023e9fb6633f98ca083d92e827e7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_full.png",
+      "oldBytes": 171280,
+      "newBytes": 169051,
+      "pixelSha256": "3f9448f77a04d4066b67df3b4f94b50e027f9eb9ae10d424624deb78d698c626",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_leafy.png",
+      "oldBytes": 130478,
+      "newBytes": 127510,
+      "pixelSha256": "0300b20edd2b2f9f28e368714350d1406cb392ea9f5eb49f7207859ff1cd9913",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_seed.png",
+      "oldBytes": 38817,
+      "newBytes": 37182,
+      "pixelSha256": "63641167b8a3bd3aa712634eb86a1853764a1a891585a4c0120ebc5b4eb5b07a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_sprout.png",
+      "oldBytes": 52576,
+      "newBytes": 50739,
+      "pixelSha256": "9db4d34fe7fcb290224c4017fc222c3883abbb7442bbdd7c09af4ea2a2f4a016",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_page_young.png",
+      "oldBytes": 91365,
+      "newBytes": 88223,
+      "pixelSha256": "9aad218f1a324c95cd443c33584e1ee999629b5007d82549b2b101f50216c726",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_full.png",
+      "oldBytes": 89921,
+      "newBytes": 88221,
+      "pixelSha256": "aaca7434ff33624b063035dcfbd662aa5f1695313cb66d692769ce587aae4d7e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_leafy.png",
+      "oldBytes": 63637,
+      "newBytes": 62464,
+      "pixelSha256": "a48a2a93a0083d37067b52fd04ff28e6f5dc77304f28b0e293835f7dac76b0f7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_seed.png",
+      "oldBytes": 13749,
+      "newBytes": 13346,
+      "pixelSha256": "7e8265d9ecbade98aea3da0738a53f842971e7d1f975cee1b041c3f503e9deeb",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_sprout.png",
+      "oldBytes": 34699,
+      "newBytes": 33569,
+      "pixelSha256": "9739a393610584aa27e64e9159e49763a3c7293951a9aa1f220895df898ae4fc",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_reed_young.png",
+      "oldBytes": 53812,
+      "newBytes": 52850,
+      "pixelSha256": "fd9679f390326c2cb41a518484168b55fbced7cc15fd804a9378bfc4791da772",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_full.png",
+      "oldBytes": 61220,
+      "newBytes": 59459,
+      "pixelSha256": "194054d0979b9dbef0e5a0da953aed6eff48029e2dc678b7057323a7ed7fa09a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_leafy.png",
+      "oldBytes": 41603,
+      "newBytes": 40270,
+      "pixelSha256": "39085c0d68c7e1d600887fb67a8d44ba4fa26fdc3421285eb23f5f8cb9a17421",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_seed.png",
+      "oldBytes": 16776,
+      "newBytes": 16101,
+      "pixelSha256": "2a625359d08a69feb9c99d56f25b655c9b9d4a37e891c364ec9fa15d8653fb0e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_sprout.png",
+      "oldBytes": 19281,
+      "newBytes": 18713,
+      "pixelSha256": "0580e905ec7993f555cc3e5c6ba057016228632e825d963359c2d81da6d9aa2d",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sprig_young.png",
+      "oldBytes": 29261,
+      "newBytes": 28207,
+      "pixelSha256": "c7965e264fc531c6a520956b0299e475a7b08b2fbabe9405f585675a2eec1f58",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_full.png",
+      "oldBytes": 136432,
+      "newBytes": 133493,
+      "pixelSha256": "8f1863cb15ddaf69057dadf757ab3aef74a6f80a4c295c7fe05c0a8525426290",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_leafy.png",
+      "oldBytes": 72414,
+      "newBytes": 70872,
+      "pixelSha256": "85d4219f122283d843c72405298375bcee0255ff5090f5d5da7d45ccc6e77653",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_seed.png",
+      "oldBytes": 58987,
+      "newBytes": 54657,
+      "pixelSha256": "73607dea89ebd9bfc28a7b6bcf5be36f613f23010ac4d2559b8e890dc967a1e9",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_sprout.png",
+      "oldBytes": 76158,
+      "newBytes": 71919,
+      "pixelSha256": "810afe5b629863873ae3528c27d68602f414a6f50c1507470571e1521dfb2210",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_sunrise_young.png",
+      "oldBytes": 73267,
+      "newBytes": 69756,
+      "pixelSha256": "fc2a7a39a3c81c00f5fbb398d8731c08140bccdfc872f943880d7043da66a9ab",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_full.png",
+      "oldBytes": 68107,
+      "newBytes": 66171,
+      "pixelSha256": "8f4ac0c624835bca28feb26d0fcb4f40e1d695a53e22648c81526808b657642b",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_leafy.png",
+      "oldBytes": 85227,
+      "newBytes": 82899,
+      "pixelSha256": "071b7ef85e06f97b657276f1a78e5559930e6fdcf83cfa10d6e7718628c1cf5e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_seed.png",
+      "oldBytes": 23587,
+      "newBytes": 22856,
+      "pixelSha256": "58564b080d7b991abfa2deb7800b1668da144267c39cc0183dde47d23c2a765e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_sprout.png",
+      "oldBytes": 24799,
+      "newBytes": 23915,
+      "pixelSha256": "45b17f19192710ae373783241ac63ef8abbcd31ddf70144c70919173e2c5d8d9",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/plant_vine_young.png",
+      "oldBytes": 54491,
+      "newBytes": 52753,
+      "pixelSha256": "cc4c0e7f5fa5d57dda7657cf0e237571ae0ca124e4662010431e413413d35dec",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/room_cookie.png",
+      "oldBytes": 13548,
+      "newBytes": 13002,
+      "pixelSha256": "b6d89806ae7d0c517f266d03875a5ee2c18189ce8775ccaf3cef2306c02dfdcf",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/room_shadow_wash.png",
+      "oldBytes": 34850,
+      "newBytes": 26042,
+      "pixelSha256": "5aea5818a0d34639ef2414bb95d5c68dfe646e0916384e663223ed43a10b74c6",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Art/Textures/tiles_atlas.png",
+      "oldBytes": 217463,
+      "newBytes": 205776,
+      "pixelSha256": "91ee335ef6d3852ff9dcce372f0d748b8410d1917322a865b1e9256394bc91b0",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_full.png",
+      "oldBytes": 9022,
+      "newBytes": 9022,
+      "pixelSha256": "967a942b19a2ffe57c2efe074acbe8760f52bbfb2170156ea6f2c1fad5009eb8",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_leafy.png",
+      "oldBytes": 9457,
+      "newBytes": 9457,
+      "pixelSha256": "0ee9496f7d243e9176e9d0f886a1a3bacc3911b26fbbe9fa326b53c3d563aae9",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_seed.png",
+      "oldBytes": 6951,
+      "newBytes": 6951,
+      "pixelSha256": "4fb454d9483589e7e56a7c6a83dd0ee28de1a932f6820ea5c4c1fea81f1fad43",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_sprout.png",
+      "oldBytes": 7499,
+      "newBytes": 7499,
+      "pixelSha256": "06f469de0b336e53287614503d820f437384fda92c786a48c7fb0c3f43507f79",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_bell_young.png",
+      "oldBytes": 7877,
+      "newBytes": 7877,
+      "pixelSha256": "a926ffac50313cf4cdad54c3f8e2fc1cbfcb60ee84f802c129f17bee228791a0",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_full.png",
+      "oldBytes": 10214,
+      "newBytes": 10214,
+      "pixelSha256": "eec0a7ebfdb17bf2f17ef6f8a6a492cacb4a4b69d565b34f49e60bc85e26a989",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_leafy.png",
+      "oldBytes": 9815,
+      "newBytes": 9815,
+      "pixelSha256": "2bb8c9beb1f5d898112cfa22e84adaeb81bf36d26a733cfc42ff06a656df1ffe",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_seed.png",
+      "oldBytes": 8005,
+      "newBytes": 8005,
+      "pixelSha256": "5f8005d75f7000708ba57527e09bc71b6548086cc466964f4f53a38b82933af3",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_sprout.png",
+      "oldBytes": 10437,
+      "newBytes": 10437,
+      "pixelSha256": "de2a080b02d543a38b29e3028aeb8faddd84014929d69f312c728b752a6b018f",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_clover_young.png",
+      "oldBytes": 9223,
+      "newBytes": 9223,
+      "pixelSha256": "e22792e3769373daef48f799473b6aae01fd84fd61de1752d53de39c083e3481",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_full.png",
+      "oldBytes": 10896,
+      "newBytes": 10896,
+      "pixelSha256": "a1c0328793bcdc7c7e9c62640a63e8c13ded744a72d7c906a935dd69359503b4",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_full__bloom_dusk_bud.png",
+      "oldBytes": 11314,
+      "newBytes": 11314,
+      "pixelSha256": "5db55c9c2852689e86660acca6ff6dc987680e13fd65171febbf8a786e1bd317",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_full__bloom_dusk_open.png",
+      "oldBytes": 10826,
+      "newBytes": 10826,
+      "pixelSha256": "449a7ad43b97684ba15cd7d601dba07ec61035e9383728dc222fd3b47aba6d59",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy.png",
+      "oldBytes": 9577,
+      "newBytes": 9577,
+      "pixelSha256": "d532fafbb4b79b9f1dbe0f1a832fbe20026f7c81707cf86251db8b04050016ca",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy__bloom_dusk_bud.png",
+      "oldBytes": 9927,
+      "newBytes": 9927,
+      "pixelSha256": "7a35f8894f830c9de30934d50edb2867e37d7549f95cec592b83dd1729cdb1e8",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_leafy__bloom_dusk_open.png",
+      "oldBytes": 9652,
+      "newBytes": 9652,
+      "pixelSha256": "d4659384e1409c1523410bdeccfceec3b40efaf9ed75cdcc4d743828bbed0846",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_seed.png",
+      "oldBytes": 7503,
+      "newBytes": 7503,
+      "pixelSha256": "69b4f6f7600c8c883c4b5d3a6ca64300aaa57594aca118be5a4d503aefe2b1d8",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_seed__bloom_dusk_bud.png",
+      "oldBytes": 10564,
+      "newBytes": 10564,
+      "pixelSha256": "9baab52b26d71b1628d040f15a953dbc7aff1e5d64a1b18281f61654ab52cd5c",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_seed__bloom_dusk_open.png",
+      "oldBytes": 10541,
+      "newBytes": 10541,
+      "pixelSha256": "c2ade0fffdcc8ef1c51a38d6c16b1c34836c50739f65290800e234e215906537",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout.png",
+      "oldBytes": 8911,
+      "newBytes": 8911,
+      "pixelSha256": "271de771d334ff2ad028059ba64f7570726cded34984fe692b773a3e413873f0",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout__bloom_dusk_bud.png",
+      "oldBytes": 10269,
+      "newBytes": 10269,
+      "pixelSha256": "1fde5c51f5d591063cd4ce14d3d067b4e128fd046cec026b82b7ef9415798e71",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_sprout__bloom_dusk_open.png",
+      "oldBytes": 10209,
+      "newBytes": 10209,
+      "pixelSha256": "a474bda863f59c2965485c52afbda8edc18de1fda2b10c7aba39791476c1262e",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_young.png",
+      "oldBytes": 8547,
+      "newBytes": 8547,
+      "pixelSha256": "c1b0d31157d53f2c42018b5a3b9f64f0045cd3eed3968ceff6c6e3f17725d315",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_young__bloom_dusk_bud.png",
+      "oldBytes": 11393,
+      "newBytes": 11393,
+      "pixelSha256": "3bfb2f01f0a24c9c8f4cc2fb84dfa345f4ebb82844401c337ba58a5ee2217472",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_dusk_young__bloom_dusk_open.png",
+      "oldBytes": 9986,
+      "newBytes": 9986,
+      "pixelSha256": "6e3f53c56ca52a3f2a8d2bfb7f90c8e8ebc86b80a0e8edd93aa6855a79349b61",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_full.png",
+      "oldBytes": 9473,
+      "newBytes": 9473,
+      "pixelSha256": "1bf1633119ced11864f839d5ac22f58b60157d34164674f72528c40621d4286f",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_full__bloom_midday_bud.png",
+      "oldBytes": 10381,
+      "newBytes": 10381,
+      "pixelSha256": "d7d41a0581a8b661d98e0f88143ddc0c37dfccad4908c88bee7b89693d114ec2",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_full__bloom_midday_open.png",
+      "oldBytes": 9985,
+      "newBytes": 9985,
+      "pixelSha256": "803a14d4bd89e218b4a2f4fd89f15236a8570857114b205a1344260b7467a4eb",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_leafy.png",
+      "oldBytes": 9178,
+      "newBytes": 9178,
+      "pixelSha256": "0f32e5ca9aafb0fe5d8cfd42cfdbd666f1fc035ee4e4bfd95d34d1253f09c37d",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_leafy__bloom_midday_bud.png",
+      "oldBytes": 10259,
+      "newBytes": 10259,
+      "pixelSha256": "c3aa39545b9d65343afa33dcd73d64a803a06305e16f24da84c86294c142e271",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_leafy__bloom_midday_open.png",
+      "oldBytes": 9772,
+      "newBytes": 9772,
+      "pixelSha256": "dcfe9cc9150e8925d191501f370f92b7672f9ffb9c54a053d29244a7ebe51499",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_seed.png",
+      "oldBytes": 6717,
+      "newBytes": 6717,
+      "pixelSha256": "1ac918d39d9aa080b51d0fa696c9bafc3cf4313acca1f65a2917a30108f97dbc",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_seed__bloom_midday_bud.png",
+      "oldBytes": 16968,
+      "newBytes": 16968,
+      "pixelSha256": "ffbfb183d5c9591a645008816a57cb248d92b87f34056b761ec00fd22e84902e",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_seed__bloom_midday_open.png",
+      "oldBytes": 8926,
+      "newBytes": 8926,
+      "pixelSha256": "75e69a3ea148c325d15875da1704d821e1ab16c072bc8202c428106add0ba009",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_sprout.png",
+      "oldBytes": 7844,
+      "newBytes": 7844,
+      "pixelSha256": "db15b5a61acfcdf1ba8f244527a374164dfa259b83f642cb604436c197ae0e0e",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_sprout__bloom_midday_bud.png",
+      "oldBytes": 16714,
+      "newBytes": 16714,
+      "pixelSha256": "1a23d1a609c9d5079f95b065caf4e3ca879bd9af9f2c7191d6824f226b2fc9a4",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_sprout__bloom_midday_open.png",
+      "oldBytes": 9285,
+      "newBytes": 9285,
+      "pixelSha256": "9fb5ea2f6db6e845f7ca93121150e9814515cc7e0028c018dc94495bb55eeff6",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_young.png",
+      "oldBytes": 8303,
+      "newBytes": 8303,
+      "pixelSha256": "24e659029bc82e5ba8e45be48ad1d318c859688cf629ce9462fbcfbc398c93a3",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_young__bloom_midday_bud.png",
+      "oldBytes": 16870,
+      "newBytes": 16870,
+      "pixelSha256": "f72dcaa8c76e1cdc3da91fc7b2c1b4f51217905293ce58d1f073344824795371",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_midday_young__bloom_midday_open.png",
+      "oldBytes": 9147,
+      "newBytes": 9147,
+      "pixelSha256": "6c57c596e605c674c1480645e566bb42a23c7ee832b5dfd07196e182e29e8c2e",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_full.png",
+      "oldBytes": 8151,
+      "newBytes": 8151,
+      "pixelSha256": "43af7f3935fea328074c74bd78694515ce28bf87490145f8218fda5768a2e7de",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_leafy.png",
+      "oldBytes": 7864,
+      "newBytes": 7864,
+      "pixelSha256": "200fb60f50b40d7e9ef14f2e0ad272f2f1fb23ea2d6fa8ec58845f48b2910677",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_seed.png",
+      "oldBytes": 8971,
+      "newBytes": 8971,
+      "pixelSha256": "71cbc5638500bbf8d975c8cb2468da2ab9e2528f55e7d15aa78b07b1857263fd",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_sprout.png",
+      "oldBytes": 11198,
+      "newBytes": 11198,
+      "pixelSha256": "ba315ecda24e86c23f75708471f40837bfbc0036bd6fabc5adc5a4fbf271a5a8",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_page_young.png",
+      "oldBytes": 9736,
+      "newBytes": 9736,
+      "pixelSha256": "3e6193da6715f72c5f02236d31f60673479be2e3095c7cf8b42eb73fed74ec76",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_full.png",
+      "oldBytes": 10526,
+      "newBytes": 10526,
+      "pixelSha256": "455b9c32da94e749a484037cd1632daded8ea4932a29b7898749063c5dbf3ebb",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_leafy.png",
+      "oldBytes": 8931,
+      "newBytes": 8931,
+      "pixelSha256": "3e3b218677e86a302c696eaedc11807ebd89fb8d30ecc41b5e5807e48a7b9f0a",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_seed.png",
+      "oldBytes": 7684,
+      "newBytes": 7684,
+      "pixelSha256": "c7358912c7688a6e5a4da8d6c9010c4cd5eed382ccd69f1dcdf5a07e104fe4e5",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_sprout.png",
+      "oldBytes": 8882,
+      "newBytes": 8882,
+      "pixelSha256": "863cb59bc4a4dc19497f699aa66f681a1191235ed4dc84949f54659474a99b82",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_reed_young.png",
+      "oldBytes": 8786,
+      "newBytes": 8786,
+      "pixelSha256": "acf0da4c2344f83fce4808e7e46f1dc477ebdb2e752be335a26e8466f7edb775",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_full.png",
+      "oldBytes": 8997,
+      "newBytes": 8997,
+      "pixelSha256": "de5038a9a98fcf867e3e45440a80949e9a8036593ca4f3d887d4e49467694183",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_leafy.png",
+      "oldBytes": 8052,
+      "newBytes": 8052,
+      "pixelSha256": "c70a4f87be3e921a9c6ccb9c30905599287e78224a86cbcf44021b1c3fbbcf87",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_seed.png",
+      "oldBytes": 6846,
+      "newBytes": 6846,
+      "pixelSha256": "3a44aaa293de73cc00e20b1260a76df04040a08711450afe226cae6577b5bfbd",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_sprout.png",
+      "oldBytes": 7524,
+      "newBytes": 7524,
+      "pixelSha256": "4f64d7947f99c0ce31955cfc4129e746ab7e051e46edeefa07d6917cabd948e9",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sprig_young.png",
+      "oldBytes": 7678,
+      "newBytes": 7678,
+      "pixelSha256": "b591e17d7c4aa75d95d738e7381c448fc026a8c1d6e3dd38ba2843d2f2919290",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_full.png",
+      "oldBytes": 10781,
+      "newBytes": 10781,
+      "pixelSha256": "7d0d3330184a4649c1418ceb3196a81cee0d49dac1fed3aa78fa1ff4c503877b",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_full__bloom_sunrise_bud.png",
+      "oldBytes": 11353,
+      "newBytes": 11353,
+      "pixelSha256": "94c65b44749910173054225ae3bb0cd7af356bdab771019b21ebf5bea949a732",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_full__bloom_sunrise_open.png",
+      "oldBytes": 11845,
+      "newBytes": 11845,
+      "pixelSha256": "6ce18ae80a84c8443ddcdceb89fc809284c338d9a8efe64342e9437b9c0320c2",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy.png",
+      "oldBytes": 10247,
+      "newBytes": 10247,
+      "pixelSha256": "cd7ee5ea81546198bd0d4a0fc74e187851a004ba5e98dd1b7f4c0590368f6d02",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy__bloom_sunrise_bud.png",
+      "oldBytes": 10906,
+      "newBytes": 10906,
+      "pixelSha256": "e2b6ac0c49d7a90f7e8a1a2d2722eedb45088759fa67f84edbc22dcf6e82650b",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_leafy__bloom_sunrise_open.png",
+      "oldBytes": 11292,
+      "newBytes": 11292,
+      "pixelSha256": "a2f3e516de7a13a17e73ce9c05e9807e5f5fa9a2522a0c5a981b5d72944d7a4b",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed.png",
+      "oldBytes": 6966,
+      "newBytes": 6966,
+      "pixelSha256": "900169e6e872365c4b38c455ed419b6abbda7c17050311b177a85f179e7d0674",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_seed__bloom_sunrise_bud.png",
+      "oldBytes": 10783,
+      "newBytes": 10783,
+      "pixelSha256": "122313395f8464e651cb776fec80e0db19b8bae6fb2b246b2b743614003de7c6",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout.png",
+      "oldBytes": 7907,
+      "newBytes": 7907,
+      "pixelSha256": "c1388ed91207fe89e02e3f99c2fcb7e4a723928ea1ade62a5e2860857cbbb4cc",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_sprout__bloom_sunrise_bud.png",
+      "oldBytes": 10936,
+      "newBytes": 10936,
+      "pixelSha256": "41d82e61dfa7efe92829b9a921185adb5256027cd8d776811b877594f16a6444",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_young.png",
+      "oldBytes": 8690,
+      "newBytes": 8690,
+      "pixelSha256": "c1ce3353bfbd49d963f296ba14fb6914df3399405d20af38bcf68b92966982a3",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_young__bloom_sunrise_bud.png",
+      "oldBytes": 11406,
+      "newBytes": 11406,
+      "pixelSha256": "40b105d8a427ffe53cc0ba201861965bb377d0f935927c2c494603fe8bd60be8",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_sunrise_young__bloom_sunrise_open.png",
+      "oldBytes": 12143,
+      "newBytes": 12143,
+      "pixelSha256": "57ae6f9124c03934b968eb060d9d796a5dd76f194adc0def8696dbaceca2f358",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_full.png",
+      "oldBytes": 9466,
+      "newBytes": 9466,
+      "pixelSha256": "78cfa9123a5f45ff9769bd6369ee2155bd5824c83554d75f6d47636b73cd2da6",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_leafy.png",
+      "oldBytes": 10140,
+      "newBytes": 10140,
+      "pixelSha256": "55bc54d6bb69d3ecd0c1551f5707595754392b405ba68200ade0ee62baad9ced",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_seed.png",
+      "oldBytes": 8107,
+      "newBytes": 8107,
+      "pixelSha256": "dac2b53496455915fbe201d2258ec738498217f09010c9239a819a375062734b",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_sprout.png",
+      "oldBytes": 7605,
+      "newBytes": 7605,
+      "pixelSha256": "ad164e21ba892644872272aef6bdbf348573b0cddb69bf95a319e32ca03a4a9b",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Halo2/plant_vine_young.png",
+      "oldBytes": 8868,
+      "newBytes": 8868,
+      "pixelSha256": "fcf9198cab51ea8f76a42687484478b48fc8be16a63c49a8184df95863892236",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Layout/dial_control_layout.png",
+      "oldBytes": 988928,
+      "newBytes": 606255,
+      "pixelSha256": "8632d679f186de954304c737364d858526cede35edc7b2a35e317cb52d8e7abe",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/SoilMound/soil_mound.png",
+      "oldBytes": 1598693,
+      "newBytes": 1588950,
+      "pixelSha256": "18fbc50f74c4681063af85f9ecdf0be0e9207bc7a4e001870c12cbc0ef6e8ee8",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/companions/sprigs-contact.png",
+      "oldBytes": 216349,
+      "newBytes": 209131,
+      "pixelSha256": "387126359369335dd6091a02e9b66b091c71af39f72a6e2325fd3d017ba014b7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/condensation.png",
+      "oldBytes": 1084502,
+      "newBytes": 1038633,
+      "pixelSha256": "ad8daba304d7a1b2038730996f20c3c54d3115ba3f5f281bb465f57cfe53feaa",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/condensation_beads.png",
+      "oldBytes": 1046959,
+      "newBytes": 1018257,
+      "pixelSha256": "94def9d6c910cd1a603096d47d7fd138560e6a223efa0ac49090500c8d09bce5",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/cork.png",
+      "oldBytes": 1765937,
+      "newBytes": 1753275,
+      "pixelSha256": "99545930777cc6b8f20608b4aaa00b10c3bf92b2b35129811c2499e7cb476bc5",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/cork_macro.png",
+      "oldBytes": 1845370,
+      "newBytes": 1831229,
+      "pixelSha256": "9fcf24f399d8c4a795bcd52eec0fd0990ce35871c92117bb227f84cdef0fe9db",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/cork_top_macro.png",
+      "oldBytes": 1645787,
+      "newBytes": 1620877,
+      "pixelSha256": "ca315eec6855381bf7aceccc2905ddd28e3f956168bb09a5707122d624a17f9e",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_a.png",
+      "oldBytes": 668623,
+      "newBytes": 653502,
+      "pixelSha256": "5981c5f1824c88d347220e1a718fea406c96987a8749a11388d3137cc3d73f30",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_b.png",
+      "oldBytes": 665294,
+      "newBytes": 654889,
+      "pixelSha256": "b8744616e5cb75970490de799666f79ff75a1534fc5ef2b021f5c837772a5683",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_nb_a.png",
+      "oldBytes": 1381596,
+      "newBytes": 1344237,
+      "pixelSha256": "06a0f32ec45c72eafffaa8cd578a946345976129210c51f437d5dc9f0238f90b",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_nb_b.png",
+      "oldBytes": 1133636,
+      "newBytes": 1089334,
+      "pixelSha256": "71ae72b2c32de934eee0e19b2d0c188beb52a7d9b2bbbb94e48286765300f8af",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_v0.png",
+      "oldBytes": 793142,
+      "newBytes": 781201,
+      "pixelSha256": "0b8061fcbefb624be8db2df3b934329a176abdebeb3d3950515d38ba5b277de5",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_v1.png",
+      "oldBytes": 598013,
+      "newBytes": 596378,
+      "pixelSha256": "4d1a27302b027035dcb98312b2c03dd707988c9202a025655608d58dd2ce2fe0",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fern_v2.png",
+      "oldBytes": 816516,
+      "newBytes": 802119,
+      "pixelSha256": "8ce0086c30bfbffad51dd4997f339911b31550bb79a23d94b416c8dffda7be09",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/fiddle_nb.png",
+      "oldBytes": 2865244,
+      "newBytes": 1996383,
+      "pixelSha256": "0c654b95c5e78bd635747dbad7175be44e45c1fff2efb45269616ccb5a1a804c",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/inputs_sheet.png",
+      "oldBytes": 538746,
+      "newBytes": 511526,
+      "pixelSha256": "9fb37cdc5b0fe563968f977008dd313fe3336c8ae759d30205f2d1408317a7ea",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/moss_clump.png",
+      "oldBytes": 1248905,
+      "newBytes": 1023466,
+      "pixelSha256": "0049a85779ef2a911e631e2f19e5c756ae760a7b3dafcc0a6a342f6cbfd13000",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/mushroom.png",
+      "oldBytes": 1171276,
+      "newBytes": 1155556,
+      "pixelSha256": "dd926d525b849d1df1586fd07381a843d24411fb1bc2791c2d6147b72ac4b81f",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/gen3d/pebble_set.png",
+      "oldBytes": 1003889,
+      "newBytes": 763953,
+      "pixelSha256": "4e171e1a00b7d9dc0c4cc84f825de88b68472875666784445624a5d807f26132",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_0.png",
+      "oldBytes": 696985,
+      "newBytes": 655879,
+      "pixelSha256": "7c67b9570d52e9f7e7cefebf97f42423e1c5e532c7746186706d727b7612e7d9",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_1.png",
+      "oldBytes": 477233,
+      "newBytes": 446734,
+      "pixelSha256": "a4bdaf7f4d3d8477b5ae34cdb5c7a781d8edca940dd542889654a33d91ffecb3",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_2.png",
+      "oldBytes": 313935,
+      "newBytes": 302608,
+      "pixelSha256": "b130e8afe96067b5e91160a057efe9b4988d80d6d0ceea2206cae869d1da7285",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_3.png",
+      "oldBytes": 401036,
+      "newBytes": 377035,
+      "pixelSha256": "e690bb7f0fa76497bc47371dc5696bbdd3bfdf2c46e7f119963dcc4152d4fb97",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_4.png",
+      "oldBytes": 531306,
+      "newBytes": 501096,
+      "pixelSha256": "6e4b9299b444f987c87a282e4f3ece17e11fa5b7feef5180d0d56d7f459f8bf9",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_5.png",
+      "oldBytes": 434106,
+      "newBytes": 408233,
+      "pixelSha256": "314f1e02e594cbf3c8e4ca493880f143a3e4c9d635179bde3a3a9bf360b02990",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_6.png",
+      "oldBytes": 606574,
+      "newBytes": 577025,
+      "pixelSha256": "600c8b5854303ec68c1ea3989d942a6e1873552ca3b588c42ceb365c027f2388",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/mist_wisp_7.png",
+      "oldBytes": 409285,
+      "newBytes": 386369,
+      "pixelSha256": "1d01fcd93303b490fc43073d0b8aea36cc123ac39dd2d00e29e5622a054ab8c2",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss-repaint.png",
+      "oldBytes": 73877,
+      "newBytes": 73320,
+      "pixelSha256": "d20442856fd542fbd23c2ca426ab3d131427af746fed65810a122f213f2096a2",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_carpet_nb.png",
+      "oldBytes": 2428040,
+      "newBytes": 2387392,
+      "pixelSha256": "2a0adaf0fadca2443af391aee1c5e99b407858e4d448408b4684d244c50f1d11",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_cushion.png",
+      "oldBytes": 2042767,
+      "newBytes": 2042767,
+      "pixelSha256": "c94cdf92de341b70c77fe2e2b592aca6363129bb32c4c3b8c428f98ca78139da",
+      "method": "none",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_macro.png",
+      "oldBytes": 2056853,
+      "newBytes": 2044125,
+      "pixelSha256": "6cef7ba85d265dcb15b66e446a636e0232b30a1fb7f384deb32a6f3120a67a57",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tile.png",
+      "oldBytes": 2979358,
+      "newBytes": 2288105,
+      "pixelSha256": "702389f7b47da5944de9fa26291136221466eabab71d9849c5568b687c47bf11",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_0.png",
+      "oldBytes": 1480467,
+      "newBytes": 1210866,
+      "pixelSha256": "8e98079109d4342eec66da1585550426d5eb24d615ab7e60a860fbe985e804af",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_1.png",
+      "oldBytes": 1264864,
+      "newBytes": 1099979,
+      "pixelSha256": "7c0095eff3b75016725a7f0b2711b64afb2babb67c77ad4fdddc80835f0925a8",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_2.png",
+      "oldBytes": 1527967,
+      "newBytes": 1490910,
+      "pixelSha256": "ce2f013d4f960b36ea03bcef8014203e76dc14e5b2ac5dc6812b00480b22de05",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_3.png",
+      "oldBytes": 1132983,
+      "newBytes": 1086679,
+      "pixelSha256": "a7319d1c0a6a24969edf086360417b0107f16022e2eb1559b526da0ee75a6fe1",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_4.png",
+      "oldBytes": 1212123,
+      "newBytes": 1177891,
+      "pixelSha256": "b5c8cfaa5bc7f7d003a952e9252c79adddec0f6c7a189927231794e31685ec0a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_nb_tuft_5.png",
+      "oldBytes": 1179412,
+      "newBytes": 1142385,
+      "pixelSha256": "b116066c2b4b8be1057f10c053a57d4682286ccfa398f4bfe017c32351951b3a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_0.png",
+      "oldBytes": 969592,
+      "newBytes": 909792,
+      "pixelSha256": "c788f09846ab6492af758d5316a071123deea17cb2276a1b080d9f0c0e7e9d63",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_1.png",
+      "oldBytes": 1343822,
+      "newBytes": 1178507,
+      "pixelSha256": "a123dfb4cf5bd3add6f9d7008a2a2a981927a29f1fe9e30f58b66f5d3c6e1b05",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_2.png",
+      "oldBytes": 1168316,
+      "newBytes": 1032441,
+      "pixelSha256": "1f2bf67118880606282cd75cd3ae1aa58b08b4c0e8280218e24c0f786b263def",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_3.png",
+      "oldBytes": 901594,
+      "newBytes": 850629,
+      "pixelSha256": "2ff7c20e486eec8008e72b97410623dc94292d817503ba26d785889f9e679aaf",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_4.png",
+      "oldBytes": 938822,
+      "newBytes": 894106,
+      "pixelSha256": "3cc0671b65a085dcd6ea098e8a51c11c2d8b642da01e636573f9398cfe00c8f3",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_sprig_5.png",
+      "oldBytes": 884926,
+      "newBytes": 841277,
+      "pixelSha256": "2d38d44285e7778f4292a4b86f8e89d00df81d2a77ab2ad20225147ac6a1f315",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft.png",
+      "oldBytes": 496135,
+      "newBytes": 490342,
+      "pixelSha256": "616c886f3b957ed870df45beed47689c6eb272541275416c1ff391a1544e8674",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft_0.png",
+      "oldBytes": 673781,
+      "newBytes": 665757,
+      "pixelSha256": "352f6ec59effe740f832cef217e7d8f63a3dee839b9524433f0dbc12830e2cc7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft_1.png",
+      "oldBytes": 913590,
+      "newBytes": 901989,
+      "pixelSha256": "e971cd9acdc555b8a60cc0fbeaa402ee33dae49b0ec9fbaaa672d2dd2006b947",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/moss_tuft_2.png",
+      "oldBytes": 895743,
+      "newBytes": 884088,
+      "pixelSha256": "835c494c8986c2bd2bbadf24d545aaebd3126eb6bf964b5089e804ccffd5ed7c",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/petal_macro.png",
+      "oldBytes": 426273,
+      "newBytes": 415376,
+      "pixelSha256": "6c68ae0efc730e3b465faa006052c8b2f88cc2bb615e1e74d568eaf07cbcbf15",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/plate-jar-seated.png",
+      "oldBytes": 2744098,
+      "newBytes": 1539983,
+      "pixelSha256": "134bea88a9f32c13cea8e2bded767eafdbffe59e5709ddfc88e54491ac207b53",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-01.png",
+      "oldBytes": 538229,
+      "newBytes": 496442,
+      "pixelSha256": "7db609b3fbd26412e8dc9ce39d169383631d309cfb88dcb589ee8aa90d7190cf",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-02.png",
+      "oldBytes": 538513,
+      "newBytes": 504609,
+      "pixelSha256": "7b8b739a12c933986652e4c813f16c8170e6d13f74c294d6affba7ba279c9533",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-03.png",
+      "oldBytes": 592489,
+      "newBytes": 555874,
+      "pixelSha256": "c9d646a6abb3420acbf99c1f5e41b5bc3fc1f641954d8e90e4111e8b40eca47c",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f1-04.png",
+      "oldBytes": 500035,
+      "newBytes": 459744,
+      "pixelSha256": "0e7053d5d2275725541a6cc9d64d299f6958a692471747bd12af400a40b9a26a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-01.png",
+      "oldBytes": 675093,
+      "newBytes": 634886,
+      "pixelSha256": "5d83eac96bde4ebc8caaf165a713665e8de76ebd7f0e2aeb941cbed5c1402527",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-02.png",
+      "oldBytes": 722263,
+      "newBytes": 681368,
+      "pixelSha256": "5b799b53ced62784fc6bc3f57861398d13cac5d1610147a4192fd3890a43248a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-03.png",
+      "oldBytes": 707573,
+      "newBytes": 665781,
+      "pixelSha256": "10438a53d9bc3aa06eacd9434ab71e7dfefecda4bcd966f64b6c32810634dae8",
+      "method": "zlib9-filtered",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/a1-03-f2-04.png",
+      "oldBytes": 759890,
+      "newBytes": 712609,
+      "pixelSha256": "695731dedf19a573587db68b838e2386c3405e17074e5a7110e9fcacfac7c546",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/ref-candidates/contact.png",
+      "oldBytes": 999732,
+      "newBytes": 943004,
+      "pixelSha256": "b605575b7361600405959474ebbbea508ebcced1e29649c16b00a6b25964c93d",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/soil.png",
+      "oldBytes": 1529026,
+      "newBytes": 1498702,
+      "pixelSha256": "1e9e42f1c73d3607f7f38c9f3696f0c4b942a645147ca9c55590f8929058e363",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Art/Source/soil_nb.png",
+      "oldBytes": 2515650,
+      "newBytes": 2371021,
+      "pixelSha256": "9aa99f5514f1f37287a78dd49afac7cce4a5dd33adf97546b84363b51189babe",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/condensation.png",
+      "oldBytes": 1085457,
+      "newBytes": 1004286,
+      "pixelSha256": "af126d1a6a0e309c25c7a31a4b9ed4228fa23e669e547f3fa3ba84d586e0efed",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/cork.png",
+      "oldBytes": 1747183,
+      "newBytes": 1678899,
+      "pixelSha256": "e8f4c4ac666ad79b9951a54cd06d60be4bc8da9f3a489aec281961be6d7f3e78",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/cork_side.png",
+      "oldBytes": 1865912,
+      "newBytes": 1844249,
+      "pixelSha256": "da100146da9edcd7f4505c520322d0bd4049b5346b8be11cf830b1956905126b",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/cork_top.png",
+      "oldBytes": 1844396,
+      "newBytes": 1815513,
+      "pixelSha256": "7b4911923d4649c61b898021b0443f84da9caa8c34f8d196c15f6db927387317",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/droplet_normal.png",
+      "oldBytes": 141783,
+      "newBytes": 73447,
+      "pixelSha256": "d583335387e0993f363741a8ce4d8511e9bdcc614ac90d7f26fad93afb843800",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_a_albedo.png",
+      "oldBytes": 772485,
+      "newBytes": 764597,
+      "pixelSha256": "2e50661e9e85601ee5809cd38b068769177dae22780b813938c318d1a897e9a7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_a_emission.png",
+      "oldBytes": 387546,
+      "newBytes": 380511,
+      "pixelSha256": "b419b098e4b34bca376c428e5b5dddd360da12e1506d134834a8985f9ee716a3",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_albedo.png",
+      "oldBytes": 1169228,
+      "newBytes": 1168869,
+      "pixelSha256": "cfe7600405d387f3639a9c2a65aa495e17443fd9aec1a54eadc7d8f9cb21ece2",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_b_albedo.png",
+      "oldBytes": 1013068,
+      "newBytes": 1008014,
+      "pixelSha256": "eec61adc2b6e065f8666e2090e8346dbb7130d672614feb3b9a65cca221098dc",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_b_emission.png",
+      "oldBytes": 448764,
+      "newBytes": 443116,
+      "pixelSha256": "1c7d08537d9454803471fe7d29d2284413e45cc9b829150ef92669f114dbb8d4",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fern_emission.png",
+      "oldBytes": 695584,
+      "newBytes": 565580,
+      "pixelSha256": "096452866e5723972096351c9e74a7545ff94e37da20bbac5c6e0d17968bf60c",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/fiddle_hairs.png",
+      "oldBytes": 590537,
+      "newBytes": 582024,
+      "pixelSha256": "6274b3ba6c9bbcbf52592db95382a5d304fa2643f172dd0b1e3b4ca83bf0c035",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss-repaint.png",
+      "oldBytes": 4106871,
+      "newBytes": 3872607,
+      "pixelSha256": "5047c3e62f3e28746c2cebb639f8598d7cc95c0584acab7fcc8cd78f2fc3dee0",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_card.png",
+      "oldBytes": 1776640,
+      "newBytes": 1726690,
+      "pixelSha256": "65ab7f324fd8da492efe7fd3c581876d4df504a77f11e33346e021ed4fe90e15",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_macro.png",
+      "oldBytes": 2506427,
+      "newBytes": 2466610,
+      "pixelSha256": "6181f2fa82c125a076ec11f36553077c092c4edebef9d2e39d4ae10065cfd781",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/moss_tuft.png",
+      "oldBytes": 457434,
+      "newBytes": 455131,
+      "pixelSha256": "925071eaa7f7dce2689724f1c1dd58b8ab0bb9bdd4d215d2b7dc59eb6151b111",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/petal.png",
+      "oldBytes": 506085,
+      "newBytes": 484012,
+      "pixelSha256": "35384116d3e93af3138385335a59f26169ac8f12fd7c54c5a8e7d0c491cf38bb",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/ring.png",
+      "oldBytes": 130227,
+      "newBytes": 113283,
+      "pixelSha256": "3fc9e7046dab4ddfc815212e030c2a9106fe70963c5ee2962113a71167fe1dd1",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s1_drops.png",
+      "oldBytes": 76149,
+      "newBytes": 72155,
+      "pixelSha256": "c30d2d6bb13b166d2b292a38f45542aa3ea20712d1b6857c9993185c8b903617",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s1_studio.png",
+      "oldBytes": 24839,
+      "newBytes": 23276,
+      "pixelSha256": "aa28b2f63200cdbd5d8bd4bdd6bc6fef5d7d812027c8c9e744fc963184254765",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s2_refract_strip.png",
+      "oldBytes": 163313,
+      "newBytes": 140395,
+      "pixelSha256": "c6b066d9cb7a2b20893c54a47fa3873f082da99c53db925e7bef8bc618f23bfc",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s3_strand.png",
+      "oldBytes": 308542,
+      "newBytes": 297956,
+      "pixelSha256": "c4f05555100cece91f70125e672ce8e35af08ccfc6eca5c339759c096f14b6a9",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s3_strata.png",
+      "oldBytes": 509319,
+      "newBytes": 502819,
+      "pixelSha256": "05fd9222afe28dae93ac89563076f14939306f4119c026d6259b5440cb9d5a6a",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s4_frond_albedo.png",
+      "oldBytes": 955091,
+      "newBytes": 949855,
+      "pixelSha256": "3969d5b0d8e8f1e33a577001fbee8d09eb7f6477a2656973f229d5c68d2af2bc",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s4_frond_thick.png",
+      "oldBytes": 397437,
+      "newBytes": 393284,
+      "pixelSha256": "ae0d764d1e943f56d9506324556097fd6bc0dcf392161df7b62b10007a42e12c",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s5_contact.png",
+      "oldBytes": 30355,
+      "newBytes": 28348,
+      "pixelSha256": "c69dfd8559e3b52c2bd3f9d58945040c4681a1fb4c41db1b866f1787a8fc2f26",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s5_desk_streak.png",
+      "oldBytes": 14614,
+      "newBytes": 12709,
+      "pixelSha256": "a09b952c13ddab3066cf05d29e3a48eeb71c63861a91372044a2dbc253ee5af2",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/s5_steam.png",
+      "oldBytes": 224589,
+      "newBytes": 216329,
+      "pixelSha256": "625bd4576516ae3bf0345216ee6564da90454ae5053ccf62d6e7da4b8b28906e",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/soil.png",
+      "oldBytes": 1803091,
+      "newBytes": 1791488,
+      "pixelSha256": "33149ad1bff3bdd7687c260b427939a676d68ad00418f356189921029473a4c0",
+      "method": "zlib9-default",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/soil_band.png",
+      "oldBytes": 2147726,
+      "newBytes": 2119297,
+      "pixelSha256": "c327336a43271d0c9ef77c53f35b8a4c77896bc6bbed404e61ad5992cf19b6a7",
+      "method": "pillow-optimize",
+      "applied": false,
+      "recordedIn": [
+        "docs/assets/baseline.json"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/sundial/Assets/Art/Textures/soil_bed.png",
+      "oldBytes": 375398,
+      "newBytes": 375338,
+      "pixelSha256": "2ddd1741364c04984121f68fadb9934f97a0376a6dd368d7790e02ae91b46060",
+      "method": "pillow-optimize",
+      "applied": false,
+      "reason": "saves under 10 percent or under 65536 bytes"
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Layout/dial_face_layout.png",
+      "oldBytes": 1101072,
+      "newBytes": 1100880,
+      "pixelSha256": "dd295ae0b8ba69e465db2273a22290bd13edb2eff8782c39b67f21c70ee71928",
+      "method": "pillow-optimize",
+      "applied": false,
+      "reason": "saves under 10 percent or under 65536 bytes"
+    },
+    {
+      "path": "apps/sundial/Assets/Resources/Layout/dial_face_layout_s1.png",
+      "oldBytes": 1098010,
+      "newBytes": 1097818,
+      "pixelSha256": "787ae7236d4c56919321803a3c7abbe42a839cffc7617f0bcc238d65fc0bd9f6",
+      "method": "pillow-optimize",
+      "applied": false,
+      "reason": "saves under 10 percent or under 65536 bytes"
+    },
+    {
+      "path": "apps/terrarium/Assets/Art/Textures/mist.png",
+      "oldBytes": 300945,
+      "newBytes": 300897,
+      "pixelSha256": "7182e11b31903b9e8dd46b2e89d473e1beb65054712442664b6a1327bc63a266",
+      "method": "pillow-optimize",
+      "applied": false,
+      "reason": "saves under 10 percent or under 65536 bytes"
+    }
+  ]
+}
