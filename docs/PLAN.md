@@ -7,6 +7,7 @@ Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, 
 | Read next | For |
 |---|---|
 | `docs/plans/terrarium.md`, `docs/plans/sundial.md` | each app's MVP, journey, rules, milestones, backlog |
+| `docs/plans/upgrade-2026-10.md` | the upgrade beyond breathing (decision 0015): vision, slice, artboards, re-scoped gate |
 | `docs/art/terrarium-style.md`, `docs/art/sundial-style.md` | style bibles and the reference framings |
 | `docs/audio/AUDIO-BIBLE.md` | sound direction, cue lists, loudness, credits |
 | `docs/knowledge/registry-consult.md` | which registry standards shaped this plan, deviations, lessons to forge |
@@ -30,6 +31,10 @@ Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, 
 
 Non-goals before 2026-11-18: accounts, cloud sync, notifications, LLM features, controllers, roomscale, Meta VR Glasses
 beyond a simulator profile (the glasses ship spring 2027, `data/TOOLING.md` section B).
+
+Amended 2026-10-09 by `docs/decisions/0015-product-upgrade-daily-life-garden.md`: the product grows into a daily-life
+garden (custom habits in zones, hand-tracked breaks, AI onboarding and reflection); quiet headset nudges and an opt-in
+cloud LLM are now in scope; accounts, cloud sync and social stay out. Plan: `docs/plans/upgrade-2026-10.md`.
 
 ## 2. The two apps
 
@@ -283,6 +288,7 @@ in `orchestration/queue/` are the first ~2.5 days each.
 | D9 | One competition entry | Garden VR is the planned entry; Mage Arena VR replaces it only if it proves the better product; the pick, and which Garden app carries it, is made on product quality nearer the deadline; both apps stay in the plan until then | Official rules Section 2 allow one entry per individual; owner's answer 2026-10-07 (`docs/decisions/0006-one-competition-entry.md`) | Two separate entries (barred by the rules) |
 | D10 | Target headsets | Quest 3 and Quest 3S; a budget must hold on both (the lower binds); no eye tracking, so `Look` is a hand ray or head reticle; Quest Pro eye gaze and the glasses simulator are not targets | Owner's answer 2026-10-07 (`docs/decisions/0010-target-headsets-are-quest-3-and-quest-3s.md`); milestone 4 budgets need a device | Quest Pro (eye gaze); Meta VR Glasses simulator (kept out before 11-18) |
 | D11 | A Unity session before the 2026-10-16 milestone-2 target | None: the duplicate cuts, the plates and every step B are staged for the first Unity session, and milestone 3 refactors what `dotnet test` reaches | Owner's answer 2026-10-07 (`docs/decisions/0012-unity-work-staged-dotnet-reached-code-refactors-now.md`) | Activate Unity here; Unity elsewhere |
+| D12 | Garden app for the upgrade and the entry | **Sundial**; Terrarium parked (compiles, no new work) | Owner's answer 2026-10-09 (`docs/decisions/0016-sundial-carries-the-upgrade.md`); the dial holds nine habits in its three arcs | Terrarium; both apps to the gate |
 
 ## 9. Host actions before and around the first queues
 

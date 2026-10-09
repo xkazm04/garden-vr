@@ -20,7 +20,14 @@ namespace GardenVR.Core
             public TendSource SourceFallback;
             /// <summary>Row is a known member: read into <see cref="HabitDef.Row"/> and written after Slot. Otherwise it passes through as unknown.</summary>
             public bool RowKnown;
+            /// <summary>
+            /// Name, Zone, Schedule, Target and Unit are known members: read into the <see cref="HabitDef"/> fields and
+            /// written after ArchivedDay, each only when set. Otherwise they pass through as unknown.
+            /// </summary>
+            public bool ProfileKnown;
         }
+
+        static readonly string[] ProfileMembers = { "Name", "Zone", "Schedule", "Target", "Unit" };
 
         static readonly string[] HabitKnownWithoutRow =
         {
@@ -40,7 +47,17 @@ namespace GardenVR.Core
         /// <summary>The members a habit row reads. Any other member is kept as unknown.</summary>
         public static string[] HabitKnown(Choices choices)
         {
-            return (string[])(choices.RowKnown ? HabitKnownWithRow : HabitKnownWithoutRow).Clone();
+            return (string[])HabitKnownFor(choices).Clone();
+        }
+
+        static string[] HabitKnownFor(Choices choices)
+        {
+            string[] known = choices.RowKnown ? HabitKnownWithRow : HabitKnownWithoutRow;
+            if (!choices.ProfileKnown) return known;
+            var all = new string[known.Length + ProfileMembers.Length];
+            known.CopyTo(all, 0);
+            ProfileMembers.CopyTo(all, known.Length);
+            return all;
         }
 
         /// <summary>The members a tend row reads. Any other member is kept as unknown.</summary>
@@ -62,7 +79,8 @@ namespace GardenVR.Core
             habit.CreatedDay = obj.Has("CreatedDay") ? obj.Get("CreatedDay").AsInt() : 0;
             if (obj.Has("ArchivedDay") && !obj.Get("ArchivedDay").IsNull)
                 habit.ArchivedDay = obj.Get("ArchivedDay").AsInt();
-            KeepExtra(obj, choices.RowKnown ? HabitKnownWithRow : HabitKnownWithoutRow, RowKey(habit.Id, index), extras);
+            if (choices.ProfileKnown) ReadProfile(obj, habit);
+            KeepExtra(obj, HabitKnownFor(choices), RowKey(habit.Id, index), extras);
             return habit;
         }
 
@@ -80,8 +98,67 @@ namespace GardenVR.Core
             if (choices.RowKnown) obj.Set("Row", JsonValue.Number(habit.Row));
             obj.Set("CreatedDay", JsonValue.Number(habit.CreatedDay));
             obj.Set("ArchivedDay", habit.ArchivedDay.HasValue ? JsonValue.Number(habit.ArchivedDay.Value) : JsonValue.Null());
+            if (choices.ProfileKnown) WriteProfile(obj, habit);
             RestoreExtra(obj, RowKey(habit.Id, index), extras);
             return obj;
+        }
+
+        // A member that cannot be read leaves its field unset: a habit falls back to its preset's zone, to daily, or to
+        // yes or no. Nothing else in the row is affected.
+        static void ReadProfile(JsonObject obj, HabitDef habit)
+        {
+            habit.Name = HabitProfiles.CleanName(StringMember(obj, "Name"));
+            if (obj.Has("Zone") && obj.Get("Zone").Kind == JsonKind.String)
+            {
+                LifeZone zone;
+                if (Enum.TryParse(obj.Get("Zone").AsString(), false, out zone) && Enum.IsDefined(typeof(LifeZone), zone))
+                    habit.Zone = zone;
+            }
+            if (obj.Has("Schedule") && obj.Get("Schedule").Kind == JsonKind.Object)
+                habit.Schedule = ReadSchedule(obj.Get("Schedule").AsObject());
+            if (obj.Has("Target") && obj.Get("Target").Kind == JsonKind.Number)
+            {
+                double target = obj.Get("Target").AsDouble();
+                if (target == Math.Floor(target) && target >= int.MinValue && target <= int.MaxValue)
+                    habit.Target = HabitProfiles.CleanTarget((int)target);
+            }
+            habit.Unit = habit.Target.HasValue ? HabitProfiles.CleanName(StringMember(obj, "Unit")) : null;
+        }
+
+        static HabitSchedule ReadSchedule(JsonObject obj)
+        {
+            if (!obj.Has("Kind") || obj.Get("Kind").Kind != JsonKind.String) return null;
+            ScheduleKind kind;
+            if (!Enum.TryParse(obj.Get("Kind").AsString(), false, out kind) || !Enum.IsDefined(typeof(ScheduleKind), kind)) return null;
+            var schedule = new HabitSchedule { Kind = kind };
+            if (kind == ScheduleKind.TimesPerWeek && obj.Has("Times") && obj.Get("Times").Kind == JsonKind.Number)
+                schedule.TimesPerWeek = (int)Math.Max(0, Math.Min(8, obj.Get("Times").AsDouble()));
+            if (kind == ScheduleKind.Weekdays && obj.Has("Days") && obj.Get("Days").Kind == JsonKind.Number)
+                schedule.WeekdayMask = (byte)Math.Max(0, Math.Min(255, obj.Get("Days").AsDouble()));
+            return schedule.IsValid ? schedule : null;
+        }
+
+        static void WriteProfile(JsonObject obj, HabitDef habit)
+        {
+            string name = HabitProfiles.CleanName(habit.Name);
+            if (name != null) obj.Set("Name", JsonValue.String(name));
+            if (habit.Zone.HasValue && Enum.IsDefined(typeof(LifeZone), habit.Zone.Value))
+                obj.Set("Zone", JsonValue.String(habit.Zone.Value.ToString()));
+            if (habit.Schedule != null && habit.Schedule.IsValid)
+            {
+                var schedule = new JsonObject();
+                schedule.Set("Kind", JsonValue.String(habit.Schedule.Kind.ToString()));
+                if (habit.Schedule.Kind == ScheduleKind.TimesPerWeek) schedule.Set("Times", JsonValue.Number(habit.Schedule.TimesPerWeek));
+                if (habit.Schedule.Kind == ScheduleKind.Weekdays) schedule.Set("Days", JsonValue.Number((int)habit.Schedule.WeekdayMask));
+                obj.Set("Schedule", schedule);
+            }
+            int? target = HabitProfiles.CleanTarget(habit.Target);
+            if (target.HasValue)
+            {
+                obj.Set("Target", JsonValue.Number(target.Value));
+                string unit = HabitProfiles.CleanName(habit.Unit);
+                if (unit != null) obj.Set("Unit", JsonValue.String(unit));
+            }
         }
 
         public static TendEvent ReadTend(JsonObject obj, int index, Dictionary<string, Dictionary<string, JsonValue>> extras, Choices choices)

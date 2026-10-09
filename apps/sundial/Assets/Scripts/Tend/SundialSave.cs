@@ -124,11 +124,14 @@ namespace GardenVR.Sundial
             return obj;
         }
 
+        // ProfileKnown (decision 0016, upgrade C11): a habit's own name, zone, schedule and target are read and written
+        // when set. A save without them reads and writes byte for byte as before (SundialCodecGoldenTests).
         static readonly LedgerJson.Choices RowChoices = new LedgerJson.Choices
         {
             NullGroupAsEmpty = true,
             SourceFallback = TendSource.Pinch,
-            RowKnown = true
+            RowKnown = true,
+            ProfileKnown = true
         };
 
         static List<GratitudeMark> ReadGratitude(JsonArray rows)
