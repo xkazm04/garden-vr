@@ -311,7 +311,7 @@ cloud, because no Unity compile can check it there.
 | C4 | Artboards: 8 composited concept frames and the comparison board (8) | `docs/art/artboards/` | the owner scores them |
 | C5 | Coach core: prompt builders, structured output parsing and validation, the 6.5 guards, `ScriptedCoach` (onboarding tree and word stones), the `ICoachClient` seam | core + tests | dotnet tests |
 | C6 | `CliCoachClient` as a small .NET console tool in `shared/core-dotnet` that sends the core's prompts through the Claude Code CLI | tool + tests with a fake CLI | dotnet tests; one live call |
-| C7 | Evaluation: 20 interview transcripts and 20 reflections, run on Haiku through C6, results recorded, the 40 lines listed for the owner's tone read (7) | `docs/research/coach-eval-2026-10.md` | the pass marks in section 7 |
+| C7 | Evaluation: 20 interview transcripts and 20 reflections, run on Haiku through C6, results recorded, the 40 lines listed for the owner's tone read (7) | `docs/research/coach-eval/README.md` | the pass marks in section 7 |
 | C8 | Breaks: `BreakSession`, `HandMobility`, `EyeRest`, `NudgePlanner` (6.4) | core + tests | dotnet tests |
 | C9 | Relay: a Node service with the Anthropic SDK and Haiku, structured output, refusal returned as failure, per-install rate limit, no content logging | `tools/relay/` | unit tests with a mocked client; a live call waits for the owner's key |
 | C10 | Step B task files for the Windows machine, one per scene, written once the app is picked: the core members each one uses, the PlayMode tests, the captures | `docs/plans/upgrade-step-b.md` | the owner can start each one cold |
