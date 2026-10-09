@@ -82,6 +82,14 @@ GardenVR.Core.BreathSession property get public System.Single PhaseTime
 GardenVR.Core.BreathSession property get public System.Single Progress
 GardenVR.Core.BreathSession property get public System.Single Time
 GardenVR.Core.BreathSession property get public System.Single Uncoil
+GardenVR.Core.CatchUp field public const System.Int32 DefaultDepth = 2
+GardenVR.Core.CatchUp field public const System.Int32 MaxDepth = 7
+GardenVR.Core.CatchUp method public static GardenVR.Core.TendResult Log(GardenVR.Core.Ledger ledger, GardenVR.Core.CatchUpItem item, GardenVR.Core.GardenDay today, System.Int32 depthSetting, GardenVR.Core.IClock clock, System.TimeSpan boundary)
+GardenVR.Core.CatchUp method public static System.Collections.Generic.List<GardenVR.Core.CatchUpItem> Pending(GardenVR.Core.Ledger ledger, System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits, System.Nullable<System.Int32> lastVisitDay, GardenVR.Core.GardenDay today, System.Int32 depthSetting)
+GardenVR.Core.CatchUp method public static System.Int32 Depth(System.Int32 setting)
+GardenVR.Core.CatchUpItem ctor public ()
+GardenVR.Core.CatchUpItem field public GardenVR.Core.GardenDay Day
+GardenVR.Core.CatchUpItem field public GardenVR.Core.HabitDef Habit
 GardenVR.Core.CompanionSpecies field public System.Int32 value__
 GardenVR.Core.CompanionSpecies field public const GardenVR.Core.CompanionSpecies GlowSprig = 0
 GardenVR.Core.CompanionSpecies field public const GardenVR.Core.CompanionSpecies MoonMoss = 1
@@ -353,6 +361,7 @@ GardenVR.Core.Ledger ctor public ()
 GardenVR.Core.Ledger ctor public (System.Collections.Generic.IEnumerable<GardenVR.Core.TendEvent> events)
 GardenVR.Core.Ledger method public GardenVR.Core.TendResult Backfill(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.GardenDay today, GardenVR.Core.IClock clock)
 GardenVR.Core.Ledger method public GardenVR.Core.TendResult Backfill(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.GardenDay today, GardenVR.Core.IClock clock, System.TimeSpan boundary)
+GardenVR.Core.Ledger method public GardenVR.Core.TendResult BackfillWithin(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.GardenDay today, System.Int32 depth, GardenVR.Core.IClock clock, System.TimeSpan boundary)
 GardenVR.Core.Ledger method public GardenVR.Core.TendResult Tend(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.TendSource src, GardenVR.Core.IClock clock)
 GardenVR.Core.Ledger method public GardenVR.Core.TendResult Tend(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.TendSource src, GardenVR.Core.IClock clock, System.TimeSpan boundary)
 GardenVR.Core.Ledger method public System.Boolean IsKept(System.String habitId, System.Int32 day)
@@ -771,6 +780,7 @@ type public sealed class GardenVR.Core.ArcDef
 type public sealed class GardenVR.Core.ArcTimes
 type public sealed class GardenVR.Core.BreathConfig
 type public sealed class GardenVR.Core.BreathSession
+type public sealed class GardenVR.Core.CatchUpItem
 type public sealed class GardenVR.Core.CountEvent
 type public sealed class GardenVR.Core.DeferredTend
 type public sealed class GardenVR.Core.DiskSaveIo implements GardenVR.Core.ISaveIo
@@ -810,6 +820,7 @@ type public sealed class GardenVR.Core.ThreeGoodThings
 type public sealed class GardenVR.Core.WeekDial
 type public sealed class GardenVR.Core.WeekRecord
 type public static class GardenVR.Core.BreathProgress
+type public static class GardenVR.Core.CatchUp
 type public static class GardenVR.Core.Companions
 type public static class GardenVR.Core.HabitProfiles
 type public static class GardenVR.Core.Json
