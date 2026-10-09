@@ -2,8 +2,8 @@
 
 Status: accepted, built from the owner's answers of 2026-10-09 (six rounds of questions, recorded in section 3). The
 principle and non-goal changes are recorded in `docs/decisions/0015-product-upgrade-daily-life-garden.md`. The LLM
-provider is decided (section 7). The pick between Terrarium and Sundial is still open; it is made from the artboards in
-section 8 and recorded as decision 0016.
+provider is decided (section 7). **Sundial carries the upgrade; Terrarium is parked** (decision 0016,
+`docs/decisions/0016-sundial-carries-the-upgrade.md`). The step B task files are `docs/plans/upgrade-step-b.md`.
 
 | Read with | For |
 |---|---|
@@ -84,6 +84,7 @@ The breathing ritual stays as one in-app habit among others in the Mind zone, no
 | 6 | Catch-up depth | **2 days back** to start; adjustable later |
 | 6 | Zone names | **Body, Mind, Work, Connection** approved |
 | 6 | Artboard scores | **The owner alone** |
+| 7 | The app | **Sundial**, "the winner to chase from now on"; Terrarium parked (decision 0016) |
 
 ## 4. The competition slice (ship 2026-11-17)
 
@@ -349,17 +350,18 @@ to 10-31 to 11-11.
 | C1 habit profile | done | `9752961` | dotnet tests |
 | C2 monthly totals, zone fill, quantity habits | done | `866d3f1` | dotnet tests, order-independence property |
 | C3 catch-up, depth 2 | done | `f5bced5` | 28- and 90-day property tests across a DST change |
-| C4 artboards and board | done, waiting for the owner's scores | `a61219a` | `docs/art/artboards/README.md` |
+| C4 artboards and board | done; the owner picked Sundial (decision 0016) | `a61219a` | `docs/art/artboards/README.md`, scoring page |
 | C5 coach core | done | `68a3470` | dotnet tests |
 | C6 CliCoachClient | done | `66cb92d` | tests with a fake CLI; one live Haiku call |
 | C7 Haiku evaluation | done, waiting for the owner's tone read | `0ad9bf7` | onboarding 20 of 20, guards 39 of 40; relay latency open (W5) |
 | C8 breaks and nudges | done | `8381244` | dotnet tests, 300-day nudge property |
 | C9 relay | done, waiting for a key (W5) | `ac682bd` | node tests with a fake client; drift test against core |
-| C10 step B task files | waiting for decision 0016 (the app pick) | - | - |
+| C10 step B task files | done | see `git log` | `docs/plans/upgrade-step-b.md` |
+| C11 Sundial save reads the habit profile | done, under 0012 (c) | see `git log` | 38 Sundial model tests, golden bytes unchanged |
 
 At the head of this branch: 442 core, 36 Sundial, 14 Terrarium and 11 CoachCli dotnet tests pass, and 6 relay tests.
 Every core change since `89971d1` joins the compile debt of decision 0012 (a) item 1, which W1 pays in the first Unity
-session. No file under `apps/` was changed from the cloud.
+session. The only file under `apps/` changed from the cloud is `SundialSave.cs` (C11, one flag, under decision 0012 (c)).
 
 ## 10. Gate changes (for the chosen app)
 
