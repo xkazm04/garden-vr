@@ -7,6 +7,7 @@ Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, 
 | Read next | For |
 |---|---|
 | `docs/plans/terrarium.md`, `docs/plans/sundial.md` | each app's MVP, journey, rules, milestones, backlog |
+| `docs/plans/upgrade-2026-10.md` | the upgrade beyond breathing (decision 0015): vision, slice, artboards, re-scoped gate |
 | `docs/art/terrarium-style.md`, `docs/art/sundial-style.md` | style bibles and the reference framings |
 | `docs/audio/AUDIO-BIBLE.md` | sound direction, cue lists, loudness, credits |
 | `docs/knowledge/registry-consult.md` | which registry standards shaped this plan, deviations, lessons to forge |
@@ -30,6 +31,10 @@ Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, 
 
 Non-goals before 2026-11-18: accounts, cloud sync, notifications, LLM features, controllers, roomscale, Meta VR Glasses
 beyond a simulator profile (the glasses ship spring 2027, `data/TOOLING.md` section B).
+
+Amended 2026-10-09 by `docs/decisions/0015-product-upgrade-daily-life-garden.md`: the product grows into a daily-life
+garden (custom habits in zones, hand-tracked breaks, AI onboarding and reflection); quiet headset nudges and an opt-in
+cloud LLM are now in scope; accounts, cloud sync and social stay out. Plan: `docs/plans/upgrade-2026-10.md`.
 
 ## 2. The two apps
 
