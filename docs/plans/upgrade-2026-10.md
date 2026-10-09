@@ -258,9 +258,12 @@ The owner keeps both apps until the artboards show which style carries the upgra
   2. Break moments: the hand-tracked stretch and the depth eye-rest mote in passthrough.
   3. Evening reflection: the speaking moment and the one-line journal entry (jar glow versus ink notebook).
   4. Week and month record: 6 to 9 custom habits across 4 zones, read at a glance. This is the scaling stress test.
-- **Production:** image-gen concept frames under the rules in `PLAN.md` section 7 (24 generations per task; sidecar
-  prompt files; no pixels from the owner's reference frames). Frames are saved under `docs/art/artboards/<style>/`.
-  One composed comparison board puts each moment's two frames side by side.
+- **Production (revised 2026-10-09):** the cloud session has no image generation, so it builds composited concept
+  frames: the project's own room plates, seed textures and plant art (all with provenance in the repo) plus drawn
+  SVG overlays in each style, rendered with headless Chromium. They show layout, scale and reading, not final
+  fidelity. No pixels from the owner's reference frames are used. Frames go to `docs/art/artboards/<style>/`, and one
+  comparison board puts each moment's two frames side by side. If they are too rough to judge, the Windows machine
+  re-renders them with image generation (task W2).
 - **Rubric** (1 to 5 per frame; the owner alone scores):
 
 | # | Criterion | Why it matters for the pick |
@@ -274,20 +277,70 @@ The owner keeps both apps until the artboards show which style carries the upgra
 - **Decision:** the higher total wins, unless a frame scores under 3 on R1 or R2, which disqualifies that style for the
   slice. The pick is recorded as decision 0016 by 2026-10-14. The losing app's art work stops; it is parked, not deleted.
 
-## 9. Schedule (the 10-23 gate re-scoped)
+## 9. Execution and schedule (revised 2026-10-09: no agents are running)
 
-| Dates | Work | Exit |
+The Grok agents and the hourly host loop in `docs/PLAN.md` section 5 are not running. Two workers carry the upgrade:
+this **cloud Claude Code session** (Linux, this repository) and the **owner's Windows machine** (Unity, later the
+headset). The split follows what each one can actually run.
+
+### 9.1 What each worker can run
+
+| Capability | Cloud session | Windows machine |
 |---|---|---|
-| Fri 10-09 | R1 review as planned; this plan and decision 0015 | owner reads the plan |
-| Sat 10-10 to Tue 10-13 | **Artboards** (8 frames and the board). **Core step A**: habit model, zones, monthly record, catch-up, `NudgePlanner`, `BreakSession` / `HandMobility` / `EyeRest`, `ScriptedCoach` and the coach guards, all with dotnet tests. **Spike S-AI-1**: the relay, `CliCoachClient`, on-device speech on PC, the Haiku evaluation set (section 7) | artboard board and dotnet tests green |
-| Wed 10-14 | Owner scores the board alone and picks the app | decision 0016 |
-| Thu 10-15 to Thu 10-22 | **Step B in the chosen app** (needs a Unity session): onboarding scene, zones in the garden, the break and eye-rest scenes, reflection, catch-up, monthly view, nudge settings; string census; gate pack | gate pack Thu 10-22 |
-| Fri 10-23 | **Gate G, re-scoped** (section 10) for the chosen app | Quest / extend one week / park |
-| Sat 10-24 to Wed 11-11 | Quest integration as `PLAN.md` Phase 2, plus: XR Hands poses for the breaks, scene-mesh far point for eye rest, mic permission and on-device speech, headset notifications, the relay from the device | RC build Wed 11-11 |
-| Thu 11-12 to Tue 11-17 | Submission as planned; the demo video follows the daily loop in section 2 | submitted Tue 11-17 |
+| `dotnet test shared/core-dotnet` (all core rules) | **yes**: .NET SDK 10 with `DOTNET_ROLL_FORWARD=Major`; 335 of 335 tests passed on 2026-10-09 | yes (.NET 9) |
+| Claude Code CLI calls to Haiku (`claude -p --model haiku`) | **yes**: one test call returned from `claude-haiku-5-5` | yes |
+| Node 22 (the relay, its tests, tooling) | **yes** | yes |
+| Headless Chromium, Python with Pillow (composited images, boards) | **yes** | yes |
+| Image generation (`image_gen`, Antigravity) | no | yes (Grok or Antigravity, if run there) |
+| Unity 6.6 compile, PlayMode tests, captures, builds | **no** | yes, needs a Unity licence |
+| Speech-to-text on PC, the microphone | no | yes |
+| A live Claude API call through the relay (needs an API key) | no key here | yes, with the owner's key |
+| Quest headset | no | yes, Phase 2 |
 
-If no Unity session is available by Thu 10-15 (decisions 0004 and 0012), the gate takes the extension rule now: Gate G
-moves to Fri 10-30 and Phase 2 shrinks to 10-31 to 11-11.
+Rule for the cloud session: it changes only what it can check. Core changes land as step A (additive, decision 0004)
+with dotnet tests and the edited `PublicSurface.approved.txt` in the same commit. Nothing in `apps/` changes from the
+cloud, because no Unity compile can check it there.
+
+### 9.2 Cloud session tasks (in order; each ends with green dotnet tests or a stated check, one commit per task)
+
+| # | Task | Output | Check |
+|---|---|---|---|
+| C1 | Habit model: `LifeZone`, `HabitSchedule`, the new optional `HabitDef` fields, save round-trip with old saves reading as before (6.1) | core + tests | dotnet tests; the row codec golden tests still pass for saves without the new fields |
+| C2 | Record: `MonthlyRecord`, `ZoneRecord`, quantity targets, a property test that no public member returns a consecutive-day count (6.2) | core + tests | dotnet tests |
+| C3 | Catch-up with depth as a setting, default 2 (6.3) | core + tests | dotnet tests over 28 and 90 simulated days |
+| C4 | Artboards: 8 composited concept frames and the comparison board (8) | `docs/art/artboards/` | the owner scores them |
+| C5 | Coach core: prompt builders, structured output parsing and validation, the 6.5 guards, `ScriptedCoach` (onboarding tree and word stones), the `ICoachClient` seam | core + tests | dotnet tests |
+| C6 | `CliCoachClient` as a small .NET console tool in `shared/core-dotnet` that sends the core's prompts through the Claude Code CLI | tool + tests with a fake CLI | dotnet tests; one live call |
+| C7 | Evaluation: 20 interview transcripts and 20 reflections, run on Haiku through C6, results recorded, the 40 lines listed for the owner's tone read (7) | `docs/research/coach-eval-2026-10.md` | the pass marks in section 7 |
+| C8 | Breaks: `BreakSession`, `HandMobility`, `EyeRest`, `NudgePlanner` (6.4) | core + tests | dotnet tests |
+| C9 | Relay: a Node service with the Anthropic SDK and Haiku, structured output, refusal returned as failure, per-install rate limit, no content logging | `tools/relay/` | unit tests with a mocked client; a live call waits for the owner's key |
+| C10 | Step B task files for the Windows machine, one per scene, written once the app is picked: the core members each one uses, the PlayMode tests, the captures | `docs/plans/upgrade-step-b.md` | the owner can start each one cold |
+
+### 9.3 Windows machine tasks (owner, or a Claude Code session the owner runs there)
+
+| # | Task | When |
+|---|---|---|
+| W1 | Pay the Unity compile debt: compile both apps against core at the head of this branch, run EditMode and PlayMode (decisions 0004, 0012) | first Unity session, before step B |
+| W2 | Optional: re-render the artboard frames with image generation, if the composited frames are too rough to judge | 10-12 to 10-13 |
+| W3 | Step B in the chosen app, from the C10 task files: zones in the garden, onboarding scene, break and eye-rest scenes, reflection, catch-up, monthly view, nudge settings | 10-15 to 10-22 |
+| W4 | PC speech-to-text provider behind `ISpeechToText` | with W3 |
+| W5 | Relay: set the API key, run it locally, make one live call from the PC build | with W3 |
+| W6 | Gate pack for the chosen app | 10-22 |
+
+### 9.4 Schedule
+
+| Dates | Cloud session | Owner and Windows | Exit |
+|---|---|---|---|
+| Fri 10-09 | this plan; C1 starts | R1 review as planned | - |
+| Sat 10-10 to Tue 10-13 | C1 to C8 | W1 if Unity is available; W2 optional | dotnet tests green; the board published |
+| Wed 10-14 | C9 | **score the board alone and pick the app**; read the 40 coach lines | decision 0016 |
+| Thu 10-15 to Thu 10-22 | C10 first, then support: core fixes found by W3, string census, gate pack documents | W3 to W6 | gate pack Thu 10-22 |
+| Fri 10-23 | - | **Gate G, re-scoped** (section 10) | Quest / extend / park |
+| Sat 10-24 to Wed 11-11 | core and relay changes Phase 2 needs | Quest integration as `PLAN.md` Phase 2, plus XR Hands poses, scene-mesh far point, mic, headset notifications, the relay from the device | RC Wed 11-11 |
+| Thu 11-12 to Tue 11-17 | submission texts (tagline, form), checked against the guards | demo video, upload, H4 install check | submitted Tue 11-17 |
+
+If W1 has not run by Thu 10-15, the gate takes the extension rule at once: Gate G moves to Fri 10-30 and Phase 2 shrinks
+to 10-31 to 11-11.
 
 ## 10. Gate changes (for the chosen app)
 
@@ -315,7 +368,9 @@ moves to Fri 10-30 and Phase 2 shrinks to 10-31 to 11-11.
 
 | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|
-| No Unity session for step B before 10-15 | high | high | core step A first; gate extension rule applied at once (section 9) |
+| No Unity session for step B before 10-15 | high | high | every rule lands in core from the cloud first; gate extension rule applied at once (section 9.4) |
+| The cloud session cannot see the apps run | certain | medium | it touches no app file; W1 compiles every core change before step B; C10 hands over exact task files |
+| Composited artboards too rough to decide on | medium | medium | they judge layout and scale, which R1 and R2 need; W2 re-renders with image generation if needed |
 | Quest speech-to-text on device is weak or heavy | medium | high | presets by pinch are a complete path; the spike measures the PC provider first, the device in H1 |
 | LLM latency on headset Wi-Fi breaks the calm | medium | medium | 4 s budget then the scripted line; the reflection is text, so latency hides behind "the garden is listening" |
 | Coach says something medical, shaming or off-tone | medium | high | core guards on every line; evaluation set; the scripted fallback replaces any failing line |
@@ -330,3 +385,10 @@ moves to Fri 10-30 and Phase 2 shrinks to 10-31 to 11-11.
 2. Catch-up depth: 2 days to start; adjustable later. `CatchUp` takes the depth as a setting with 2 as the default.
 3. Zone names: Body, Mind, Work, Connection, approved.
 4. Artboard scores: the owner alone.
+
+Still open:
+
+5. Where the relay runs for the competition build. Judges install the APK on their own headsets, so the relay must be
+   reachable from the internet with the owner's key, rate-limited, and up from 11-17 through judging. Candidates: a
+   small serverless function on a host the owner already uses, or the owner's own machine during testing only. Needed
+   by Phase 2 (10-24).
