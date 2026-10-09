@@ -45,5 +45,8 @@ with no clear answer to why it needs VR.
   gate items change as `docs/plans/upgrade-2026-10.md` sections 9 and 10 say, once decision 0016 names the app.
 - New core work is additive step A under decision 0004. App adoption is step B and needs a Unity session. If none
   exists by 2026-10-15, the gate extension rule applies at once (gate on 2026-10-30).
-- The LLM provider is open: the owner chooses from the comparison in `docs/plans/upgrade-2026-10.md` section 7 after
-  the spike.
+- The LLM provider (owner's answer, 2026-10-09): the Claude API with Claude Haiku 5.5 for every coach call from the
+  app, through the relay. Local tests on the Windows machine call the Claude Code CLI through a development-only
+  `CliCoachClient` that the Quest build excludes. Details in `docs/plans/upgrade-2026-10.md` section 7.
+- Catch-up starts at 2 days back and is a setting. The zones are Body, Mind, Work and Connection. The owner alone scores
+  the artboards.

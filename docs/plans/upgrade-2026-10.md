@@ -1,8 +1,9 @@
 # Garden VR upgrade - from a breathing ritual to a daily-life garden (plan, 2026-10-09)
 
-Status: proposed, built from the owner's answers of 2026-10-09 (five rounds of questions, recorded in section 3). The
-principle and non-goal changes are recorded in `docs/decisions/0015-product-upgrade-daily-life-garden.md`. The pick
-between Terrarium and Sundial is still open; it is made from the artboards in section 8 and recorded as decision 0016.
+Status: accepted, built from the owner's answers of 2026-10-09 (six rounds of questions, recorded in section 3). The
+principle and non-goal changes are recorded in `docs/decisions/0015-product-upgrade-daily-life-garden.md`. The LLM
+provider is decided (section 7). The pick between Terrarium and Sundial is still open; it is made from the artboards in
+section 8 and recorded as decision 0016.
 
 | Read with | For |
 |---|---|
@@ -79,6 +80,10 @@ The breathing ritual stays as one in-app habit among others in the Mind zone, no
 | 5 | Artboard method | Image-gen frames plus a rubric |
 | 5 | LLM provider | Compared in this plan (section 7); the owner chooses |
 | 5 | Deliverable | This plan plus decision record 0015 |
+| 6 | LLM provider | **Claude API with Haiku** for every coach call from the app; local tests on the Windows machine call the Claude Code CLI instead of the API |
+| 6 | Catch-up depth | **2 days back** to start; adjustable later |
+| 6 | Zone names | **Body, Mind, Work, Connection** approved |
+| 6 | Artboard scores | **The owner alone** |
 
 ## 4. The competition slice (ship 2026-11-17)
 
@@ -102,7 +107,7 @@ In the slice, in priority order. The cut line is in section 4.2.
 7. **Quiet nudges.** At most 2 headset notifications a day, inside windows the user chooses, with no guilt copy: "The
    garden has a break ready." Never "you missed".
 8. **Catch-up at the next visit.** "What happened since?" lists the scheduled habits from the days since the last visit
-   (at most 2 days back); pinch or say which happened. Those days are drawn late (hatched or dimmer), never on time.
+   (at most 2 days back, the owner's starting value, adjustable); pinch or say which happened. Those days are drawn late (hatched or dimmer), never on time.
 9. **Monthly totals.** Per habit: "kept 18 days this month"; per zone: a fill level. Never a consecutive-day count.
 
 ### 4.1 Out of the slice (post-slice roadmap, section 11)
@@ -195,8 +200,12 @@ public string Unit;                // "glasses", "pages"
 ### 6.5 Coach, voice and privacy
 
 - **Seams.** `ISpeechToText` (on-device: PC provider for development, Quest provider chosen in the spike, section 9)
-  and `ICoachClient` (two implementations: `RelayCoachClient`, the opt-in cloud call, and `ScriptedCoach`, the
-  deterministic fallback in core). The app always runs `ScriptedCoach` when the relay is off, slow (over 4 s) or fails.
+  and `ICoachClient` with three implementations:
+  - `RelayCoachClient`: the opt-in cloud call from the app, through the relay, to the Claude API (section 7).
+  - `CliCoachClient`: development only, PC only. It calls the Claude Code CLI on the Windows machine, so local tests
+    need no API key and no relay. It never ships: the Quest build excludes it.
+  - `ScriptedCoach`: the deterministic fallback in core.
+  The app always runs `ScriptedCoach` when the coach is off, slow (over 4 s) or fails, including a refusal.
 - **Onboarding output** is structured: up to 3 `{name, zone, schedule, cue}` objects, validated in core against the
   habit model before anything is shown.
 - **Reflection output** is one line of 90 characters or fewer.
@@ -211,30 +220,33 @@ public string Unit;                // "glasses", "pages"
 - **The API key never ships in the APK.** A thin relay holds it, rate-limits per install key and forwards only the
   prompt the core builds.
 
-## 7. LLM provider comparison (for the owner's choice)
+## 7. LLM provider: Claude API with Haiku (decided 2026-10-09)
 
-Usage per active user, estimated: one reflection a day (about 1,500 tokens in, 100 out), one onboarding interview per
-install (about 8,000 in, 2,000 out over its turns), and later one weekly review a week.
+| Path | Where | Calls | Model |
+|---|---|---|---|
+| App, PC and Quest builds | `RelayCoachClient` -> relay -> Claude API | onboarding interview, evening reflection; later the weekly review and suggestions | Claude Haiku 5.5, `claude-haiku-5-5` |
+| Local tests on the Windows machine | `CliCoachClient` -> the Claude Code CLI in print mode, one process per call, JSON output | the same prompts the core builds | Haiku, selected through the CLI's model flag |
+| No coach | `ScriptedCoach` in core | the same moments, scripted | none |
 
-| Criterion | What to measure | How |
-|---|---|---|
-| Latency from the headset's network | time to the first token and to the full reply, p50 and p95 | spike task S-AI-1: 50 calls per provider from the PC build, then 20 from a Quest (Phase 2) |
-| Quality of structured onboarding | valid `{name, zone, schedule, cue}` on the first try; calm tone | a fixed set of 20 scripted interview transcripts, graded against the core validator and the guards in 6.5 |
-| Guard pass rate | share of reflection lines that pass the 6.5 guards | the same 20 transcripts plus 20 reflections |
-| Cost per active user per month | from list prices and the token estimates above | table below, recomputed at decision time |
-| Data terms | retention, use for training, region | each provider's published API terms at decision time |
+- **The prompt is built in core and is identical on both paths**, so a line that passes the guards through the CLI
+  passes them through the relay. The CLI path exists only for development; the Quest build never contains it.
+- **Cost at list price** ($0.10 input and $0.50 output per 1M tokens, Anthropic API prices cached 2026-10-06): about
+  $0.0002 per daily reflection and about $0.002 per onboarding interview, so a daily user costs about one cent a month.
+- **Refusals:** a Haiku request has no server-side fallback model. The relay returns the refusal as a failure, and the
+  app shows the scripted line.
+- **Spike S-AI-1 (10-10 to 10-13)** no longer compares providers. It runs Haiku through `CliCoachClient` on the
+  evaluation set below, then sends the same set through the relay once, to confirm both paths agree:
 
-Claude list prices (Anthropic API, cached 2026-10-06), with the estimate above:
+| Check | Pass |
+|---|---|
+| Structured onboarding: 20 scripted interview transcripts | at least 19 of 20 produce valid `{name, zone, schedule, cue}` objects on the first try |
+| Guards: the same 20 plus 20 reflections | at least 39 of 40 lines pass the 6.5 guards; a failing line falls back to the scripted line |
+| Latency through the relay from the PC build | p95 to the full reply 4 s or less |
+| Tone | the owner reads all 40 lines once and marks any that feel off |
 
-| Model | Input / output per 1M tokens | Daily reflection | Onboarding (once) | Role it fits |
-|---|---|---|---|---|
-| Claude Haiku 5.5 (`claude-haiku-5-5`) | $0.10 / $0.50 | about $0.0002 | about $0.002 | reflection lines, suggestions |
-| Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2 / $10 | about $0.004 | about $0.04 | onboarding interview, weekly review |
-| Claude Opus 5.5 (`claude-opus-5-5`) | $4 / $20 | about $0.008 | about $0.07 | quality ceiling for the evaluation set |
-
-Other providers go into the same tables from their own published prices and terms on the day the spike runs; this plan
-does not quote them from memory. Whichever provider wins, the relay is the only place that names it, so a later switch
-to an on-device model (section 11) is a change of `ICoachClient`, not of the app.
+If onboarding misses its pass mark on Haiku, the fix is the prompt and the validator first; a larger model for
+onboarding alone needs a new owner decision. The relay is the only place that names the model, so a later move to an
+on-device model (section 11) is a change of `ICoachClient`, not of the app.
 
 ## 8. Artboards: how the style pick is made
 
@@ -249,7 +261,7 @@ The owner keeps both apps until the artboards show which style carries the upgra
 - **Production:** image-gen concept frames under the rules in `PLAN.md` section 7 (24 generations per task; sidecar
   prompt files; no pixels from the owner's reference frames). Frames are saved under `docs/art/artboards/<style>/`.
   One composed comparison board puts each moment's two frames side by side.
-- **Rubric** (1 to 5 per frame; the owner scores, Gemini gives a blind advisory score as in gate A3):
+- **Rubric** (1 to 5 per frame; the owner alone scores):
 
 | # | Criterion | Why it matters for the pick |
 |---|---|---|
@@ -267,8 +279,8 @@ The owner keeps both apps until the artboards show which style carries the upgra
 | Dates | Work | Exit |
 |---|---|---|
 | Fri 10-09 | R1 review as planned; this plan and decision 0015 | owner reads the plan |
-| Sat 10-10 to Tue 10-13 | **Artboards** (8 frames, the board, the scores). **Core step A**: habit model, zones, monthly record, catch-up, `NudgePlanner`, `BreakSession` / `HandMobility` / `EyeRest`, `ScriptedCoach` and the coach guards, all with dotnet tests. **Spike S-AI-1**: the relay, on-device speech on PC, the provider evaluation set | artboard board and dotnet tests green |
-| Wed 10-14 | Owner picks the app from the board | decision 0016 |
+| Sat 10-10 to Tue 10-13 | **Artboards** (8 frames and the board). **Core step A**: habit model, zones, monthly record, catch-up, `NudgePlanner`, `BreakSession` / `HandMobility` / `EyeRest`, `ScriptedCoach` and the coach guards, all with dotnet tests. **Spike S-AI-1**: the relay, `CliCoachClient`, on-device speech on PC, the Haiku evaluation set (section 7) | artboard board and dotnet tests green |
+| Wed 10-14 | Owner scores the board alone and picks the app | decision 0016 |
 | Thu 10-15 to Thu 10-22 | **Step B in the chosen app** (needs a Unity session): onboarding scene, zones in the garden, the break and eye-rest scenes, reflection, catch-up, monthly view, nudge settings; string census; gate pack | gate pack Thu 10-22 |
 | Fri 10-23 | **Gate G, re-scoped** (section 10) for the chosen app | Quest / extend one week / park |
 | Sat 10-24 to Wed 11-11 | Quest integration as `PLAN.md` Phase 2, plus: XR Hands poses for the breaks, scene-mesh far point for eye rest, mic permission and on-device speech, headset notifications, the relay from the device | RC build Wed 11-11 |
@@ -283,7 +295,7 @@ moves to Fri 10-30 and Phase 2 shrinks to 10-31 to 11-11.
 |---|---|
 | U1 | The scripted first run includes the onboarding interview on the scripted coach path; first ritual or first break and the garden's answer in 180 s or less |
 | U3 | Extends to schedules (daily, N a week, weekdays), quantity targets, catch-up across 2 days, and monthly totals over 3 simulated months |
-| U5 | Unchanged grep, plus: coach guard tests pass on the provider evaluation set; no public core member returns a consecutive-day count |
+| U5 | Unchanged grep, plus: coach guard tests pass on the Haiku evaluation set (section 7); no public core member returns a consecutive-day count |
 | U6 (new) | Every coach moment completes with the network off (scripted path), checked by a PlayMode test with `RelayCoachClient` disabled |
 | U7 (new) | Privacy: no transcript in the save file or the relay logs; the delete-journal setting empties the journal; the LLM is off on a fresh save |
 | S3 | Adds: speech-to-text result shown within 2 s of release on PC; a coach reply within 4 s, or the scripted line |
@@ -312,9 +324,9 @@ moves to Fri 10-30 and Phase 2 shrinks to 10-31 to 11-11.
 | Catch-up logging feels like a chore | medium | medium | at most 2 days back, one pinch per item, skippable with no consequence |
 | The one-entry choice moves to Mage Arena VR | unknown | high | the upgrade makes Garden VR the stronger, safer entry (decision 0006) |
 
-## 13. Open questions for the owner
+## 13. Owner answers to the open questions (2026-10-09)
 
-1. Which LLM provider, after the spike's tables are filled (section 7)?
-2. Catch-up depth: 2 days back (this plan's default) or more?
-3. Zone names: Body, Mind, Work, Connection, or your own four?
-4. Who records the artboard scores on 10-14: you alone, or you plus one person who has never seen the apps?
+1. LLM provider: Claude API with Haiku in the app; the Claude Code CLI for local tests on Windows (section 7).
+2. Catch-up depth: 2 days to start; adjustable later. `CatchUp` takes the depth as a setting with 2 as the default.
+3. Zone names: Body, Mind, Work, Connection, approved.
+4. Artboard scores: the owner alone.
