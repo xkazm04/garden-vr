@@ -119,6 +119,7 @@ namespace GardenVR.Core
             { "stretch", LifeZone.Body },
             { "early-night", LifeZone.Body },
             { "bed", LifeZone.Body },
+            { "break", LifeZone.Body },
             { "read", LifeZone.Mind },
             { "journal", LifeZone.Mind },
             { "breaths", LifeZone.Mind },
