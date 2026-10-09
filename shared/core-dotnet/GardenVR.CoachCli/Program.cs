@@ -14,6 +14,7 @@ namespace GardenVR.CoachCli
     /// dotnet run --project shared/core-dotnet/GardenVR.CoachCli -- onboard [--voice sundial] "a1" "a2" "a3" "a4"
     /// dotnet run --project shared/core-dotnet/GardenVR.CoachCli -- reflect [--voice sundial] [--kept "Walk"] "transcript"
     /// dotnet run --project shared/core-dotnet/GardenVR.CoachCli -- eval cases.json results.json [--parallel 4]
+    /// dotnet run --project shared/core-dotnet/GardenVR.CoachCli -- systems tools/relay/allowed-systems.json
     /// GARDENVR_CLAUDE names the CLI when "claude" is not on PATH (for example claude.cmd on Windows).
     /// </summary>
     public static class Program
@@ -54,9 +55,23 @@ namespace GardenVR.CoachCli
                     Console.WriteLine(Evaluation.Summary(results));
                     return 0;
                 }
+                case "systems":
+                {
+                    if (rest.Count < 1) return Usage();
+                    File.WriteAllText(rest[0], SystemsJson());
+                    Console.WriteLine("wrote " + RelayProtocol.AllowedSystems().Count + " system prompts to " + rest[0]);
+                    return 0;
+                }
                 default:
                     return Usage();
             }
+        }
+
+        /// <summary>The relay's allowed-systems.json, written from core so the two never drift.</summary>
+        public static string SystemsJson()
+        {
+            return JsonSerializer.Serialize(new { note = "Written by GardenVR.CoachCli systems from RelayProtocol.AllowedSystems. Do not edit.", systems = RelayProtocol.AllowedSystems() },
+                new JsonSerializerOptions { WriteIndented = true }) + "\n";
         }
 
         static string Describe(CoachProposal p)

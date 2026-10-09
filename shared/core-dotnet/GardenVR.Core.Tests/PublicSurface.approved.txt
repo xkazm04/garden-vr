@@ -623,6 +623,12 @@ GardenVR.Core.ReflectionResult ctor public ()
 GardenVR.Core.ReflectionResult field public GardenVR.Core.CoachFailure Failure
 GardenVR.Core.ReflectionResult field public System.Boolean FromModel
 GardenVR.Core.ReflectionResult field public System.String Line
+GardenVR.Core.RelayProtocol field public const System.String InstallKeyHeader = x-install-key
+GardenVR.Core.RelayProtocol field public const System.String Path = /v1/coach
+GardenVR.Core.RelayProtocol method public static GardenVR.Core.CoachReply Decode(System.Int32 status, System.String body)
+GardenVR.Core.RelayProtocol method public static System.Collections.Generic.List<System.String> AllowedSystems()
+GardenVR.Core.RelayProtocol method public static System.String Encode(GardenVR.Core.CoachRequest request)
+GardenVR.Core.RelayProtocol method public static System.String NewInstallKey()
 GardenVR.Core.RimRead ctor public (System.Int32 daysBack, System.Int32 minute, System.Single gnomonDeg, System.Int32 rewindMinutes, System.Boolean atNow)
 GardenVR.Core.RimRead field public readonly System.Boolean AtNow
 GardenVR.Core.RimRead field public readonly System.Int32 DaysBack
@@ -990,6 +996,7 @@ type public static class GardenVR.Core.NudgePlanner
 type public static class GardenVR.Core.PacedHand
 type public static class GardenVR.Core.Quantity
 type public static class GardenVR.Core.QuantityJson
+type public static class GardenVR.Core.RelayProtocol
 type public static class GardenVR.Core.RimScrub
 type public static class GardenVR.Core.ScriptedCoach
 type public static class GardenVR.Core.Season
