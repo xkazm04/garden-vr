@@ -1,8 +1,4 @@
 GardenVR.Core.ArcDef ctor public ()
-GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonArray WriteHabits(System.Collections.Generic.List<GardenVR.Core.HabitDef> habits, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
-GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonArray WriteTends(System.Collections.Generic.List<GardenVR.Core.TendEvent> tends, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
-GardenVR.Core.LedgerJson method public static System.Collections.Generic.List<GardenVR.Core.HabitDef> ReadHabits(GardenVR.Core.JsonObject root, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
-GardenVR.Core.LedgerJson method public static System.Collections.Generic.List<GardenVR.Core.TendEvent> ReadTends(GardenVR.Core.JsonObject root, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
 GardenVR.Core.ArcDef field public GardenVR.Core.ArcId Id
 GardenVR.Core.ArcDef field public System.Int32 EndMin
 GardenVR.Core.ArcDef field public System.Int32 StartMin
@@ -227,17 +223,46 @@ GardenVR.Core.GrowthAnswer field public readonly System.Boolean Recovered
 GardenVR.Core.GrowthAnswer field public readonly System.Int32 DewBeads
 GardenVR.Core.HabitDef ctor public ()
 GardenVR.Core.HabitDef field public GardenVR.Core.HabitKind Kind
+GardenVR.Core.HabitDef field public GardenVR.Core.HabitSchedule Schedule
 GardenVR.Core.HabitDef field public System.Int32 CreatedDay
 GardenVR.Core.HabitDef field public System.Int32 Row
 GardenVR.Core.HabitDef field public System.Int32 Slot
+GardenVR.Core.HabitDef field public System.Nullable<GardenVR.Core.LifeZone> Zone
 GardenVR.Core.HabitDef field public System.Nullable<System.Int32> ArchivedDay
+GardenVR.Core.HabitDef field public System.Nullable<System.Int32> Target
 GardenVR.Core.HabitDef field public System.String Group
 GardenVR.Core.HabitDef field public System.String Id
+GardenVR.Core.HabitDef field public System.String Name
 GardenVR.Core.HabitDef field public System.String PresetKey
 GardenVR.Core.HabitDef field public System.String Species
+GardenVR.Core.HabitDef field public System.String Unit
 GardenVR.Core.HabitKind field public System.Int32 value__
 GardenVR.Core.HabitKind field public const GardenVR.Core.HabitKind InAppRitual = 0
 GardenVR.Core.HabitKind field public const GardenVR.Core.HabitKind LifeCheckIn = 1
+GardenVR.Core.HabitProfiles field public const System.Int32 MaxLive = 9
+GardenVR.Core.HabitProfiles field public const System.Int32 MaxNameLength = 32
+GardenVR.Core.HabitProfiles field public const System.Int32 MaxTarget = 99
+GardenVR.Core.HabitProfiles method public static GardenVR.Core.HabitSchedule ScheduleOf(GardenVR.Core.HabitDef habit)
+GardenVR.Core.HabitProfiles method public static GardenVR.Core.LifeZone ZoneOf(GardenVR.Core.HabitDef habit)
+GardenVR.Core.HabitProfiles method public static System.Boolean CanAdd(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits)
+GardenVR.Core.HabitProfiles method public static System.Boolean TryPresetZone(System.String presetKey, out GardenVR.Core.LifeZone zone)
+GardenVR.Core.HabitProfiles method public static System.Int32 LiveCount(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits)
+GardenVR.Core.HabitProfiles method public static System.Nullable<System.Int32> CleanTarget(System.Nullable<System.Int32> target)
+GardenVR.Core.HabitProfiles method public static System.String CleanName(System.String raw)
+GardenVR.Core.HabitSchedule ctor public ()
+GardenVR.Core.HabitSchedule field public GardenVR.Core.ScheduleKind Kind
+GardenVR.Core.HabitSchedule field public System.Byte WeekdayMask
+GardenVR.Core.HabitSchedule field public System.Int32 TimesPerWeek
+GardenVR.Core.HabitSchedule field public const System.Byte AllWeekdays = 127
+GardenVR.Core.HabitSchedule field public const System.Byte WorkWeek = 31
+GardenVR.Core.HabitSchedule method public System.Boolean IsPlannedOn(GardenVR.Core.GardenDay day)
+GardenVR.Core.HabitSchedule method public System.Int32 PlannedInWeek()
+GardenVR.Core.HabitSchedule method public static GardenVR.Core.GardenDay WeekStart(GardenVR.Core.GardenDay day)
+GardenVR.Core.HabitSchedule method public static GardenVR.Core.HabitSchedule Daily()
+GardenVR.Core.HabitSchedule method public static GardenVR.Core.HabitSchedule OnWeekdays(System.Byte mask)
+GardenVR.Core.HabitSchedule method public static GardenVR.Core.HabitSchedule PerWeek(System.Int32 times)
+GardenVR.Core.HabitSchedule method public static System.Byte WeekdayBit(GardenVR.Core.GardenDay day)
+GardenVR.Core.HabitSchedule property get public System.Boolean IsValid
 GardenVR.Core.IClock property get public abstract System.DateTimeOffset Now
 GardenVR.Core.IClock property get public abstract System.TimeZoneInfo Zone
 GardenVR.Core.ISaveIo method public abstract System.Boolean Exists(System.String name)
@@ -320,9 +345,13 @@ GardenVR.Core.Ledger method public System.Int32 KeptDaysFrom(System.String habit
 GardenVR.Core.Ledger method public System.Int32 KeptDaysInWindow(System.String habitId, GardenVR.Core.GardenDay today, System.Int32 days)
 GardenVR.Core.Ledger property get public System.Collections.Generic.IReadOnlyList<GardenVR.Core.TendEvent> Events
 GardenVR.Core.LedgerJson method public static GardenVR.Core.HabitDef ReadHabit(GardenVR.Core.JsonObject obj, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonArray WriteHabits(System.Collections.Generic.List<GardenVR.Core.HabitDef> habits, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonArray WriteTends(System.Collections.Generic.List<GardenVR.Core.TendEvent> tends, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
 GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonObject WriteHabit(GardenVR.Core.HabitDef habit, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
 GardenVR.Core.LedgerJson method public static GardenVR.Core.JsonObject WriteTend(GardenVR.Core.TendEvent tend, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras)
 GardenVR.Core.LedgerJson method public static GardenVR.Core.TendEvent ReadTend(GardenVR.Core.JsonObject obj, System.Int32 index, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static System.Collections.Generic.List<GardenVR.Core.HabitDef> ReadHabits(GardenVR.Core.JsonObject root, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
+GardenVR.Core.LedgerJson method public static System.Collections.Generic.List<GardenVR.Core.TendEvent> ReadTends(GardenVR.Core.JsonObject root, System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> extras, GardenVR.Core.LedgerJson.Choices choices)
 GardenVR.Core.LedgerJson method public static System.String RowKey(System.String id, System.Int32 index)
 GardenVR.Core.LedgerJson method public static System.String StringMember(GardenVR.Core.JsonObject obj, System.String key)
 GardenVR.Core.LedgerJson method public static System.String[] HabitKnown(GardenVR.Core.LedgerJson.Choices choices)
@@ -334,8 +363,15 @@ GardenVR.Core.LedgerJson.Choices field public GardenVR.Core.TendSource SourceFal
 GardenVR.Core.LedgerJson.Choices field public GardenVR.Core.TendSource SourceFallback
 GardenVR.Core.LedgerJson.Choices field public System.Boolean NullGroupAsEmpty
 GardenVR.Core.LedgerJson.Choices field public System.Boolean NullGroupAsEmpty
+GardenVR.Core.LedgerJson.Choices field public System.Boolean ProfileKnown
+GardenVR.Core.LedgerJson.Choices field public System.Boolean ProfileKnown
 GardenVR.Core.LedgerJson.Choices field public System.Boolean RowKnown
 GardenVR.Core.LedgerJson.Choices field public System.Boolean RowKnown
+GardenVR.Core.LifeZone field public System.Int32 value__
+GardenVR.Core.LifeZone field public const GardenVR.Core.LifeZone Body = 0
+GardenVR.Core.LifeZone field public const GardenVR.Core.LifeZone Connection = 3
+GardenVR.Core.LifeZone field public const GardenVR.Core.LifeZone Mind = 1
+GardenVR.Core.LifeZone field public const GardenVR.Core.LifeZone Work = 2
 GardenVR.Core.LoadOutcome field public System.Int32 value__
 GardenVR.Core.LoadOutcome field public const GardenVR.Core.LoadOutcome Failed = 3
 GardenVR.Core.LoadOutcome field public const GardenVR.Core.LoadOutcome Fresh = 0
@@ -467,6 +503,10 @@ GardenVR.Core.SaveStore<T> field public const System.String TempName = save.json
 GardenVR.Core.SaveStore<T> method public GardenVR.Core.LoadResult<T> Load()
 GardenVR.Core.SaveStore<T> method public GardenVR.Core.LoadResult<T> Restore()
 GardenVR.Core.SaveStore<T> method public System.Void Save(T doc)
+GardenVR.Core.ScheduleKind field public System.Int32 value__
+GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind Daily = 0
+GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind TimesPerWeek = 1
+GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind Weekdays = 2
 GardenVR.Core.Season field public const System.Int32 DaysInWeek = 7
 GardenVR.Core.Season field public const System.Int32 DetailWeek = 3
 GardenVR.Core.Season field public const System.Int32 GoldWeek = 6
@@ -677,9 +717,11 @@ type public enum GardenVR.Core.CompanionSpecies implements System.IComparable,Sy
 type public enum GardenVR.Core.FocusPhase implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.HabitKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.JsonKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+type public enum GardenVR.Core.LifeZone implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.LoadOutcome implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.PinchState implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.RitualPauseEvent implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+type public enum GardenVR.Core.ScheduleKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.Stage implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.StretchEventKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.StretchPhase implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
@@ -701,6 +743,7 @@ type public sealed class GardenVR.Core.Garden
 type public sealed class GardenVR.Core.GratitudeMark
 type public sealed class GardenVR.Core.GratitudeRecord
 type public sealed class GardenVR.Core.HabitDef
+type public sealed class GardenVR.Core.HabitSchedule
 type public sealed class GardenVR.Core.JsonArray : GardenVR.Core.JsonValue
 type public sealed class GardenVR.Core.JsonObject : GardenVR.Core.JsonValue
 type public sealed class GardenVR.Core.KeptWord
@@ -728,6 +771,7 @@ type public sealed class GardenVR.Core.WeekDial
 type public sealed class GardenVR.Core.WeekRecord
 type public static class GardenVR.Core.BreathProgress
 type public static class GardenVR.Core.Companions
+type public static class GardenVR.Core.HabitProfiles
 type public static class GardenVR.Core.Json
 type public static class GardenVR.Core.LedgerJson
 type public static class GardenVR.Core.LookBack

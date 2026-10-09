@@ -27,6 +27,17 @@ namespace GardenVR.Core
 
         public int CreatedDay;
         public int? ArchivedDay;
+
+        /// <summary>The user's own name for the habit. Null means the preset's label.</summary>
+        public string Name;
+        /// <summary>Null means the preset's zone (<see cref="HabitProfiles.ZoneOf"/>).</summary>
+        public LifeZone? Zone;
+        /// <summary>Null means daily (<see cref="HabitProfiles.ScheduleOf"/>).</summary>
+        public HabitSchedule Schedule;
+        /// <summary>A quantity to reach in a day, 2 or more. Null means a yes-or-no habit.</summary>
+        public int? Target;
+        /// <summary>What <see cref="Target"/> counts, for example "glasses". Null when there is no target.</summary>
+        public string Unit;
     }
 
     public enum TendSource { Pinch, Poke, Ritual, Backfill }
