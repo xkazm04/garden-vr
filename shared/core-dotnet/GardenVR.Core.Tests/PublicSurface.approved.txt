@@ -90,6 +90,66 @@ GardenVR.Core.CatchUp method public static System.Int32 Depth(System.Int32 setti
 GardenVR.Core.CatchUpItem ctor public ()
 GardenVR.Core.CatchUpItem field public GardenVR.Core.GardenDay Day
 GardenVR.Core.CatchUpItem field public GardenVR.Core.HabitDef Habit
+GardenVR.Core.CoachFailure field public System.Int32 value__
+GardenVR.Core.CoachFailure field public const GardenVR.Core.CoachFailure Error = 4
+GardenVR.Core.CoachFailure field public const GardenVR.Core.CoachFailure None = 0
+GardenVR.Core.CoachFailure field public const GardenVR.Core.CoachFailure Off = 1
+GardenVR.Core.CoachFailure field public const GardenVR.Core.CoachFailure Refused = 3
+GardenVR.Core.CoachFailure field public const GardenVR.Core.CoachFailure Timeout = 2
+GardenVR.Core.CoachFlow field public static readonly System.TimeSpan Budget
+GardenVR.Core.CoachFlow method public static System.Threading.Tasks.Task<GardenVR.Core.OnboardingResult> OnboardAsync(GardenVR.Core.ICoachClient client, System.Boolean optedIn, GardenVR.Core.CoachVoice voice, System.Collections.Generic.IReadOnlyList<System.String> answers, System.TimeSpan budget, System.Threading.CancellationToken cancel)
+GardenVR.Core.CoachFlow method public static System.Threading.Tasks.Task<GardenVR.Core.ReflectionResult> ReflectAsync(GardenVR.Core.ICoachClient client, System.Boolean optedIn, GardenVR.Core.CoachVoice voice, System.String transcript, GardenVR.Core.ReflectionContext context, System.String stone, System.TimeSpan budget, System.Threading.CancellationToken cancel)
+GardenVR.Core.CoachGuards field public const System.Int32 CueMax = 48
+GardenVR.Core.CoachGuards field public const System.Int32 NameMax = 32
+GardenVR.Core.CoachGuards field public const System.Int32 ReflectionMax = 90
+GardenVR.Core.CoachGuards method public static GardenVR.Core.GuardReason Check(System.String line, System.Int32 maxLength)
+GardenVR.Core.CoachGuards method public static System.Boolean IsClean(System.String line, System.Int32 maxLength)
+GardenVR.Core.CoachJournal ctor public ()
+GardenVR.Core.CoachJournal method public GardenVR.Core.JsonArray Write()
+GardenVR.Core.CoachJournal method public System.Boolean Keep(System.Int32 day, System.String line)
+GardenVR.Core.CoachJournal method public System.String On(System.Int32 day)
+GardenVR.Core.CoachJournal method public System.Void Clear()
+GardenVR.Core.CoachJournal method public static GardenVR.Core.CoachJournal Read(GardenVR.Core.JsonObject root)
+GardenVR.Core.CoachJournal property get public System.Collections.Generic.IReadOnlyList<GardenVR.Core.CoachJournal.Entry> Entries
+GardenVR.Core.CoachJournal.Entry ctor public ()
+GardenVR.Core.CoachJournal.Entry ctor public ()
+GardenVR.Core.CoachJournal.Entry field public System.Int32 Day
+GardenVR.Core.CoachJournal.Entry field public System.Int32 Day
+GardenVR.Core.CoachJournal.Entry field public System.String Line
+GardenVR.Core.CoachJournal.Entry field public System.String Line
+GardenVR.Core.CoachKind field public System.Int32 value__
+GardenVR.Core.CoachKind field public const GardenVR.Core.CoachKind Onboarding = 0
+GardenVR.Core.CoachKind field public const GardenVR.Core.CoachKind Reflection = 1
+GardenVR.Core.CoachPrompts field public const System.Int32 MaxAnswerLength = 400
+GardenVR.Core.CoachPrompts field public const System.Int32 MaxProposals = 3
+GardenVR.Core.CoachPrompts field public const System.Int32 MaxTranscriptLength = 1200
+GardenVR.Core.CoachPrompts field public static readonly System.String[] OnboardingQuestions
+GardenVR.Core.CoachPrompts method public static GardenVR.Core.CoachRequest Onboarding(GardenVR.Core.CoachVoice voice, System.Collections.Generic.IReadOnlyList<System.String> answers)
+GardenVR.Core.CoachPrompts method public static GardenVR.Core.CoachRequest Reflection(GardenVR.Core.CoachVoice voice, System.String transcript, GardenVR.Core.ReflectionContext context)
+GardenVR.Core.CoachPrompts method public static System.Collections.Generic.List<GardenVR.Core.CoachProposal> ParseOnboarding(System.String reply)
+GardenVR.Core.CoachPrompts method public static System.String ParseReflection(System.String reply)
+GardenVR.Core.CoachProposal ctor public ()
+GardenVR.Core.CoachProposal field public GardenVR.Core.HabitSchedule Schedule
+GardenVR.Core.CoachProposal field public GardenVR.Core.LifeZone Zone
+GardenVR.Core.CoachProposal field public System.Nullable<System.Int32> Target
+GardenVR.Core.CoachProposal field public System.String Cue
+GardenVR.Core.CoachProposal field public System.String Name
+GardenVR.Core.CoachProposal field public System.String Unit
+GardenVR.Core.CoachProposal method public GardenVR.Core.HabitDef ToHabit(System.String id, System.Int32 createdDay)
+GardenVR.Core.CoachReply ctor public ()
+GardenVR.Core.CoachReply field public GardenVR.Core.CoachFailure Failure
+GardenVR.Core.CoachReply field public System.Boolean Ok
+GardenVR.Core.CoachReply field public System.String Text
+GardenVR.Core.CoachReply method public static GardenVR.Core.CoachReply Failed(GardenVR.Core.CoachFailure failure)
+GardenVR.Core.CoachReply method public static GardenVR.Core.CoachReply Success(System.String text)
+GardenVR.Core.CoachRequest ctor public ()
+GardenVR.Core.CoachRequest field public GardenVR.Core.CoachKind Kind
+GardenVR.Core.CoachRequest field public System.Int32 MaxTokens
+GardenVR.Core.CoachRequest field public System.String System
+GardenVR.Core.CoachRequest field public System.String User
+GardenVR.Core.CoachVoice field public System.Int32 value__
+GardenVR.Core.CoachVoice field public const GardenVR.Core.CoachVoice Sundial = 1
+GardenVR.Core.CoachVoice field public const GardenVR.Core.CoachVoice Terrarium = 0
 GardenVR.Core.CompanionSpecies field public System.Int32 value__
 GardenVR.Core.CompanionSpecies field public const GardenVR.Core.CompanionSpecies GlowSprig = 0
 GardenVR.Core.CompanionSpecies field public const GardenVR.Core.CompanionSpecies MoonMoss = 1
@@ -246,6 +306,16 @@ GardenVR.Core.GrowthAnswer field public readonly System.Boolean Flower
 GardenVR.Core.GrowthAnswer field public readonly System.Boolean NewFrond
 GardenVR.Core.GrowthAnswer field public readonly System.Boolean Recovered
 GardenVR.Core.GrowthAnswer field public readonly System.Int32 DewBeads
+GardenVR.Core.GuardReason field public System.Int32 value__
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason Count = 7
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason Dash = 4
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason Empty = 1
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason Exclamation = 5
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason Guilt = 8
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason Medical = 6
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason MultiLine = 3
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason None = 0
+GardenVR.Core.GuardReason field public const GardenVR.Core.GuardReason TooLong = 2
 GardenVR.Core.HabitDef ctor public ()
 GardenVR.Core.HabitDef field public GardenVR.Core.HabitKind Kind
 GardenVR.Core.HabitDef field public GardenVR.Core.HabitSchedule Schedule
@@ -290,6 +360,7 @@ GardenVR.Core.HabitSchedule method public static System.Byte WeekdayBit(GardenVR
 GardenVR.Core.HabitSchedule property get public System.Boolean IsValid
 GardenVR.Core.IClock property get public abstract System.DateTimeOffset Now
 GardenVR.Core.IClock property get public abstract System.TimeZoneInfo Zone
+GardenVR.Core.ICoachClient method public abstract System.Threading.Tasks.Task<GardenVR.Core.CoachReply> AskAsync(GardenVR.Core.CoachRequest request, System.Threading.CancellationToken cancel)
 GardenVR.Core.ISaveIo method public abstract System.Boolean Exists(System.String name)
 GardenVR.Core.ISaveIo method public abstract System.Byte[] ReadBytes(System.String name)
 GardenVR.Core.ISaveIo method public abstract System.IO.Stream Create(System.String name)
@@ -427,6 +498,10 @@ GardenVR.Core.MigrationStep property get public System.String Id
 GardenVR.Core.MonthlyRecord method public static System.Int32 KeptDays(GardenVR.Core.Ledger ledger, System.String habitId, GardenVR.Core.GardenMonth month)
 GardenVR.Core.MonthlyRecord method public static System.Int32 KeptTowardPlan(GardenVR.Core.Ledger ledger, GardenVR.Core.HabitDef habit, GardenVR.Core.GardenMonth month, GardenVR.Core.GardenDay today)
 GardenVR.Core.MonthlyRecord method public static System.Int32 PlannedDays(GardenVR.Core.HabitDef habit, GardenVR.Core.GardenMonth month, GardenVR.Core.GardenDay today)
+GardenVR.Core.OnboardingResult ctor public ()
+GardenVR.Core.OnboardingResult field public GardenVR.Core.CoachFailure Failure
+GardenVR.Core.OnboardingResult field public System.Boolean FromModel
+GardenVR.Core.OnboardingResult field public System.Collections.Generic.List<GardenVR.Core.CoachProposal> Proposals
 GardenVR.Core.OneWord ctor public ()
 GardenVR.Core.OneWord field public const System.Int32 Count = 6
 GardenVR.Core.OneWord field public static readonly System.String[] Stones
@@ -488,6 +563,14 @@ GardenVR.Core.QuantityTally method public GardenVR.Core.CountEvent Add(System.St
 GardenVR.Core.QuantityTally method public System.Boolean Undo(System.String countId, GardenVR.Core.IClock clock, System.Double windowSeconds = 6)
 GardenVR.Core.QuantityTally method public System.Int32 Count(System.String habitId, System.Int32 day)
 GardenVR.Core.QuantityTally property get public System.Collections.Generic.IReadOnlyList<GardenVR.Core.CountEvent> Events
+GardenVR.Core.ReflectionContext ctor public ()
+GardenVR.Core.ReflectionContext field public System.Collections.Generic.List<System.String> KeptToday
+GardenVR.Core.ReflectionContext field public System.Collections.Generic.List<System.String> PlannedNotKept
+GardenVR.Core.ReflectionContext field public System.String Weekday
+GardenVR.Core.ReflectionResult ctor public ()
+GardenVR.Core.ReflectionResult field public GardenVR.Core.CoachFailure Failure
+GardenVR.Core.ReflectionResult field public System.Boolean FromModel
+GardenVR.Core.ReflectionResult field public System.String Line
 GardenVR.Core.RimRead ctor public (System.Int32 daysBack, System.Int32 minute, System.Single gnomonDeg, System.Int32 rewindMinutes, System.Boolean atNow)
 GardenVR.Core.RimRead field public readonly System.Boolean AtNow
 GardenVR.Core.RimRead field public readonly System.Int32 DaysBack
@@ -552,6 +635,8 @@ GardenVR.Core.ScheduleKind field public System.Int32 value__
 GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind Daily = 0
 GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind TimesPerWeek = 1
 GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind Weekdays = 2
+GardenVR.Core.ScriptedCoach method public static System.Collections.Generic.List<GardenVR.Core.CoachProposal> Onboarding(System.Collections.Generic.IReadOnlyList<System.String> answers)
+GardenVR.Core.ScriptedCoach method public static System.String Reflection(System.String stone, System.Collections.Generic.IReadOnlyList<System.String> keptToday)
 GardenVR.Core.Season field public const System.Int32 DaysInWeek = 7
 GardenVR.Core.Season field public const System.Int32 DetailWeek = 3
 GardenVR.Core.Season field public const System.Int32 GoldWeek = 6
@@ -759,8 +844,12 @@ type public enum GardenVR.Core.ArcId implements System.IComparable,System.IConve
 type public enum GardenVR.Core.Bloom implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.BreathEventKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.BreathPhase implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+type public enum GardenVR.Core.CoachFailure implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+type public enum GardenVR.Core.CoachKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+type public enum GardenVR.Core.CoachVoice implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.CompanionSpecies implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.FocusPhase implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
+type public enum GardenVR.Core.GuardReason implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.HabitKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.JsonKind implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.LifeZone implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
@@ -774,6 +863,7 @@ type public enum GardenVR.Core.StretchPhase implements System.IComparable,System
 type public enum GardenVR.Core.TendSource implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public enum GardenVR.Core.TileState implements System.IComparable,System.IConvertible,System.IFormattable,System.ISpanFormattable
 type public interface GardenVR.Core.IClock
+type public interface GardenVR.Core.ICoachClient
 type public interface GardenVR.Core.ISaveIo
 type public interface GardenVR.Core.ISaveStore<T>
 type public sealed class GardenVR.Core.ArcDef
@@ -781,6 +871,12 @@ type public sealed class GardenVR.Core.ArcTimes
 type public sealed class GardenVR.Core.BreathConfig
 type public sealed class GardenVR.Core.BreathSession
 type public sealed class GardenVR.Core.CatchUpItem
+type public sealed class GardenVR.Core.CoachJournal
+type public sealed class GardenVR.Core.CoachJournal.Entry
+type public sealed class GardenVR.Core.CoachJournal.Entry
+type public sealed class GardenVR.Core.CoachProposal
+type public sealed class GardenVR.Core.CoachReply
+type public sealed class GardenVR.Core.CoachRequest
 type public sealed class GardenVR.Core.CountEvent
 type public sealed class GardenVR.Core.DeferredTend
 type public sealed class GardenVR.Core.DiskSaveIo implements GardenVR.Core.ISaveIo
@@ -798,11 +894,14 @@ type public sealed class GardenVR.Core.KeptWord
 type public sealed class GardenVR.Core.Ledger
 type public sealed class GardenVR.Core.LoadResult<T>
 type public sealed class GardenVR.Core.MigrationStep
+type public sealed class GardenVR.Core.OnboardingResult
 type public sealed class GardenVR.Core.OneWord
 type public sealed class GardenVR.Core.PinchDetector
 type public sealed class GardenVR.Core.PlantState
 type public sealed class GardenVR.Core.QuantityStep
 type public sealed class GardenVR.Core.QuantityTally
+type public sealed class GardenVR.Core.ReflectionContext
+type public sealed class GardenVR.Core.ReflectionResult
 type public sealed class GardenVR.Core.RitualPause
 type public sealed class GardenVR.Core.RitualSettings
 type public sealed class GardenVR.Core.SaveStore<T> implements GardenVR.Core.ISaveStore<T>
@@ -821,6 +920,9 @@ type public sealed class GardenVR.Core.WeekDial
 type public sealed class GardenVR.Core.WeekRecord
 type public static class GardenVR.Core.BreathProgress
 type public static class GardenVR.Core.CatchUp
+type public static class GardenVR.Core.CoachFlow
+type public static class GardenVR.Core.CoachGuards
+type public static class GardenVR.Core.CoachPrompts
 type public static class GardenVR.Core.Companions
 type public static class GardenVR.Core.HabitProfiles
 type public static class GardenVR.Core.Json
@@ -831,6 +933,7 @@ type public static class GardenVR.Core.PacedHand
 type public static class GardenVR.Core.Quantity
 type public static class GardenVR.Core.QuantityJson
 type public static class GardenVR.Core.RimScrub
+type public static class GardenVR.Core.ScriptedCoach
 type public static class GardenVR.Core.Season
 type public static class GardenVR.Core.SundialRules
 type public static class GardenVR.Core.TerrariumSaveMigrations
