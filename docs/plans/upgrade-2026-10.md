@@ -342,6 +342,25 @@ cloud, because no Unity compile can check it there.
 If W1 has not run by Thu 10-15, the gate takes the extension rule at once: Gate G moves to Fri 10-30 and Phase 2 shrinks
 to 10-31 to 11-11.
 
+### 9.5 Progress (2026-10-09, cloud session)
+
+| Task | State | Commit | Check |
+|---|---|---|---|
+| C1 habit profile | done | `9752961` | dotnet tests |
+| C2 monthly totals, zone fill, quantity habits | done | `866d3f1` | dotnet tests, order-independence property |
+| C3 catch-up, depth 2 | done | `f5bced5` | 28- and 90-day property tests across a DST change |
+| C4 artboards and board | done, waiting for the owner's scores | `a61219a` | `docs/art/artboards/README.md` |
+| C5 coach core | done | `68a3470` | dotnet tests |
+| C6 CliCoachClient | done | `66cb92d` | tests with a fake CLI; one live Haiku call |
+| C7 Haiku evaluation | done, waiting for the owner's tone read | `0ad9bf7` | onboarding 20 of 20, guards 39 of 40; relay latency open (W5) |
+| C8 breaks and nudges | done | `8381244` | dotnet tests, 300-day nudge property |
+| C9 relay | done, waiting for a key (W5) | `ac682bd` | node tests with a fake client; drift test against core |
+| C10 step B task files | waiting for decision 0016 (the app pick) | - | - |
+
+At the head of this branch: 442 core, 36 Sundial, 14 Terrarium and 11 CoachCli dotnet tests pass, and 6 relay tests.
+Every core change since `89971d1` joins the compile debt of decision 0012 (a) item 1, which W1 pays in the first Unity
+session. No file under `apps/` was changed from the cloud.
+
 ## 10. Gate changes (for the chosen app)
 
 | Item | Change |
