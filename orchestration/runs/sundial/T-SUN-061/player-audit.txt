@@ -1,0 +1,7 @@
+PASS GardenVR.Audio.dll: no CLI type or Process/ProcessStartInfo reference; SHA256=eb62b1dd44fbf27864d15ff8a277445550912338a1e321c7c2378a7caa825523
+PASS GardenVR.Capture.dll: no CLI type or Process/ProcessStartInfo reference; SHA256=d6f879a4c479b3ff324c7ac7c8802547b308e4469a35a0eb54639e54ee568136
+PASS GardenVR.Core.dll: no CLI type or Process/ProcessStartInfo reference; SHA256=b5b8483672bf2eb8e4021150275c879c6219d231af41b8009d3be768a38a8240
+PASS GardenVR.Input.dll: no CLI type or Process/ProcessStartInfo reference; SHA256=e1961147c487ce69517a56c3394af75733e435bfaa5f7264859e5943dd59c894
+PASS GardenVR.Room.dll: no CLI type or Process/ProcessStartInfo reference; SHA256=f7239c9c9d53b4b5e5bb2e5cc5ca329c1036a93226202e7f75fa99d29c806bce
+PASS GardenVR.Sundial.dll: no CLI type or Process/ProcessStartInfo reference; SHA256=058468971edda59025fa5dabdfdc9bb0ab8ff1969416975b2e3c107ab2067c3e
+PASS audited 6 application/package assemblies; RelayCoachClient, SundialCoach, RelayConfig present.
