@@ -1,6 +1,6 @@
 # Coach relay
 
-Holds the Claude API key for the Garden VR coach (upgrade plan C9, `docs/plans/upgrade-2026-10.md` sections 6.5 and 7).
+Holds the model path (Claude Code CLI locally, the Claude API key in the cloud) for the Garden VR coach (upgrade plan C9, `docs/plans/upgrade-2026-10.md` sections 6.5 and 7).
 The app never carries a key: it POSTs the prompt that core built (`RelayProtocol.Encode`) and reads one line back
 (`RelayProtocol.Decode`).
 
@@ -17,13 +17,31 @@ The app never carries a key: it POSTs the prompt that core built (`RelayProtocol
 - **Logs:** one JSON line per request with time, kind, status, failure, milliseconds and token counts. It never holds
   what the user said, the reply, or the install key.
 
+## Backend: CLI now, API later
+
+`COACH_BACKEND` in the repo-root `.env` (or the environment) picks the model path (`backend.mjs`):
+
+| Value | Path | Billing | Use |
+|---|---|---|---|
+| `cli` (default) | Claude Code CLI on this machine, one `claude -p` per request, the same flags as `CliCoachClient` | the owner's subscription; any `ANTHROPIC_API_KEY` is stripped from the child | local development and tests, until the product is proven |
+| `api` | Anthropic SDK | `ANTHROPIC_API_KEY` | the cloud relay for the competition build |
+
+Everything else (the allowed prompts, limits, failure mapping, logs) is the same on both. `/healthz` answers
+`{"ok":true,"backend":"cli"}`, so a client can pick its time budget.
+
+**Latency differs.** Measured 2026-10-12 on this machine, CLI backend, Haiku 5.5, 3 reflection calls: 6.0, 10.8 and
+9.9 s, because every request starts a CLI process. That misses the section 7 mark (p95 of 4 s or less), which is a mark
+for the `api` path. On `cli`, give `CoachFlow` a longer budget (about 15 s) or every call falls back to the scripted
+line. The 4 s gate row is measured on `api` only.
+
 ## Run
 
 ```bash
 cd tools/relay && npm ci
-ANTHROPIC_API_KEY=... node server.mjs          # PORT=8787 by default
-curl -s localhost:8787/healthz                  # {"ok":true}
-npm test                                        # node --test, with a fake client
+node server.mjs                                 # PORT=8787; backend from .env (cli by default)
+COACH_BACKEND=api ANTHROPIC_API_KEY=... node server.mjs
+curl -s localhost:8787/healthz                  # {"ok":true,"backend":"cli"}
+npm test                                        # node --test, with fake clients and a fake CLI
 ```
 
 ## Keep it in step with core
