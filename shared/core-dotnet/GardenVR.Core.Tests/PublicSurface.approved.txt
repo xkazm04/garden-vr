@@ -631,6 +631,7 @@ GardenVR.Core.QuantityStep property get public System.Boolean Reached
 GardenVR.Core.QuantityTally ctor public ()
 GardenVR.Core.QuantityTally ctor public (System.Collections.Generic.IEnumerable<GardenVR.Core.CountEvent> events)
 GardenVR.Core.QuantityTally method public GardenVR.Core.CountEvent Add(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.IClock clock, System.TimeSpan boundary)
+GardenVR.Core.QuantityTally method public System.Boolean CanUndo(System.String countId, GardenVR.Core.IClock clock, System.Double windowSeconds = 6)
 GardenVR.Core.QuantityTally method public System.Boolean Undo(System.String countId, GardenVR.Core.IClock clock, System.Double windowSeconds = 6)
 GardenVR.Core.QuantityTally method public System.Int32 Count(System.String habitId, System.Int32 day)
 GardenVR.Core.QuantityTally property get public System.Collections.Generic.IReadOnlyList<GardenVR.Core.CountEvent> Events

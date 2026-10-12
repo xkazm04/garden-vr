@@ -11,6 +11,23 @@ namespace GardenVR.Core.Tests;
 // Upgrade plan section 6.2: monthly totals, zone fill and quantity habits. Never a consecutive-day count.
 public class RecordTests
 {
+    [Fact]
+    public void Quantity_undo_availability_is_read_only_and_includes_six_seconds()
+    {
+        var clock = ClockOn(Day(2026, 10, 10));
+        var tally = new QuantityTally();
+        var count = tally.Add("water", Day(2026, 10, 10), clock, Boundary);
+        clock.Advance(TimeSpan.FromSeconds(6));
+        Assert.True(tally.CanUndo(count.Id, clock));
+        Assert.Null(count.UndoneAtUtcMs);
+        Assert.True(tally.Undo(count.Id, clock));
+        Assert.False(tally.CanUndo(count.Id, clock));
+        var next = tally.Add("water", Day(2026, 10, 10), clock, Boundary);
+        clock.Advance(TimeSpan.FromMilliseconds(6001));
+        Assert.False(tally.CanUndo(next.Id, clock));
+        Assert.False(tally.Undo(next.Id, clock));
+        Assert.False(tally.CanUndo("missing", clock));
+    }
     static readonly TimeSpan Boundary = GardenDay.DefaultBoundary;
     static GardenDay Day(int year, int month, int day) { return new GardenDay((int)(new DateTime(year, month, day) - GardenDay.Epoch).TotalDays); }
     // October 2026: Thursday the 1st to Saturday the 31st. Monday the 5th starts the first full week.
