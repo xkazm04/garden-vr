@@ -66,6 +66,7 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (GetComponent<SundialController>()?.CatchUpCard?.BlocksInput == true) return;
             if (intent.Kind == HandIntentKind.PalmOpen) { Pause(); return; }
             if (Hidden || intent.Kind != HandIntentKind.Pinch) return;
             if (intent.TargetId == "reflection.open" && CanReopen()) { Offer(); return; }

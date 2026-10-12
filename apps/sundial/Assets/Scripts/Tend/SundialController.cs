@@ -107,6 +107,7 @@ namespace GardenVR.Sundial
             CoachConfig != null ? CoachConfig : RelayConfig.LoadDefault()));
         public FirstRunWizard Wizard { get { return _wizard; } }
         public SettingsTabs Settings { get { return _settings; } }
+        public CatchUpCard CatchUpCard { get; private set; }
         /// <summary>Palm open has put the dial under the desk. A second palm brings it back.</summary>
         public bool Dismissed { get; private set; }
         public IHandIntentSource Source { get { return _source; } }
@@ -236,6 +237,7 @@ namespace GardenVR.Sundial
                 : SaveDirectoryOverride;
             IClock clock = ClockOverride ?? new SystemClock();
             _service = new SundialService(clock, directory);
+            CatchUpCard = GetComponent<CatchUpCard>() ?? gameObject.AddComponent<CatchUpCard>();
             if (GetComponent<SpeechController>() == null)
                 gameObject.AddComponent<SpeechController>();
             if (GetComponent<ReflectionController>() == null)
@@ -263,8 +265,7 @@ namespace GardenVR.Sundial
         }
 
         /// <summary>
-        /// B8 subscribes before Start, offers catch-up using Service.Save.LastVisitDay, then calls the
-        /// supplied completion when the card closes. With no subscriber, the launch completes immediately.
+        /// Optional launch presenter override. The built-in card is used when no presenter subscribes.
         /// </summary>
         public event Action<Action> LaunchCatchUp;
 
@@ -277,7 +278,7 @@ namespace GardenVR.Sundial
                 if (keyboard != null) SetSource(keyboard);
             }
             BeginSweep();
-            if (LaunchCatchUp == null) _service.CompleteLaunch();
+            if (LaunchCatchUp == null) CatchUpCard.Offer(_service.CompleteLaunch);
             else LaunchCatchUp(_service.CompleteLaunch);
         }
 
@@ -392,6 +393,7 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (CatchUpCard != null && CatchUpCard.BlocksInput) { CatchUpCard.Handle(intent); return; }
             if (_service != null && _service.Scrubbing)
             {
                 if (intent.Kind == HandIntentKind.Look) OnLook(intent.TargetId);
