@@ -1,0 +1,11 @@
+coach-01 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.602610
+coach-02 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.605534
+coach-03 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.613052
+coach-04 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.606716
+coach-05 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.608101
+coach-06 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.599629
+coach-07 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.600646
+coach-08 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.606533
+coach-09 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.621935
+coach-10 exit=0 result=Passed total=8 passed=8 failed=0 skipped=0 relay=Passed relaySeconds=0.614939
+playmode-full exit=0 result=Passed total=94 passed=94 failed=0 skipped=0 relay=Passed relaySeconds=0.602012
