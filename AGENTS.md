@@ -49,6 +49,8 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
   Never push. Never rewrite history. Never commit `Library/`, `Temp/`, `Logs/`, builds or `.env`.
 - Commit the REPORT, results XML, captures and small summaries; leave raw Unity/build `.log` files on disk, untracked
   (quote the lines that matter in the REPORT).
+- If you cannot meet the acceptance, the REPORT's first status line is `Status: blocked` followed by the exact blocker
+  and the decision you need; the loop then holds the task instead of filing it as done.
 - Finish by writing `orchestration/runs/<app>/<task-id>/REPORT.md`: what changed, commands run with their real
   output (trimmed), evidence paths (screenshots, side-by-sides, videos), what failed, what you would do next.
 

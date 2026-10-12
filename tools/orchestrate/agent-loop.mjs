@@ -145,7 +145,10 @@ while (true) {
   const r = await runGrok(task);
   const report = path.join(wt, 'orchestration', 'runs', app, r.id, 'REPORT.md');
   const ok = r.code === 0 && fs.existsSync(report);
-  fs.renameSync(O('running', task.file), O(ok ? 'done' : 'failed', task.file));
-  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok, report: fs.existsSync(report) }) + '\n');
-  log(`${ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)}`);
+  // A REPORT that declares itself blocked is not done: it goes to hold/ so nothing that depends on it starts (measured
+  // 2026-10-12: T-SUN-063 reported "Status: blocked" and the loop filed it as done, which unblocked B10).
+  const blocked = ok && /^\W*status\W*blocked/im.test(fs.readFileSync(report, 'utf8'));
+  fs.renameSync(O('running', task.file), O(blocked ? 'hold' : ok ? 'done' : 'failed', task.file));
+  fs.appendFileSync(O('runs', app, 'tasks.jsonl'), JSON.stringify({ ts: new Date().toISOString(), ...r, ok: ok && !blocked, blocked, report: fs.existsSync(report) }) + '\n');
+  log(`${blocked ? 'BLOCKED' : ok ? 'done' : 'FAILED'} ${task.file} exit=${r.code} wall=${r.wallS}s report=${fs.existsSync(report)}`);
 }
