@@ -150,6 +150,17 @@ namespace GardenVR.Core
 
         public void Clear() { _entries.Clear(); }
 
+        /// <summary>The seven days ending on day, oldest first, matching a WeekDial week.</summary>
+        public List<Entry> WeekEnding(int day)
+        {
+            var week = new List<Entry>();
+            foreach (var entry in _entries)
+                if ((long)entry.Day > (long)day - 7 && entry.Day <= day)
+                    week.Add(new Entry { Day = entry.Day, Line = entry.Line });
+            week.Sort((a, b) => a.Day.CompareTo(b.Day));
+            return week;
+        }
+
         public JsonArray Write()
         {
             var array = new JsonArray();

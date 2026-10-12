@@ -546,6 +546,30 @@ namespace GardenVR.Sundial
             return true;
         }
 
+        public ReflectionContext ReflectionToday()
+        {
+            return ReflectionContext.ForToday(_save.Habits, _ledger, Today().Index,
+                h => HabitProfiles.CleanName(h.Name) ?? Array.Find(SeedCatalog.All, p => p.Key == h.PresetKey)?.Title);
+        }
+
+        public bool KeepReflection(int day, string line)
+        {
+            if (_readOnly || Outcome == LoadOutcome.Failed || Scrubbing) return false;
+            if (!_save.Journal.Keep(day, line)) return false;
+            Persist();
+            return true;
+        }
+
+        public bool DeleteJournal()
+        {
+            if (_readOnly || Outcome == LoadOutcome.Failed || Scrubbing) return false;
+            _save.Journal.Clear();
+            Persist();
+            _store.SaveAndForgetHistory(_save);
+            BackupAvailable = false;
+            return true;
+        }
+
         public TendEvent Flush()
         {
             if (Scrubbing) return null;

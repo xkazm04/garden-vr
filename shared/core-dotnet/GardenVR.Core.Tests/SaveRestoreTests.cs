@@ -7,6 +7,18 @@ namespace GardenVR.Core.Tests;
 
 public class SaveRestoreTests
 {
+    [Fact]
+    public void Privacy_save_installs_new_live_before_removing_recovery_copies()
+    {
+        var io = new SaveCrashWindowTests.MemoryIo();
+        SaveTwo(io, "private one", "private two");
+        Put(io, SaveStore<Note>.SnapshotName, Text(io, SaveStore<Note>.LiveName));
+        Store(io).SaveAndForgetHistory(new Note { Name = "cleared" });
+        Assert.Equal("cleared", Store(io).Load().Doc.Name);
+        foreach (string name in new[] { SaveStore<Note>.Prev1Name, SaveStore<Note>.Prev2Name, SaveStore<Note>.SnapshotName })
+            Assert.False(io.Exists(name));
+    }
+
     // Restore brings a record back from prev1, prev2 or the snapshot when save.json cannot be read. It never
     // replaces a readable live file, never rotates the previous copies, and keeps the damaged bytes.
 

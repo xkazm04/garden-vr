@@ -375,6 +375,15 @@ namespace GardenVR.Core
             WriteObjectAtomic(obj);
         }
 
+        /// <summary>Save a privacy deletion, then remove recovery copies that could restore deleted data.
+        /// The new live save is installed before any recovery copy is removed.</summary>
+        public void SaveAndForgetHistory(T doc)
+        {
+            Save(doc);
+            foreach (string name in new[] { Prev1Name, Prev2Name, SnapshotName })
+                if (_io.Exists(name)) _io.Delete(name);
+        }
+
         void WriteTemp(JsonObject obj)
         {
             var bytes = Utf8.GetBytes(Json.Write(obj));
