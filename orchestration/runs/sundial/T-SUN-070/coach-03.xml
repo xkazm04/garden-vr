@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.1209183">
+  <test-suite type="TestSuite" id="1127" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.120918" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1119" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.110414" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="37788" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1120" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.108947" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1121" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.107676" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1122" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.106451" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1123" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.105184" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1013" name="CoachTests" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="1.100891" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1014" name="Coach_OffByDefault_ScriptedPathCompletes" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_OffByDefault_ScriptedPathCompletes" methodname="Coach_OffByDefault_ScriptedPathCompletes" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1350750745" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:12Z" duration="0.034583" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1017" name="Coach_OptInAndInstallKeyAreReadOnEveryCall" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_OptInAndInstallKeyAreReadOnEveryCall" methodname="Coach_OptInAndInstallKeyAreReadOnEveryCall" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="125290305" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:12Z" duration="0.002284" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1016" name="Coach_Refused_ShowsScriptedLine" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_Refused_ShowsScriptedLine" methodname="Coach_Refused_ShowsScriptedLine" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="990209573" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:12Z" duration="0.001566" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1015" name="Coach_RelayDown_FallsBackWithinBudget" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_RelayDown_FallsBackWithinBudget" methodname="Coach_RelayDown_FallsBackWithinBudget" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1989443752" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:12Z" duration="0.207677" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1019" name="Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget" methodname="Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="611951279" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:12Z" duration="0.613052" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1018" name="Relay_PostsCoreEnvelopeAndKey_DecodesReply" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_PostsCoreEnvelopeAndKey_DecodesReply" methodname="Relay_PostsCoreEnvelopeAndKey_DecodesReply" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="2022313118" result="Passed" start-time="2026-10-12 14:38:12Z" end-time="2026-10-12 14:38:13Z" duration="0.077974" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1021" name="Relay_PreCancelled_DoesNotConnect" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_PreCancelled_DoesNotConnect" methodname="Relay_PreCancelled_DoesNotConnect" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="7779011" result="Passed" start-time="2026-10-12 14:38:13Z" end-time="2026-10-12 14:38:13Z" duration="0.001161" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1020" name="Relay_RefusalAndMalformedReply_MapToFailure" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_RefusalAndMalformedReply_MapToFailure" methodname="Relay_RefusalAndMalformedReply_MapToFailure" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1191165403" result="Passed" start-time="2026-10-12 14:38:13Z" end-time="2026-10-12 14:38:13Z" duration="0.147033" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
