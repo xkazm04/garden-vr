@@ -100,6 +100,11 @@ namespace GardenVR.Sundial
         GUIStyle _overlayStyle;
 
         public SundialService Service { get { return _service; } }
+        public RelayConfig CoachConfig;
+        SundialCoach _coach;
+        /// <summary>Coach moments share the current save's opt-in and install key. Call on the Unity thread.</summary>
+        public SundialCoach Coach => _coach ?? (_coach = new SundialCoach(() => _service?.Save,
+            CoachConfig != null ? CoachConfig : RelayConfig.LoadDefault()));
         public FirstRunWizard Wizard { get { return _wizard; } }
         public SettingsTabs Settings { get { return _settings; } }
         /// <summary>Palm open has put the dial under the desk. A second palm brings it back.</summary>
