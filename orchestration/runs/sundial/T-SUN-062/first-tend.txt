@@ -1,0 +1,3 @@
+CoachOptIn=False; speech unavailable; questions skipped=4
+FirstTendAt=4.25 simulated seconds
+WallSeconds=0.940478 (includes scene load and two captures)

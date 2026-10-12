@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.8654236">
+  <test-suite type="TestSuite" id="1101" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="72" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.865424" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1093" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="72" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.854783" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="51964" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1094" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="72" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.853571" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1095" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="72" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.852564" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1096" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="72" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.851454" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1097" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="72" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.850270" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1039" name="InterviewTests" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:22Z" duration="2.846840" total="4" passed="1" failed="3" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1042" name="FirstRun_Interview_Resumes_AtSavedStep" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_Resumes_AtSavedStep" methodname="FirstRun_Interview_Resumes_AtSavedStep" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1432330863" result="Failed" start-time="2026-10-12 11:58:19Z" end-time="2026-10-12 11:58:20Z" duration="1.234059" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                    <stack-trace><![CDATA[at GardenVR.Sundial.Tests.PlayMode.InterviewTests+<FirstRun_Interview_Resumes_AtSavedStep>d__15.MoveNext () [0x002c3] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\InterviewTests.cs:148
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=4.323
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.03
+[FirstRun] step=fr.interview.q1 t=0.07
+[FirstRun] step=fr.interview.q2 t=0.10
+[FirstRun] step=fr.interview.q2 t=0.00
+[Sundial] first-interactive t=4.536
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q3 t=0.03
+[FirstRun] step=fr.interview.waiting t=0.07
+[FirstRun] step=fr.interview.review t=0.08
+[Sundial] cue seed.drop
+[FirstRun] step=fr.interview.review t=0.00
+[Sundial] first-interactive t=4.795
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1040" name="FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" methodname="FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1568301001" result="Failed" start-time="2026-10-12 11:58:20Z" end-time="2026-10-12 11:58:21Z" duration="1.190685" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: greater than 0.0f
+  But was:  -1.0f
+]]></message>
+                    <stack-trace><![CDATA[at GardenVR.Sundial.Tests.PlayMode.InterviewTests+<FirstRun_Interview_ScriptedCoach_FirstTendUnder60s>d__13.MoveNext () [0x00295] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\InterviewTests.cs:103
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.904
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=2.72
+[FirstRun] step=fr.interview.q1 t=2.75
+[FirstRun] step=fr.interview.q2 t=2.78
+[FirstRun] step=fr.interview.q3 t=2.82
+[FirstRun] step=fr.interview.waiting t=2.85
+[FirstRun] step=fr.interview.review t=2.87
+[Sundial] cue seed.drop
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=4.22
+]]></output>
+                </test-case>
+                <test-case id="1041" name="FirstRun_Interview_Skips_AllFourQuestions" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_Skips_AllFourQuestions" methodname="FirstRun_Interview_Skips_AllFourQuestions" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="153988066" result="Passed" start-time="2026-10-12 11:58:21Z" end-time="2026-10-12 11:58:22Z" duration="0.294498" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=6.109
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.05
+[FirstRun] step=fr.interview.q1 t=0.08
+[FirstRun] step=fr.interview.q2 t=0.12
+[FirstRun] step=fr.interview.q3 t=0.15
+[FirstRun] step=fr.interview.waiting t=0.18
+[FirstRun] step=fr.interview.review t=0.20
+[FirstRun] step=fr.caption t=0.33
+[FirstRun] step=fr.packets t=0.35
+[FirstRun] step=fr.pick.morning t=0.35
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=0.42
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=0.48
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=0.55
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=0.57
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.60
+[FirstRun] step=fr.breaths.offer t=0.60
+]]></output>
+                </test-case>
+                <test-case id="1043" name="Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" methodname="Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1911621867" result="Failed" start-time="2026-10-12 11:58:22Z" end-time="2026-10-12 11:58:22Z" duration="0.116198" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: not <empty>
+  But was:  <string.Empty>
+]]></message>
+                    <stack-trace><![CDATA[at GardenVR.Sundial.Tests.PlayMode.InterviewTests+<Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy>d__16.MoveNext () [0x00101] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\InterviewTests.cs:169
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=6.395
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.03
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

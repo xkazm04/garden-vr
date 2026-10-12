@@ -1,0 +1,52 @@
+New B5 app copy (FirstRunWizard.Interview.cs):
+The coach can use an online model to suggest habits. Your words are not kept.
+Keep coach off
+Use online coach
+{question number} / 4
+Hold to answer
+Pinch skip to use starter habits
+skip
+Answer ready · next
+Finding a few small habits
+Choose an arc
+Pinch a packet to plant it
+not this one
+Ready to tend
+Choose presets
+morning
+midday
+evening
+every day
+{times} a week
+weekdays
+Mon Tue Wed Thu Fri Sat Sun (the selected subset)
+{habit name}
+{zone} · {schedule}
+{cue}
+
+Existing core questions newly presented by B5:
+What would you like a little more of in your days?
+When does your day have some room: morning, midday or evening?
+Is there someone you would like to stay closer to?
+What does your body ask you for most?
+
+Existing B2 zone labels reused on the rim:
+Body
+Mind
+Work
+Connection
+
+Existing ScriptedCoach catalog supplies packet names/cues; no catalog copy changed:
+Walk after lunch | After lunch
+Water | With each meal
+Stretch | After my first coffee
+Early night | At ten, screens away
+Call home | On my walk home
+Message a friend | After dinner
+Plan tomorrow's top 3 | Before I close the laptop
+Read | In bed, before the light goes out
+Three breaths | When I sit down at my desk
+One line of thanks | After I brush my teeth
+
+Model-supplied names and cues still pass CoachPrompts.ParseOnboarding / CoachGuards.
+Existing preset captions, listening indicator, settings and ritual copy are reused unchanged.

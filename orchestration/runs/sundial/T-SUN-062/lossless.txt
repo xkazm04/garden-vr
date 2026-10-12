@@ -1,0 +1,5 @@
+orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-consent.png  2687785 -> 2234699  zlib9-default  proof ok (mode, size, palette, transparency, pixel sha256 9bfa42186016)  written
+orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-packets.png  2829660 -> 2375883  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 67b8fab4bfc2)  written
+orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-question.png  2700141 -> 2247691  zlib9-default  proof ok (mode, size, palette, transparency, pixel sha256 3769bfb06f63)  written
+orchestration/runs/sundial/T-SUN-062/DialG1-onboarding.png  2810494 -> 2348099  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 cc4a32fae6fe)  written
+total 11028080 -> 9206372, saved 1821708 bytes; proof failures 0; applied
