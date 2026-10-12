@@ -1,0 +1,11 @@
+{
+  "meanLuma": 0.632768,
+  "blackFrac": 0.00012,
+  "whiteFrac": 5.8e-05,
+  "magentaFrac": 0,
+  "width": 1824,
+  "height": 1024,
+  "sha256": "843a4311105e96193d4b4998e1befef3cfa7557879f6886791fa6c2fe8ccc68b",
+  "capturePngSha256": "c98af0d1832d3e2a5250fe27b3b64b6b95af64d08478fab6bce7eacd3e6118bc",
+  "losslessProof": "lossless.txt: identical decoded pixels after ingest"
+}

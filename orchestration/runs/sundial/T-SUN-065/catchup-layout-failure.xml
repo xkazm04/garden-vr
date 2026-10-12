@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.8889273">
+  <test-suite type="TestSuite" id="1121" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="89" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.888927" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1113" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="89" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.880192" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="50680" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1114" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="89" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.877329" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1115" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="89" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.876490" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1116" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="89" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.875803" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1117" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="89" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.875083" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1005" name="CatchUpTests" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:24Z" duration="2.872146" total="7" passed="6" failed="1" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1012" name="CatchUp_DayRollover_RefreshesStaleRows" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_DayRollover_RefreshesStaleRows" methodname="CatchUp_DayRollover_RefreshesStaleRows" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="173097823" result="Passed" start-time="2026-10-12 13:46:21Z" end-time="2026-10-12 13:46:22Z" duration="0.730651" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.475
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1009" name="CatchUp_DepthOne_QuestionAlsoLogsLate" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_DepthOne_QuestionAlsoLogsLate" methodname="CatchUp_DepthOne_QuestionAlsoLogsLate" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="2006731355" result="Passed" start-time="2026-10-12 13:46:22Z" end-time="2026-10-12 13:46:22Z" duration="0.165588" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.712
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.hatch
+]]></output>
+                </test-case>
+                <test-case id="1008" name="CatchUp_FirstVisit_ShowsNothing" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_FirstVisit_ShowsNothing" methodname="CatchUp_FirstVisit_ShowsNothing" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="530950877" result="Passed" start-time="2026-10-12 13:46:22Z" end-time="2026-10-12 13:46:22Z" duration="0.092638" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.867
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1007" name="CatchUp_Logged_IsHatchedLate" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_Logged_IsHatchedLate" methodname="CatchUp_Logged_IsHatchedLate" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="568156568" result="Passed" start-time="2026-10-12 13:46:22Z" end-time="2026-10-12 13:46:23Z" duration="0.753677" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.961
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1010" name="CatchUp_Pages_Pause_AndBackgroundIntents" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_Pages_Pause_AndBackgroundIntents" methodname="CatchUp_Pages_Pause_AndBackgroundIntents" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="145686678" result="Failed" start-time="2026-10-12 13:46:23Z" end-time="2026-10-12 13:46:23Z" duration="0.455606" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  catchup.previous
+  Expected: in range (0.01,0.99)
+  But was:  -0.11404103f
+]]></message>
+                    <stack-trace><![CDATA[at GardenVR.Sundial.Tests.PlayMode.CatchUpTests+<Capture>d__16.MoveNext () [0x0010d] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\CatchUpTests.cs:76
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.723
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1006" name="CatchUp_TwoDaysAway_OffersTwoDays" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_TwoDaysAway_OffersTwoDays" methodname="CatchUp_TwoDaysAway_OffersTwoDays" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="1510246516" result="Passed" start-time="2026-10-12 13:46:23Z" end-time="2026-10-12 13:46:24Z" duration="0.525258" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.177
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.605
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1011" name="CatchUp_WeeklyTarget_RefreshesRemainingRows" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_WeeklyTarget_RefreshesRemainingRows" methodname="CatchUp_WeeklyTarget_RefreshesRemainingRows" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="1502239323" result="Passed" start-time="2026-10-12 13:46:24Z" end-time="2026-10-12 13:46:24Z" duration="0.135868" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.696
+[Sundial] cue amb.kitchen
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

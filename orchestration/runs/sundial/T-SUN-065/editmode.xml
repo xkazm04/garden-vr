@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="98" result="Passed" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.298557">
+  <test-suite type="TestSuite" id="1000" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.298557" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1114" name="GardenVR.Sundial.Tests.EditMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.EditMode.dll" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.289367" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="57148" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1115" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.288270" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1116" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.287468" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1117" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.286593" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1118" name="EditMode" fullname="GardenVR.Sundial.Tests.EditMode" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:46Z" duration="3.285325" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1001" name="BreakInputContractTests" fullname="GardenVR.Sundial.Tests.EditMode.BreakInputContractTests" classname="GardenVR.Sundial.Tests.EditMode.BreakInputContractTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.029555" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1002" name="PcPalm_CurrentContractCannotDistinguishReleaseFromContinuedHold" fullname="GardenVR.Sundial.Tests.EditMode.BreakInputContractTests.PcPalm_CurrentContractCannotDistinguishReleaseFromContinuedHold" methodname="PcPalm_CurrentContractCannotDistinguishReleaseFromContinuedHold" classname="GardenVR.Sundial.Tests.EditMode.BreakInputContractTests" runstate="Runnable" seed="1244925399" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.017192" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[B6 input blocker] P held for 0.7s then released and P held for 4s produce identical intent streams: one PalmOpen, no Release. IHandIntentSource exposes no palm state.
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1003" name="CaptureEditModeTests" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.023719" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1014" name="Contract_StateSyntaxAndFrameNames" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Contract_StateSyntaxAndFrameNames" methodname="Contract_StateSyntaxAndFrameNames" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="726751218" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000417" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1013" name="Crops_SamePixelRows" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Crops_SamePixelRows" methodname="Crops_SamePixelRows" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="443083585" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.001514" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1010" name="Diff_WithMask" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Diff_WithMask" methodname="Diff_WithMask" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="344835060" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000927" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1009" name="Diff_WithoutMask" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Diff_WithoutMask" methodname="Diff_WithoutMask" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="132959839" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.001135" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1011" name="Framings_BuiltInsMatchFidelityTools" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Framings_BuiltInsMatchFidelityTools" methodname="Framings_BuiltInsMatchFidelityTools" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="1100997446" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.003201" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1012" name="Framings_JsonOverrideAndAddition" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Framings_JsonOverrideAndAddition" methodname="Framings_JsonOverrideAndAddition" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="1399035555" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.003353" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1004" name="ImageCheck_AllBlack" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.ImageCheck_AllBlack" methodname="ImageCheck_AllBlack" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="1922309798" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000624" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1005" name="ImageCheck_AllMagenta" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.ImageCheck_AllMagenta" methodname="ImageCheck_AllMagenta" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="47960772" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000220" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1006" name="ImageCheck_Gradient" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.ImageCheck_Gradient" methodname="ImageCheck_Gradient" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="1585992406" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000161" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1015" name="Measure_TwoOpaqueOneTransparent_KnownCounts" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.Measure_TwoOpaqueOneTransparent_KnownCounts" methodname="Measure_TwoOpaqueOneTransparent_KnownCounts" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="353021931" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.008351" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1008" name="SideBySide_LabelStripChangesWithCaption" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.SideBySide_LabelStripChangesWithCaption" methodname="SideBySide_LabelStripChangesWithCaption" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="1538327959" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.001069" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1007" name="SideBySide_SizeAndPixels" fullname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests.SideBySide_SizeAndPixels" methodname="SideBySide_SizeAndPixels" classname="GardenVR.Sundial.Tests.EditMode.CaptureEditModeTests" runstate="Runnable" seed="129180882" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000224" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1016" name="CoachClientTests" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" testcasecount="13" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:45Z" duration="2.398205" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1030" name="Cli_CancelledBeforeStart_NeverRuns" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_CancelledBeforeStart_NeverRuns" methodname="Cli_CancelledBeforeStart_NeverRuns" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="1743510192" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.006108" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1029" name="Cli_MapsFailedResults" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.007250" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1024" name="Cli_MapsFailedResults(&quot;{\&quot;stop_reason\&quot;:\&quot;refusal\&quot;}&quot;,0,Refused)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults(&quot;{\&quot;stop_reason\&quot;:\&quot;refusal\&quot;}&quot;,0,Refused)" methodname="Cli_MapsFailedResults" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="2055626265" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.002371" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1025" name="Cli_MapsFailedResults(&quot;{\&quot;is_error\&quot;:true,\&quot;result\&quot;:\&quot;bad\&quot;}&quot;,0,Error)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults(&quot;{\&quot;is_error\&quot;:true,\&quot;result\&quot;:\&quot;bad\&quot;}&quot;,0,Error)" methodname="Cli_MapsFailedResults" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="1088426341" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000234" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1026" name="Cli_MapsFailedResults(&quot;{\&quot;result\&quot;:\&quot;bad\&quot;}&quot;,1,Error)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults(&quot;{\&quot;result\&quot;:\&quot;bad\&quot;}&quot;,1,Error)" methodname="Cli_MapsFailedResults" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="737730516" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000105" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1027" name="Cli_MapsFailedResults(&quot;not json&quot;,0,Error)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults(&quot;not json&quot;,0,Error)" methodname="Cli_MapsFailedResults" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="1325107092" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000241" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1028" name="Cli_MapsFailedResults(&quot;{}&quot;,0,Error)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults(&quot;{}&quot;,0,Error)" methodname="Cli_MapsFailedResults" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="1526165438" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.000100" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1018" name="Cli_PassesUserTextOnlyOnStdin_UsesIsolatedFlags" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_PassesUserTextOnlyOnStdin_UsesIsolatedFlags" methodname="Cli_PassesUserTextOnlyOnStdin_UsesIsolatedFlags" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="2004206356" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:42Z" duration="0.003584" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1031" name="Cli_ProcessAdapter_DrainsOutputAndKillsOnCancellation" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_ProcessAdapter_DrainsOutputAndKillsOnCancellation" methodname="Cli_ProcessAdapter_DrainsOutputAndKillsOnCancellation" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="1300329357" result="Passed" start-time="2026-10-12 13:48:42Z" end-time="2026-10-12 13:48:45Z" duration="2.368244" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1023" name="Cli_QuotesWindowsArguments" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001167" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1019" name="Cli_QuotesWindowsArguments(&quot;&quot;,&quot;\&quot;\&quot;&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments(&quot;&quot;,&quot;\&quot;\&quot;&quot;)" methodname="Cli_QuotesWindowsArguments" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="793588236" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000296" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1020" name="Cli_QuotesWindowsArguments(&quot;a b&quot;,&quot;\&quot;a b\&quot;&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments(&quot;a b&quot;,&quot;\&quot;a b\&quot;&quot;)" methodname="Cli_QuotesWindowsArguments" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="982281783" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000072" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1021" name="Cli_QuotesWindowsArguments(&quot;a\&quot;b&quot;,&quot;\&quot;a\\\&quot;b\&quot;&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments(&quot;a\&quot;b&quot;,&quot;\&quot;a\\\&quot;b\&quot;&quot;)" methodname="Cli_QuotesWindowsArguments" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="1109674263" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000056" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1022" name="Cli_QuotesWindowsArguments(&quot;a\\&quot;,&quot;\&quot;a\\\\\&quot;&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments(&quot;a\\&quot;,&quot;\&quot;a\\\\\&quot;&quot;)" methodname="Cli_QuotesWindowsArguments" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="67990218" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000054" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1017" name="RelayConfig_DefaultAndLocalBudgets_NoProductionEndpoint" fullname="GardenVR.Sundial.Tests.EditMode.CoachClientTests.RelayConfig_DefaultAndLocalBudgets_NoProductionEndpoint" methodname="RelayConfig_DefaultAndLocalBudgets_NoProductionEndpoint" classname="GardenVR.Sundial.Tests.EditMode.CoachClientTests" runstate="Runnable" seed="901715619" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.010214" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1032" name="Halo2VariantTests" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.146738" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1037" name="AMissingMaskFallsBackToLookAHalo" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.AMissingMaskFallsBackToLookAHalo" methodname="AMissingMaskFallsBackToLookAHalo" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="1953897180" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.048805" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Halo2] no baked halo for plant_nobody_full, look A's halo is drawn
+]]></output>
+                </test-case>
+                <test-case id="1036" name="EveryBakedMaskLoadsIsOneClosedCurveWithAtMostTwoConcavities" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.EveryBakedMaskLoadsIsOneClosedCurveWithAtMostTwoConcavities" methodname="EveryBakedMaskLoadsIsOneClosedCurveWithAtMostTwoConcavities" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="1735973414" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.082688" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1040" name="TheCardShaderIsUntouched" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.TheCardShaderIsUntouched" methodname="TheCardShaderIsUntouched" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="607973639" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001029" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1035" name="TheGroundHalfMeetsTheCardHalfAtTheCardBase" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.TheGroundHalfMeetsTheCardHalfAtTheCardBase" methodname="TheGroundHalfMeetsTheCardHalfAtTheCardBase" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="918291263" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.005069" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1039" name="TheSphereUnionStubIsAUnionOfCirclesAndSmoothsOnRequest" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.TheSphereUnionStubIsAUnionOfCirclesAndSmoothsOnRequest" methodname="TheSphereUnionStubIsAUnionOfCirclesAndSmoothsOnRequest" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="1785925879" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000952" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1038" name="TheSpillCoversTheGroundEllipseOnTheSoil" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.TheSpillCoversTheGroundEllipseOnTheSoil" methodname="TheSpillCoversTheGroundEllipseOnTheSoil" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="2120008192" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002034" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1033" name="VariantA_DrawsTheCardHaloAndBuildsNothing" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.VariantA_DrawsTheCardHaloAndBuildsNothing" methodname="VariantA_DrawsTheCardHaloAndBuildsNothing" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="1469109796" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001860" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1034" name="VariantHalo2_ReplacesTheCardHaloWithOneMeshAndBackAgain" fullname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests.VariantHalo2_ReplacesTheCardHaloWithOneMeshAndBackAgain" methodname="VariantHalo2_ReplacesTheCardHaloWithOneMeshAndBackAgain" classname="GardenVR.Sundial.Tests.EditMode.Halo2VariantTests" runstate="Runnable" seed="523736426" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002400" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[S5 halo2 mesh: verts 275, tris 432
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1041" name="LayoutVariantTests" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.035816" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1043" name="Layout_ScalesTheDialToTheMeasuredSizeAndGivesItBack" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.Layout_ScalesTheDialToTheMeasuredSizeAndGivesItBack" methodname="Layout_ScalesTheDialToTheMeasuredSizeAndGivesItBack" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="55239881" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002279" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1047" name="PlantsStandOnTheBed_AndMorningAndDuskStayInTheirArcs" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.PlantsStandOnTheBed_AndMorningAndDuskStayInTheirArcs" methodname="PlantsStandOnTheBed_AndMorningAndDuskStayInTheirArcs" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="1104464362" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000980" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1045" name="TheBedIsWiderAndNearerThanTheOldMound" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.TheBedIsWiderAndNearerThanTheOldMound" methodname="TheBedIsWiderAndNearerThanTheOldMound" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="106202991" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.024740" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[mound x -0.121..0.121 z -0.121..0.055 | bed x -0.118..0.118 z -0.130..0.015
+]]></output>
+                </test-case>
+                <test-case id="1049" name="TheFaceMaterialSwapsAndComesBack" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.TheFaceMaterialSwapsAndComesBack" methodname="TheFaceMaterialSwapsAndComesBack" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="1352687198" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000858" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1050" name="TheHaloStrokeIsTheLockedOneAndOnlyTheCloseIsWider" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.TheHaloStrokeIsTheLockedOneAndOnlyTheCloseIsWider" methodname="TheHaloStrokeIsTheLockedOneAndOnlyTheCloseIsWider" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="1883839675" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000372" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1048" name="TheTileRowsStayOrderedAndRowZeroIsInTheBand" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.TheTileRowsStayOrderedAndRowZeroIsInTheBand" methodname="TheTileRowsStayOrderedAndRowZeroIsInTheBand" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="1687760577" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000214" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1042" name="VariantA_LeavesTheDialExactlyAsItWas" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.VariantA_LeavesTheDialExactlyAsItWas" methodname="VariantA_LeavesTheDialExactlyAsItWas" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="640111058" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000729" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1044" name="VariantsCombineWithAPlus_AndAnUnknownOneStillThrows" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.VariantsCombineWithAPlus_AndAnUnknownOneStillThrows" methodname="VariantsCombineWithAPlus_AndAnUnknownOneStillThrows" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="300417782" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001843" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1046" name="WithoutTheMound_TheFlatDiscBecomesTheBedWhateverPlaneItsMeshLiesIn" fullname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests.WithoutTheMound_TheFlatDiscBecomesTheBedWhateverPlaneItsMeshLiesIn" methodname="WithoutTheMound_TheFlatDiscBecomesTheBedWhateverPlaneItsMeshLiesIn" classname="GardenVR.Sundial.Tests.EditMode.LayoutVariantTests" runstate="Runnable" seed="475569211" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001503" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1051" name="LeafPlantVariantTests" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.391732" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1056" name="EachAssemblyStaysNearItsOldCardBoxAndHasDepth" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.EachAssemblyStaysNearItsOldCardBoxAndHasDepth" methodname="EachAssemblyStaysNearItsOldCardBoxAndHasDepth" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="425746107" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.085977" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[LeafPlant.morning: size (m) 0.0611 x 0.0650 x 0.0510
+LeafPlant.midday: size (m) 0.0685 x 0.0772 x 0.0614
+LeafPlant.evening: size (m) 0.0553 x 0.0656 x 0.0337
+]]></output>
+                </test-case>
+                <test-case id="1054" name="EveryAssemblyIsUnderTheSixtyCardCapAndDeterministic" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.EveryAssemblyIsUnderTheSixtyCardCapAndDeterministic" methodname="EveryAssemblyIsUnderTheSixtyCardCapAndDeterministic" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="1109393902" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.119680" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[LeafPlant.morning open: cards 60, verts 892, tris 936
+LeafPlant.morning bud: cards 58, tris 896
+LeafPlant.morning none: cards 50, tris 768
+LeafPlant.midday open: cards 60, verts 876, tris 918
+LeafPlant.midday bud: cards 58, tris 880
+LeafPlant.midday none: cards 52, tris 784
+LeafPlant.evening open: cards 60, verts 897, tris 928
+LeafPlant.evening bud: cards 58, tris 896
+LeafPlant.evening none: cards 51, tris 784
+]]></output>
+                </test-case>
+                <test-case id="1059" name="LeafShaderKeepsTheStereoRules" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.LeafShaderKeepsTheStereoRules" methodname="LeafShaderKeepsTheStereoRules" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="10474761" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000849" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1055" name="MiddayIsBushierThanTheFirstSpikeAndStillInsideTheCap" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.MiddayIsBushierThanTheFirstSpikeAndStillInsideTheCap" methodname="MiddayIsBushierThanTheFirstSpikeAndStillInsideTheCap" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="74563710" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.024352" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1057" name="NormalsComeFromOneEllipsoid_UpOnTopDownUnderneathOutwardAtTheSides" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.NormalsComeFromOneEllipsoid_UpOnTopDownUnderneathOutwardAtTheSides" methodname="NormalsComeFromOneEllipsoid_UpOnTopDownUnderneathOutwardAtTheSides" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="384665448" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000329" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1060" name="ResourcesCarryTheAtlasMaterialAndPartsOfEverySpecies" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.ResourcesCarryTheAtlasMaterialAndPartsOfEverySpecies" methodname="ResourcesCarryTheAtlasMaterialAndPartsOfEverySpecies" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="1872028250" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000516" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1061" name="SpeciesLayoutsCoverTheirStemsAndHeads" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.SpeciesLayoutsCoverTheirStemsAndHeads" methodname="SpeciesLayoutsCoverTheirStemsAndHeads" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="1881732114" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000520" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1058" name="TheHaloSilhouetteHasEveryAssemblyInIt" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.TheHaloSilhouetteHasEveryAssemblyInIt" methodname="TheHaloSilhouetteHasEveryAssemblyInIt" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="902600222" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.132241" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1052" name="VariantA_DrawsTheCardAndBuildsNoAssembly" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.VariantA_DrawsTheCardAndBuildsNoAssembly" methodname="VariantA_DrawsTheCardAndBuildsNoAssembly" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="608538630" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001406" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1053" name="VariantLeafPlant_SwapsEachHeroCardForOneMeshAndBackAgain" fullname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests.VariantLeafPlant_SwapsEachHeroCardForOneMeshAndBackAgain" methodname="VariantLeafPlant_SwapsEachHeroCardForOneMeshAndBackAgain" classname="GardenVR.Sundial.Tests.EditMode.LeafPlantVariantTests" runstate="Runnable" seed="1294968885" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.023339" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1062" name="RoomLightVariantTests" fullname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" classname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.013871" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1066" name="ShadersDeclareTheRoomLightTerms" fullname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests.ShadersDeclareTheRoomLightTerms" methodname="ShadersDeclareTheRoomLightTerms" classname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" runstate="Runnable" seed="736431541" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002667" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1067" name="TheCookieIsCappedAndBrighterOnTheWindowSide" fullname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests.TheCookieIsCappedAndBrighterOnTheWindowSide" methodname="TheCookieIsCappedAndBrighterOnTheWindowSide" classname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" runstate="Runnable" seed="29614963" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.003355" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1063" name="VariantA_LeavesTheKeywordOff" fullname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests.VariantA_LeavesTheKeywordOff" methodname="VariantA_LeavesTheKeywordOff" classname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" runstate="Runnable" seed="973892990" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001149" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1064" name="VariantRoomLight_TurnsTheKeywordAndTheWedgesOnAndOffAgain" fullname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests.VariantRoomLight_TurnsTheKeywordAndTheWedgesOnAndOffAgain" methodname="VariantRoomLight_TurnsTheKeywordAndTheWedgesOnAndOffAgain" classname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" runstate="Runnable" seed="1920895881" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.003495" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1065" name="VariantRoomLight_WithoutTheKitThrows" fullname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests.VariantRoomLight_WithoutTheKitThrows" methodname="VariantRoomLight_WithoutTheKitThrows" classname="GardenVR.Sundial.Tests.EditMode.RoomLightVariantTests" runstate="Runnable" seed="1565938645" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000736" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1068" name="SoilMoundVariantTests" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.018449" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1078" name="ResourcesCarryThePaintingMaterialAndHeightfield" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.ResourcesCarryThePaintingMaterialAndHeightfield" methodname="ResourcesCarryThePaintingMaterialAndHeightfield" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="1445025006" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000298" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1077" name="ShaderKeepsTheStereoRulesAndDrawsNoTransparentLayer" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.ShaderKeepsTheStereoRulesAndDrawsNoTransparentLayer" methodname="ShaderKeepsTheStereoRulesAndDrawsNoTransparentLayer" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="1306620659" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000867" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1072" name="TheBedIsAWideCrescentAlongTheNearRimNotACompactHeap" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.TheBedIsAWideCrescentAlongTheNearRimNotACompactHeap" methodname="TheBedIsAWideCrescentAlongTheNearRimNotACompactHeap" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="1329193634" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002437" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[S4b bed box (mm): x -121 to 121, z -121 to 55
+]]></output>
+                </test-case>
+                <test-case id="1075" name="TheBuildIsDeterministic" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.TheBuildIsDeterministic" methodname="TheBuildIsDeterministic" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="2098661039" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001887" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1073" name="TheLayoutMapsTheBedBoxOntoItsEllipseBox" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.TheLayoutMapsTheBedBoxOntoItsEllipseBox" methodname="TheLayoutMapsTheBedBoxOntoItsEllipseBox" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="1347769394" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000171" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1071" name="TheMoundIsRaisedNotSunkenAndStaysUnderTheNib" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.TheMoundIsRaisedNotSunkenAndStaysUnderTheNib" methodname="TheMoundIsRaisedNotSunkenAndStaysUnderTheNib" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="83972094" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001909" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1074" name="TheWashBleedIsOffWithoutAFaceTextureAndSwitchesOnWithOne" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.TheWashBleedIsOffWithoutAFaceTextureAndSwitchesOnWithOne" methodname="TheWashBleedIsOffWithoutAFaceTextureAndSwitchesOnWithOne" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="771821091" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002395" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1076" name="UvIsTheDialPlaneSoThePaintingIsAPlanarProjection" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.UvIsTheDialPlaneSoThePaintingIsAPlanarProjection" methodname="UvIsTheDialPlaneSoThePaintingIsAPlanarProjection" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="117691739" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.003580" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1069" name="VariantA_KeepsTheOldDiscAndBuildsNoMound" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.VariantA_KeepsTheOldDiscAndBuildsNoMound" methodname="VariantA_KeepsTheOldDiscAndBuildsNoMound" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="2087008566" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000632" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1070" name="VariantSoilMound_SwapsTheDiscForOneMeshAndBackAgain" fullname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests.VariantSoilMound_SwapsTheDiscForOneMeshAndBackAgain" methodname="VariantSoilMound_SwapsTheDiscForOneMeshAndBackAgain" classname="GardenVR.Sundial.Tests.EditMode.SoilMoundVariantTests" runstate="Runnable" seed="1040550125" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002133" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[S4 mound: verts 2967, tris 5402, pebbles 20, crown (mm) 4.84
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1079" name="SpeechSourceTests" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.018283" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1082" name="ExhaustedPlayback_DoesNotRepeatOrInventText" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.ExhaustedPlayback_DoesNotRepeatOrInventText" methodname="ExhaustedPlayback_DoesNotRepeatOrInventText" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="571740756" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.002546" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1080" name="File_ReplaysOnlyDuringHold_InOrder_Once" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.File_ReplaysOnlyDuringHold_InOrder_Once" methodname="File_ReplaysOnlyDuringHold_InOrder_Once" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="771988403" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001119" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1087" name="InvalidLoad_PreservesPreviousPlayback" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.InvalidLoad_PreservesPreviousPlayback" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.003341" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1083" name="InvalidLoad_PreservesPreviousPlayback(&quot;{\&quot;utterances\&quot;:[{\&quot;events\&quot;:[{\&quot;t\&quot;:-1,\&quot;kind\&quot;:\&quot;final\&quot;,\&quot;text\&quot;:\&quot;x\&quot;}]}]}&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.InvalidLoad_PreservesPreviousPlayback(&quot;{\&quot;utterances\&quot;:[{\&quot;events\&quot;:[{\&quot;t\&quot;:-1,\&quot;kind\&quot;:\&quot;final\&quot;,\&quot;text\&quot;:\&quot;x\&quot;}]}]}&quot;)" methodname="InvalidLoad_PreservesPreviousPlayback" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="1002516852" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000603" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1084" name="InvalidLoad_PreservesPreviousPlayback(&quot;{\&quot;utterances\&quot;:[{\&quot;events\&quot;:[{\&quot;t\&quot;:0,\&quot;kind\&quot;:\&quot;unknown\&quot;,\&quot;text\&quot;:\&quot;x\&quot;}]}]}&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.InvalidLoad_PreservesPreviousPlayback(&quot;{\&quot;utterances\&quot;:[{\&quot;events\&quot;:[{\&quot;t\&quot;:0,\&quot;kind\&quot;:\&quot;unknown\&quot;,\&quot;text\&quot;:\&quot;x\&quot;}]}]}&quot;)" methodname="InvalidLoad_PreservesPreviousPlayback" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="1756095253" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000314" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1085" name="InvalidLoad_PreservesPreviousPlayback(&quot;{\&quot;utterances\&quot;:[{\&quot;events\&quot;:[{\&quot;t\&quot;:2,\&quot;kind\&quot;:\&quot;final\&quot;,\&quot;text\&quot;:\&quot;x\&quot;},{\&quot;t\&quot;:1,\&quot;kind\&quot;:\&quot;final\&quot;,\&quot;text\&quot;:\&quot;y\&quot;}]}]}&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.InvalidLoad_PreservesPreviousPlayback(&quot;{\&quot;utterances\&quot;:[{\&quot;events\&quot;:[{\&quot;t\&quot;:2,\&quot;kind\&quot;:\&quot;final\&quot;,\&quot;text\&quot;:\&quot;x\&quot;},{\&quot;t\&quot;:1,\&quot;kind\&quot;:\&quot;final\&quot;,\&quot;text\&quot;:\&quot;y\&quot;}]}]}&quot;)" methodname="InvalidLoad_PreservesPreviousPlayback" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="525446921" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000306" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1086" name="InvalidLoad_PreservesPreviousPlayback(&quot;{}&quot;)" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.InvalidLoad_PreservesPreviousPlayback(&quot;{}&quot;)" methodname="InvalidLoad_PreservesPreviousPlayback" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="1718421027" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000938" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1088" name="InvalidTime_Refused" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.InvalidTime_Refused" methodname="InvalidTime_Refused" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="1208003129" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.000964" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1081" name="Release_DropsFutureEvents_NextHoldUsesNextAnswer" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.Release_DropsFutureEvents_NextHoldUsesNextAnswer" methodname="Release_DropsFutureEvents_NextHoldUsesNextAnswer" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="2004984195" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001189" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1089" name="Reload_StopsAndRewinds" fullname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests.Reload_StopsAndRewinds" methodname="Reload_StopsAndRewinds" classname="GardenVR.Sundial.Tests.EditMode.SpeechSourceTests" runstate="Runnable" seed="1774996785" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:45Z" duration="0.001197" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1090" name="SprintVariantTests" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:46Z" duration="0.128135" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1092" name="HaloV2DrawsForTheCardPlant_AndTheDrawnLeavesKeepTheLayoutHalo" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.HaloV2DrawsForTheCardPlant_AndTheDrawnLeavesKeepTheLayoutHalo" methodname="HaloV2DrawsForTheCardPlant_AndTheDrawnLeavesKeepTheLayoutHalo" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="1384983977" result="Passed" start-time="2026-10-12 13:48:45Z" end-time="2026-10-12 13:48:46Z" duration="0.032085" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1098" name="LookAComesBackExactly" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.LookAComesBackExactly" methodname="LookAComesBackExactly" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="2003719804" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.009237" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1091" name="SprintIsKnown_AndExpandsToTheStack" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.SprintIsKnown_AndExpandsToTheStack" methodname="SprintIsKnown_AndExpandsToTheStack" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="451453720" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.005110" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1095" name="TheControlMapCarriesTheWashIdsOnTheWiderDisc" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheControlMapCarriesTheWashIdsOnTheWiderDisc" methodname="TheControlMapCarriesTheWashIdsOnTheWiderDisc" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="274693901" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.019520" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1097" name="TheCookieIsReadAtTheLookASizeWhateverTheLayoutScale" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheCookieIsReadAtTheLookASizeWhateverTheLayoutScale" methodname="TheCookieIsReadAtTheLookASizeWhateverTheLayoutScale" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="1026874503" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.001795" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1094" name="TheFaceIsTheWatercolourPaperOnTheLayoutDisc" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheFaceIsTheWatercolourPaperOnTheLayoutDisc" methodname="TheFaceIsTheWatercolourPaperOnTheLayoutDisc" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="1082217523" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.036116" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1100" name="TheLeafAtlasesTakeTheCookieAtTheBasePointLikeTheCards" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheLeafAtlasesTakeTheCookieAtTheBasePointLikeTheCards" methodname="TheLeafAtlasesTakeTheCookieAtTheBasePointLikeTheCards" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="102001197" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000869" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1099" name="TheLeafShaderHasTheRoomLightPathAndStillKeepsTheStereoRules" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheLeafShaderHasTheRoomLightPathAndStillKeepsTheStereoRules" methodname="TheLeafShaderHasTheRoomLightPathAndStillKeepsTheStereoRules" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="1028752808" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000813" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1093" name="TheMorningPlantStaysACard_BecauseItsAssemblyLostToIt" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheMorningPlantStaysACard_BecauseItsAssemblyLostToIt" methodname="TheMorningPlantStaysACard_BecauseItsAssemblyLostToIt" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="1805568519" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.012460" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1096" name="TheRoomLightWedgeStandsUnderADrawnLeafPlant" fullname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests.TheRoomLightWedgeStandsUnderADrawnLeafPlant" methodname="TheRoomLightWedgeStandsUnderADrawnLeafPlant" classname="GardenVR.Sundial.Tests.EditMode.SprintVariantTests" runstate="Runnable" seed="1838966238" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.005584" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1101" name="SundialAudioTests" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.067978" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1104" name="Beds_CrossfadeOnArcChange" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests.Beds_CrossfadeOnArcChange" methodname="Beds_CrossfadeOnArcChange" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" seed="991311953" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.008641" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1102" name="Manifest_ListsEverySundialCue_AndClipsExist" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests.Manifest_ListsEverySundialCue_AndClipsExist" methodname="Manifest_ListsEverySundialCue_AndClipsExist" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" seed="1385685426" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.002041" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1103" name="Scripts_OnlyCallCueIdsThatExist" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests.Scripts_OnlyCallCueIdsThatExist" methodname="Scripts_OnlyCallCueIdsThatExist" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" seed="1583178600" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.050291" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1106" name="Voice_CutsWhenFaster" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests.Voice_CutsWhenFaster" methodname="Voice_CutsWhenFaster" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" seed="762930497" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.002641" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1105" name="Voice_NeverLeadsTheHold" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests.Voice_NeverLeadsTheHold" methodname="Voice_NeverLeadsTheHold" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" seed="24785635" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.001021" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1107" name="VoiceCatalog_MatchesTheFrozenLines" fullname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests.VoiceCatalog_MatchesTheFrozenLines" methodname="VoiceCatalog_MatchesTheFrozenLines" classname="GardenVR.Sundial.Tests.EditMode.SundialAudioTests" runstate="Runnable" seed="1517666411" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.001180" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1108" name="WatercolourVariantTests" fullname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" classname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.004452" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1113" name="ShaderDeclaresTheWatercolourTerms" fullname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests.ShaderDeclaresTheWatercolourTerms" methodname="ShaderDeclaresTheWatercolourTerms" classname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" runstate="Runnable" seed="1619757609" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000456" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1112" name="UnknownVariantThrows" fullname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests.UnknownVariantThrows" methodname="UnknownVariantThrows" classname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" runstate="Runnable" seed="675163995" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000719" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1109" name="VariantA_KeepsTheFaceMaterial" fullname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests.VariantA_KeepsTheFaceMaterial" methodname="VariantA_KeepsTheFaceMaterial" classname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" runstate="Runnable" seed="1624467695" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000810" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1110" name="VariantWatercolour_SwapsToTheS1Material" fullname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests.VariantWatercolour_SwapsToTheS1Material" methodname="VariantWatercolour_SwapsToTheS1Material" classname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" runstate="Runnable" seed="918870726" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000522" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1111" name="VariantWatercolour_WithoutMaterialThrows" fullname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests.VariantWatercolour_WithoutMaterialThrows" methodname="VariantWatercolour_WithoutMaterialThrows" classname="GardenVR.Sundial.Tests.EditMode.WatercolourVariantTests" runstate="Runnable" seed="706680219" result="Passed" start-time="2026-10-12 13:48:46Z" end-time="2026-10-12 13:48:46Z" duration="0.000477" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

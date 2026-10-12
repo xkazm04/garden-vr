@@ -1,0 +1,14 @@
+editmode result=Passed total=98 passed=98 failed=0 skipped=0
+playmode result=Passed total=89 passed=89 failed=0 skipped=0
+CatchUp_DayRollover_RefreshesStaleRows Passed
+CatchUp_DepthOne_QuestionAlsoLogsLate Passed
+CatchUp_FirstVisit_ShowsNothing Passed
+CatchUp_Logged_IsHatchedLate Passed
+CatchUp_Pages_Pause_AndBackgroundIntents Passed
+CatchUp_TwoDaysAway_OffersTwoDays Passed
+CatchUp_WeeklyTarget_RefreshesRemainingRows Passed
+editmode compiler/shader/build error entries=0
+playmode compiler/shader/build error entries=0
+build compiler/shader/build error entries=0
+Build Succeeded C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Build\sundial\Sundial.exe
+apps/sundial/Build/sundial/Sundial.exe bytes=667136 sha256=91a36fa14dd3ccf390b99720805eda0553da1ca1108381b49c98c938f69dc256
