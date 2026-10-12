@@ -315,6 +315,7 @@ namespace GardenVR.Sundial
             _haloArc = haloArc;
             ApplyPlants();
             ApplyProfiles();
+            ApplyMonthlyRecord();
             ApplyLeafPlant();
             ApplyStrip();
             ApplyPulse();
@@ -1469,6 +1470,7 @@ namespace GardenVR.Sundial
 
         void OnDestroy()
         {
+            DestroyMonthlyRecord();
             if (_profileDotMaterial != null) DestroyObject(_profileDotMaterial);
             for (int i = 0; i < _leaves.Length; i++)
                 if (_leaves[i] != null) _leaves[i].Destroy();

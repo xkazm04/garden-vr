@@ -264,7 +264,11 @@ namespace GardenVR.Sundial
                     return;
                 }
             }
-            if ((_step == FirstRunSteps.FirstTend || _step == Onboarding.FirstTend) && id == "plant." + DueArc() && _service.IsPending)
+            HabitDef firstHabit = _service.HabitForArc(DueArc());
+            bool firstKept = firstHabit != null && _service.Ledger.IsKept(firstHabit.Id, _service.Today().Index);
+            if ((_step == FirstRunSteps.FirstTend || _step == Onboarding.FirstTend)
+                && (id == "plant." + DueArc() || id == SundialArcs.TileId(DueArc(), 0, 6))
+                && (_service.IsPending || firstKept))
             {
                 _firstTendAt = _appTime;
                 Debug.Log("[FirstRun] firstTendAt=" + _appTime.ToString("0.00", Inv));

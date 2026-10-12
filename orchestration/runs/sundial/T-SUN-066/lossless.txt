@@ -1,0 +1,3 @@
+orchestration/runs/sundial/T-SUN-066/DialG1-monthly-record-nine-plants.png  2952227 -> 2490002  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 f0302b4b6ce0)  written
+orchestration/runs/sundial/T-SUN-066/DialG1-quantity-three-of-eight.png  2947010 -> 2482180  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 4a5e71770627)  written
+total 5899237 -> 4972182, saved 927055 bytes; proof failures 0; applied

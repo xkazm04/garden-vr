@@ -1,0 +1,12 @@
+New templates:
+kept {N} days this month
+{count} of {target}
+
+Existing strings reused on the shared onboarding/monthly tabs:
+Body
+Mind
+Work
+Connection
+
+Existing habit names, zones, weekday notes, and weekly totals remain profile data.
+There is no numeric label on a zone tab, including a zone with no planned days.

@@ -98,6 +98,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
         [Timeout(180000)]
         public IEnumerator Backfill_NotAfterBoundary()
         {
+            // This test owns its dev habits, independently of the preceding fixture.
+            SundialService.DevSeedOnFresh = true;
             FixedClock clock = SundialPlay.Clock1420();
             SundialController.SaveDirectoryOverride = SundialPlay.FreshDir();
             SundialController.ClockOverride = clock;

@@ -47,3 +47,16 @@ with the first plant; B9 still owns their monthly fill and totals. This does not
 - [First question with speech unavailable](../../orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-question.png)
 - [U1 timing](../../orchestration/runs/sundial/T-SUN-062/first-tend.txt)
 - [Verification, string census and limitations](../../orchestration/runs/sundial/T-SUN-062/REPORT.md)
+
+## B9 monthly record frame (T-SUN-066, 2026-10-12)
+
+The record moment now uses the four shared onboarding rim tabs, shaded from the month's zone record. Looking
+at a plant shows its monthly kept-day total. Quantity habits fill today's tile one pinch at a time and retain
+the six-second undo; the target-reaching pinch keeps the day. The U5 string scan includes consecutive-count
+phrases. B12 can collect this frame without changing the owner's art scores above.
+
+- [Nine plants and monthly total at DialG1](../../orchestration/runs/sundial/T-SUN-066/DialG1-monthly-record-nine-plants.png)
+- [Record artboard comparison](../../orchestration/runs/sundial/T-SUN-066/DialG1-record-side-by-side.jpg)
+- [Field Notebook style reference comparison](../../orchestration/runs/sundial/T-SUN-066/DialG1-reference-side-by-side.jpg)
+- [Quantity progress, 3 of 8](../../orchestration/runs/sundial/T-SUN-066/DialG1-quantity-three-of-eight.png)
+- [Verification, strings and limitations](../../orchestration/runs/sundial/T-SUN-066/REPORT.md)

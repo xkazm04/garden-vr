@@ -81,6 +81,7 @@ GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef PlantPreset
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef PlantProposal(GardenVR.Core.CoachProposal p, System.String arcKey)
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef TryAdmit(GardenVR.Sundial.SeedPreset preset)
 GardenVR.Sundial.SundialService method public GardenVR.Core.PlantState PlantFor(GardenVR.Core.HabitDef habit)
+GardenVR.Sundial.SundialService method public GardenVR.Core.QuantityStep CountQuantity(System.String habitId)
 GardenVR.Sundial.SundialService method public GardenVR.Core.ReflectionContext ReflectionToday()
 GardenVR.Sundial.SundialService method public GardenVR.Core.TendEvent Flush()
 GardenVR.Sundial.SundialService method public GardenVR.Core.TendResult BackfillYesterday(GardenVR.Core.HabitDef habit)
@@ -98,6 +99,7 @@ GardenVR.Sundial.SundialService method public System.Boolean TryEndFocus()
 GardenVR.Sundial.SundialService method public System.Boolean TryRestoreBackup()
 GardenVR.Sundial.SundialService method public System.Boolean TryShiftDay(System.Int32 delta)
 GardenVR.Sundial.SundialService method public System.Boolean TryStartFocus()
+GardenVR.Sundial.SundialService method public System.Boolean UndoQuantity()
 GardenVR.Sundial.SundialService method public System.Collections.Generic.List<GardenVR.Core.CatchUpItem> PendingCatchUp()
 GardenVR.Sundial.SundialService method public System.Int32 LiveCount(System.String habitId)
 GardenVR.Sundial.SundialService method public System.Int32 LiveInArc(System.String arcKey)
@@ -118,6 +120,7 @@ GardenVR.Sundial.SundialService property get public GardenVR.Core.GratitudeRecor
 GardenVR.Sundial.SundialService property get public GardenVR.Core.IClock Clock
 GardenVR.Sundial.SundialService property get public GardenVR.Core.Ledger Ledger
 GardenVR.Sundial.SundialService property get public GardenVR.Core.LoadOutcome Outcome
+GardenVR.Sundial.SundialService property get public GardenVR.Core.QuantityTally Counts
 GardenVR.Sundial.SundialService property get public GardenVR.Core.SundialState State
 GardenVR.Sundial.SundialService property get public GardenVR.Sundial.SundialSave Save
 GardenVR.Sundial.SundialService property get public System.Boolean BackupAvailable
@@ -126,6 +129,7 @@ GardenVR.Sundial.SundialService property get public System.Boolean Boil
 GardenVR.Sundial.SundialService property get public System.Boolean FastClock
 GardenVR.Sundial.SundialService property get public System.Boolean IsPending
 GardenVR.Sundial.SundialService property get public System.Boolean Mute
+GardenVR.Sundial.SundialService property get public System.Boolean QuantityUndoAvailable
 GardenVR.Sundial.SundialService property get public System.Boolean ReducedMotion
 GardenVR.Sundial.SundialService property get public System.Boolean Scrubbing
 GardenVR.Sundial.SundialService property get public System.Boolean StateChanged

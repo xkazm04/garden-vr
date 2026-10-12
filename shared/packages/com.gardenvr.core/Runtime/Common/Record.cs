@@ -162,7 +162,7 @@ namespace GardenVR.Core
         {
             if (events == null) return;
             foreach (var e in events)
-                if (e != null) _events.Add(e);
+                if (e != null) { _events.Add(e); _seq++; }
         }
 
         public IReadOnlyList<CountEvent> Events { get { return _events; } }
@@ -196,8 +196,8 @@ namespace GardenVR.Core
             return e;
         }
 
-        /// <summary>Marks the count when the clock is still inside the window (inclusive). Default 6 seconds.</summary>
-        public bool Undo(string countId, IClock clock, double windowSeconds = 6)
+        /// <summary>Whether a live count is still inside its undo window (inclusive). Default 6 seconds.</summary>
+        public bool CanUndo(string countId, IClock clock, double windowSeconds = 6)
         {
             if (clock == null) throw new ArgumentNullException(nameof(clock));
             if (windowSeconds < 0) throw new ArgumentOutOfRangeException(nameof(windowSeconds));
@@ -209,9 +209,17 @@ namespace GardenVR.Core
                 if (e.UndoneAtUtcMs.HasValue) return false;
                 long now = clock.Now.ToUnixTimeMilliseconds();
                 if (now - e.AtUtcMs > (long)Math.Round(windowSeconds * 1000.0)) return false;
-                e.UndoneAtUtcMs = now;
                 return true;
             }
+            return false;
+        }
+
+        /// <summary>Marks the count when the clock is still inside the window (inclusive). Default 6 seconds.</summary>
+        public bool Undo(string countId, IClock clock, double windowSeconds = 6)
+        {
+            if (!CanUndo(countId, clock, windowSeconds)) return false;
+            for (int i = 0; i < _events.Count; i++)
+                if (_events[i].Id == countId) { _events[i].UndoneAtUtcMs = clock.Now.ToUnixTimeMilliseconds(); return true; }
             return false;
         }
     }

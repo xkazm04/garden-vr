@@ -1,0 +1,3 @@
+Runtime script string literals and instantiated dial labels
+Pattern: \bstreak\w*\b|\bin a row\b|\bconsecutive\b|\bdays straight\b|\bstraight days\b|\bfail\w*\b|\bsham\w*\b|\bwilt\w*\b
+Hits: 0

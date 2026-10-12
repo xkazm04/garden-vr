@@ -275,7 +275,7 @@ namespace GardenVR.Sundial
         void RefreshOffer()
         {
             if (_offer == null) return;
-            bool show = CueDue();
+            bool show = CueDue() && (_sundial?.View == null || _sundial.View.ProfileLabel.Length == 0);
             if (_offer.activeSelf != show) _offer.SetActive(show);
         }
 

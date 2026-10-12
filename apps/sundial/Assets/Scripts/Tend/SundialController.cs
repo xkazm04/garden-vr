@@ -321,7 +321,7 @@ namespace GardenVR.Sundial
             }
             float dt = ClampStep(Time.deltaTime);
             _service.Step(dt);
-            if (_pendingArc != null && !_service.IsPending)
+            if (_pendingArc != null && !_service.IsPending && !_service.QuantityUndoAvailable)
                 ClearTendVisual();
 
             if (!(_source is KeyboardMouseIntentSource))
@@ -474,13 +474,30 @@ namespace GardenVR.Sundial
             if (TryAnother(id)) return;
             string arc;
             int row;
+            bool quantityTile = !string.IsNullOrEmpty(id) && id.StartsWith("tile.", StringComparison.Ordinal) && id.EndsWith(".6", StringComparison.Ordinal);
+            if (quantityTile) id = "plant." + id.Substring(5, id.Length - 7);
             if (!SundialArcs.TryPlant(id, out arc, out row)) return;
             if (_wizard != null && !_wizard.AllowsPlantTend(arc)) return;
             HabitDef habit = _service.HabitAt(arc, row);
+            if (quantityTile && !HabitProfiles.CleanTarget(habit?.Target).HasValue) return;
             PlantState plant = _service.PlantFor(habit);
             if (habit == null || plant == null || plant.Window == null || plant.Window.Length < 7) return;
             // An in-app ritual, including the wind-down breaths, is not a quick pinch.
             if (habit.Kind == HabitKind.InAppRitual) return;
+            if (HabitProfiles.CleanTarget(habit.Target).HasValue)
+            {
+                var step = _service.CountQuantity(habit.Id);
+                if (step == null) return;
+                ClearTendVisual();
+                _pendingArc = arc;
+                _pendingRow = row;
+                _pendingHabitId = habit.Id;
+                Play(CueInk, At(SundialArcs.TileId(arc, row, 6)));
+                if (step.Tend != null && step.Tend.Ok && !step.Tend.AlreadyKept)
+                    Play(CueFlutter, At(SundialArcs.PlantId(arc, row)));
+                ShowUndo(arc, row);
+                return;
+            }
             // A second pinch the same day, or a pinch while one tend is still waiting, leaves the picture alone.
             if (_service.IsPending) return;
             if (!SundialRules.CanTendToday(plant.Window[6])) return;
@@ -521,6 +538,11 @@ namespace GardenVR.Sundial
 
         void TryUndo(string arc)
         {
+            if (_pendingArc == arc && _service.QuantityUndoAvailable)
+            {
+                if (_service.UndoQuantity()) { Play(CueUndo, At(SundialArcs.TileId(arc, _pendingRow, 6))); ClearTendVisual(); }
+                return;
+            }
             if (!_service.IsPending || _pendingArc != arc) return;
             if (!_service.Cancel()) return;
             Play(CueUndo, At(SundialArcs.TileId(arc, _pendingRow, 6)));
@@ -657,6 +679,7 @@ namespace GardenVR.Sundial
                     if (arc < 0 || row < 0) continue;
                     int plantIndex = arc * 3 + row;
                     _view.SetProfile(plantIndex, habit, _service.Ledger, _service.Today(), plant);
+                    _view.SetQuantityProfile(plantIndex, habit, _service.Counts, _service.Today());
                     int stage = (int)plant.Stage;
                     // A miss never shrinks the drawing. The card stays on the fullest stage this session has shown.
                     if (_stageFloor[plantIndex] < 0 || stage > _stageFloor[plantIndex]) _stageFloor[plantIndex] = stage;
@@ -675,6 +698,18 @@ namespace GardenVR.Sundial
                     int count = plant.Window.Length < 7 ? plant.Window.Length : 7;
                     for (int day = 0; day < count; day++)
                         _view.tiles[DialView.TileIndex(arc, row, day)] = SundialArcs.TileDigit(plant.Window[day]);
+                    int? target = HabitProfiles.CleanTarget(habit.Target);
+                    if (target.HasValue)
+                    {
+                        for (int day = 0; day < count; day++)
+                        {
+                            int units = _service.Counts.Count(habit.Id, _service.Today().Index - 6 + day);
+                            if (units == 0 || plant.Window[day] == TileState.Kept || plant.Window[day] == TileState.Late) continue;
+                            int tile = DialView.TileIndex(arc, row, day);
+                            _view.tiles[tile] = SundialArcs.TileDigit(TileState.Kept);
+                            _view.tileFill[tile] = Mathf.Clamp01((float)units / target.Value);
+                        }
+                    }
                     if (_pendingHabitId != null && habit.Id == _pendingHabitId && (_filling || _fillDone))
                     {
                         int today = DialView.TileIndex(arc, row, 6);
@@ -686,6 +721,7 @@ namespace GardenVR.Sundial
                 }
             }
             _view.waiting = due >= 0 ? 1f : 0f;
+            _view.SetMonthlyRecord(_service.Ledger, _service.Save.Habits, _service.Today());
             if (due >= 0) _view.waitingTarget = SundialArcs.FromIndex(due);
             // Reduced motion stops the boil. The saved boil flag stays, so turning it off brings the line back.
             _view.boil = _service.Boil && !_service.ReducedMotion;
