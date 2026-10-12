@@ -16,6 +16,7 @@ namespace GardenVR.Sundial
         BreakPart _part;
         HandPose _pose;
         bool _active;
+        Camera _camera;
         public Transform EyeTarget => _mote == null ? null : _mote.transform;
 
         void Awake()
@@ -48,6 +49,13 @@ namespace GardenVR.Sundial
         void OnEnable() { RenderPipelineManager.beginCameraRendering += Place; }
         void OnDisable() { RenderPipelineManager.beginCameraRendering -= Place; }
         void OnDestroy() { if (_ink != null) Destroy(_ink); }
+
+        void LateUpdate()
+        {
+            // Targets must be placed even before the first render (including batch PlayMode).
+            if (_camera == null) _camera = Camera.main ?? GameObject.Find("EyeCamera")?.GetComponent<Camera>();
+            if (_camera != null) Place(default, _camera);
+        }
 
         TextMesh Note(string name, Vector2 size, string id = null)
         {
@@ -104,9 +112,9 @@ namespace GardenVR.Sundial
         void Place(ScriptableRenderContext context, Camera cam)
         {
             if (cam == null || cam.cameraType != CameraType.Game || _note == null) return;
-            PlaceAt(cam, _note.transform, .09f, .30f, .45f, .15f, .12f);
-            PlaceAt(cam, _action.transform, .09f, .19f, .45f, .12f, .105f);
-            PlaceAt(cam, _figure.transform, .09f, .42f, .45f, .038f, .023f);
+            PlaceAt(cam, _note.transform, .09f, .30f, .20f, .15f, .12f);
+            PlaceAt(cam, _action.transform, .09f, .19f, .20f, .12f, .105f);
+            PlaceAt(cam, _figure.transform, .09f, .42f, .20f, .038f, .023f);
             PlaceAt(cam, _mote.transform, .257f, .932f, EyeRest.TargetDistance(null), .05f, .128f);
             PlaceAt(cam, _eyes.transform, .263f, .84f, EyeRest.TargetDistance(null), .17f, .43f);
         }

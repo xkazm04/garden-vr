@@ -160,6 +160,7 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (GetComponent<BreakController>()?.Active == true) return;
             if (GetComponent<SundialController>()?.CatchUpCard?.BlocksInput == true) return;
             if (intent.Kind == HandIntentKind.Release)
             {
