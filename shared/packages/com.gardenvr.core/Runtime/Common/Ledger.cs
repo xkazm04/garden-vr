@@ -27,6 +27,17 @@ namespace GardenVR.Core
 
         public int CreatedDay;
         public int? ArchivedDay;
+
+        /// <summary>The user's own name for the habit. Null means the preset's label.</summary>
+        public string Name;
+        /// <summary>Null means the preset's zone (<see cref="HabitProfiles.ZoneOf"/>).</summary>
+        public LifeZone? Zone;
+        /// <summary>Null means daily (<see cref="HabitProfiles.ScheduleOf"/>).</summary>
+        public HabitSchedule Schedule;
+        /// <summary>A quantity to reach in a day, 2 or more. Null means a yes-or-no habit.</summary>
+        public int? Target;
+        /// <summary>What <see cref="Target"/> counts, for example "glasses". Null when there is no target.</summary>
+        public string Unit;
     }
 
     public enum TendSource { Pinch, Poke, Ritual, Backfill }
@@ -134,6 +145,26 @@ namespace GardenVR.Core
             Require(habitId, clock);
             if (clock.Zone == null) throw new ArgumentException("clock has no zone");
             if (day.Index != today.Index - 1) return TendResult.Refused("not-yesterday");
+            if (clock.Now >= today.EndsAt(clock.Zone, boundary)) return TendResult.Refused("after-boundary");
+            var nowDay = GardenDay.From(clock.Now, boundary);
+            if (day.Index > nowDay.Index) return TendResult.Refused("future");
+            var existing = FindLive(habitId, day.Index);
+            if (existing != null) return TendResult.Refused("already-kept");
+            return TendResult.Accepted(Append(habitId, day.Index, TendSource.Backfill, true, clock));
+        }
+
+        /// <summary>
+        /// Logs a missed day from the catch-up window: a day from <paramref name="depth"/> days before
+        /// <paramref name="today"/> up to yesterday, once, and only before today's boundary. <see cref="TendEvent.Late"/>
+        /// is set and the timestamp is the clock's real instant. With a depth of 1 it accepts what <see cref="Backfill"/>
+        /// accepts.
+        /// </summary>
+        public TendResult BackfillWithin(string habitId, GardenDay day, GardenDay today, int depth, IClock clock, TimeSpan boundary)
+        {
+            Require(habitId, clock);
+            if (depth < 1) throw new ArgumentOutOfRangeException(nameof(depth));
+            if (clock.Zone == null) throw new ArgumentException("clock has no zone");
+            if (day.Index >= today.Index || day.Index < today.Index - depth) return TendResult.Refused("outside-window");
             if (clock.Now >= today.EndsAt(clock.Zone, boundary)) return TendResult.Refused("after-boundary");
             var nowDay = GardenDay.From(clock.Now, boundary);
             if (day.Index > nowDay.Index) return TendResult.Refused("future");

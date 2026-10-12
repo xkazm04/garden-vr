@@ -1,0 +1,16 @@
+{
+  "name": "gardenvr-coach-relay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Holds the Claude API key for the Garden VR coach; forwards only the prompts core builds (upgrade plan C9).",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.133.0"
+  }
+}
