@@ -47,6 +47,8 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 - Verify before you claim: run the tests, capture the screenshot, read the log. A claim you did not run is "not run".
 - **Commit atomically** on your own branch (`agent/<app>`), one commit per finished sub-step, with a clear message.
   Never push. Never rewrite history. Never commit `Library/`, `Temp/`, `Logs/`, builds or `.env`.
+- Commit the REPORT, results XML, captures and small summaries; leave raw Unity/build `.log` files on disk, untracked
+  (quote the lines that matter in the REPORT).
 - Finish by writing `orchestration/runs/<app>/<task-id>/REPORT.md`: what changed, commands run with their real
   output (trimmed), evidence paths (screenshots, side-by-sides, videos), what failed, what you would do next.
 
