@@ -419,7 +419,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             return Path.Combine(root, "orchestration", "runs", "sundial", "T-SUN-010");
         }
 
-        static Color32[] Shot(Camera cam, string path)
+        internal static Color32[] Shot(Camera cam, string path)
         {
             Texture2D warm = FrameGrab.RenderToTexture(cam, 320, 180, 1);
             UnityEngine.Object.Destroy(warm);
@@ -445,7 +445,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             }
         }
 
-        static Camera PoseDial()
+        internal static Camera PoseDial()
         {
             MonoBehaviour[] behaviours = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include);
             for (int i = 0; i < behaviours.Length; i++)
@@ -479,7 +479,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             return cam;
         }
 
-        static void AttachPlate(Camera cam)
+        internal static void AttachPlate(Camera cam)
         {
             string path = Path.Combine(Application.dataPath, "Art", "Plates", "plate-dial.png");
             Assert.IsTrue(File.Exists(path), path);
@@ -516,7 +516,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             renderer.receiveShadows = false;
         }
 
-        static void DisableAsyncShaders()
+        internal static void DisableAsyncShaders()
         {
             Type shaderUtil = Type.GetType("UnityEditor.ShaderUtil, UnityEditor");
             if (shaderUtil == null) return;

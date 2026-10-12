@@ -203,7 +203,8 @@ namespace GardenVR.Sundial
         void RefreshOffer()
         {
             if (_offer == null) return;
-            bool show = !Blocked() && Phase != FocusPhase.Running && Phase != FocusPhase.Paused;
+            bool show = !Blocked() && Phase != FocusPhase.Running && Phase != FocusPhase.Paused
+                && (_sundial == null || _sundial.View == null || _sundial.View.ProfileLabel.Length == 0);
             if (_offer.activeSelf != show) _offer.SetActive(show);
         }
 

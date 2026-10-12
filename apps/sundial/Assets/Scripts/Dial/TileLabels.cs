@@ -18,6 +18,9 @@ namespace GardenVR.Sundial
         public const string Before = "Before";
         public const string Neutral = "Quiet";
 
+        public const string NotPlanned = "not planned";
+        public const string Flexible = "Any day this week";
+
         static bool _loggedUnknown;
 
         public static string For(TileState state)
@@ -28,6 +31,8 @@ namespace GardenVR.Sundial
                 case TileState.Late: return Late;
                 case TileState.Missed: return Missed;
                 case TileState.Today: return Today;
+                case TileState.NotPlanned: return NotPlanned;
+                case TileState.Flexible: return Flexible;
                 case TileState.Before: return Before;
                 default: return Unknown((int)state);
             }
