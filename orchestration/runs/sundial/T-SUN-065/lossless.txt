@@ -1,0 +1,4 @@
+orchestration/runs/sundial/T-SUN-065/DialG1-catch-up-late.png  2758864 -> 2295491  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 35adb5b7ed3a)  written
+orchestration/runs/sundial/T-SUN-065/DialG1-catch-up-nine-habits.png  2588827 -> 2129081  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 d48200e2288f)  written
+orchestration/runs/sundial/T-SUN-065/DialG1-catch-up.png  2564013 -> 2103262  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 5bbf2c0f5ad3)  written
+total 7911704 -> 6527834, saved 1383870 bytes; proof failures 0; applied

@@ -648,7 +648,7 @@ namespace GardenVR.Sundial
 
         /// <summary>
         /// Yesterday can be logged once, before today's boundary. The flag on the plant does not
-        /// see the clock, so the boundary is checked here, the same instant <see cref="SundialRules.Backfill"/> uses.
+        /// see the clock, so the saved boundary is checked here and supplied to <see cref="CatchUp.Log"/>.
         /// </summary>
         public bool BackfillOffered(HabitDef habit)
         {
@@ -657,15 +657,36 @@ namespace GardenVR.Sundial
             if (plant == null || !plant.CanBackfillYesterday) return false;
             GardenDay today = Today();
             TimeZoneInfo zone = _clock.Zone ?? TimeZoneInfo.Utc;
-            return _clock.Now < today.EndsAt(zone, GardenDay.DefaultBoundary);
+            return _clock.Now < today.EndsAt(zone, Boundary);
         }
 
         /// <summary>Logs yesterday late, once, with the clock's real timestamp. A refusal writes nothing.</summary>
         public TendResult BackfillYesterday(HabitDef habit)
         {
             if (habit == null) throw new ArgumentNullException(nameof(habit));
+            return LogCatchUp(new CatchUpItem { Habit = habit, Day = new GardenDay(Today().Index - 1) });
+        }
+
+        public List<CatchUpItem> PendingCatchUp()
+        {
+            return CatchUp.Pending(_ledger, _save.Habits, _save.LastVisitDay, Today(), _save.Settings.CatchUpDepth);
+        }
+
+        /// <summary>Both the launch card and yesterday's question write through the same core rule.</summary>
+        public TendResult LogCatchUp(CatchUpItem item)
+        {
+            if (item == null || item.Habit == null) throw new ArgumentNullException(nameof(item));
             if (Scrubbing) return TendResult.Refused("reading");
-            TendResult result = SundialRules.Backfill(habit, _ledger, Today(), _clock);
+            if (_readOnly || Outcome == LoadOutcome.Failed) return TendResult.Refused("read-only");
+            // Re-query core so a stale row cannot log a retired habit or an already satisfied weekly schedule.
+            // Yesterday's question is independent of the last launch, but uses the same eligibility rules.
+            if (!_ledger.IsKept(item.Habit.Id, item.Day.Index))
+            {
+                var eligible = CatchUp.Pending(_ledger, _save.Habits, item.Day.Index - 1, Today(), _save.Settings.CatchUpDepth);
+                if (!eligible.Exists(x => x.Habit.Id == item.Habit.Id && x.Day.Index == item.Day.Index))
+                    return TendResult.Refused("not-offered");
+            }
+            TendResult result = CatchUp.Log(_ledger, item, Today(), _save.Settings.CatchUpDepth, _clock, Boundary);
             if (result != null && result.Ok) Persist();
             Recompute();
             return result;

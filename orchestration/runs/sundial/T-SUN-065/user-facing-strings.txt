@@ -1,0 +1,10 @@
+What happened since?
+Pinch what happened. Leave the rest.
+All noted
+Previous
+Next
+Done
+
+Dynamic row: {date: ddd d MMM}   {existing habit display name}
+Example: Thu 1 Oct   Drink water
+Dates use invariant English weekday and month names. Habit names use existing WeekPageInk.PlantLine.

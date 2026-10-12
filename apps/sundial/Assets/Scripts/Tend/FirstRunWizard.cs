@@ -223,6 +223,7 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (GetComponent<SundialController>()?.CatchUpCard?.BlocksInput == true) return;
             if (_service != null && _service.Outcome == LoadOutcome.Failed)
             {
                 if (intent.Kind == HandIntentKind.Pinch && intent.TargetId == RestoreId)

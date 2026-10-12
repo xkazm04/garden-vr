@@ -121,6 +121,7 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (GetComponent<SundialController>()?.CatchUpCard?.BlocksInput == true) return;
             if (intent.Kind == HandIntentKind.Release)
             {
                 _gesture = false;

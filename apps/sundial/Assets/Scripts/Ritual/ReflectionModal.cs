@@ -13,10 +13,11 @@ namespace GardenVR.Sundial
         {
             Restore();
             var c = GetComponent<SundialController>();
-            if (c == null || (!(GetComponent<ReflectionController>()?.Open ?? false) && !(c.Settings?.Open ?? false))) return;
+            bool catchUp = c?.CatchUpCard?.Open == true;
+            if (c == null || (!catchUp && !(GetComponent<ReflectionController>()?.Open ?? false) && !(c.Settings?.Open ?? false))) return;
             foreach (var target in GetComponentsInChildren<GardenVR.Input.IntentTarget>(true))
             {
-                if (!(target.Id.StartsWith("plant.") || target.Id == "gnomon")) continue;
+                if (catchUp ? target.Id.StartsWith("catchup.") : !(target.Id.StartsWith("plant.") || target.Id == "gnomon")) continue;
                 var col = target.GetComponent<Collider>();
                 if (col != null && !_colliders.ContainsKey(col)) { _colliders.Add(col, col.enabled); col.enabled = false; }
             }
@@ -24,6 +25,7 @@ namespace GardenVR.Sundial
             {
                 string n = t.name;
                 if (!(n.EndsWith("Prompt") || n == "VoiceCaption" || n == "DuskSparkle" || n.StartsWith("more.") ||
+                    (catchUp && (n.StartsWith("tile.") && n.EndsWith(".ask") || n.StartsWith("tab.") || n.StartsWith("reflection."))) ||
                     (c.Settings.Open && n.StartsWith("zone.dot.")) ||
                     n.StartsWith("symbol.") || n.StartsWith("mark."))) continue;
                 foreach (var r in t.GetComponentsInChildren<Renderer>(true))

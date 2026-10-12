@@ -1,0 +1,3 @@
+6 static strings checked against CoachGuards MedicalStems, CountPhrases and GuiltStems: 0 matches.
+Em dash: 0 matches.
+Dynamic date and existing habit display name are documented separately.

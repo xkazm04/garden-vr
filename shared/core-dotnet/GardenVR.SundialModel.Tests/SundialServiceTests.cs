@@ -100,10 +100,9 @@ public sealed class SundialServiceTests : IDisposable
     }
 
     [Fact]
-    public void Backfill_closes_at_the_default_boundary_instant()
+    public void Backfill_uses_the_saved_boundary_like_the_launch_card()
     {
-        // :545-553 BackfillOffered compares against EndsAt with GardenDay.DefaultBoundary (03:00), not the saved boundary.
-        // With a 06:00 saved boundary, 03:00 to 06:00 is still the previous garden day, and the offer is already closed.
+        // Both catch-up paths now use the saved garden-day boundary through CatchUp.Log.
         SundialService svc = Open();
         HabitDef water = Plant(svc, "morning", "water");
         svc.Save.Settings.BoundaryMin = 6 * 60;
@@ -114,6 +113,8 @@ public sealed class SundialServiceTests : IDisposable
         Assert.True(svc.BackfillOffered(water));
 
         svc.JumpTo(new DateTimeOffset(2026, 10, 9, 3, 0, 0, TimeSpan.Zero));
+        Assert.True(svc.BackfillOffered(water));
+        Assert.True(svc.BackfillYesterday(water).Ok);
         Assert.False(svc.BackfillOffered(water));
     }
 

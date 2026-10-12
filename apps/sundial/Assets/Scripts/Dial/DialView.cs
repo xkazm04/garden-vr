@@ -1668,7 +1668,7 @@ namespace GardenVR.Sundial
                 if (on && tex != null) SetMain(renderer, tex, tint);
             }
             Collider box = plant.GetComponent<Collider>();
-            if (box != null) box.enabled = on && !(GetComponent<ReflectionController>()?.Open ?? false)
+            if (box != null) box.enabled = on && !(GetComponent<CatchUpCard>()?.Open ?? false) && !(GetComponent<ReflectionController>()?.Open ?? false)
                 && !(GetComponent<SettingsTabs>()?.Open ?? false);
             PlacePlant(slot, plant);
             if (row != 0 || bloomRenderers == null || arc >= bloomRenderers.Length || bloomRenderers[arc] == null) return;
@@ -2677,7 +2677,7 @@ namespace GardenVR.Sundial
                 if (!TryTileName(child.name, out index)) continue;
                 var box = child.GetComponent<Collider>();
                 if (box == null) continue;
-                box.enabled = index >= 0 && index < tiles.Length && tiles[index] >= 0;
+                box.enabled = index >= 0 && index < tiles.Length && tiles[index] >= 0 && !(GetComponent<CatchUpCard>()?.Open ?? false);
             }
         }
 
