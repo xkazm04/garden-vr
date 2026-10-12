@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.2709479">
+  <test-suite type="TestSuite" id="1132" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.270948" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1124" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.261750" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="29532" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1125" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.260461" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1126" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.256665" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1127" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.255722" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1128" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="98" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.254941" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1003" name="BreakControllerTests" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.252799" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1004" name="Break_FullRun_TendsBreakHabitOnce" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_FullRun_TendsBreakHabitOnce" methodname="Break_FullRun_TendsBreakHabitOnce" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" seed="971615352" result="Failed" start-time="2026-10-12 16:18:57Z" end-time="2026-10-12 16:19:03Z" duration="5.241463" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  restart gesture=Pinch:dial.rim.09, settings=False, dismissed=False
+  Expected: True
+  But was:  False
+]]></message>
+                    <stack-trace><![CDATA[at GardenVR.Sundial.Tests.PlayMode.BreakControllerTests+<Break_FullRun_TendsBreakHabitOnce>d__20.MoveNext () [0x003dd] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\BreakControllerTests.cs:164
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.545
+[Sundial] cue amb.kitchen
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

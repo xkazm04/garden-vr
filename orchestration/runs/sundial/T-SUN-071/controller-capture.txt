@@ -1,0 +1,3 @@
+Main runtime BreakController, real KbmIntentMapper via raw-sample test provider.
+DialG1 1824x1024; eye ray target at 3m; countdown 13s after 7s.
+Two completed breaks; one Body break habit; one persisted Ritual tend; morning untouched.

@@ -9,7 +9,7 @@ namespace GardenVR.Input
     /// It fills a <see cref="RawKbm"/> each frame and forwards it to <see cref="KbmIntentMapper"/>.
     /// </summary>
     [DefaultExecutionOrder(-100)]
-    public sealed class KeyboardMouseIntentSource : MonoBehaviour, IHandIntentSource
+    public sealed class KeyboardMouseIntentSource : MonoBehaviour, IHandIntentSource, IPalmStateSource
     {
         readonly KbmIntentMapper _mapper = new KbmIntentMapper();
 
@@ -18,6 +18,9 @@ namespace GardenVR.Input
 
         public event Action<HandIntent> Intent;
         public event Action SystemPause;
+        public event Action PalmReleased;
+        public bool PalmHeld => _mapper.PalmHeld;
+        bool _focused = true;
         public event Action Recentred;
         /// <summary>L pressed. Apps that offer two looks listen; the rest ignore it.</summary>
         public event Action LookToggled;
@@ -50,6 +53,7 @@ namespace GardenVR.Input
         void OnEnable()
         {
             _mapper.Intent += HandleIntent;
+            _mapper.PalmReleased += HandlePalmReleased;
             _mapper.SystemPause += HandlePause;
             _mapper.Recentred += HandleRecentred;
             _mapper.LookToggled += HandleLookToggled;
@@ -58,6 +62,8 @@ namespace GardenVR.Input
 
         void OnDisable()
         {
+            _mapper.CancelPalmHold();
+            _mapper.PalmReleased -= HandlePalmReleased;
             _mapper.Intent -= HandleIntent;
             _mapper.SystemPause -= HandlePause;
             _mapper.Recentred -= HandleRecentred;
@@ -70,14 +76,18 @@ namespace GardenVR.Input
             _mapper.HoldMode = _holdMode;
             _mapper.DevCommandsEnabled = Debug.isDebugBuild || Application.isEditor;
             RawKbm raw;
-            if (!TryRead(out raw)) return;
+            if (!_focused || !TryRead(out raw)) { _mapper.CancelPalmHold(); return; }
             _mapper.Tick(raw, () => BuildRay(raw.MousePosition));
         }
 
         void OnApplicationFocus(bool hasFocus)
         {
+            _focused = hasFocus;
             if (!hasFocus)
+            {
+                _mapper.CancelPalmHold();
                 SystemPause?.Invoke();
+            }
         }
 
         Ray BuildRay(Vector2 screen)
@@ -128,6 +138,7 @@ namespace GardenVR.Input
         }
 
         void HandleIntent(HandIntent intent) { Intent?.Invoke(intent); }
+        void HandlePalmReleased() { PalmReleased?.Invoke(); }
         void HandlePause() { SystemPause?.Invoke(); }
         void HandleRecentred() { Recentred?.Invoke(); }
         void HandleLookToggled() { LookToggled?.Invoke(); }

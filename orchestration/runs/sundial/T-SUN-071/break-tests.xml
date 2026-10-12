@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.4040914">
+  <test-suite type="TestSuite" id="1132" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.404091" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1124" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.395292" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="57548" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1125" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.394158" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1126" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.393351" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1127" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.392601" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1128" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.391842" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1003" name="BreakControllerTests" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:36Z" duration="21.387078" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1004" name="Break_FullRun_TendsBreakHabitOnce" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_FullRun_TendsBreakHabitOnce" methodname="Break_FullRun_TendsBreakHabitOnce" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" seed="1356850124" result="Passed" start-time="2026-10-12 16:34:14Z" end-time="2026-10-12 16:34:24Z" duration="10.161635" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=9.074
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1005" name="Break_LookAway_PausesEyeRest" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_LookAway_PausesEyeRest" methodname="Break_LookAway_PausesEyeRest" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" seed="1929836813" result="Passed" start-time="2026-10-12 16:34:24Z" end-time="2026-10-12 16:34:28Z" duration="3.178887" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=18.379
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1007" name="Break_PauseResume_AtEachPart" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_PauseResume_AtEachPart" methodname="Break_PauseResume_AtEachPart" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" seed="1851946991" result="Passed" start-time="2026-10-12 16:34:28Z" end-time="2026-10-12 16:34:33Z" duration="5.360337" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=21.555
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1006" name="Break_PoseLetGo_KeepsDonePoses" fullname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_PoseLetGo_KeepsDonePoses" methodname="Break_PoseLetGo_KeepsDonePoses" classname="GardenVR.Sundial.Tests.PlayMode.BreakControllerTests" runstate="Runnable" seed="386488055" result="Passed" start-time="2026-10-12 16:34:33Z" end-time="2026-10-12 16:34:36Z" duration="2.673642" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=26.916
+[Sundial] cue amb.kitchen
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

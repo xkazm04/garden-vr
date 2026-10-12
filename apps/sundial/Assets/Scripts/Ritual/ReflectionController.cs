@@ -59,13 +59,14 @@ namespace GardenVR.Sundial
             if (_call != null) _call.ContinueWith(t => { var ignored = t.Exception; }, TaskContinuationOptions.OnlyOnFaulted);
             _call = null; _requestSave = null; _key = null;
         }
-        bool Hidden => _controller.Dismissed || Service.Scrubbing ||
+        bool Hidden => GetComponent<BreakController>()?.Active == true || _controller.Dismissed || Service.Scrubbing ||
             (_controller.Wizard != null && _controller.Wizard.Running) ||
             (GetComponent<WeekDialController>()?.Turn > .02f) == true ||
             (_controller.Settings != null && _controller.Settings.Open);
 
         void OnIntent(HandIntent intent)
         {
+            if (GetComponent<BreakController>()?.Active == true) return;
             if (GetComponent<SundialController>()?.CatchUpCard?.BlocksInput == true) return;
             if (intent.Kind == HandIntentKind.PalmOpen) { Pause(); return; }
             if (Hidden || intent.Kind != HandIntentKind.Pinch) return;

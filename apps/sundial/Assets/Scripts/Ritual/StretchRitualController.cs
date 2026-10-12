@@ -169,6 +169,13 @@ namespace GardenVR.Sundial
                 SetSource(_sundial.Source);
             if (!_built) BuildMarks();
 
+            var activeBreak = GetComponent<BreakController>();
+            if (activeBreak != null && activeBreak.Active)
+            {
+                if (_offer != null) _offer.SetActive(false);
+                RefreshMarks(activeBreak.Session.Stretch, activeBreak.Session.Part == BreakPart.Stretch);
+                return;
+            }
             float dt = ClampStep(Time.deltaTime);
             _appTime += dt;
             _reduced = _sundial != null && _sundial.Service != null && _sundial.Service.ReducedMotion;
@@ -186,6 +193,7 @@ namespace GardenVR.Sundial
 
         void OnIntent(HandIntent intent)
         {
+            if (GetComponent<BreakController>()?.Active == true) return;
             if (GetComponent<SundialController>()?.CatchUpCard?.BlocksInput == true) return;
             if (_sundial != null && _sundial.Service != null && _sundial.Service.Scrubbing
                 && intent.Kind != HandIntentKind.Look)
@@ -376,22 +384,25 @@ namespace GardenVR.Sundial
             if (_offer.activeSelf != show) _offer.SetActive(show);
         }
 
-        void RefreshMarks()
+        void RefreshMarks(StretchSession breakStretch = null, bool breakMarks = false)
         {
-            bool show = CueDue() || (_session != null && _session.Reaches > 0 && _pose > 0.02f) || (_answered && _hold < HoldSeconds + SettleSeconds);
-            int key = (_session == null ? 0 : _session.Reaches) * 8 + (_lookMark + 1);
+            var display = breakStretch ?? _session;
+            bool show = CueDue() || (display != null && display.Reaches > 0 && _pose > 0.02f) || (_answered && _hold < HoldSeconds + SettleSeconds);
+            if (breakStretch != null) show = breakMarks;
+            int key = (display == null ? 0 : display.Reaches) * 8 + (_lookMark + 1);
+            if (breakStretch != null) key += 1000;
             bool repaint = key != _paintKey;
             for (int i = 0; i < _marks.Length; i++)
             {
                 if (_marks[i] == null) continue;
                 if (_marks[i].activeSelf != show) _marks[i].SetActive(show);
                 if (!show) continue;
-                bool next = _session == null || _session.Phase != StretchPhase.Complete
-                    ? (_session == null ? i == 0 : i == _session.NextMark)
+                bool next = display == null || display.Phase != StretchPhase.Complete
+                    ? (display == null ? i == 0 : i == display.NextMark)
                     : false;
                 float emphasis = next && _lookMark == i ? 1.18f : next ? 1.06f : 1f;
                 _marks[i].transform.localScale = new Vector3(emphasis, 1f, emphasis);
-                if (repaint) PaintMark(i, _session != null && i < _session.Reaches, next);
+                if (repaint) PaintMark(i, display != null && i < display.Reaches, next);
             }
             if (repaint) _paintKey = key;
         }
@@ -399,7 +410,7 @@ namespace GardenVR.Sundial
         void OnBeginCamera(ScriptableRenderContext context, Camera cam)
         {
             if (!Application.isPlaying || cam == null || cam.cameraType != CameraType.Game) return;
-            if (_reduced || _pose <= 0.001f) return;
+            if (GetComponent<BreakController>()?.Active == true || _reduced || _pose <= 0.001f) return;
             Transform plant = PlantTransform();
             Transform mark = ActiveMark();
             if (plant == null || mark == null) return;

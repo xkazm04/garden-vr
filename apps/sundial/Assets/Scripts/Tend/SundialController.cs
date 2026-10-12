@@ -190,6 +190,7 @@ namespace GardenVR.Sundial
         /// </summary>
         public void NotifyFocusLost()
         {
+            GetComponent<BreakController>()?.Pause();
             CommitEarly();
             DuskRitualController dusk = GetComponent<DuskRitualController>();
             if (dusk != null) dusk.NotifyFocusLost();
@@ -244,6 +245,8 @@ namespace GardenVR.Sundial
                 gameObject.AddComponent<ReflectionController>();
             if (GetComponent<ReflectionModal>() == null)
                 gameObject.AddComponent<ReflectionModal>();
+            if (GetComponent<BreakController>() == null)
+                gameObject.AddComponent<BreakController>();
             EnsureAudio();
             PushAudio();
             if (GetComponent<FirstRunWizard>() == null)
@@ -394,6 +397,7 @@ namespace GardenVR.Sundial
         void OnIntent(HandIntent intent)
         {
             if (CatchUpCard != null && CatchUpCard.BlocksInput) { CatchUpCard.Handle(intent); return; }
+            if (GetComponent<BreakController>()?.HandleIntent(intent) == true) return;
             if (_service != null && _service.Scrubbing)
             {
                 if (intent.Kind == HandIntentKind.Look) OnLook(intent.TargetId);

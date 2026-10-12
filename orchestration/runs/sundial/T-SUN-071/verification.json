@@ -1,0 +1,143 @@
+{
+  "editmode": {
+    "result": "Passed",
+    "total": "102",
+    "passed": "102",
+    "failed": "0",
+    "skipped": "0",
+    "break_checks": [
+      "GardenVR.Sundial.Tests.EditMode.BreakInputContractTests.PcPalm_ContractDistinguishesReleaseFromContinuedHold",
+      "GardenVR.Sundial.Tests.EditMode.BreakInputContractTests.PcPalm_PressHoldRelease_OneCommit(False)",
+      "GardenVR.Sundial.Tests.EditMode.BreakInputContractTests.PcPalm_PressHoldRelease_OneCommit(True)",
+      "GardenVR.Sundial.Tests.EditMode.BreakInputContractTests.PcPalm_ProviderFocusLossAndDisable_ReleaseBeforePause",
+      "GardenVR.Sundial.Tests.EditMode.BreakInputContractTests.PcPalm_TrackingLoss_RequiresFreshGesture"
+    ]
+  },
+  "playmode": {
+    "result": "Passed",
+    "total": "98",
+    "passed": "98",
+    "failed": "0",
+    "skipped": "0",
+    "break_checks": [
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_FullRun_TendsBreakHabitOnce",
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_LookAway_PausesEyeRest",
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_PauseResume_AtEachPart",
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_PoseLetGo_KeepsDonePoses"
+    ]
+  },
+  "break-tests": {
+    "result": "Passed",
+    "total": "4",
+    "passed": "4",
+    "failed": "0",
+    "skipped": "0",
+    "break_checks": [
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_FullRun_TendsBreakHabitOnce",
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_LookAway_PausesEyeRest",
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_PauseResume_AtEachPart",
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_PoseLetGo_KeepsDonePoses"
+    ]
+  },
+  "gate-capture": {
+    "result": "Passed",
+    "total": "1",
+    "passed": "1",
+    "failed": "0",
+    "skipped": "0",
+    "break_checks": [
+      "GardenVR.Sundial.Tests.PlayMode.BreakControllerTests.Break_FullRun_TendsBreakHabitOnce"
+    ]
+  },
+  "dotnet": [
+    {
+      "file": "dotnet_net9.0_20261012171825.trx",
+      "total": "14",
+      "passed": "14",
+      "failed": "0"
+    },
+    {
+      "file": "dotnet_net9.0_20261012171826.trx",
+      "total": "60",
+      "passed": "60",
+      "failed": "0"
+    },
+    {
+      "file": "dotnet_net9.0_20261012171827.trx",
+      "total": "11",
+      "passed": "11",
+      "failed": "0"
+    },
+    {
+      "file": "dotnet_net9.0_20261012171828.trx",
+      "total": "462",
+      "passed": "462",
+      "failed": "0"
+    }
+  ],
+  "dotnet_total": 547,
+  "build": "Unity exit 0; Build Succeeded apps/sundial/Build/sundial/Sundial.exe",
+  "terrarium_compile": "Unity exit 0; Csc GardenVR.Input.dll and GardenVR.Terrarium.dll; Exiting batchmode successfully now!",
+  "captures": [
+    {
+      "file": "break-eye-side-by-side.png",
+      "size": [
+        3648,
+        1084
+      ],
+      "mode": "RGB",
+      "pixel_sha256": "fe38169512434a1f6e8341250ed78976a895e0b83466667338f6031cbcc161bf",
+      "file_sha256": "b22d98819e62aad00bea78df8ffd5945c60a56e48c4552450fefd267a58af31a"
+    },
+    {
+      "file": "break-palm-side-by-side.png",
+      "size": [
+        3648,
+        1084
+      ],
+      "mode": "RGB",
+      "pixel_sha256": "7acc2a36cf32ec38a943b8f0c8294ddb470adef990f3ed7cc9b940dc5667cae7",
+      "file_sha256": "05fcf73b82eb16c2ab2d7afd49d43a2cf637db807edb8ce343a30ff955760f7e"
+    },
+    {
+      "file": "break-pinch-side-by-side.png",
+      "size": [
+        3648,
+        1084
+      ],
+      "mode": "RGB",
+      "pixel_sha256": "443d9c930c88c2f3147a325a1f9f4dc0b026f24c1af648b71c6077ac996de0c3",
+      "file_sha256": "e0a63a31f8455cb3997d8a4d98cf216d4d469d039bbb93b5fd0aef7780dda742"
+    },
+    {
+      "file": "DialG1-break-eye.png",
+      "size": [
+        1824,
+        1024
+      ],
+      "mode": "RGBA",
+      "pixel_sha256": "7871ebd74322275d32228966c494f8589faba0fb72cc5f6a572fe2d89ddb1a22",
+      "file_sha256": "d4eb08d6b4ac9f4231fa933ac4e10697d5bd0c43a7658ac4726c92d8debbb07b"
+    },
+    {
+      "file": "DialG1-break-palm.png",
+      "size": [
+        1824,
+        1024
+      ],
+      "mode": "RGBA",
+      "pixel_sha256": "32a9023ae9c8adb8c0830b89980f60b34fdacb9fb75b33974c56051e415b1ae7",
+      "file_sha256": "842134ba190bef1fd8277c3b9d28b00705bf7fb1f28edb5b7ec0dd88ec074ab9"
+    },
+    {
+      "file": "DialG1-break-pinch.png",
+      "size": [
+        1824,
+        1024
+      ],
+      "mode": "RGBA",
+      "pixel_sha256": "5146b01c5604f97e49a7c00d07f011bb433a9a86740283d5cd464b8f1f15e41e",
+      "file_sha256": "c2531654ffcdce63d4473134797605f742dd078508dbd61a00075e15c372f58a"
+    }
+  ]
+}

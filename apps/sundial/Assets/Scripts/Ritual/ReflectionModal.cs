@@ -14,10 +14,13 @@ namespace GardenVR.Sundial
             Restore();
             var c = GetComponent<SundialController>();
             bool catchUp = c?.CatchUpCard?.Open == true;
-            if (c == null || (!catchUp && !(GetComponent<ReflectionController>()?.Open ?? false) && !(c.Settings?.Open ?? false))) return;
+            var rest = GetComponent<BreakController>();
+            bool breaking = rest?.Active == true;
+            if (c == null || (!breaking && !catchUp && !(GetComponent<ReflectionController>()?.Open ?? false) && !(c.Settings?.Open ?? false))) return;
             foreach (var target in GetComponentsInChildren<GardenVR.Input.IntentTarget>(true))
             {
-                if (catchUp ? target.Id.StartsWith("catchup.") : !(target.Id.StartsWith("plant.") || target.Id == "gnomon")) continue;
+                if (breaking ? (target.Id.StartsWith("break.") || (target.Id.StartsWith("mark.") && rest.Session.Part == GardenVR.Core.BreakPart.Stretch)) :
+                    catchUp ? target.Id.StartsWith("catchup.") : !(target.Id.StartsWith("plant.") || target.Id == "gnomon")) continue;
                 var col = target.GetComponent<Collider>();
                 if (col != null && !_colliders.ContainsKey(col)) { _colliders.Add(col, col.enabled); col.enabled = false; }
             }
@@ -27,7 +30,7 @@ namespace GardenVR.Sundial
                 if (!(n.EndsWith("Prompt") || n == "VoiceCaption" || n == "DuskSparkle" || n.StartsWith("more.") ||
                     (catchUp && (n.StartsWith("tile.") && n.EndsWith(".ask") || n.StartsWith("tab.") || n.StartsWith("reflection."))) ||
                     (c.Settings.Open && n.StartsWith("zone.dot.")) ||
-                    n.StartsWith("symbol.") || n.StartsWith("mark."))) continue;
+                    n.StartsWith("symbol.") || (n.StartsWith("mark.") && (!breaking || rest.Session.Part != GardenVR.Core.BreakPart.Stretch)))) continue;
                 foreach (var r in t.GetComponentsInChildren<Renderer>(true))
                     if (!_renderers.ContainsKey(r)) { _renderers.Add(r, r.forceRenderingOff); r.forceRenderingOff = true; }
                 foreach (var col in t.GetComponentsInChildren<Collider>(true))

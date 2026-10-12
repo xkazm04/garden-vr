@@ -104,3 +104,10 @@ One JSON object per line. Blank lines are skipped. A line the parser cannot read
 `PinchHold` keeps `PinchStrength` ramped up for `dur` (smoothstep in over 0.12 s, then held at 1) and raises `PinchHold` each tick. `Release` raises `Release` and ramps strength back down. `Look` with `dur` raises `Look` for that long. `Lost` is not a `HandIntent`: `IsTracked` is false until `dur` elapses, then tracking returns. `Finished` becomes true once every event has started and every `dur` has elapsed.
 
 `Poke` is accepted on the same line shape. Lines should be in time order; the player sorts them by `t` and keeps file order for equal times.
+# Optional continuous palm state
+
+`IPalmStateSource` adds `PalmHeld` and `PalmReleased` without changing `IHandIntentSource`, intent kinds or bindings.
+Keyboard/mouse reports the hold from the initial press; the existing single `PalmOpen` still commits at 0.6 seconds.
+Release, focus loss, provider disable or unavailable input ends the hold. After loss, release and begin a fresh gesture.
+Future tracked-hand providers can implement the same optional interface and end the hold on tracking loss.
+Consumers that need sustained poses check for this capability; a one-shot `PalmOpen` must never imply an indefinite hold.

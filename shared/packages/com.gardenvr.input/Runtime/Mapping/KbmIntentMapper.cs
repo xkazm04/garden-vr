@@ -8,7 +8,7 @@ namespace GardenVR.Input
     /// Pure keyboard/mouse mapping. Feed it a <see cref="RawKbm"/> and a look-ray function each frame.
     /// It does not read devices. Rules match docs/plans/terrarium.md section 4.
     /// </summary>
-    public sealed class KbmIntentMapper
+    public sealed class KbmIntentMapper : IPalmStateSource
     {
         public const float HoldCommitSeconds = 0.30f;
         public const float PalmCommitSeconds = 0.6f;
@@ -26,6 +26,7 @@ namespace GardenVR.Input
         float _holdTime;
         bool _palmDown;
         bool _palmFired;
+        bool _palmRequiresRelease;
         float _palmTime;
         string _dwellCandidate;
         float _dwellTime;
@@ -50,6 +51,8 @@ namespace GardenVR.Input
         public float PinchStrength { get; private set; }
         public bool IsPinching { get; private set; }
         public bool IsTracked => true;
+        public bool PalmHeld => _palmDown;
+        public event Action PalmReleased;
         public Ray LookRay { get; private set; }
         public string LookTargetId { get; private set; }
         public Quaternion HeadLocalRotation { get; private set; } = Quaternion.identity;
@@ -127,11 +130,11 @@ namespace GardenVR.Input
             bool down = raw.P || raw.MiddleMouse;
             if (!down)
             {
-                _palmDown = false;
-                _palmTime = 0f;
-                _palmFired = false;
+                EndPalm();
+                _palmRequiresRelease = false;
                 return;
             }
+            if (_palmRequiresRelease) return;
             if (!_palmDown)
             {
                 _palmDown = true;
@@ -142,6 +145,22 @@ namespace GardenVR.Input
             if (_palmFired || _palmTime < PalmCommitSeconds) return;
             _palmFired = true;
             Emit(HandIntentKind.PalmOpen, ray, 1f, _palmTime, null);
+        }
+
+        /// <summary>Focus/tracking loss ends the hold. Require a fresh gesture after recovery.</summary>
+        public void CancelPalmHold()
+        {
+            _palmRequiresRelease = true;
+            EndPalm();
+        }
+
+        void EndPalm()
+        {
+            bool held = _palmDown;
+            _palmDown = false;
+            _palmTime = 0f;
+            _palmFired = false;
+            if (held) PalmReleased?.Invoke();
         }
 
         void UpdateHold(in RawKbm raw, float dt, Ray ray)
