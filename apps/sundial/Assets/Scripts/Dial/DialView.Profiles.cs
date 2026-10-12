@@ -45,6 +45,7 @@ namespace GardenVR.Sundial
         {
             _profileZones[slot] = HabitProfiles.ZoneOf(habit);
             string line = WeekPageInk.PlantLine(habit) + "\n" + ZoneName(_profileZones[slot]);
+            line += "\nkept " + MonthlyRecord.KeptDays(ledger, habit.Id, GardenMonth.Of(today)) + " days this month";
             HabitSchedule schedule = HabitProfiles.ScheduleOf(habit);
             if (schedule.Kind == ScheduleKind.TimesPerWeek)
                 line += "\n" + SundialRules.KeptThisWeek(habit, ledger, today) + " of " + schedule.TimesPerWeek + " this week";
@@ -107,7 +108,7 @@ namespace GardenVR.Sundial
                 label.transform.SetParent(transform, false);
                 _profileLabel = label.AddComponent<TextMesh>();
                 _profileLabel.richText = false;
-                InkLetter.AttachNote(label.transform, new Vector2(0.115f, 0.046f));
+                InkLetter.AttachNote(label.transform, new Vector2(0.135f, 0.061f));
             }
             string text = _profileLines[_profileLook];
             if (_profileDay >= 0) text += "\n" + _profileTiles[_profileLook * 7 + _profileDay];

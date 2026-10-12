@@ -13,7 +13,6 @@ namespace GardenVR.Sundial
         public const string ConsentLine = "The coach can use an online model to suggest habits. Your words are not kept.";
         readonly string[] _answers = new string[4];
         readonly List<GameObject> _interviewChrome = new List<GameObject>();
-        readonly List<GameObject> _zoneTabs = new List<GameObject>();
         Task<OnboardingResult> _onboardingCall;
         CancellationTokenSource _interviewCancel;
         string _chromeKey;
@@ -25,7 +24,7 @@ namespace GardenVR.Sundial
 
         public int QuestionIndex => Onboarding.QuestionIndex(_step);
         public string Question => QuestionIndex >= 0 ? CoachPrompts.OnboardingQuestions[QuestionIndex] : null;
-        public bool ZoneTabsVisible => _zoneTabs.Count == 4 && _zoneTabs[0].activeSelf;
+        public bool ZoneTabsVisible => _view != null && _view.MonthlyTab(LifeZone.Body) != null && _view.MonthlyTab(LifeZone.Body).gameObject.activeInHierarchy;
 
         void InterviewIntent(HandIntent intent)
         {
@@ -261,21 +260,11 @@ namespace GardenVR.Sundial
         }
         void EnsureZoneTabs()
         {
-            if (_service.Save.Habits.Count == 0) return;
-            if (_zoneTabs.Count != 0) return;
-            foreach (LifeZone zone in Enum.GetValues(typeof(LifeZone)))
-            {
-                var go = MakeText("zone.tab." + zone, zone.ToString(), 48, .0014f, null);
-                InkLetter.AttachNote(go.transform, new Vector2(.035f, .022f));
-                go.GetComponent<TextMesh>().color = DialView.ZoneColor(zone);
-                go.transform.localPosition = new Vector3((_zoneTabs.Count - 1.5f) * .050f, _view.faceY + .035f, -_view.faceRadius * 1.13f);
-                _zoneTabs.Add(go);
-            }
+            _view.SetMonthlyRecord(_service.Ledger, _service.Save.Habits, _service.Today());
         }
         void PlaceInterview(Camera cam)
         {
             foreach (var go in _interviewChrome) if (go != null) FaceAway(cam, go.transform, go.transform.position);
-            foreach (var go in _zoneTabs) if (go != null) FaceAway(cam, go.transform, go.transform.position);
             if (_dropPacket != null) FaceAway(cam, _dropPacket.transform, _dropPacket.transform.position);
         }
 

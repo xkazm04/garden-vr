@@ -73,6 +73,8 @@ namespace GardenVR.Sundial
         SundialSave _save;
         Ledger _ledger;
         DeferredTend _deferred;
+        QuantityTally _quantity;
+        QuantityStep _quantityUndo;
         GratitudeRecord _gratitude;
         FocusBlock _focus;
         string _stateJson = "";
@@ -98,6 +100,8 @@ namespace GardenVR.Sundial
         public SundialSave Save { get { return _save; } }
         public string PendingHabitId { get; private set; }
         public bool IsPending { get { return _deferred != null && _deferred.IsPending; } }
+        public QuantityTally Counts { get { return _quantity; } }
+        public bool QuantityUndoAvailable { get { return _quantityUndo != null && _quantity.CanUndo(_quantityUndo.Count.Id, _clock); } }
         public bool FastClock { get { return _clock.TimeScale > 1.5f; } }
         public bool ReducedMotion { get { return _save != null && _save.Settings != null && _save.Settings.ReducedMotion; } }
         public bool Boil { get { return _save == null || _save.Settings == null || _save.Settings.Boil; } }
@@ -196,6 +200,8 @@ namespace GardenVR.Sundial
             if (_save.Gratitude == null) _save.Gratitude = new List<GratitudeMark>();
             _gratitude = new GratitudeRecord(_save.Gratitude);
             _deferred = new DeferredTend(_ledger);
+            _quantity = new QuantityTally(_save.Counts);
+            _quantityUndo = null;
             _focus = FocusBlock.Restore(_save.Focus);
             if (_focus.Phase == FocusPhase.Running)
                 _focus.Observe(_clock.Now);
@@ -534,8 +540,33 @@ namespace GardenVR.Sundial
             if (Scrubbing) return;
             if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             if (_deferred.IsPending) throw new InvalidOperationException("a tend is already waiting to commit");
+            _quantityUndo = null;
             _deferred.Arm(habitId, Today(), TendSource.Pinch, _clock);
             PendingHabitId = habitId;
+        }
+
+        /// <summary>Counts and saves one unit through core. The most recent pinch owns the undo mark.</summary>
+        public QuantityStep CountQuantity(string habitId)
+        {
+            if (Scrubbing || _readOnly || Outcome == LoadOutcome.Failed || IsPending) return null;
+            var habit = _save.Habits.Find(h => h.Id == habitId && !h.ArchivedDay.HasValue);
+            if (habit == null) return null;
+            var step = Quantity.Add(_quantity, _ledger, habit, Today(), _clock, Boundary);
+            if (step == null) return null;
+            _quantityUndo = step;
+            Persist();
+            Recompute();
+            return step;
+        }
+
+        public bool UndoQuantity()
+        {
+            if (Scrubbing || _readOnly || Outcome == LoadOutcome.Failed) return false;
+            if (!Quantity.Undo(_quantity, _ledger, _quantityUndo, _clock)) return false;
+            _quantityUndo = null;
+            Persist();
+            Recompute();
+            return true;
         }
 
         public bool Cancel()
@@ -574,6 +605,7 @@ namespace GardenVR.Sundial
         {
             if (Scrubbing) return null;
             TendEvent committed = _deferred.Flush();
+            _quantityUndo = null;
             PendingHabitId = null;
             if (committed != null) Persist();
             Recompute();
@@ -757,6 +789,7 @@ namespace GardenVR.Sundial
                 if (events[i] != null) tends.Add(events[i]);
             }
             _save.Tends = tends;
+            if (_quantity != null) _save.Counts = new List<CountEvent>(_quantity.Events);
             _store.Save(_save);
         }
 

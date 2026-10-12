@@ -235,7 +235,12 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual("Water", _c.Service.HabitForArc("morning").Name);
             yield return Pinch("interview.done");
             yield return Pinch("plant.morning"); // Current midday arc is empty; the planted arc must work.
+            var water = _c.Service.HabitForArc("morning");
+            Assert.AreEqual(8, water.Target);
+            Assert.AreEqual(-1f, _c.Wizard.FirstTendAt, "a partial quantity is not yet a kept day");
+            for (int count = 1; count < water.Target.Value; count++) yield return Pinch("tile.morning.6");
             Assert.Greater(_c.Wizard.FirstTendAt, 0);
+            Assert.IsTrue(_c.Ledger.IsKept(water.Id, _c.Service.Today().Index));
             _c.Service.Flush();
             Assert.AreEqual(FirstRunSteps.Done, _c.Wizard.Step);
             yield return SundialPlay.Unload(); yield return Boot(true);
