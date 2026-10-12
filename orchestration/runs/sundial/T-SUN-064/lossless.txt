@@ -1,0 +1,7 @@
+orchestration/runs/sundial/T-SUN-064/DialG1-journal-delete.png  2000126 -> 1561192  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 49bed6fe2d80)  written
+orchestration/runs/sundial/T-SUN-064/DialG1-journal-seven-lines.png  2133663 -> 1660353  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 c684c149a659)  written
+orchestration/runs/sundial/T-SUN-064/DialG1-journal-week.png  2102272 -> 1604338  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 f591ce9a67b9)  written
+orchestration/runs/sundial/T-SUN-064/DialG1-reflection-listening.png  2741364 -> 2282565  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 53d541b78b7b)  written
+orchestration/runs/sundial/T-SUN-064/DialG1-reflection-stones.png  2733736 -> 2274841  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 29c0d995a82a)  written
+orchestration/runs/sundial/T-SUN-064/DialG1-reflection.png  2749859 -> 2291895  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 4243065866f0)  written
+total 14461020 -> 11675184, saved 2785836 bytes; proof failures 0; applied

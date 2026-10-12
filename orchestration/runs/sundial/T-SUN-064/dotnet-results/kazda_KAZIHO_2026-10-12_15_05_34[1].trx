@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="cf1fc8d2-82b2-4903-a88e-2c737d27b7a1" name="kazda@KAZIHO 2026-10-12 15:05:34" runUser="KAZIHO\kazda" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-12T15:05:34.3501731+02:00" queuing="2026-10-12T15:05:34.3501732+02:00" start="2026-10-12T15:05:33.4608987+02:00" finish="2026-10-12T15:05:34.3748993+02:00" />
+  <TestSettings name="default" id="e1d0227d-8e5a-4fdb-a686-8fcb1ab21bfb">
+    <Deployment runDeploymentRoot="kazda_KAZIHO_2026-10-12_15_05_34" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="3d918187-7410-402a-bf90-54590c2c5bfa" testId="b8ab4d09-0165-8a1b-9882-d377620da1f8" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.The_evaluation_scores_cases_from_raw_replies_without_fallback" computerName="KAZIHO" duration="00:00:00.0260962" startTime="2026-10-12T15:05:34.3097843+02:00" endTime="2026-10-12T15:05:34.3097846+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3d918187-7410-402a-bf90-54590c2c5bfa" />
+    <UnitTestResult executionId="e8842996-aae3-4a4b-b0c7-b854305a7888" testId="08919283-c479-eb54-1bd1-3a986bd72b6c" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.The_user_text_goes_in_on_stdin" computerName="KAZIHO" duration="00:00:00.0003377" startTime="2026-10-12T15:05:34.3101641+02:00" endTime="2026-10-12T15:05:34.3101642+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e8842996-aae3-4a4b-b0c7-b854305a7888" />
+    <UnitTestResult executionId="8009ba4e-af74-4ebd-9083-e86468c1a0a8" testId="70898e72-e842-f8bc-8990-adec2ffb018a" testName="GardenVR.CoachCli.Tests.AllowedSystemsTests.The_relay_file_matches_core" computerName="KAZIHO" duration="00:00:00.0196006" startTime="2026-10-12T15:05:34.2908684+02:00" endTime="2026-10-12T15:05:34.2908685+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8009ba4e-af74-4ebd-9083-e86468c1a0a8" />
+    <UnitTestResult executionId="43f7dfba-ad88-4236-b61f-47e25c4bea23" testId="debfe687-df6b-36f5-800e-4991d5b3096c" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;&quot;, failure: Error)" computerName="KAZIHO" duration="00:00:00.0000049" startTime="2026-10-12T15:05:34.2808596+02:00" endTime="2026-10-12T15:05:34.2808596+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="43f7dfba-ad88-4236-b61f-47e25c4bea23" />
+    <UnitTestResult executionId="e0894d23-bd10-41c3-9006-c90ffbcec7f8" testId="b41880e4-ead1-0d98-afe9-9f3ba5493a4a" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;not json&quot;, failure: Error)" computerName="KAZIHO" duration="00:00:00.0018583" startTime="2026-10-12T15:05:34.2806652+02:00" endTime="2026-10-12T15:05:34.2806653+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e0894d23-bd10-41c3-9006-c90ffbcec7f8" />
+    <UnitTestResult executionId="5de26007-3199-4528-a2c2-555e475b032e" testId="e1cf15c3-98db-78dc-5c25-2b77edc5160a" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;{\&quot;is_error\&quot;:true,\&quot;result\&quot;:\&quot;rate limited\&quot;}&quot;, failure: Error)" computerName="KAZIHO" duration="00:00:00.0000862" startTime="2026-10-12T15:05:34.2808390+02:00" endTime="2026-10-12T15:05:34.2808391+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5de26007-3199-4528-a2c2-555e475b032e" />
+    <UnitTestResult executionId="aa30925d-3d95-4ea9-80fe-09a97255c93a" testId="07b8e6e6-0363-1e03-9448-2123e96380bf" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;{\&quot;stop_reason\&quot;:\&quot;refusal\&quot;,\&quot;result\&quot;:\&quot;\&quot;,\&quot;is_&quot;···, failure: Refused)" computerName="KAZIHO" duration="00:00:00.0060836" startTime="2026-10-12T15:05:34.2790325+02:00" endTime="2026-10-12T15:05:34.2790445+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aa30925d-3d95-4ea9-80fe-09a97255c93a" />
+    <UnitTestResult executionId="17ff9831-eb7e-4c88-b90d-39f85057a502" testId="493b2108-8c54-7d6d-3f74-240d88e3706a" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.A_cancelled_or_missing_process_is_a_failure_not_a_throw" computerName="KAZIHO" duration="00:00:00.0028580" startTime="2026-10-12T15:05:34.2836249+02:00" endTime="2026-10-12T15:05:34.2836250+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="17ff9831-eb7e-4c88-b90d-39f85057a502" />
+    <UnitTestResult executionId="d1249dc8-d340-48c9-acea-6a77d91a3de6" testId="19141479-044c-67a0-fb80-660d176c2f5d" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.A_result_is_read_with_its_model" computerName="KAZIHO" duration="00:00:00.0002787" startTime="2026-10-12T15:05:34.3292656+02:00" endTime="2026-10-12T15:05:34.3292657+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d1249dc8-d340-48c9-acea-6a77d91a3de6" />
+    <UnitTestResult executionId="e68f8cdd-0144-432a-80e0-5e3950941551" testId="c45c581f-f6d6-f7c9-7fbd-fbe8ff24383c" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;{\&quot;is_error\&quot;:false}&quot;, failure: Error)" computerName="KAZIHO" duration="00:00:00.0000111" startTime="2026-10-12T15:05:34.2808757+02:00" endTime="2026-10-12T15:05:34.2808757+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e68f8cdd-0144-432a-80e0-5e3950941551" />
+    <UnitTestResult executionId="eca53858-555f-4212-a220-ba3ed53eb53d" testId="5068085a-bad4-cce9-ed58-9e153ee69909" testName="GardenVR.CoachCli.Tests.CliCoachClientTests.The_request_runs_print_mode_with_its_own_system_prompt_and_no_tools" computerName="KAZIHO" duration="00:00:00.0025577" startTime="2026-10-12T15:05:34.3293864+02:00" endTime="2026-10-12T15:05:34.3293864+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eca53858-555f-4212-a220-ba3ed53eb53d" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.The_user_text_goes_in_on_stdin" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="08919283-c479-eb54-1bd1-3a986bd72b6c">
+      <Execution id="e8842996-aae3-4a4b-b0c7-b854305a7888" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="The_user_text_goes_in_on_stdin" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;{\&quot;stop_reason\&quot;:\&quot;refusal\&quot;,\&quot;result\&quot;:\&quot;\&quot;,\&quot;is_&quot;···, failure: Refused)" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="07b8e6e6-0363-1e03-9448-2123e96380bf">
+      <Execution id="aa30925d-3d95-4ea9-80fe-09a97255c93a" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="Refusals_errors_and_garbage_are_failures" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;not json&quot;, failure: Error)" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="b41880e4-ead1-0d98-afe9-9f3ba5493a4a">
+      <Execution id="e0894d23-bd10-41c3-9006-c90ffbcec7f8" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="Refusals_errors_and_garbage_are_failures" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.A_result_is_read_with_its_model" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="19141479-044c-67a0-fb80-660d176c2f5d">
+      <Execution id="d1249dc8-d340-48c9-acea-6a77d91a3de6" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="A_result_is_read_with_its_model" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;&quot;, failure: Error)" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="debfe687-df6b-36f5-800e-4991d5b3096c">
+      <Execution id="43f7dfba-ad88-4236-b61f-47e25c4bea23" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="Refusals_errors_and_garbage_are_failures" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.The_evaluation_scores_cases_from_raw_replies_without_fallback" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="b8ab4d09-0165-8a1b-9882-d377620da1f8">
+      <Execution id="3d918187-7410-402a-bf90-54590c2c5bfa" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="The_evaluation_scores_cases_from_raw_replies_without_fallback" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.AllowedSystemsTests.The_relay_file_matches_core" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="70898e72-e842-f8bc-8990-adec2ffb018a">
+      <Execution id="8009ba4e-af74-4ebd-9083-e86468c1a0a8" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.AllowedSystemsTests" name="The_relay_file_matches_core" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;{\&quot;is_error\&quot;:true,\&quot;result\&quot;:\&quot;rate limited\&quot;}&quot;, failure: Error)" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="e1cf15c3-98db-78dc-5c25-2b77edc5160a">
+      <Execution id="5de26007-3199-4528-a2c2-555e475b032e" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="Refusals_errors_and_garbage_are_failures" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.A_cancelled_or_missing_process_is_a_failure_not_a_throw" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="493b2108-8c54-7d6d-3f74-240d88e3706a">
+      <Execution id="17ff9831-eb7e-4c88-b90d-39f85057a502" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="A_cancelled_or_missing_process_is_a_failure_not_a_throw" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.The_request_runs_print_mode_with_its_own_system_prompt_and_no_tools" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="5068085a-bad4-cce9-ed58-9e153ee69909">
+      <Execution id="eca53858-555f-4212-a220-ba3ed53eb53d" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="The_request_runs_print_mode_with_its_own_system_prompt_and_no_tools" />
+    </UnitTest>
+    <UnitTest name="GardenVR.CoachCli.Tests.CliCoachClientTests.Refusals_errors_and_garbage_are_failures(stdout: &quot;{\&quot;is_error\&quot;:false}&quot;, failure: Error)" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.coachcli.tests\bin\debug\net9.0\gardenvr.coachcli.tests.dll" id="c45c581f-f6d6-f7c9-7fbd-fbe8ff24383c">
+      <Execution id="e68f8cdd-0144-432a-80e0-5e3950941551" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.CoachCli.Tests\bin\Debug\net9.0\GardenVR.CoachCli.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.CoachCli.Tests.CliCoachClientTests" name="Refusals_errors_and_garbage_are_failures" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="b8ab4d09-0165-8a1b-9882-d377620da1f8" executionId="3d918187-7410-402a-bf90-54590c2c5bfa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="08919283-c479-eb54-1bd1-3a986bd72b6c" executionId="e8842996-aae3-4a4b-b0c7-b854305a7888" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="70898e72-e842-f8bc-8990-adec2ffb018a" executionId="8009ba4e-af74-4ebd-9083-e86468c1a0a8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="debfe687-df6b-36f5-800e-4991d5b3096c" executionId="43f7dfba-ad88-4236-b61f-47e25c4bea23" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b41880e4-ead1-0d98-afe9-9f3ba5493a4a" executionId="e0894d23-bd10-41c3-9006-c90ffbcec7f8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e1cf15c3-98db-78dc-5c25-2b77edc5160a" executionId="5de26007-3199-4528-a2c2-555e475b032e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="07b8e6e6-0363-1e03-9448-2123e96380bf" executionId="aa30925d-3d95-4ea9-80fe-09a97255c93a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="493b2108-8c54-7d6d-3f74-240d88e3706a" executionId="17ff9831-eb7e-4c88-b90d-39f85057a502" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="19141479-044c-67a0-fb80-660d176c2f5d" executionId="d1249dc8-d340-48c9-acea-6a77d91a3de6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c45c581f-f6d6-f7c9-7fbd-fbe8ff24383c" executionId="e68f8cdd-0144-432a-80e0-5e3950941551" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5068085a-bad4-cce9-ed58-9e153ee69909" executionId="eca53858-555f-4212-a220-ba3ed53eb53d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="11" executed="11" passed="11" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.11)&#xD;
+[xUnit.net 00:00:00.04]   Discovering: GardenVR.CoachCli.Tests&#xD;
+[xUnit.net 00:00:00.07]   Discovered:  GardenVR.CoachCli.Tests&#xD;
+[xUnit.net 00:00:00.07]   Starting:    GardenVR.CoachCli.Tests&#xD;
+[xUnit.net 00:00:00.16]   Finished:    GardenVR.CoachCli.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
