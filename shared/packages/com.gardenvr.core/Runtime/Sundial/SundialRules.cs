@@ -10,6 +10,9 @@ namespace GardenVR.Core
     {
         public const int MinutesPerDay = 24 * 60;
 
+        /// <summary>A deliberate check-in is allowed on any unkept current-day tile, including an off day.</summary>
+        public static bool CanTendToday(TileState tile) => tile == TileState.Today || tile == TileState.Flexible || tile == TileState.NotPlanned;
+
         /// <summary>06:00. The gnomon reads 0 here, and the morning arc opens.</summary>
         public const int MorningStartMin = 6 * 60;
 
