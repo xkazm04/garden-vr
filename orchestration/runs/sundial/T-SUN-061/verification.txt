@@ -1,0 +1,28 @@
+editmode result=Passed total=97 passed=97 failed=0 skipped=0
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_CancelledBeforeStart_NeverRuns result=Passed duration=0.005278
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults("{\"stop_reason\":\"refusal\"}",0,Refused) result=Passed duration=0.001380
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults("{\"is_error\":true,\"result\":\"bad\"}",0,Error) result=Passed duration=0.000158
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults("{\"result\":\"bad\"}",1,Error) result=Passed duration=0.000057
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults("not json",0,Error) result=Passed duration=0.000162
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_MapsFailedResults("{}",0,Error) result=Passed duration=0.000057
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_PassesUserTextOnlyOnStdin_UsesIsolatedFlags result=Passed duration=0.002144
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_ProcessAdapter_DrainsOutputAndKillsOnCancellation result=Passed duration=2.405269
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments("","\"\"") result=Passed duration=0.000306
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments("a b","\"a b\"") result=Passed duration=0.000086
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments("a\"b","\"a\\\"b\"") result=Passed duration=0.000059
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.Cli_QuotesWindowsArguments("a\\","\"a\\\\\"") result=Passed duration=0.000048
+GardenVR.Sundial.Tests.EditMode.CoachClientTests.RelayConfig_DefaultAndLocalBudgets_NoProductionEndpoint result=Passed duration=0.009166
+playmode result=Passed total=68 passed=68 failed=0 skipped=0
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_OffByDefault_ScriptedPathCompletes result=Passed duration=0.008241
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_OptInAndInstallKeyAreReadOnEveryCall result=Passed duration=0.001820
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_Refused_ShowsScriptedLine result=Passed duration=0.001333
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_RelayDown_FallsBackWithinBudget result=Passed duration=0.207606
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget result=Passed duration=0.521581
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_PostsCoreEnvelopeAndKey_DecodesReply result=Passed duration=0.078103
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_PreCancelled_DoesNotConnect result=Passed duration=0.001170
+GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_RefusalAndMalformedReply_MapToFailure result=Passed duration=0.244935
+editmode compiler/shader/build errors=0
+playmode compiler/shader/build errors=0
+build compiler/shader/build errors=0
+UnityProjectProcesses=0
+Sundial.exe bytes=667136 SHA256=91a36fa14dd3ccf390b99720805eda0553da1ca1108381b49c98c938f69dc256
