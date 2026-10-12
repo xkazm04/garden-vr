@@ -23,6 +23,7 @@ namespace GardenVR.Sundial
         bool _gnomonWasEnabled;
 
         public int QuestionIndex => Onboarding.QuestionIndex(_step);
+        public bool InterviewFromModel { get; private set; }
         public string Question => QuestionIndex >= 0 ? CoachPrompts.OnboardingQuestions[QuestionIndex] : null;
         public bool ZoneTabsVisible => _view != null && _view.MonthlyTab(LifeZone.Body) != null && _view.MonthlyTab(LifeZone.Body).gameObject.activeInHierarchy;
 
@@ -105,6 +106,7 @@ namespace GardenVR.Sundial
             var speech = GetComponent<SpeechController>();
             if (_step == Onboarding.Waiting && _onboardingCall == null)
             {
+                InterviewFromModel = false;
                 _interviewCancel = new CancellationTokenSource();
                 _onboardingCall = _controller.Coach.OnboardAsync((string[])_answers.Clone(), _interviewCancel.Token);
                 Array.Clear(_answers, 0, _answers.Length);
@@ -117,6 +119,7 @@ namespace GardenVR.Sundial
                 speech.CompleteCoachCall();
                 if (_step == Onboarding.Waiting)
                 {
+                    InterviewFromModel = call.Status == TaskStatus.RanToCompletion && call.Result.FromModel;
                     var proposals = call.Status == TaskStatus.RanToCompletion ? call.Result.Proposals : ScriptedCoach.Onboarding(null);
                     _service.Save.Interview = new OnboardingDraft { Proposals = proposals };
                     Enter(Onboarding.Review);

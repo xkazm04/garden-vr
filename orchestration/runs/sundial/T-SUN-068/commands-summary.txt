@@ -1,0 +1,7 @@
+npm ci: added 7 packages, audited 8 packages; found 0 vulnerabilities; exit 0
+npm test: tests 14, pass 14, fail 0, cancelled 0, skipped 0; exit 0
+dotnet test: Core 462, SundialModel 60, TerrariumModel 14, CoachCli 11; total 547 passed, 0 failed; exit 0
+Unity development build: exit 0; Build Succeeded apps/sundial/Build/sundial-development/Sundial.exe
+PNG ingest: onboarding 2287067 -> 1864032, reflection 2196958 -> 1766865; proof failures 0; exit 0
+SHA256 apps/sundial/Build/sundial-development/Sundial.exe 437691663c5fb21231524f4886e60a10b1841f13e42fbbc93ee39fbd827930cd
+SHA256 apps/sundial/Build/sundial-development/Sundial_Data/Managed/GardenVR.Sundial.dll 62b5cc7aef26f1aa3a2ebef24c3848e547ca00289adc7423fcc49d2fa547dd97

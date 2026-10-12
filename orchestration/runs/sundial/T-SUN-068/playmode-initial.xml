@@ -1,0 +1,2017 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="94" result="Failed(Child)" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.1529031">
+  <test-suite type="TestSuite" id="1127" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.152903" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1119" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.143767" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="40492" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1120" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.142358" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1121" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.141140" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1122" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.137330" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1123" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="94" result="Failed" site="Child" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:26:29Z" duration="155.136115" total="94" passed="93" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1001" name="ArcTimesPlayTests" fullname="GardenVR.Sundial.Tests.PlayMode.ArcTimesPlayTests" classname="GardenVR.Sundial.Tests.PlayMode.ArcTimesPlayTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:23:56Z" duration="1.281134" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1002" name="ArcTimes_DragEdge_Persists" fullname="GardenVR.Sundial.Tests.PlayMode.ArcTimesPlayTests.ArcTimes_DragEdge_Persists" methodname="ArcTimes_DragEdge_Persists" classname="GardenVR.Sundial.Tests.PlayMode.ArcTimesPlayTests" runstate="Runnable" seed="1527380891" result="Passed" start-time="2026-10-12 14:23:54Z" end-time="2026-10-12 14:23:56Z" duration="1.267752" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.401
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1003" name="BreakViewTests" fullname="GardenVR.Sundial.Tests.PlayMode.BreakViewTests" classname="GardenVR.Sundial.Tests.PlayMode.BreakViewTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:23:56Z" end-time="2026-10-12 14:23:57Z" duration="1.374208" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1004" name="BreakView_PresentsPosesAndEyeRestAtDialG1" fullname="GardenVR.Sundial.Tests.PlayMode.BreakViewTests.BreakView_PresentsPosesAndEyeRestAtDialG1" methodname="BreakView_PresentsPosesAndEyeRestAtDialG1" classname="GardenVR.Sundial.Tests.PlayMode.BreakViewTests" runstate="Runnable" seed="783322493" result="Passed" start-time="2026-10-12 14:23:56Z" end-time="2026-10-12 14:23:57Z" duration="1.370864" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.271
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1005" name="CatchUpTests" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-12 14:23:57Z" end-time="2026-10-12 14:23:59Z" duration="2.063294" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1012" name="CatchUp_DayRollover_RefreshesStaleRows" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_DayRollover_RefreshesStaleRows" methodname="CatchUp_DayRollover_RefreshesStaleRows" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="1267143929" result="Passed" start-time="2026-10-12 14:23:57Z" end-time="2026-10-12 14:23:57Z" duration="0.155358" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.542
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1009" name="CatchUp_DepthOne_QuestionAlsoLogsLate" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_DepthOne_QuestionAlsoLogsLate" methodname="CatchUp_DepthOne_QuestionAlsoLogsLate" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="52012406" result="Passed" start-time="2026-10-12 14:23:57Z" end-time="2026-10-12 14:23:57Z" duration="0.153430" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.686
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.hatch
+]]></output>
+                </test-case>
+                <test-case id="1008" name="CatchUp_FirstVisit_ShowsNothing" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_FirstVisit_ShowsNothing" methodname="CatchUp_FirstVisit_ShowsNothing" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="1882160942" result="Passed" start-time="2026-10-12 14:23:57Z" end-time="2026-10-12 14:23:57Z" duration="0.096891" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.844
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1007" name="CatchUp_Logged_IsHatchedLate" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_Logged_IsHatchedLate" methodname="CatchUp_Logged_IsHatchedLate" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="1491711673" result="Passed" start-time="2026-10-12 14:23:57Z" end-time="2026-10-12 14:23:58Z" duration="0.456286" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.946
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1010" name="CatchUp_Pages_Pause_AndBackgroundIntents" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_Pages_Pause_AndBackgroundIntents" methodname="CatchUp_Pages_Pause_AndBackgroundIntents" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="1256090769" result="Passed" start-time="2026-10-12 14:23:58Z" end-time="2026-10-12 14:23:58Z" duration="0.537242" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=6.405
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1006" name="CatchUp_TwoDaysAway_OffersTwoDays" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_TwoDaysAway_OffersTwoDays" methodname="CatchUp_TwoDaysAway_OffersTwoDays" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="2088794070" result="Passed" start-time="2026-10-12 14:23:58Z" end-time="2026-10-12 14:23:59Z" duration="0.530537" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=6.945
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=7.372
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1011" name="CatchUp_WeeklyTarget_RefreshesRemainingRows" fullname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests.CatchUp_WeeklyTarget_RefreshesRemainingRows" methodname="CatchUp_WeeklyTarget_RefreshesRemainingRows" classname="GardenVR.Sundial.Tests.PlayMode.CatchUpTests" runstate="Runnable" seed="365467190" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:23:59Z" duration="0.125056" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=7.461
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1013" name="CoachTests" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:24:00Z" duration="0.963905" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1014" name="Coach_OffByDefault_ScriptedPathCompletes" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_OffByDefault_ScriptedPathCompletes" methodname="Coach_OffByDefault_ScriptedPathCompletes" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1434520099" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:23:59Z" duration="0.007611" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1017" name="Coach_OptInAndInstallKeyAreReadOnEveryCall" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_OptInAndInstallKeyAreReadOnEveryCall" methodname="Coach_OptInAndInstallKeyAreReadOnEveryCall" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1051762268" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:23:59Z" duration="0.001917" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1016" name="Coach_Refused_ShowsScriptedLine" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_Refused_ShowsScriptedLine" methodname="Coach_Refused_ShowsScriptedLine" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1858589168" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:23:59Z" duration="0.001383" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1015" name="Coach_RelayDown_FallsBackWithinBudget" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Coach_RelayDown_FallsBackWithinBudget" methodname="Coach_RelayDown_FallsBackWithinBudget" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="987869838" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:23:59Z" duration="0.204976" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1019" name="Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget" methodname="Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1944765031" result="Passed" start-time="2026-10-12 14:23:59Z" end-time="2026-10-12 14:24:00Z" duration="0.524657" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1018" name="Relay_PostsCoreEnvelopeAndKey_DecodesReply" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_PostsCoreEnvelopeAndKey_DecodesReply" methodname="Relay_PostsCoreEnvelopeAndKey_DecodesReply" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1066101196" result="Passed" start-time="2026-10-12 14:24:00Z" end-time="2026-10-12 14:24:00Z" duration="0.076320" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1021" name="Relay_PreCancelled_DoesNotConnect" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_PreCancelled_DoesNotConnect" methodname="Relay_PreCancelled_DoesNotConnect" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1970164302" result="Passed" start-time="2026-10-12 14:24:00Z" end-time="2026-10-12 14:24:00Z" duration="0.001247" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1020" name="Relay_RefusalAndMalformedReply_MapToFailure" fullname="GardenVR.Sundial.Tests.PlayMode.CoachTests.Relay_RefusalAndMalformedReply_MapToFailure" methodname="Relay_RefusalAndMalformedReply_MapToFailure" classname="GardenVR.Sundial.Tests.PlayMode.CoachTests" runstate="Runnable" seed="1178618529" result="Passed" start-time="2026-10-12 14:24:00Z" end-time="2026-10-12 14:24:00Z" duration="0.142705" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1022" name="DuskRitualTests" fullname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" classname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 14:24:00Z" end-time="2026-10-12 14:24:08Z" duration="7.921548" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1024" name="Dusk_FidgetsIgnored" fullname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests.Dusk_FidgetsIgnored" methodname="Dusk_FidgetsIgnored" classname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" runstate="Runnable" seed="484079662" result="Passed" start-time="2026-10-12 14:24:00Z" end-time="2026-10-12 14:24:01Z" duration="1.009938" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=8.558
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1025" name="Dusk_PauseAndResume_NoLoss" fullname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests.Dusk_PauseAndResume_NoLoss" methodname="Dusk_PauseAndResume_NoLoss" classname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" runstate="Runnable" seed="494136500" result="Passed" start-time="2026-10-12 14:24:01Z" end-time="2026-10-12 14:24:05Z" duration="4.050636" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=9.567
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1026" name="Dusk_ReducedMotion_SameTiming" fullname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests.Dusk_ReducedMotion_SameTiming" methodname="Dusk_ReducedMotion_SameTiming" classname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" runstate="Runnable" seed="520252289" result="Passed" start-time="2026-10-12 14:24:05Z" end-time="2026-10-12 14:24:07Z" duration="2.105432" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=13.620
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=14.356
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1023" name="Dusk_ThreeBreaths" fullname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests.Dusk_ThreeBreaths" methodname="Dusk_ThreeBreaths" classname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" runstate="Runnable" seed="1902719136" result="Passed" start-time="2026-10-12 14:24:07Z" end-time="2026-10-12 14:24:08Z" duration="0.751749" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=15.721
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1027" name="Record_DuskSequence" fullname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests.Record_DuskSequence" methodname="Record_DuskSequence" classname="GardenVR.Sundial.Tests.PlayMode.DuskRitualTests" runstate="Runnable" seed="1790243503" result="Passed" start-time="2026-10-12 14:24:08Z" end-time="2026-10-12 14:24:08Z" duration="0.002462" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="600000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1028" name="FirstRunTests" fullname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests" classname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 14:24:08Z" end-time="2026-10-12 14:24:17Z" duration="9.490724" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1029" name="FirstRun_FirstTendAndDusk" fullname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests.FirstRun_FirstTendAndDusk" methodname="FirstRun_FirstTendAndDusk" classname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests" runstate="Runnable" seed="2120299814" result="Passed" start-time="2026-10-12 14:24:08Z" end-time="2026-10-12 14:24:17Z" duration="8.629264" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="900000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=16.519
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=2.98
+[FirstRun] step=fr.interview.q1 t=3.18
+[FirstRun] step=fr.interview.q2 t=3.38
+[FirstRun] step=fr.interview.q3 t=3.58
+[FirstRun] step=fr.interview.waiting t=3.78
+[FirstRun] step=fr.interview.review t=3.80
+[FirstRun] step=fr.caption t=4.18
+[FirstRun] step=fr.packets t=5.08
+[FirstRun] step=fr.pick.morning t=5.88
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=20.98
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=26.98
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=32.98
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.88
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=51.98
+[FirstRun] step=fr.breaths.offer t=51.98
+[FirstRun] step=fr.breaths t=95.01
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.59
+[FirstRun] step=fr.done t=144.59
+]]></output>
+                </test-case>
+                <test-case id="1031" name="FirstRun_NotOnFailedLoad" fullname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests.FirstRun_NotOnFailedLoad" methodname="FirstRun_NotOnFailedLoad" classname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests" runstate="Runnable" seed="1669662749" result="Passed" start-time="2026-10-12 14:24:17Z" end-time="2026-10-12 14:24:17Z" duration="0.132267" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="120000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=25.135
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1032" name="FirstRun_ReducedMotion" fullname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests.FirstRun_ReducedMotion" methodname="FirstRun_ReducedMotion" classname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests" runstate="Runnable" seed="321690138" result="Passed" start-time="2026-10-12 14:24:17Z" end-time="2026-10-12 14:24:17Z" duration="0.119604" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="120000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=25.252
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1030" name="FirstRun_ResumeAfterQuit" fullname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests.FirstRun_ResumeAfterQuit" methodname="FirstRun_ResumeAfterQuit" classname="GardenVR.Sundial.Tests.PlayMode.FirstRunTests" runstate="Runnable" seed="1069652072" result="Passed" start-time="2026-10-12 14:24:17Z" end-time="2026-10-12 14:24:17Z" duration="0.608437" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.pick.morning t=0.00
+[Sundial] first-interactive t=25.368
+[Sundial] cue amb.kitchen
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=6.08
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=7.58
+[FirstRun] step=fr.pick.winddown t=0.00
+[Sundial] first-interactive t=25.879
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1033" name="FocusBlockTests" fullname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests" classname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 14:24:17Z" end-time="2026-10-12 14:24:18Z" duration="0.888359" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1035" name="FocusBlock_EndEarly_StillCounts" fullname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests.FocusBlock_EndEarly_StillCounts" methodname="FocusBlock_EndEarly_StillCounts" classname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests" runstate="Runnable" seed="486639718" result="Passed" start-time="2026-10-12 14:24:17Z" end-time="2026-10-12 14:24:18Z" duration="0.186964" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=25.977
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1036" name="FocusBlock_PauseAndReload_KeepsTheHour" fullname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests.FocusBlock_PauseAndReload_KeepsTheHour" methodname="FocusBlock_PauseAndReload_KeepsTheHour" classname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests" runstate="Runnable" seed="1470144985" result="Passed" start-time="2026-10-12 14:24:18Z" end-time="2026-10-12 14:24:18Z" duration="0.434090" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=26.156
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=26.274
+[Sundial] cue amb.kitchen
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=26.428
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+]]></output>
+                </test-case>
+                <test-case id="1034" name="FocusBlock_TwentyFiveMinutes_ByPlayback" fullname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests.FocusBlock_TwentyFiveMinutes_ByPlayback" methodname="FocusBlock_TwentyFiveMinutes_ByPlayback" classname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests" runstate="Runnable" seed="766013460" result="Passed" start-time="2026-10-12 14:24:18Z" end-time="2026-10-12 14:24:18Z" duration="0.262625" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=26.579
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1037" name="Record_FocusShadow" fullname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests.Record_FocusShadow" methodname="Record_FocusShadow" classname="GardenVR.Sundial.Tests.PlayMode.FocusBlockTests" runstate="Runnable" seed="487552668" result="Passed" start-time="2026-10-12 14:24:18Z" end-time="2026-10-12 14:24:18Z" duration="0.003312" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1038" name="GatePlaybackTests" fullname="GardenVR.Sundial.Tests.PlayMode.GatePlaybackTests" classname="GardenVR.Sundial.Tests.PlayMode.GatePlaybackTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 14:24:18Z" end-time="2026-10-12 14:25:58Z" duration="99.481936" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1039" name="CanonicalJourney_TenRuns" fullname="GardenVR.Sundial.Tests.PlayMode.GatePlaybackTests.CanonicalJourney_TenRuns" methodname="CanonicalJourney_TenRuns" classname="GardenVR.Sundial.Tests.PlayMode.GatePlaybackTests" runstate="Runnable" seed="1690572947" result="Passed" start-time="2026-10-12 14:24:18Z" end-time="2026-10-12 14:25:58Z" duration="99.251108" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="900000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=26.861
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=34.952
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=35.225
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=35.479
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=36.479
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=36.585
+[Sundial] cue amb.kitchen
+[playback] run=1 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=36.776
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=44.798
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=45.061
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=45.301
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=46.311
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=46.418
+[Sundial] cue amb.kitchen
+[playback] run=2 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=46.614
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=54.782
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=55.063
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=55.298
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=56.310
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=56.417
+[Sundial] cue amb.kitchen
+[playback] run=3 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=56.613
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=64.709
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=64.986
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=65.265
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=66.254
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=66.354
+[Sundial] cue amb.kitchen
+[playback] run=4 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=66.563
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=74.641
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=74.925
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=75.183
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=76.257
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=76.356
+[Sundial] cue amb.kitchen
+[playback] run=5 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=76.552
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=84.640
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=84.929
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=85.176
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=86.180
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=86.287
+[Sundial] cue amb.kitchen
+[playback] run=6 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=86.471
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=94.492
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=94.760
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=95.005
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=96.018
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=96.115
+[Sundial] cue amb.kitchen
+[playback] run=7 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=96.304
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=104.325
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=104.613
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=104.871
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=105.869
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=105.975
+[Sundial] cue amb.kitchen
+[playback] run=8 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=106.171
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=114.228
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=114.497
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=114.740
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=115.790
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=115.893
+[Sundial] cue amb.kitchen
+[playback] run=9 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=116.089
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=3.02
+[FirstRun] step=fr.interview.q1 t=3.22
+[FirstRun] step=fr.interview.q2 t=3.42
+[FirstRun] step=fr.interview.q3 t=3.62
+[FirstRun] step=fr.interview.waiting t=3.82
+[FirstRun] step=fr.interview.review t=3.83
+[FirstRun] step=fr.caption t=4.22
+[FirstRun] step=fr.packets t=5.12
+[FirstRun] step=fr.pick.morning t=5.92
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=21.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=27.02
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=33.02
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=33.92
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=52.02
+[FirstRun] step=fr.breaths.offer t=52.02
+[FirstRun] step=fr.breaths t=95.04
+[Sundial] cue dusk.chime
+[FirstRun] ritualDoneAt=144.63
+[FirstRun] step=fr.done t=144.63
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=124.178
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=124.463
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=124.711
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=125.809
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=125.911
+[Sundial] cue amb.kitchen
+[playback] run=10 sha256=4d993985b44e1ed46492b269bdf3dd4ed011f8ed0d7e028e130a8bd079f1881d
+]]></output>
+                </test-case>
+                <test-case id="1040" name="ReducedMotion_ShowsEndStates" fullname="GardenVR.Sundial.Tests.PlayMode.GatePlaybackTests.ReducedMotion_ShowsEndStates" methodname="ReducedMotion_ShowsEndStates" classname="GardenVR.Sundial.Tests.PlayMode.GatePlaybackTests" runstate="Runnable" seed="497085184" result="Passed" start-time="2026-10-12 14:25:58Z" end-time="2026-10-12 14:25:58Z" duration="0.229829" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=126.130
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=126.235
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1041" name="GratitudeRitualTests" fullname="GardenVR.Sundial.Tests.PlayMode.GratitudeRitualTests" classname="GardenVR.Sundial.Tests.PlayMode.GratitudeRitualTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 14:25:58Z" end-time="2026-10-12 14:25:58Z" duration="0.350878" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1042" name="Gratitude_InksSymbol_TendsMidday" fullname="GardenVR.Sundial.Tests.PlayMode.GratitudeRitualTests.Gratitude_InksSymbol_TendsMidday" methodname="Gratitude_InksSymbol_TendsMidday" classname="GardenVR.Sundial.Tests.PlayMode.GratitudeRitualTests" runstate="Runnable" seed="1497985569" result="Passed" start-time="2026-10-12 14:25:58Z" end-time="2026-10-12 14:25:58Z" duration="0.344493" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=126.339
+[Sundial] cue amb.kitchen
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=126.582
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1043" name="Record_GratitudeCaptures" fullname="GardenVR.Sundial.Tests.PlayMode.GratitudeRitualTests.Record_GratitudeCaptures" methodname="Record_GratitudeCaptures" classname="GardenVR.Sundial.Tests.PlayMode.GratitudeRitualTests" runstate="Runnable" seed="1071469143" result="Passed" start-time="2026-10-12 14:25:58Z" end-time="2026-10-12 14:25:58Z" duration="0.003247" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1044" name="HabitProfileTests" fullname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests" classname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 14:25:58Z" end-time="2026-10-12 14:26:00Z" duration="2.079125" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1048" name="NinePlants_ThreeArcsFull_AdmitRefusesTenth" fullname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests.NinePlants_ThreeArcsFull_AdmitRefusesTenth" methodname="NinePlants_ThreeArcsFull_AdmitRefusesTenth" classname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests" runstate="Runnable" seed="1880363151" result="Passed" start-time="2026-10-12 14:25:58Z" end-time="2026-10-12 14:26:00Z" duration="1.519070" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=127.101
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1047" name="PerWeek_NeverMarksADayMissed" fullname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests.PerWeek_NeverMarksADayMissed" methodname="PerWeek_NeverMarksADayMissed" classname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests" runstate="Runnable" seed="345096426" result="Passed" start-time="2026-10-12 14:26:00Z" end-time="2026-10-12 14:26:00Z" duration="0.197600" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=128.219
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1045" name="Profile_NameAndZoneShowOnLook" fullname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests.Profile_NameAndZoneShowOnLook" methodname="Profile_NameAndZoneShowOnLook" classname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests" runstate="Runnable" seed="1116798211" result="Passed" start-time="2026-10-12 14:26:00Z" end-time="2026-10-12 14:26:00Z" duration="0.202870" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=128.408
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1046" name="Weekdays_OffDayTileIsBlank" fullname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests.Weekdays_OffDayTileIsBlank" methodname="Weekdays_OffDayTileIsBlank" classname="GardenVR.Sundial.Tests.PlayMode.HabitProfileTests" runstate="Runnable" seed="2036532334" result="Passed" start-time="2026-10-12 14:26:00Z" end-time="2026-10-12 14:26:00Z" duration="0.157911" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=128.608
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1049" name="InterviewTests" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 14:26:00Z" end-time="2026-10-12 14:26:03Z" duration="3.214983" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1053" name="FirstRun_Interview_Resumes_AtSavedStep" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_Resumes_AtSavedStep" methodname="FirstRun_Interview_Resumes_AtSavedStep" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1365891790" result="Passed" start-time="2026-10-12 14:26:00Z" end-time="2026-10-12 14:26:01Z" duration="0.482787" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=128.800
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.03
+[FirstRun] step=fr.interview.q1 t=0.07
+[FirstRun] step=fr.interview.q2 t=0.10
+[FirstRun] step=fr.interview.q2 t=0.00
+[Sundial] first-interactive t=128.941
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q3 t=0.03
+[FirstRun] step=fr.interview.waiting t=0.07
+[FirstRun] step=fr.interview.review t=0.08
+[Sundial] cue seed.drop
+[FirstRun] step=fr.interview.review t=0.00
+[Sundial] first-interactive t=129.113
+[Sundial] cue amb.kitchen
+[Sundial] cue seed.drop
+[FirstRun] step=fr.interview.firsttend t=0.10
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.13
+[FirstRun] step=fr.done t=0.13
+]]></output>
+                </test-case>
+                <test-case id="1050" name="FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" methodname="FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1091288956" result="Passed" start-time="2026-10-12 14:26:01Z" end-time="2026-10-12 14:26:02Z" duration="1.023352" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=129.263
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=2.72
+[FirstRun] step=fr.interview.q1 t=2.75
+[FirstRun] step=fr.interview.q2 t=2.78
+[FirstRun] step=fr.interview.q3 t=2.82
+[FirstRun] step=fr.interview.waiting t=2.85
+[FirstRun] step=fr.interview.review t=2.87
+[Sundial] cue seed.drop
+[Sundial] cue seed.drop
+[FirstRun] step=fr.interview.firsttend t=4.22
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=4.25
+[FirstRun] step=fr.done t=4.25
+]]></output>
+                </test-case>
+                <test-case id="1052" name="FirstRun_Interview_Skips_AllFourQuestions" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_Skips_AllFourQuestions" methodname="FirstRun_Interview_Skips_AllFourQuestions" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1801047309" result="Passed" start-time="2026-10-12 14:26:02Z" end-time="2026-10-12 14:26:02Z" duration="0.298237" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=130.295
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.05
+[FirstRun] step=fr.interview.q1 t=0.08
+[FirstRun] step=fr.interview.q2 t=0.12
+[FirstRun] step=fr.interview.q3 t=0.15
+[FirstRun] step=fr.interview.waiting t=0.18
+[FirstRun] step=fr.interview.review t=0.20
+[FirstRun] step=fr.caption t=0.33
+[FirstRun] step=fr.packets t=0.35
+[FirstRun] step=fr.pick.morning t=0.35
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=0.42
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=0.48
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=0.55
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=0.57
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.60
+[FirstRun] step=fr.breaths.offer t=0.60
+]]></output>
+                </test-case>
+                <test-case id="1051" name="Interview_ConsentAndQuestion_AreVisible_OptInPersists" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.Interview_ConsentAndQuestion_AreVisible_OptInPersists" methodname="Interview_ConsentAndQuestion_AreVisible_OptInPersists" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="590389941" result="Passed" start-time="2026-10-12 14:26:02Z" end-time="2026-10-12 14:26:03Z" duration="0.800105" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=130.591
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.25
+[FirstRun] step=fr.interview.q0 t=0.00
+[Sundial] first-interactive t=131.284
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1054" name="Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" methodname="Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1768266062" result="Passed" start-time="2026-10-12 14:26:03Z" end-time="2026-10-12 14:26:03Z" duration="0.606953" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=131.391
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.03
+[FirstRun] step=fr.interview.q1 t=2.75
+[FirstRun] step=fr.interview.q2 t=2.78
+[FirstRun] step=fr.interview.q3 t=2.82
+[FirstRun] step=fr.interview.waiting t=2.85
+[FirstRun] step=fr.interview.review t=2.87
+[FirstRun] step=fr.interview.review t=0.00
+[Sundial] first-interactive t=131.691
+[Sundial] cue amb.kitchen
+[Sundial] cue seed.drop
+[FirstRun] step=fr.interview.firsttend t=0.07
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.33
+[FirstRun] step=fr.done t=0.33
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=131.889
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1055" name="JourneyTests" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-12 14:26:03Z" end-time="2026-10-12 14:26:12Z" duration="8.459345" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1059" name="Day7_LookBack" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.Day7_LookBack" methodname="Day7_LookBack" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="569018494" result="Passed" start-time="2026-10-12 14:26:03Z" end-time="2026-10-12 14:26:04Z" duration="0.195280" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=131.998
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1057" name="Dismiss_PalmOpen_Returns" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.Dismiss_PalmOpen_Returns" methodname="Dismiss_PalmOpen_Returns" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="645856352" result="Passed" start-time="2026-10-12 14:26:04Z" end-time="2026-10-12 14:26:04Z" duration="0.274226" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=132.198
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1058" name="MissedDay_IsQuiet" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.MissedDay_IsQuiet" methodname="MissedDay_IsQuiet" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="812741320" result="Passed" start-time="2026-10-12 14:26:04Z" end-time="2026-10-12 14:26:04Z" duration="0.264512" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=132.476
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1062" name="PauseAt_Exhale1" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.PauseAt_Exhale1" methodname="PauseAt_Exhale1" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="352338560" result="Passed" start-time="2026-10-12 14:26:04Z" end-time="2026-10-12 14:26:05Z" duration="0.791741" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=132.729
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1061" name="PauseAt_Inhale1" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.PauseAt_Inhale1" methodname="PauseAt_Inhale1" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="813227532" result="Passed" start-time="2026-10-12 14:26:05Z" end-time="2026-10-12 14:26:06Z" duration="0.830262" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=133.516
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1063" name="PauseAt_Inhale2" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.PauseAt_Inhale2" methodname="PauseAt_Inhale2" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="1328068540" result="Passed" start-time="2026-10-12 14:26:06Z" end-time="2026-10-12 14:26:07Z" duration="0.743906" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=134.349
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1064" name="PauseAt_Inhale3" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.PauseAt_Inhale3" methodname="PauseAt_Inhale3" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="476739386" result="Passed" start-time="2026-10-12 14:26:07Z" end-time="2026-10-12 14:26:07Z" duration="0.806045" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=135.093
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1060" name="PauseAt_Offer" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.PauseAt_Offer" methodname="PauseAt_Offer" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="1728824655" result="Passed" start-time="2026-10-12 14:26:07Z" end-time="2026-10-12 14:26:08Z" duration="0.755877" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=135.898
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1065" name="Record_JourneyFrames" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.Record_JourneyFrames" methodname="Record_JourneyFrames" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="1486596564" result="Passed" start-time="2026-10-12 14:26:08Z" end-time="2026-10-12 14:26:12Z" duration="3.486552" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.00
+[FirstRun] step=fr.interview.optin t=0.00
+[Sundial] first-interactive t=136.672
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=137.095
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue bed.midday
+[Sundial] cue tab.tap
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=137.995
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1056" name="Settings_Tabs_Poke" fullname="GardenVR.Sundial.Tests.PlayMode.JourneyTests.Settings_Tabs_Poke" methodname="Settings_Tabs_Poke" classname="GardenVR.Sundial.Tests.PlayMode.JourneyTests" runstate="Runnable" seed="252077375" result="Passed" start-time="2026-10-12 14:26:12Z" end-time="2026-10-12 14:26:12Z" duration="0.299008" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=140.151
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue bed.midday
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1066" name="MonthlyRecordTests" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-12 14:26:12Z" end-time="2026-10-12 14:26:15Z" duration="2.672422" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1068" name="MonthTotal_OnLook" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.MonthTotal_OnLook" methodname="MonthTotal_OnLook" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="402383886" result="Passed" start-time="2026-10-12 14:26:12Z" end-time="2026-10-12 14:26:14Z" duration="1.677525" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=140.817
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1071" name="NoConsecutiveCountString" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.NoConsecutiveCountString" methodname="NoConsecutiveCountString" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="1414392635" result="Failed" start-time="2026-10-12 14:26:14Z" end-time="2026-10-12 14:26:14Z" duration="0.164134" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[  Expected: <empty>
+  But was:  < "C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Assets\Scripts\Coach\RelayLiveCheck.cs: "sample,backend,kind,elapsed_ms,from_model,failure\n"", "C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Assets\Scripts\Coach\RelayLiveCheck.cs: " failure="", "C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Assets\Scripts\Coach\RelayLiveCheck.cs: "[RelayLive] FAIL "", "C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Assets\Scripts\Coach\RelayLiveCheck.cs: "[RelayLive] FAIL"", "C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Assets\Scripts\Coach\RelayLiveCheck.cs: "failure.txt"" >
+]]></message>
+                    <stack-trace><![CDATA[at GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests+<NoConsecutiveCountString>d__17.MoveNext () [0x001dc] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\MonthlyRecordTests.cs:189
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52
+]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=142.129
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1069" name="Quantity_ReachTarget_TendsOnce" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.Quantity_ReachTarget_TendsOnce" methodname="Quantity_ReachTarget_TendsOnce" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="1714364346" result="Passed" start-time="2026-10-12 14:26:14Z" end-time="2026-10-12 14:26:14Z" duration="0.312565" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] cue tile.ink
+[Sundial] first-interactive t=142.292
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tile.ink
+[Sundial] cue tend.undo
+]]></output>
+                </test-case>
+                <test-case id="1070" name="Quantity_Undo_ReversesTend" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.Quantity_Undo_ReversesTend" methodname="Quantity_Undo_ReversesTend" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="1920176928" result="Passed" start-time="2026-10-12 14:26:14Z" end-time="2026-10-12 14:26:14Z" duration="0.319525" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] cue tile.ink
+[Sundial] first-interactive t=142.616
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.undo
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1067" name="ZoneTabs_FillFromLedger" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.ZoneTabs_FillFromLedger" methodname="ZoneTabs_FillFromLedger" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="892104664" result="Passed" start-time="2026-10-12 14:26:14Z" end-time="2026-10-12 14:26:15Z" duration="0.194935" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=142.932
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1072" name="RecordTilesTests" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 14:26:15Z" end-time="2026-10-12 14:26:17Z" duration="2.747074" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1074" name="Backfill_NotAfterBoundary" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Backfill_NotAfterBoundary" methodname="Backfill_NotAfterBoundary" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" seed="1495886906" result="Passed" start-time="2026-10-12 14:26:15Z" end-time="2026-10-12 14:26:15Z" duration="0.176291" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=143.117
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1073" name="Backfill_Once_Late" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Backfill_Once_Late" methodname="Backfill_Once_Late" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" seed="548686724" result="Passed" start-time="2026-10-12 14:26:15Z" end-time="2026-10-12 14:26:15Z" duration="0.287839" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=143.294
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.hatch
+]]></output>
+                </test-case>
+                <test-case id="1077" name="Day7_TilesReadOldestFirst" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Day7_TilesReadOldestFirst" methodname="Day7_TilesReadOldestFirst" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" seed="755434390" result="Passed" start-time="2026-10-12 14:26:15Z" end-time="2026-10-12 14:26:15Z" duration="0.126143" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=143.591
+[Sundial] cue amb.kitchen
+[Sundial] unknown tile state 42; using the neutral label
+]]></output>
+                </test-case>
+                <test-case id="1075" name="Missed_NoShrink" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Missed_NoShrink" methodname="Missed_NoShrink" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" seed="848663556" result="Passed" start-time="2026-10-12 14:26:15Z" end-time="2026-10-12 14:26:15Z" duration="0.146405" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=143.713
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1078" name="Record_HonestTiles" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Record_HonestTiles" methodname="Record_HonestTiles" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" seed="596588112" result="Passed" start-time="2026-10-12 14:26:15Z" end-time="2026-10-12 14:26:17Z" duration="1.716128" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=143.863
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=144.687
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1076" name="Week_BloomOpensAt5_ClosesBelow" fullname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Week_BloomOpensAt5_ClosesBelow" methodname="Week_BloomOpensAt5_ClosesBelow" classname="GardenVR.Sundial.Tests.PlayMode.RecordTilesTests" runstate="Runnable" seed="2100464103" result="Passed" start-time="2026-10-12 14:26:17Z" end-time="2026-10-12 14:26:17Z" duration="0.291109" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=145.598
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1079" name="ReflectionTests" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 14:26:17Z" end-time="2026-10-12 14:26:21Z" duration="3.750516" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1084" name="Journal_Delete_Empties" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_Delete_Empties" methodname="Journal_Delete_Empties" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1544765913" result="Passed" start-time="2026-10-12 14:26:17Z" end-time="2026-10-12 14:26:18Z" duration="0.463561" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=145.865
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+                <test-case id="1087" name="Journal_SevenLines_FitCard" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_SevenLines_FitCard" methodname="Journal_SevenLines_FitCard" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="77717349" result="Passed" start-time="2026-10-12 14:26:18Z" end-time="2026-10-12 14:26:18Z" duration="0.535052" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=146.337
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+]]></output>
+                </test-case>
+                <test-case id="1086" name="Journal_WeekPage_ShowsOnlySelectedWeek" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_WeekPage_ShowsOnlySelectedWeek" methodname="Journal_WeekPage_ShowsOnlySelectedWeek" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="992717810" result="Passed" start-time="2026-10-12 14:26:18Z" end-time="2026-10-12 14:26:19Z" duration="0.490672" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=146.875
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+]]></output>
+                </test-case>
+                <test-case id="1085" name="Reflection_CancelAndDelete_RejectLateReply" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_CancelAndDelete_RejectLateReply" methodname="Reflection_CancelAndDelete_RejectLateReply" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="57222252" result="Passed" start-time="2026-10-12 14:26:19Z" end-time="2026-10-12 14:26:19Z" duration="0.174871" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=147.364
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+                <test-case id="1082" name="Reflection_DirtyLine_FallsBack" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_DirtyLine_FallsBack" methodname="Reflection_DirtyLine_FallsBack" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1667565134" result="Passed" start-time="2026-10-12 14:26:19Z" end-time="2026-10-12 14:26:19Z" duration="0.120042" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=147.535
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1081" name="Reflection_Speech_FakeClient_KeepsModelLine" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_Speech_FakeClient_KeepsModelLine" methodname="Reflection_Speech_FakeClient_KeepsModelLine" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="283088393" result="Passed" start-time="2026-10-12 14:26:19Z" end-time="2026-10-12 14:26:20Z" duration="0.477462" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=147.647
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1080" name="Reflection_Stone_KeepsScriptedLine" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_Stone_KeepsScriptedLine" methodname="Reflection_Stone_KeepsScriptedLine" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="2036497912" result="Passed" start-time="2026-10-12 14:26:20Z" end-time="2026-10-12 14:26:21Z" duration="1.367032" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=148.136
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1083" name="Save_HoldsNoTranscript" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Save_HoldsNoTranscript" methodname="Save_HoldsNoTranscript" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="355574590" result="Passed" start-time="2026-10-12 14:26:21Z" end-time="2026-10-12 14:26:21Z" duration="0.117575" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=149.496
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1088" name="ReviewPackPlaybackTests" fullname="GardenVR.Sundial.Tests.PlayMode.ReviewPackPlaybackTests" classname="GardenVR.Sundial.Tests.PlayMode.ReviewPackPlaybackTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:26:21Z" end-time="2026-10-12 14:26:22Z" duration="0.489950" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1089" name="EachControl_ByPlayback" fullname="GardenVR.Sundial.Tests.PlayMode.ReviewPackPlaybackTests.EachControl_ByPlayback" methodname="EachControl_ByPlayback" classname="GardenVR.Sundial.Tests.PlayMode.ReviewPackPlaybackTests" runstate="Runnable" seed="323785089" result="Passed" start-time="2026-10-12 14:26:21Z" end-time="2026-10-12 14:26:22Z" duration="0.487725" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=149.613
+[Sundial] cue amb.kitchen
+[Review] hints Look=mouse Pinch=click PinchHold=Space or mouse Release=release Poke=F PalmOpen=hold P
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tab.tap
+[Review] hints Look=mouse Pinch=click PinchHold=Space or mouse Release=release Poke=F PalmOpen=hold P | Look halo=True | Pinch tend top3=1 | PinchHold duskActive=True | Release breaths=1 | Poke settingsOpen=True | PalmOpen dismissed=True | clock=2026-10-03 14:20Z dev-seed |
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1090" name="RimScrubTests" fullname="GardenVR.Sundial.Tests.PlayMode.RimScrubTests" classname="GardenVR.Sundial.Tests.PlayMode.RimScrubTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:22Z" duration="0.445127" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1091" name="RimScrub_ReadOnly_SnapsBack" fullname="GardenVR.Sundial.Tests.PlayMode.RimScrubTests.RimScrub_ReadOnly_SnapsBack" methodname="RimScrub_ReadOnly_SnapsBack" classname="GardenVR.Sundial.Tests.PlayMode.RimScrubTests" runstate="Runnable" seed="833539091" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:22Z" duration="0.442694" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=150.107
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1092" name="SpeechTests" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:25Z" duration="2.722486" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1096" name="DeviceFailure_HidesListening_UnavailableDoesNotBegin" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.DeviceFailure_HidesListening_UnavailableDoesNotBegin" methodname="DeviceFailure_HidesListening_UnavailableDoesNotBegin" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="1023220422" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:22Z" duration="0.003270" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1093" name="Hold_IsOptInAndTargeted_ReleaseAllowsFinal_ClearRejectsLateText" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.Hold_IsOptInAndTargeted_ReleaseAllowsFinal_ClearRejectsLateText" methodname="Hold_IsOptInAndTargeted_ReleaseAllowsFinal_ClearRejectsLateText" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="1861017191" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:22Z" duration="0.001706" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1094" name="Pause_DisarmsAndClears_DoesNotRestartFromHeldInput" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.Pause_DisarmsAndClears_DoesNotRestartFromHeldInput" methodname="Pause_DisarmsAndClears_DoesNotRestartFromHeldInput" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="962680257" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:22Z" duration="0.001425" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1097" name="ScriptedFile_Intents_NoTranscriptInSave_Captures" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.ScriptedFile_Intents_NoTranscriptInSave_Captures" methodname="ScriptedFile_Intents_NoTranscriptInSave_Captures" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="1676297947" result="Passed" start-time="2026-10-12 14:26:22Z" end-time="2026-10-12 14:26:25Z" duration="2.701551" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=150.555
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1095" name="TrackingLoss_AndDisable_StopCapture" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.TrackingLoss_AndDisable_StopCapture" methodname="TrackingLoss_AndDisable_StopCapture" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="1751184234" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.010731" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1098" name="StretchRitualTests" fullname="GardenVR.Sundial.Tests.PlayMode.StretchRitualTests" classname="GardenVR.Sundial.Tests.PlayMode.StretchRitualTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.308235" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1100" name="Record_StretchSequence" fullname="GardenVR.Sundial.Tests.PlayMode.StretchRitualTests.Record_StretchSequence" methodname="Record_StretchSequence" classname="GardenVR.Sundial.Tests.PlayMode.StretchRitualTests" runstate="Runnable" seed="1284409236" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.001770" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1099" name="Stretch_ThreeReaches_TendsMorning" fullname="GardenVR.Sundial.Tests.PlayMode.StretchRitualTests.Stretch_ThreeReaches_TendsMorning" methodname="Stretch_ThreeReaches_TendsMorning" classname="GardenVR.Sundial.Tests.PlayMode.StretchRitualTests" runstate="Runnable" seed="154024988" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.305535" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=153.273
+[Sundial] cue amb.kitchen
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1101" name="TendPlaybackTests" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:28Z" duration="2.885891" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1106" name="Gnomon_At1420_Is125" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Gnomon_At1420_Is125" methodname="Gnomon_At1420_Is125" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="797949958" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.219944" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=153.579
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1107" name="Halo_OnlyAfterDwell" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Halo_OnlyAfterDwell" methodname="Halo_OnlyAfterDwell" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="535213406" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.118137" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=153.804
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1109" name="Response_TwoFrames" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Response_TwoFrames" methodname="Response_TwoFrames" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="1425926549" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:25Z" duration="0.093674" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] first-interactive t=153.919
+[Sundial] cue amb.kitchen
+[playback] intent t=0.00 kind=Pinch frame=129560
+[playback] state-changed frame=129561 dtFrames=1
+]]></output>
+                </test-case>
+                <test-case id="1108" name="Save_SurvivesRelaunch" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Save_SurvivesRelaunch" methodname="Save_SurvivesRelaunch" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="859169343" result="Passed" start-time="2026-10-12 14:26:25Z" end-time="2026-10-12 14:26:26Z" duration="0.608163" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=154.012
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=154.519
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1104" name="Tend_FlushOnPause" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Tend_FlushOnPause" methodname="Tend_FlushOnPause" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="2013207646" result="Passed" start-time="2026-10-12 14:26:26Z" end-time="2026-10-12 14:26:26Z" duration="0.227416" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] first-interactive t=154.629
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1102" name="Tend_LookPinch_ByPlayback" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Tend_LookPinch_ByPlayback" methodname="Tend_LookPinch_ByPlayback" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="371711919" result="Passed" start-time="2026-10-12 14:26:26Z" end-time="2026-10-12 14:26:27Z" duration="0.526830" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=154.858
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1105" name="Tend_SecondSameDay_NoOp" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Tend_SecondSameDay_NoOp" methodname="Tend_SecondSameDay_NoOp" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="1029367585" result="Passed" start-time="2026-10-12 14:26:27Z" end-time="2026-10-12 14:26:27Z" duration="0.574253" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=155.386
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1103" name="Tend_Undo_InsideWindow" fullname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests.Tend_Undo_InsideWindow" methodname="Tend_Undo_InsideWindow" classname="GardenVR.Sundial.Tests.PlayMode.TendPlaybackTests" runstate="Runnable" seed="1102898956" result="Passed" start-time="2026-10-12 14:26:27Z" end-time="2026-10-12 14:26:28Z" duration="0.514092" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=155.949
+[Sundial] cue amb.kitchen
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.undo
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1110" name="TendRecordTests" fullname="GardenVR.Sundial.Tests.PlayMode.TendRecordTests" classname="GardenVR.Sundial.Tests.PlayMode.TendRecordTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:26:28Z" end-time="2026-10-12 14:26:28Z" duration="0.003997" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1111" name="Record_TendSequence" fullname="GardenVR.Sundial.Tests.PlayMode.TendRecordTests.Record_TendSequence" methodname="Record_TendSequence" classname="GardenVR.Sundial.Tests.PlayMode.TendRecordTests" runstate="Runnable" seed="1843214173" result="Passed" start-time="2026-10-12 14:26:28Z" end-time="2026-10-12 14:26:28Z" duration="0.001090" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1112" name="ThreeHabitsPerArcTests" fullname="GardenVR.Sundial.Tests.PlayMode.ThreeHabitsPerArcTests" classname="GardenVR.Sundial.Tests.PlayMode.ThreeHabitsPerArcTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:26:28Z" end-time="2026-10-12 14:26:29Z" duration="0.816961" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1113" name="ThreeHabitsPerArc_TendAll" fullname="GardenVR.Sundial.Tests.PlayMode.ThreeHabitsPerArcTests.ThreeHabitsPerArc_TendAll" methodname="ThreeHabitsPerArc_TendAll" classname="GardenVR.Sundial.Tests.PlayMode.ThreeHabitsPerArcTests" runstate="Runnable" seed="1283874748" result="Passed" start-time="2026-10-12 14:26:28Z" end-time="2026-10-12 14:26:29Z" duration="0.816391" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=156.469
+[Sundial] cue amb.kitchen
+[Sundial] cue seed.drop
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.undo
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1114" name="UpgradeSaveTests" fullname="GardenVR.Sundial.Tests.PlayMode.UpgradeSaveTests" classname="GardenVR.Sundial.Tests.PlayMode.UpgradeSaveTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 14:26:29Z" end-time="2026-10-12 14:26:29Z" duration="0.274148" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1116" name="LaunchCatchUp_SeesPreviousVisit_AndDefersWritingUntilClosed" fullname="GardenVR.Sundial.Tests.PlayMode.UpgradeSaveTests.LaunchCatchUp_SeesPreviousVisit_AndDefersWritingUntilClosed" methodname="LaunchCatchUp_SeesPreviousVisit_AndDefersWritingUntilClosed" classname="GardenVR.Sundial.Tests.PlayMode.UpgradeSaveTests" runstate="Runnable" seed="415682233" result="Passed" start-time="2026-10-12 14:26:29Z" end-time="2026-10-12 14:26:29Z" duration="0.098157" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=157.288
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1115" name="Schema1_LaunchMigratesAndPersistsVisitAndKey" fullname="GardenVR.Sundial.Tests.PlayMode.UpgradeSaveTests.Schema1_LaunchMigratesAndPersistsVisitAndKey" methodname="Schema1_LaunchMigratesAndPersistsVisitAndKey" classname="GardenVR.Sundial.Tests.PlayMode.UpgradeSaveTests" runstate="Runnable" seed="12233964" result="Passed" start-time="2026-10-12 14:26:29Z" end-time="2026-10-12 14:26:29Z" duration="0.173880" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=157.381
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=157.470
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1117" name="WeekDialTests" fullname="GardenVR.Sundial.Tests.PlayMode.WeekDialTests" classname="GardenVR.Sundial.Tests.PlayMode.WeekDialTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 14:26:29Z" end-time="2026-10-12 14:26:29Z" duration="0.445441" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1118" name="WeekDial_TurnsAndReturns" fullname="GardenVR.Sundial.Tests.PlayMode.WeekDialTests.WeekDial_TurnsAndReturns" methodname="WeekDial_TurnsAndReturns" classname="GardenVR.Sundial.Tests.PlayMode.WeekDialTests" runstate="Runnable" seed="1110817263" result="Passed" start-time="2026-10-12 14:26:29Z" end-time="2026-10-12 14:26:29Z" duration="0.443565" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=157.567
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+[Sundial] cue dial.appear
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

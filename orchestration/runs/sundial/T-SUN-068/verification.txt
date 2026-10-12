@@ -1,0 +1,7 @@
+editmode result=Passed total=98 passed=98 failed=0 skipped=0
+playmode-initial result=Failed(Child) total=94 passed=93 failed=1 skipped=0
+playmode-recheck result=Passed total=1 passed=1 failed=0 skipped=0
+PASS relay log schema: no prompt, reply, transcript, or install-key fields; stderr empty
+PASS live model proposals match rendered packets; live model line matches rendered card and journal
+PASS backend=cli, budget=15000ms, 20 timed player calls, 10 per kind
+p50_ms=4658.616 p95_ms=6333.906

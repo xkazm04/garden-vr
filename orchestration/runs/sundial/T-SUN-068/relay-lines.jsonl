@@ -1,0 +1,23 @@
+{"listening": 8787, "backend": "cli", "model": "claude-haiku-5-5", "systems": 2}
+{"t": "2026-10-12T14:28:19.356Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4362, "in_tokens": 2, "out_tokens": 194}
+{"t": "2026-10-12T14:28:30.520Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 4109, "in_tokens": 2, "out_tokens": 184}
+{"t": "2026-10-12T14:28:41.403Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4610, "in_tokens": 2, "out_tokens": 194}
+{"t": "2026-10-12T14:28:52.404Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 4521, "in_tokens": 2, "out_tokens": 275}
+{"t": "2026-10-12T14:29:03.405Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4597, "in_tokens": 2, "out_tokens": 194}
+{"t": "2026-10-12T14:29:14.405Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 4221, "in_tokens": 2, "out_tokens": 151}
+{"t": "2026-10-12T14:29:25.407Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4956, "in_tokens": 2, "out_tokens": 194}
+{"t": "2026-10-12T14:29:36.408Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 4763, "in_tokens": 2, "out_tokens": 220}
+{"t": "2026-10-12T14:29:47.410Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 3749, "in_tokens": 2, "out_tokens": 192}
+{"t": "2026-10-12T14:29:58.410Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 4509, "in_tokens": 2, "out_tokens": 23}
+{"t": "2026-10-12T14:30:09.412Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4895, "in_tokens": 2, "out_tokens": 193}
+{"t": "2026-10-12T14:30:20.411Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 7121, "in_tokens": 2, "out_tokens": 42}
+{"t": "2026-10-12T14:30:31.412Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4218, "in_tokens": 2, "out_tokens": 190}
+{"t": "2026-10-12T14:30:42.414Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 3853, "in_tokens": 2, "out_tokens": 35}
+{"t": "2026-10-12T14:30:53.416Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4618, "in_tokens": 2, "out_tokens": 181}
+{"t": "2026-10-12T14:31:04.417Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 4592, "in_tokens": 2, "out_tokens": 25}
+{"t": "2026-10-12T14:31:15.418Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4617, "in_tokens": 2, "out_tokens": 184}
+{"t": "2026-10-12T14:31:26.420Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 6297, "in_tokens": 2, "out_tokens": 24}
+{"t": "2026-10-12T14:31:37.420Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 5164, "in_tokens": 2, "out_tokens": 550}
+{"t": "2026-10-12T14:31:48.421Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 5486, "in_tokens": 2, "out_tokens": 156}
+{"t": "2026-10-12T14:31:59.422Z", "kind": "Onboarding", "status": 200, "failure": null, "ms": 4787, "in_tokens": 2, "out_tokens": 189}
+{"t": "2026-10-12T14:32:10.424Z", "kind": "Reflection", "status": 200, "failure": null, "ms": 3742, "in_tokens": 2, "out_tokens": 28}
