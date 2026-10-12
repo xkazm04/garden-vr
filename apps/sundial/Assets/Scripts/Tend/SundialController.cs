@@ -329,6 +329,7 @@ namespace GardenVR.Sundial
         {
             if (!_lookedThisFrame)
             {
+                if (_view != null) _view.LookAtProfile(null);
                 _dwellId = null;
                 _dwellTime = 0f;
             }
@@ -395,6 +396,7 @@ namespace GardenVR.Sundial
         void OnLook(string id)
         {
             _lookedThisFrame = true;
+            if (_view != null) _view.LookAtProfile(id);
             if (_source is KeyboardMouseIntentSource)
             {
                 ShowLookHalo(id);
@@ -636,6 +638,7 @@ namespace GardenVR.Sundial
                     int row = SundialRules.RowOf(_service.Save.Habits, habit);
                     if (arc < 0 || row < 0) continue;
                     int plantIndex = arc * 3 + row;
+                    _view.SetProfile(plantIndex, habit, _service.Ledger, _service.Today(), plant);
                     int stage = (int)plant.Stage;
                     // A miss never shrinks the drawing. The card stays on the fullest stage this session has shown.
                     if (_stageFloor[plantIndex] < 0 || stage > _stageFloor[plantIndex]) _stageFloor[plantIndex] = stage;

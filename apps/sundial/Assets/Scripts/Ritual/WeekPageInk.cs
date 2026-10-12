@@ -48,9 +48,13 @@ namespace GardenVR.Sundial
         public static string PlantLine(HabitDef habit)
         {
             if (habit == null) return "";
+            string name = HabitProfiles.CleanName(habit.Name);
+            if (name != null) return name;
             if (habit.Id == "water" || habit.PresetKey == "water") return "Water";
             if (habit.Id == "top3" || habit.PresetKey == "top3") return "Top three";
             if (habit.Id == "breaths" || habit.PresetKey == "breaths") return "Breaths";
+            SeedPreset preset = SeedCatalog.Find(habit.Group, habit.PresetKey);
+            if (preset != null) return preset.Title;
             int arc = ArcOf(habit);
             if (arc == 0) return "Morning";
             if (arc == 1) return "Midday";

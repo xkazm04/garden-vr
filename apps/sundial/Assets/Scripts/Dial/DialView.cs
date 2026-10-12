@@ -31,7 +31,7 @@ namespace GardenVR.Sundial
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteAlways]
-    public sealed class DialView : MonoBehaviour, ICaptureState
+    public sealed partial class DialView : MonoBehaviour, ICaptureState
     {
         public const int ArcCount = 3;
         public const int RowsPerArc = 3;
@@ -314,6 +314,7 @@ namespace GardenVR.Sundial
             int haloArc = ArcIndex(haloTarget);
             _haloArc = haloArc;
             ApplyPlants();
+            ApplyProfiles();
             ApplyLeafPlant();
             ApplyStrip();
             ApplyPulse();
@@ -1468,6 +1469,7 @@ namespace GardenVR.Sundial
 
         void OnDestroy()
         {
+            if (_profileDotMaterial != null) DestroyObject(_profileDotMaterial);
             for (int i = 0; i < _leaves.Length; i++)
                 if (_leaves[i] != null) _leaves[i].Destroy();
             if (_mound != null) _mound.Destroy();

@@ -389,6 +389,7 @@ namespace GardenVR.Sundial
             {
                 Id = string.IsNullOrEmpty(preset.HabitId) ? preset.Key : preset.HabitId,
                 PresetKey = preset.Key,
+                Zone = PresetZone(preset.Key),
                 Group = preset.Group,
                 Kind = preset.Kind,
                 Species = SundialSpecies.ForPreset(preset.Key),
@@ -396,10 +397,7 @@ namespace GardenVR.Sundial
                 Row = 0,
                 CreatedDay = Today().Index
             };
-            _save.Habits.Add(habit);
-            Persist();
-            Recompute();
-            return habit;
+            return Admit(habit);
         }
 
         /// <summary>
@@ -415,11 +413,39 @@ namespace GardenVR.Sundial
             {
                 Id = string.IsNullOrEmpty(preset.HabitId) ? preset.Key : preset.HabitId,
                 PresetKey = preset.Key,
+                Zone = PresetZone(preset.Key),
                 Group = preset.Group,
                 Species = SundialSpecies.ForPreset(preset.Key),
                 Kind = preset.Kind,
                 CreatedDay = Today().Index
             };
+            return Admit(habit);
+        }
+
+        static LifeZone? PresetZone(string key)
+        {
+            LifeZone zone;
+            return HabitProfiles.TryPresetZone(key, out zone) ? zone : (LifeZone?)null;
+        }
+
+        /// <summary>Accepts a named proposal on the chosen arc, or the least populated arc.</summary>
+        public HabitDef PlantProposal(CoachProposal p, string arcKey)
+        {
+            if (p == null) throw new ArgumentNullException(nameof(p));
+            if (Scrubbing || _readOnly || Outcome == LoadOutcome.Failed || _save == null) return null;
+            if (_save.Habits == null) _save.Habits = new List<HabitDef>();
+            HabitDef habit = p.ToHabit("habit-" + Guid.NewGuid().ToString("N"), Today().Index);
+            habit.Name = HabitProfiles.CleanName(habit.Name);
+            habit.Target = HabitProfiles.CleanTarget(habit.Target);
+            HabitSchedule schedule = HabitProfiles.ScheduleOf(habit);
+            habit.Schedule = new HabitSchedule { Kind = schedule.Kind, TimesPerWeek = schedule.TimesPerWeek, WeekdayMask = schedule.WeekdayMask };
+            habit.Group = string.IsNullOrEmpty(arcKey) ? SundialRules.LeastPopulatedArc(_save.Habits) : SundialArcs.Key(arcKey);
+            return Admit(habit);
+        }
+
+        HabitDef Admit(HabitDef habit)
+        {
+            if (!HabitProfiles.CanAdd(_save.Habits)) return null;
             string reason = SundialRules.Admit(_save.Habits, habit);
             if (reason != null) return null;
             Persist();

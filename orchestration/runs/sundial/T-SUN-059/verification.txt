@@ -1,0 +1,20 @@
+editmode result=Passed total=75 passed=75 failed=0 skipped=0
+playmode result=Passed total=55 passed=55 failed=0 skipped=0
+NinePlants_ThreeArcsFull_AdmitRefusesTenth Passed
+PerWeek_NeverMarksADayMissed Passed
+Profile_NameAndZoneShowOnLook Passed
+Weekdays_OffDayTileIsBlank Passed
+editmode compiler/shader/build error entries=0
+playmode compiler/shader/build error entries=0
+build compiler/shader/build error entries=0
+terrarium-compile compiler/shader/build error entries=0
+Passed!  - Failed:     0, Passed:    14, Skipped:     0, Total:    14, Duration: 27 ms - GardenVR.TerrariumModel.Tests.dll (net9.0)
+Passed!  - Failed:     0, Passed:    11, Skipped:     0, Total:    11, Duration: 65 ms - GardenVR.CoachCli.Tests.dll (net9.0)
+Passed!  - Failed:     0, Passed:    52, Skipped:     0, Total:    52, Duration: 305 ms - GardenVR.SundialModel.Tests.dll (net9.0)
+Passed!  - Failed:     0, Passed:   445, Skipped:     0, Total:   445, Duration: 999 ms - GardenVR.Core.Tests.dll (net9.0)
+Build Succeeded C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Build\sundial\Sundial.exe
+DialG1-nine-plants.png bytes=2448602 sha256=11dea933563bcbd62a26ddf7fd9194ff6f508268fd1cf52bd56f3fbaf2ad349e size=(1824, 1024)
+DialG1-record-side-by-side.jpg bytes=1123032 sha256=727f03d1b5b4400ec1c3a3e82c90b20de3a89c5841d30ec0900f7a8c605e2b17 size=(3648, 1088)
+DialG1-weekly-look.png bytes=2439111 sha256=1c773424a53a7dd4538efdb36d1c189915e9f8e14d6f30cd3fec97d12f986455 size=(1824, 1024)
+Sundial.exe bytes=667136 sha256=91a36fa14dd3ccf390b99720805eda0553da1ca1108381b49c98c938f69dc256
+New string census: 7 entries; medical stems=0; count phrases=0; em dash=0
