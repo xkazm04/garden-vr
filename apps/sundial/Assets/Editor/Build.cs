@@ -14,7 +14,17 @@ namespace GardenVR.Sundial.Editor
     {
         public static void Windows()
         {
-            string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Build", "sundial"));
+            WindowsPlayer(false);
+        }
+
+        public static void WindowsDevelopment()
+        {
+            WindowsPlayer(true);
+        }
+
+        static void WindowsPlayer(bool development)
+        {
+            string folder = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Build", development ? "sundial-development" : "sundial"));
             Directory.CreateDirectory(folder);
             string exe = Path.Combine(folder, "Sundial.exe");
             bool splash = PlayerSettings.SplashScreen.show;
@@ -26,7 +36,7 @@ namespace GardenVR.Sundial.Editor
                 scenes = new[] { SceneSetup.ScenePath },
                 locationPathName = exe,
                 target = BuildTarget.StandaloneWindows64,
-                options = BuildOptions.None
+                options = development ? BuildOptions.Development : BuildOptions.None
             };
             BuildReport report = BuildPipeline.BuildPlayer(options);
             PlayerSettings.SplashScreen.show = splash;

@@ -147,6 +147,8 @@ namespace GardenVR.Sundial
                 view.gameObject.AddComponent<RimScrubController>();
             if (UnityEngine.Object.FindAnyObjectByType<ArcTimesController>() == null)
                 view.gameObject.AddComponent<ArcTimesController>();
+            if (view.GetComponent<SpeechController>() == null)
+                view.gameObject.AddComponent<SpeechController>();
         }
 
         public void SetSource(IHandIntentSource source)
@@ -170,6 +172,8 @@ namespace GardenVR.Sundial
             if (focus != null) focus.SetSource(source);
             WeekDialController week = GetComponent<WeekDialController>();
             if (week != null) week.SetSource(source);
+            SpeechController speech = GetComponent<SpeechController>();
+            if (speech != null) speech.SetSource(source);
         }
 
         /// <summary>
@@ -226,6 +230,8 @@ namespace GardenVR.Sundial
                 : SaveDirectoryOverride;
             IClock clock = ClockOverride ?? new SystemClock();
             _service = new SundialService(clock, directory);
+            if (GetComponent<SpeechController>() == null)
+                gameObject.AddComponent<SpeechController>();
             EnsureAudio();
             PushAudio();
             if (GetComponent<FirstRunWizard>() == null)

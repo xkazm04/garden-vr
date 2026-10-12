@@ -18,6 +18,40 @@ Owner: terrarium (`docs/PLAN.md`). Sundial consumes the same assembly.
 
 `HandIntent.TargetId` is optional and defaults to null, so older constructors still compile.
 
+## Speech input
+
+`ISpeechToText` supplies `Begin()`, `End()`, `Available`, and `Final` / `Partial` string events.
+It is additive: no existing hand interface or mapping changes. Consumers start from `PinchHold` and stop on
+`Release`, lifecycle pause, tracking loss, or shutdown. Providers never write transcripts to disk.
+`ISpeechCaptureState.Listening` optionally exposes actual capture state for the listening indicator.
+
+`WindowsSpeechSource` lazily creates `DictationRecognizer` on Windows, only when `Begin` is called. `End` stops
+capture but leaves the result callbacks connected for native completion. `Dispose` releases the native resource.
+`Available` is optimistic before the first attempt; a start/error failure makes it false for that instance.
+Call `Poll()` each frame (Sundial does) to observe asynchronous startup and bound a stalled start to three seconds.
+Non-Windows builds report unavailable. The provider does not enable Windows permissions or change speech settings.
+Windows dictation depends on the machine's speech service/privacy configuration; this adapter does not establish
+an offline guarantee. Keep the preset path available. Diagnostics include device state and HRESULT, never text.
+
+`ScriptedSpeechSource.Load(json)` accepts playback file contents. Each `Begin` selects the next utterance;
+repeated `Begin` during a hold is harmless. `Tick(seconds)` advances events during capture only. `End` discards
+unplayed events and never promotes a partial to a final. Exhausted/empty scripts emit nothing. Invalid loads
+leave the previous playback intact. A consumer drives Tick (Sundial's SpeechController does so in Update).
+
+```json
+{"utterances":[{"events":[{"t":0.1,"kind":"partial","text":"read"},{"t":0.5,"kind":"final","text":"read a little"}]}]}
+```
+
+Sundial keeps the adapter dormant until a speech context calls `Arm(targetId)`. Consumers must call
+`CompleteCoachCall()` when the request completes or is cancelled. This clears accumulated final and partial
+text and rejects late callbacks. No text enters SundialSave. Preset onboarding remains the default in B3.
+On device failure it selects an empty scripted source and reports `UsingPresetFallback=true`, `Available=false`;
+it never fabricates a player answer. Tests inject a loaded scripted source explicitly using `SetSpeech`.
+The development player alone accepts `--speech-check` (manual Space, speak, release; 30-second check) or
+`--speech-probe` (scripted hold/release, real Windows provider; no human speech claim). Only this explicitly
+requested development harness logs final text; do not use sensitive phrases in the check. Both modes use an
+isolated temporary save and exit themselves. Build with `GardenVR.Sundial.Editor.Build.WindowsDevelopment`.
+
 ## PC bindings
 
 `holdMode` defaults to `Hold`. Set `KeyboardMouseIntentSource.HoldMode` (or the mapper) to `Toggle` for the accessibility latch.
