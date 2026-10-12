@@ -5,6 +5,15 @@ namespace GardenVR.Core.Tests;
 
 public class OnboardingTests
 {
+    [Fact] public void Breath_ritual_never_keeps_a_custom_evening_habit()
+    {
+        var custom = new CoachProposal { Name = "Read", Zone = LifeZone.Mind, Schedule = HabitSchedule.Daily() }.ToHabit("read", 1);
+        Assert.False(SundialRules.IsBreathHabit(custom));
+        var breath = new HabitDef { PresetKey = "breaths", Kind = HabitKind.InAppRitual };
+        Assert.True(SundialRules.IsBreathHabit(breath));
+        breath.ArchivedDay = 2;
+        Assert.False(SundialRules.IsBreathHabit(breath));
+    }
     [Theory]
     [InlineData(TileState.Today, true)]
     [InlineData(TileState.Flexible, true)]

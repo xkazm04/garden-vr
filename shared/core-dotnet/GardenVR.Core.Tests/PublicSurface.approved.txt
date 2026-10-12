@@ -550,6 +550,7 @@ GardenVR.Core.NudgeWindow ctor public (System.TimeSpan start, System.TimeSpan en
 GardenVR.Core.NudgeWindow field public readonly System.TimeSpan End
 GardenVR.Core.NudgeWindow field public readonly System.TimeSpan Start
 GardenVR.Core.NudgeWindow property get public System.Boolean IsValid
+GardenVR.Core.Onboarding field public const System.String FirstTend = fr.interview.firsttend
 GardenVR.Core.Onboarding field public const System.String OptIn = fr.interview.optin
 GardenVR.Core.Onboarding field public const System.String Review = fr.interview.review
 GardenVR.Core.Onboarding field public const System.String Waiting = fr.interview.waiting
@@ -806,6 +807,7 @@ GardenVR.Core.SundialRules method public static GardenVR.Core.Stage StageFor(Sys
 GardenVR.Core.SundialRules method public static GardenVR.Core.TendResult Backfill(GardenVR.Core.HabitDef habit, GardenVR.Core.Ledger ledger, GardenVR.Core.GardenDay today, GardenVR.Core.IClock clock)
 GardenVR.Core.SundialRules method public static GardenVR.Core.TileState TileOn(GardenVR.Core.HabitDef habit, GardenVR.Core.Ledger ledger, System.Int32 day, System.Int32 todayIndex)
 GardenVR.Core.SundialRules method public static System.Boolean CanTendToday(GardenVR.Core.TileState tile)
+GardenVR.Core.SundialRules method public static System.Boolean IsBreathHabit(GardenVR.Core.HabitDef habit)
 GardenVR.Core.SundialRules method public static System.Boolean TryArc(System.String group, out GardenVR.Core.ArcId arc)
 GardenVR.Core.SundialRules method public static System.Int32 KeptThisWeek(GardenVR.Core.HabitDef habit, GardenVR.Core.Ledger ledger, GardenVR.Core.GardenDay today)
 GardenVR.Core.SundialRules method public static System.Int32 LiveInArc(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits, System.String group)

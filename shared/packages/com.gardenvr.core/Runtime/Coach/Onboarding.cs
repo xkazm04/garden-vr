@@ -72,6 +72,7 @@ namespace GardenVR.Core
         public const string OptIn = "fr.interview.optin";
         public const string Review = "fr.interview.review";
         public const string Waiting = "fr.interview.waiting";
+        public const string FirstTend = "fr.interview.firsttend";
         public static string QuestionStep(int index) => index >= 0 && index < CoachPrompts.OnboardingQuestions.Length ? "fr.interview.q" + index : null;
         public static int QuestionIndex(string step)
         {

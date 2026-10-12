@@ -13,6 +13,10 @@ namespace GardenVR.Core
         /// <summary>A deliberate check-in is allowed on any unkept current-day tile, including an off day.</summary>
         public static bool CanTendToday(TileState tile) => tile == TileState.Today || tile == TileState.Flexible || tile == TileState.NotPlanned;
 
+        /// <summary>A breath ritual can only keep its own live ritual habit, never a custom evening check-in.</summary>
+        public static bool IsBreathHabit(HabitDef habit) => habit != null && !habit.ArchivedDay.HasValue &&
+            habit.PresetKey == "breaths" && habit.Kind == HabitKind.InAppRitual;
+
         /// <summary>06:00. The gnomon reads 0 here, and the morning arc opens.</summary>
         public const int MorningStartMin = 6 * 60;
 
