@@ -75,6 +75,7 @@ export function createHandler({ client, model = DEFAULT_MODEL, allowedSystems, l
       if (error instanceof Anthropic.RateLimitError) upstream = 'upstream-rate-limit';
       else if (error instanceof Anthropic.APIConnectionError) upstream = 'upstream-connection';
       else if (error instanceof Anthropic.APIError) upstream = 'upstream-' + (error.status ?? 'error');
+      else if (/^cli-/.test(error?.message || '')) upstream = error.message; // backend.mjs, COACH_BACKEND=cli
       return done(failed(200, 'Error'), { upstream });
     }
     const usage = { in_tokens: response.usage?.input_tokens ?? null, out_tokens: response.usage?.output_tokens ?? null };
