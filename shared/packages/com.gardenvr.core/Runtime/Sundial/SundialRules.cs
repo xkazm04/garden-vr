@@ -102,7 +102,7 @@ namespace GardenVR.Core
             state.Bloom = BloomFor(windowKept);
             state.DueNow = window[6] == TileState.Today && TryArc(habit.Group, out arc) && schedule.ArcAt(nowMin) == arc;
             int yesterday = today.Index - 1;
-            state.CanBackfillYesterday = yesterday >= habit.CreatedDay && !ledger.IsKept(habit.Id, yesterday);
+            state.CanBackfillYesterday = TileOn(habit, ledger, yesterday, today.Index) == TileState.Missed;
             return state;
         }
 
@@ -119,9 +119,11 @@ namespace GardenVR.Core
             if (day < habit.CreatedDay) return TileState.Before;
             TendEvent live = Live(ledger, habit.Id, day);
             if (live != null) return live.Late ? TileState.Late : TileState.Kept;
+            HabitSchedule schedule = HabitProfiles.ScheduleOf(habit);
+            if (!schedule.IsPlannedOn(new GardenDay(day))) return TileState.NotPlanned;
             if (day == todayIndex) return TileState.Today;
             if (day > todayIndex) return TileState.Before;
-            return TileState.Missed;
+            return schedule.Kind == ScheduleKind.TimesPerWeek ? TileState.Flexible : TileState.Missed;
         }
 
         /// <summary>15 degrees per hour, 0 at 06:00. The angle wraps every full turn.</summary>

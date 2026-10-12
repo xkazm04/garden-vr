@@ -789,11 +789,13 @@ GardenVR.Core.SundialRules method public static GardenVR.Core.Stage StageFor(Sys
 GardenVR.Core.SundialRules method public static GardenVR.Core.TendResult Backfill(GardenVR.Core.HabitDef habit, GardenVR.Core.Ledger ledger, GardenVR.Core.GardenDay today, GardenVR.Core.IClock clock)
 GardenVR.Core.SundialRules method public static GardenVR.Core.TileState TileOn(GardenVR.Core.HabitDef habit, GardenVR.Core.Ledger ledger, System.Int32 day, System.Int32 todayIndex)
 GardenVR.Core.SundialRules method public static System.Boolean TryArc(System.String group, out GardenVR.Core.ArcId arc)
+GardenVR.Core.SundialRules method public static System.Int32 KeptThisWeek(GardenVR.Core.HabitDef habit, GardenVR.Core.Ledger ledger, GardenVR.Core.GardenDay today)
 GardenVR.Core.SundialRules method public static System.Int32 LiveInArc(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits, System.String group)
 GardenVR.Core.SundialRules method public static System.Int32 RowOf(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits, GardenVR.Core.HabitDef habit)
 GardenVR.Core.SundialRules method public static System.Nullable<GardenVR.Core.ArcId> ArcAt(System.Int32 nowMin)
 GardenVR.Core.SundialRules method public static System.Single GnomonAngleDeg(System.Int32 nowMin)
 GardenVR.Core.SundialRules method public static System.String Admit(System.Collections.Generic.IList<GardenVR.Core.HabitDef> habits, GardenVR.Core.HabitDef candidate)
+GardenVR.Core.SundialRules method public static System.String LeastPopulatedArc(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits)
 GardenVR.Core.SundialState ctor public ()
 GardenVR.Core.SundialState field public System.Collections.Generic.List<GardenVR.Core.PlantState> Plants
 GardenVR.Core.SundialState field public System.Int32 Now
@@ -874,9 +876,11 @@ GardenVR.Core.ThreeGoodThings property get public System.Boolean Complete
 GardenVR.Core.ThreeGoodThings property get public System.Int32 Placed
 GardenVR.Core.TileState field public System.Int32 value__
 GardenVR.Core.TileState field public const GardenVR.Core.TileState Before = 4
+GardenVR.Core.TileState field public const GardenVR.Core.TileState Flexible = 6
 GardenVR.Core.TileState field public const GardenVR.Core.TileState Kept = 0
 GardenVR.Core.TileState field public const GardenVR.Core.TileState Late = 1
 GardenVR.Core.TileState field public const GardenVR.Core.TileState Missed = 2
+GardenVR.Core.TileState field public const GardenVR.Core.TileState NotPlanned = 5
 GardenVR.Core.TileState field public const GardenVR.Core.TileState Today = 3
 GardenVR.Core.WeekDial ctor public ()
 GardenVR.Core.WeekDial field public System.Collections.Generic.List<GardenVR.Core.WeekRecord> Plants

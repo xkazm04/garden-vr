@@ -125,6 +125,24 @@ namespace GardenVR.Core
             return used;
         }
 
+        /// <summary>The least populated arc; ties go morning, midday, then wind-down.</summary>
+        public static string LeastPopulatedArc(IReadOnlyList<HabitDef> habits)
+        {
+            string best = "morning";
+            foreach (string arc in new[] { "midday", "winddown" })
+                if (LiveInArc(habits, arc) < LiveInArc(habits, best)) best = arc;
+            return best;
+        }
+
+        /// <summary>Distinct kept days from Monday through today, including late logs.</summary>
+        public static int KeptThisWeek(HabitDef habit, Ledger ledger, GardenDay today)
+        {
+            if (habit == null) throw new ArgumentNullException(nameof(habit));
+            if (ledger == null) throw new ArgumentNullException(nameof(ledger));
+            int first = Math.Max(habit.CreatedDay, HabitSchedule.WeekStart(today).Index);
+            return first > today.Index ? 0 : ledger.KeptDaysInWindow(habit.Id, today, today.Index - first + 1);
+        }
+
         static bool LiveIn(HabitDef habit, ArcId arc)
         {
             if (habit == null || habit.ArchivedDay.HasValue || string.IsNullOrEmpty(habit.Id)) return false;

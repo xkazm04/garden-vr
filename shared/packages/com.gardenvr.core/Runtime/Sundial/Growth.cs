@@ -7,7 +7,9 @@ namespace GardenVR.Core
         Late,
         Missed,
         Today,
-        Before
+        Before,
+        NotPlanned,
+        Flexible
     }
 
     /// <summary>
