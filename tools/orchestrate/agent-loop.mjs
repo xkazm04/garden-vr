@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Runs one Grok agent against its task queue until the queue is empty or a STOP file appears.
+// Runs one coding agent (Codex, Claude, Grok or agy: --engine) against its task queue until the queue is empty or a STOP file appears.
 //
-//   node tools/orchestrate/agent-loop.mjs --app terrarium --worktree C:/Users/kazda/kiro/gvr-terrarium [--model grok-4.7]
+//   node tools/orchestrate/agent-loop.mjs --app sundial --worktree C:/Users/kazda/kiro/gvr-sundial --engine codex [--codex-model gpt-6-astra]
 //
 // Queue lives in the MAIN checkout: orchestration/queue/<app>/*.md (sorted by name). A task whose `depends:` ids are
 // not all in orchestration/done/ is skipped until they are. Running a task: the file moves to orchestration/running/,
@@ -23,7 +23,8 @@ const app = opt('app'); const wt = opt('worktree'); const model = opt('model', '
 const effort = opt('effort', 'high'); const timeoutMin = Number(opt('timeout-min', 150));
 const agyModel = opt('agy-model', 'gemini-3.8-flash-high');
 const claudeModel = opt('claude-model', 'claude-sonnet-5-5'); const claudeEffort = opt('claude-effort', 'high');
-const engineState = { primary: opt('engine', 'grok') }; // grok | agy
+const codexModel = opt('codex-model', 'gpt-6-astra'); const codexEffort = opt('codex-effort', 'high');
+const engineState = { primary: opt('engine', 'grok') }; // grok | claude | codex | agy
 if (!app || !wt) { console.error('need --app and --worktree'); process.exit(1); }
 
 const O = (...p) => path.join(main, 'orchestration', ...p);
@@ -66,23 +67,29 @@ async function runGrok(task) {
   const report = path.join(wt, 'orchestration', 'runs', app, id, 'REPORT.md');
   const AGY = process.env.AGY || path.join(process.env.LOCALAPPDATA, 'agy', 'bin', 'agy.exe');
   const extra = 'Run every long process (Unity, Blender) in the FOREGROUND and read its log before you continue. Do not end your turn while a process runs.';
+  // codex: OpenAI Codex CLI, spawned as node + codex.js (the npm shim is a .ps1/.cmd that spawn cannot run without a
+  // shell). It reads extra input from stdin unless stdin is closed (measured 2026-10-12), so stdin is 'ignore'.
+  const CODEX_JS = process.env.CODEX_JS || path.join(path.dirname(process.execPath), 'node_modules', '@openai', 'codex', 'bin', 'codex.js');
   // One engine call. grok: Grok Build CLI. agy: Antigravity CLI (Gemini), which must skip permissions headless or every
   // write_file is auto-denied (measured 2026-10-04: T-TER-042/043 "SUCCESS" with denied write_file and no output).
   const once = (eng, text, resumeId, tag) => new Promise((resolve) => {
-    const args = eng === 'agy'
+    const args = eng === 'codex'
+      ? [CODEX_JS, 'exec', ...(resumeId ? ['resume', resumeId] : []), '-m', codexModel, '-c', `model_reasoning_effort="${codexEffort}"`,
+         '--dangerously-bypass-approvals-and-sandbox', '--json', ...(resumeId ? [] : ['-C', wt]), text]
+      : eng === 'agy'
       ? ['-p', text, '--model', agyModel, '--output-format', 'json', '--dangerously-skip-permissions', ...(resumeId ? ['--conversation', resumeId] : [])]
       : eng === 'claude'
       ? [...(resumeId ? ['-r', resumeId] : []), '-p', text, '--model', claudeModel, '--effort', claudeEffort, '--output-format', 'json',
          '--permission-mode', 'bypassPermissions']
       : [...(resumeId ? ['-r', resumeId] : []), '-p', text, '-m', model, '--reasoning-effort', effort, '--output-format', 'json',
          '--always-approve', '--permission-mode', 'bypassPermissions', '--cwd', wt];
-    const bin = eng === 'agy' ? AGY : eng === 'claude' ? 'claude' : 'grok';
+    const bin = eng === 'codex' ? process.execPath : eng === 'agy' ? AGY : eng === 'claude' ? 'claude' : 'grok';
     // A Claude child must not inherit the parent Claude session's CLAUDECODE / CLAUDE_CODE_* variables, and must bill the
     // subscription, never a leaked ANTHROPIC_API_KEY (both from this machine's own measured failures).
     const env = { ...process.env, GROK_AGENT_DASHBOARD: '0' };
     if (eng === 'claude') for (const k of Object.keys(env)) if (k === 'CLAUDECODE' || k.startsWith('CLAUDE_CODE_') || k === 'ANTHROPIC_API_KEY') delete env[k];
     if (eng === 'claude') env.CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS = '0';
-    const child = spawn(bin, args, { cwd: wt, env, shell: false, windowsHide: true });
+    const child = spawn(bin, args, { cwd: wt, env, shell: false, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
     child.stdout.pipe(fs.createWriteStream(path.join(runDir, `${eng}${tag}.json`)));
     child.stderr.pipe(fs.createWriteStream(path.join(runDir, `${eng}${tag}.stderr.log`)));
     // SIGTERM does not reach the process tree on Windows (measured: a 150-min timeout fired 8.7 h late and left children);
@@ -91,7 +98,9 @@ async function runGrok(task) {
     child.on('close', (code) => { clearTimeout(timer); resolve(code); });
     child.on('error', (e) => { clearTimeout(timer); log(`${id}: spawn error ${e.message}`); resolve(-1); });
   });
-  const sessionOf = (eng, tag) => { try { const s = fs.readFileSync(path.join(runDir, `${eng}${tag}.json`), 'utf8'); const d = JSON.parse(s.slice(s.indexOf('{'))); return d.sessionId || d.session_id || d.conversation_id || null; } catch { return null; } };
+  // codex writes JSONL; its first event is {"type":"thread.started","thread_id":...}.
+  const sessionOf = (eng, tag) => { try { const s = fs.readFileSync(path.join(runDir, `${eng}${tag}.json`), 'utf8');
+    if (eng === 'codex') return (s.match(/"thread_id"\s*:\s*"([^"]+)"/) || [])[1] || null; const d = JSON.parse(s.slice(s.indexOf('{'))); return d.sessionId || d.session_id || d.conversation_id || null; } catch { return null; } };
   const limited = (eng) => { const b = ['', '.cont1', '.cont2'].map((tag) => { try { return fs.readFileSync(path.join(runDir, `${eng}${tag}.json`), 'utf8') + fs.readFileSync(path.join(runDir, `${eng}${tag}.stderr.log`), 'utf8'); } catch { return ''; } }).join(' '); return /rate.?limit|quota|usage limit|429|402|insufficient|exhausted|too many requests|balance/i.test(b); };
   const t0 = Date.now();
   // Run one engine with up to two same-session continuations when it exits without REPORT.md (headless agents end their
@@ -109,7 +118,8 @@ async function runGrok(task) {
   let code;
   const primary = engineState.primary;
   code = await attempt(primary);
-  if (primary !== 'agy' && !fs.existsSync(report) && limited(primary)) {
+  // Codex runs do not fall back to agy: the owner allowed agy for image generation only (2026-10-12).
+  if (primary !== 'agy' && primary !== 'codex' && !fs.existsSync(report) && limited(primary)) {
     engineState.primary = 'agy';
     log(`${id}: ${primary} usage limit/balance hit - switching this loop to agy ${agyModel}`);
     code = await attempt('agy');
@@ -118,7 +128,7 @@ async function runGrok(task) {
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-log(`loop start: engine=${engineState.primary} claude=${claudeModel}@${claudeEffort} grok=${model} agy=${agyModel} worktree=${wt}`);
+log(`loop start: engine=${engineState.primary} codex=${codexModel}@${codexEffort} claude=${claudeModel}@${claudeEffort} grok=${model} agy=${agyModel} worktree=${wt}`);
 while (true) {
   if (fs.existsSync(O('STOP-' + app))) { log('STOP file present, exiting'); break; }
   const task = nextTask();

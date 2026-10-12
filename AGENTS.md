@@ -63,4 +63,9 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
   exit means a pixel proof failed, and that png is not committed as written (decision 0011).
 
 ## Keys and credits
-- `ELEVENLABS_API_KEY` and `TRIPO_API_KEY` live in the git-ignored `.env` at the repo (and worktree) root. Never print or commit them. Tripo: log balance before/after every call; respect the task cap.
+- `ELEVENLABS_API_KEY` lives in the git-ignored `.env` at the repo (and worktree) root. Never print or commit it.
+- **No 3D generation models (owner, 2026-10-12).** Do not create meshes with any local or commercial image- or
+  text-to-3D model: no TRELLIS, no Tripo, no other. `TRIPO_API_KEY` stays unused. Meshes are scripted Blender
+  (`tools/blender/`) or built in Unity from code.
+- **Codex agents (GPT 6 Astra) generate images only through `tools/agy/image.sh`** (agy, Nano Banana), in the
+  foreground; there is no built-in `image_gen` for them.
