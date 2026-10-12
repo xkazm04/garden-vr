@@ -13,7 +13,7 @@ namespace GardenVR.Sundial
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(120)]
-    public sealed class WeekDialController : MonoBehaviour
+    public sealed partial class WeekDialController : MonoBehaviour
     {
         public const string CornerId = "page.corner";
         public const string CaptionLine = WeekPageInk.Caption;
@@ -190,10 +190,12 @@ namespace GardenVR.Sundial
             Paint();
             CoverOthers(_turn > 0.72f);
             PlaceWords();
+            PlaceJournal();
         }
 
         void OnIntent(HandIntent intent)
         {
+            if (JournalIntent(intent)) return;
             if (intent.Kind == HandIntentKind.Release)
             {
                 _gate = false;

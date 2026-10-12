@@ -59,4 +59,3 @@ public sealed class SundialReflectionTests : IDisposable
         Assert.Equal("A quiet day.", journal.On(14));
     }
 }
-
