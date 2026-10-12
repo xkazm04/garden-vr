@@ -1,0 +1,3 @@
+orchestration/runs/sundial/T-SUN-060/DialG1-listening.png  2724558 -> 2256819  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 cb7c0be37496)  written
+orchestration/runs/sundial/T-SUN-060/DialG1-released.png  2722411 -> 2254640  pillow-optimize  proof ok (mode, size, palette, transparency, pixel sha256 1579a137ba77)  written
+total 5446969 -> 4511459, saved 935510 bytes; proof failures 0; applied

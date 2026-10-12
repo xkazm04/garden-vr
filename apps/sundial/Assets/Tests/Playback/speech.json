@@ -1,0 +1,10 @@
+{
+  "utterances": [
+    { "events": [
+      { "t": 0.05, "kind": "partial", "text": "private copper" },
+      { "t": 0.10, "kind": "final", "text": "private copper lantern" },
+      { "t": 0.20, "kind": "final", "text": "beside the window" }
+    ] },
+    { "events": [ { "t": 0.10, "kind": "final", "text": "second answer" } ] }
+  ]
+}

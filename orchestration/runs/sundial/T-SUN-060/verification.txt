@@ -1,0 +1,18 @@
+editmode result=Passed total=84 passed=84 failed=0 skipped=0
+playmode result=Passed total=60 passed=60 failed=0 skipped=0
+speech-playmode result=Passed total=5 passed=5 failed=0 skipped=0
+editmode compiler/shader error entries=0
+playmode compiler/shader error entries=0
+build compiler/shader error entries=0
+build-development compiler/shader error entries=0
+terrarium-compile compiler/shader error entries=0
+[SpeechCheck] Automated device probe, no human speech claimed
+[Speech] Windows begin: Stopped
+ERROR:  Dictation support is not enabled on this device (see 'Get to know me' in Settings > Privacy > Speech, inking, & typing) [Operation has failed with error 0x80045509: (null)]
+[Speech] Windows unavailable: HRESULT=0x80045509 ERROR:  Dictation support is not enabled on this device (see 'Get to know me' in Settings > Privacy > Speech, inking, & typing)
+[SpeechCheck] Available=False Listening=False Finals=0
+[SpeechCheck] Transient text cleared=True
+App raw keyboard/mouse reads=0
+sundial SpeechPlayerCheck metadata present=False; GardenVR.Sundial.dll sha256=fa2724e199eac83575acc42d3718d0fb052906de7ea4b064cec82fed5ee2a042
+sundial-development SpeechPlayerCheck metadata present=True; GardenVR.Sundial.dll sha256=bd8be30d66e618c1b2be413987537eaa6a8087e898c07db192826d855ba2a683
+User-facing strings added: listening

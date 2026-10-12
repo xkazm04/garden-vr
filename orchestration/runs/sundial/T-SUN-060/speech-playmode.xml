@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.8785022">
+  <test-suite type="TestSuite" id="1087" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="60" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.878502" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1079" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="60" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.867073" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="45620" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1080" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="60" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.865378" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1081" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="60" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.860529" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1082" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="60" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.859075" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1083" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="60" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.857065" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1052" name="SpeechTests" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.853255" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1056" name="DeviceFailure_HidesListening_UnavailableDoesNotBegin" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.DeviceFailure_HidesListening_UnavailableDoesNotBegin" methodname="DeviceFailure_HidesListening_UnavailableDoesNotBegin" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="2023562930" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:33Z" duration="0.107877" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1053" name="Hold_IsOptInAndTargeted_ReleaseAllowsFinal_ClearRejectsLateText" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.Hold_IsOptInAndTargeted_ReleaseAllowsFinal_ClearRejectsLateText" methodname="Hold_IsOptInAndTargeted_ReleaseAllowsFinal_ClearRejectsLateText" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="2135188509" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:33Z" duration="0.002366" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1054" name="Pause_DisarmsAndClears_DoesNotRestartFromHeldInput" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.Pause_DisarmsAndClears_DoesNotRestartFromHeldInput" methodname="Pause_DisarmsAndClears_DoesNotRestartFromHeldInput" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="738055748" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:33Z" duration="0.001522" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1057" name="ScriptedFile_Intents_NoTranscriptInSave_Captures" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.ScriptedFile_Intents_NoTranscriptInSave_Captures" methodname="ScriptedFile_Intents_NoTranscriptInSave_Captures" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="977814048" result="Passed" start-time="2026-10-12 11:18:33Z" end-time="2026-10-12 11:18:36Z" duration="3.705558" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.669
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1055" name="TrackingLoss_AndDisable_StopCapture" fullname="GardenVR.Sundial.Tests.PlayMode.SpeechTests.TrackingLoss_AndDisable_StopCapture" methodname="TrackingLoss_AndDisable_StopCapture" classname="GardenVR.Sundial.Tests.PlayMode.SpeechTests" runstate="Runnable" seed="1488599053" result="Passed" start-time="2026-10-12 11:18:36Z" end-time="2026-10-12 11:18:36Z" duration="0.018683" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
