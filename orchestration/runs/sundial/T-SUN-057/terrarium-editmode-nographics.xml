@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="55" result="Failed(Child)" total="55" passed="54" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.759008">
+  <test-suite type="TestSuite" id="1000" name="terrarium" fullname="terrarium" runstate="Runnable" testcasecount="55" result="Failed" site="Child" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.759008" total="55" passed="54" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1069" name="GardenVR.Terrarium.Tests.EditMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/terrarium/Library/ScriptAssemblies/GardenVR.Terrarium.Tests.EditMode.dll" runstate="Runnable" testcasecount="55" result="Failed" site="Child" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.748960" total="55" passed="54" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="24396" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1070" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="55" result="Failed" site="Child" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.747879" total="55" passed="54" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1071" name="Terrarium" fullname="GardenVR.Terrarium" runstate="Runnable" testcasecount="55" result="Failed" site="Child" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.747061" total="55" passed="54" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1072" name="Tests" fullname="GardenVR.Terrarium.Tests" runstate="Runnable" testcasecount="55" result="Failed" site="Child" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.746095" total="55" passed="54" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1001" name="AtmosphereVariantTests" fullname="GardenVR.Terrarium.Tests.AtmosphereVariantTests" classname="GardenVR.Terrarium.Tests.AtmosphereVariantTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.088900" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="CaptureState_S5_IsOptIn_ComposesAndResets" fullname="GardenVR.Terrarium.Tests.AtmosphereVariantTests.CaptureState_S5_IsOptIn_ComposesAndResets" methodname="CaptureState_S5_IsOptIn_ComposesAndResets" classname="GardenVR.Terrarium.Tests.AtmosphereVariantTests" runstate="Runnable" seed="2031369224" result="Passed" start-time="2026-10-12 10:31:05Z" end-time="2026-10-12 10:31:06Z" duration="0.059927" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="CaptureState_S6_ImpliesMossAndFiddle_ComposesAndResets" fullname="GardenVR.Terrarium.Tests.AtmosphereVariantTests.CaptureState_S6_ImpliesMossAndFiddle_ComposesAndResets" methodname="CaptureState_S6_ImpliesMossAndFiddle_ComposesAndResets" classname="GardenVR.Terrarium.Tests.AtmosphereVariantTests" runstate="Runnable" seed="486892054" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001008" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1004" name="AudioCueServiceTests" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.067793" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1007" name="Cooldown_DropsUntilTheWindowPasses" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Cooldown_DropsUntilTheWindowPasses" methodname="Cooldown_DropsUntilTheWindowPasses" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="660471686" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.012386" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="Duck_AttacksWhileVoicePlays_AndReleasesAfter" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Duck_AttacksWhileVoicePlays_AndReleasesAfter" methodname="Duck_AttacksWhileVoicePlays_AndReleasesAfter" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="327915675" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.003888" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1013" name="FullPool_YieldsTheLowestBandFirst" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.FullPool_YieldsTheLowestBandFirst" methodname="FullPool_YieldsTheLowestBandFirst" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="1707041590" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001098" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="Manifest_ListsEveryTerrariumCue_AndClipsExist" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Manifest_ListsEveryTerrariumCue_AndClipsExist" methodname="Manifest_ListsEveryTerrariumCue_AndClipsExist" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="1523609254" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.023584" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1011" name="Mute_OutranksPlayback_AndPersists" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Mute_OutranksPlayback_AndPersists" methodname="Mute_OutranksPlayback_AndPersists" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="1543897503" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001594" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1012" name="Placeholder_IsSilent_AndLoggedOnce" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Placeholder_IsSilent_AndLoggedOnce" methodname="Placeholder_IsSilent_AndLoggedOnce" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="966058816" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.002853" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[PLACEHOLDER cue gone
+PLACEHOLDER cue no.such
+]]></output>
+              </test-case>
+              <test-case id="1006" name="Scripts_OnlyPlayCueIdsThatExist" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Scripts_OnlyPlayCueIdsThatExist" methodname="Scripts_OnlyPlayCueIdsThatExist" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="1933569245" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.011586" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1010" name="Variants_DoNotRepeatTheSameClipWithinThreeSeconds" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.Variants_DoNotRepeatTheSameClipWithinThreeSeconds" methodname="Variants_DoNotRepeatTheSameClipWithinThreeSeconds" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="5271793" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.004180" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1009" name="VoiceLine_ReplacesTheOneAlreadyPlaying" fullname="GardenVR.Terrarium.Tests.AudioCueServiceTests.VoiceLine_ReplacesTheOneAlreadyPlaying" methodname="VoiceLine_ReplacesTheOneAlreadyPlaying" classname="GardenVR.Terrarium.Tests.AudioCueServiceTests" runstate="Runnable" seed="1566223264" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000531" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1014" name="BacklitFrondsVariantTests" fullname="GardenVR.Terrarium.Tests.BacklitFrondsVariantTests" classname="GardenVR.Terrarium.Tests.BacklitFrondsVariantTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.020813" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1015" name="CaptureState_S4_IsOptIn_SplitsFrondsAndFiddle_AndComposes" fullname="GardenVR.Terrarium.Tests.BacklitFrondsVariantTests.CaptureState_S4_IsOptIn_SplitsFrondsAndFiddle_AndComposes" methodname="CaptureState_S4_IsOptIn_SplitsFrondsAndFiddle_AndComposes" classname="GardenVR.Terrarium.Tests.BacklitFrondsVariantTests" runstate="Runnable" seed="304798344" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.005734" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1016" name="FiddleStack_IsOneMesh_TubeFirst_ShellFractionsUpToTop_CoreWeightKept" fullname="GardenVR.Terrarium.Tests.BacklitFrondsVariantTests.FiddleStack_IsOneMesh_TubeFirst_ShellFractionsUpToTop_CoreWeightKept" methodname="FiddleStack_IsOneMesh_TubeFirst_ShellFractionsUpToTop_CoreWeightKept" classname="GardenVR.Terrarium.Tests.BacklitFrondsVariantTests" runstate="Runnable" seed="948201812" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.012792" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1017" name="EtchContrastTests" fullname="GardenVR.Terrarium.Tests.EtchContrastTests" classname="GardenVR.Terrarium.Tests.EtchContrastTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.504621" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1018" name="Etch_RenderedContrast_AtLeastFourPointFive" fullname="GardenVR.Terrarium.Tests.EtchContrastTests.Etch_RenderedContrast_AtLeastFourPointFive" methodname="Etch_RenderedContrast_AtLeastFourPointFive" classname="GardenVR.Terrarium.Tests.EtchContrastTests" runstate="Runnable" seed="718973032" result="Failed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.499816" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  the etched line did not render any glyph pixels
+  Expected: greater than 40
+  But was:  0
+]]></message>
+                  <stack-trace><![CDATA[at GardenVR.Terrarium.Tests.EtchContrastTests.Etch_RenderedContrast_AtLeastFourPointFive () [0x0017a] in C:\Users\kazda\kiro\gvr-sundial\apps\terrarium\Assets\Tests\EditMode\EtchContrastTests.cs:40
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[[Etch] font=CormorantGaramond SDF chars=19 shader=TextMeshPro/Mobile/Distance Field
+RenderTexture.Create failed
+RenderTexture.Create failed
+Failed to set the active render target, ensure that it is a valid render target.
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+DrawOpaqueObjects/Copy Color: Unable to find surface for attachment 0
+NextSubPass: Not inside a Renderpass
+EndRenderPass: Not inside a Renderpass
+RenderTexture.Create failed
+RenderTexture.Create failed
+RenderTexture.Create failed
+DrawTransparentObjects: Unable to find surface for attachment 0
+EndRenderPass: Not inside a Renderpass
+[Etch] contrast=0.00 hits=0 ink=CDCDCD bg=CDCDCD
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1019" name="IntentTargetTests" fullname="GardenVR.Terrarium.Tests.IntentTargetTests" classname="GardenVR.Terrarium.Tests.IntentTargetTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.008149" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1020" name="Raycast_MissesHiddenAndDisabledTargets" fullname="GardenVR.Terrarium.Tests.IntentTargetTests.Raycast_MissesHiddenAndDisabledTargets" methodname="Raycast_MissesHiddenAndDisabledTargets" classname="GardenVR.Terrarium.Tests.IntentTargetTests" runstate="Runnable" seed="369814754" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.004738" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1021" name="KbmIntentMapperTests" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.019327" total="16" passed="16" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1037" name="BindingHint_ReturnsThePcStrings" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.BindingHint_ReturnsThePcStrings" methodname="BindingHint_ReturnsThePcStrings" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="2093524039" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000666" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="ClickVersusHold_SplitsAtPointThreeSeconds" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.ClickVersusHold_SplitsAtPointThreeSeconds" methodname="ClickVersusHold_SplitsAtPointThreeSeconds" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="1209603585" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.004361" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="DevCommand_F3OffersSeedPackets" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.DevCommand_F3OffersSeedPackets" methodname="DevCommand_F3OffersSeedPackets" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="1609458444" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.002348" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1031" name="DevCommands_AreAbsentUnlessTheFlagIsOn" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.DevCommands_AreAbsentUnlessTheFlagIsOn" methodname="DevCommands_AreAbsentUnlessTheFlagIsOn" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="193713701" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000400" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="Enter_PinchesTheFocusedTarget" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.Enter_PinchesTheFocusedTarget" methodname="Enter_PinchesTheFocusedTarget" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="305484865" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000827" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1035" name="Esc_RaisesSystemPauseOncePerPress" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.Esc_RaisesSystemPauseOncePerPress" methodname="Esc_RaisesSystemPauseOncePerPress" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="50346595" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000241" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1034" name="HeadDrag_ClampsYawPitchAndRRecentres" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.HeadDrag_ClampsYawPitchAndRRecentres" methodname="HeadDrag_ClampsYawPitchAndRRecentres" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="1654563153" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001080" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1029" name="LookDwell_CommitsAfterPointOneFiveSeconds" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.LookDwell_CommitsAfterPointOneFiveSeconds" methodname="LookDwell_CommitsAfterPointOneFiveSeconds" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="943282115" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000380" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1033" name="LookToggle_RaisesOnPress_InEveryBuild" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.LookToggle_RaisesOnPress_InEveryBuild" methodname="LookToggle_RaisesOnPress_InEveryBuild" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="91095242" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000306" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1028" name="PalmOpen_FiresAtPointSixAndNotAtPointFive" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.PalmOpen_FiresAtPointSixAndNotAtPointFive" methodname="PalmOpen_FiresAtPointSixAndNotAtPointFive" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="2100699752" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000320" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1036" name="Poke_FiresOnFAndOnPokeOnlyClick" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.Poke_FiresOnFAndOnPokeOnlyClick" methodname="Poke_FiresOnFAndOnPokeOnlyClick" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="1246358172" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000536" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="Release_CarriesTotalHoldSeconds" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.Release_CarriesTotalHoldSeconds" methodname="Release_CarriesTotalHoldSeconds" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="194545026" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000317" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="ShortSpaceTap_DoesNotSelect" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.ShortSpaceTap_DoesNotSelect" methodname="ShortSpaceTap_DoesNotSelect" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="1498987214" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000179" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="StrengthRamp_CrossesHysteresisInsidePointOneTwoSeconds" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.StrengthRamp_CrossesHysteresisInsidePointOneTwoSeconds" methodname="StrengthRamp_CrossesHysteresisInsidePointOneTwoSeconds" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="736717405" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000521" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="Tab_StepsInOrdinalIdOrderAndSkipsDisabled" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.Tab_StepsInOrdinalIdOrderAndSkipsDisabled" methodname="Tab_StepsInOrdinalIdOrderAndSkipsDisabled" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="1639358865" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000594" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="ToggleMode_SpacePressLatchesUntilNextPress" fullname="GardenVR.Terrarium.Tests.KbmIntentMapperTests.ToggleMode_SpacePressLatchesUntilNextPress" methodname="ToggleMode_SpacePressLatchesUntilNextPress" classname="GardenVR.Terrarium.Tests.KbmIntentMapperTests" runstate="Runnable" seed="2021283200" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000294" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1038" name="MossInTheJarVariantTests" fullname="GardenVR.Terrarium.Tests.MossInTheJarVariantTests" classname="GardenVR.Terrarium.Tests.MossInTheJarVariantTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.002823" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1039" name="CaptureState_S3_IsOptIn_AndComposesWithS1" fullname="GardenVR.Terrarium.Tests.MossInTheJarVariantTests.CaptureState_S3_IsOptIn_AndComposesWithS1" methodname="CaptureState_S3_IsOptIn_AndComposesWithS1" classname="GardenVR.Terrarium.Tests.MossInTheJarVariantTests" runstate="Runnable" seed="1776099792" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000633" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1040" name="ShellStack_HoldsEveryShellInOneMesh_WithFractionsUnderOne" fullname="GardenVR.Terrarium.Tests.MossInTheJarVariantTests.ShellStack_HoldsEveryShellInOneMesh_WithFractionsUnderOne" methodname="ShellStack_HoldsEveryShellInOneMesh_WithFractionsUnderOne" classname="GardenVR.Terrarium.Tests.MossInTheJarVariantTests" runstate="Runnable" seed="1009136132" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001468" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1041" name="RoomRigTests" fullname="GardenVR.Terrarium.Tests.RoomRigTests" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.014098" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1042" name="Clamp_LimitsYawTo40AndPitchTo25" fullname="GardenVR.Terrarium.Tests.RoomRigTests.Clamp_LimitsYawTo40AndPitchTo25" methodname="Clamp_LimitsYawTo40AndPitchTo25" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="833624951" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.004162" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1044" name="DeskPose_ComesFromHeightDistanceAndLateral" fullname="GardenVR.Terrarium.Tests.RoomRigTests.DeskPose_ComesFromHeightDistanceAndLateral" methodname="DeskPose_ComesFromHeightDistanceAndLateral" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="1496756839" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001234" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1045" name="DeskTrace_RaisesPlacedAfterTheNearEdgeFinishes" fullname="GardenVR.Terrarium.Tests.RoomRigTests.DeskTrace_RaisesPlacedAfterTheNearEdgeFinishes" methodname="DeskTrace_RaisesPlacedAfterTheNearEdgeFinishes" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="1405067627" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000985" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1046" name="DeskTrace_StaysHiddenUntilTheLineIsDrawing" fullname="GardenVR.Terrarium.Tests.RoomRigTests.DeskTrace_StaysHiddenUntilTheLineIsDrawing" methodname="DeskTrace_StaysHiddenUntilTheLineIsDrawing" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="1633818409" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000661" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1052" name="Eye_SitsAtSeatedHeightWithPcLens" fullname="GardenVR.Terrarium.Tests.RoomRigTests.Eye_SitsAtSeatedHeightWithPcLens" methodname="Eye_SitsAtSeatedHeightWithPcLens" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="814025005" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000590" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="LensCard_FillsTheSeatedLens" fullname="GardenVR.Terrarium.Tests.RoomRigTests.LensCard_FillsTheSeatedLens" methodname="LensCard_FillsTheSeatedLens" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="1758165109" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000618" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1047" name="PlateFade_ReachesFullExposureAtFadeSeconds" fullname="GardenVR.Terrarium.Tests.RoomRigTests.PlateFade_ReachesFullExposureAtFadeSeconds" methodname="PlateFade_ReachesFullExposureAtFadeSeconds" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="610027871" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001436" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1043" name="Recentre_ClearsTheHeadOffset" fullname="GardenVR.Terrarium.Tests.RoomRigTests.Recentre_ClearsTheHeadOffset" methodname="Recentre_ClearsTheHeadOffset" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="999510741" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000632" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1048" name="RestPitch_AimsTheEyeAtTheDesk" fullname="GardenVR.Terrarium.Tests.RoomRigTests.RestPitch_AimsTheEyeAtTheDesk" methodname="RestPitch_AimsTheEyeAtTheDesk" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="663850400" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000860" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1049" name="RestPitch_CanSitTheHeroLowerInTheFrame" fullname="GardenVR.Terrarium.Tests.RoomRigTests.RestPitch_CanSitTheHeroLowerInTheFrame" methodname="RestPitch_CanSitTheHeroLowerInTheFrame" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="1173875859" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000604" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1051" name="SeatedCard_FillsTheCaptureFrustum" fullname="GardenVR.Terrarium.Tests.RoomRigTests.SeatedCard_FillsTheCaptureFrustum" methodname="SeatedCard_FillsTheCaptureFrustum" classname="GardenVR.Terrarium.Tests.RoomRigTests" runstate="Runnable" seed="296290434" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000333" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1053" name="ScriptedIntentPlaybackTests" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.008257" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1055" name="Playback_BadLineReportsItsLineNumber" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests.Playback_BadLineReportsItsLineNumber" methodname="Playback_BadLineReportsItsLineNumber" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" seed="422661489" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.004071" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1059" name="Playback_BindingHintsMatchTheProvider" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests.Playback_BindingHintsMatchTheProvider" methodname="Playback_BindingHintsMatchTheProvider" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" seed="1587455691" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000243" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1058" name="Playback_FinishedBecomesTrueAfterTheLastEvent" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests.Playback_FinishedBecomesTrueAfterTheLastEvent" methodname="Playback_FinishedBecomesTrueAfterTheLastEvent" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" seed="1994633498" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000308" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1056" name="Playback_HoldsStrengthForTheDuration" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests.Playback_HoldsStrengthForTheDuration" methodname="Playback_HoldsStrengthForTheDuration" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" seed="1307461937" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000266" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="Playback_LostReportsUntracked" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests.Playback_LostReportsUntracked" methodname="Playback_LostReportsUntracked" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" seed="1604208035" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000224" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="Playback_ParsesEveryLineKind" fullname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests.Playback_ParsesEveryLineKind" methodname="Playback_ParsesEveryLineKind" classname="GardenVR.Terrarium.Tests.ScriptedIntentPlaybackTests" runstate="Runnable" seed="177504791" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001922" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1060" name="SprintCompositeVariantTests" fullname="GardenVR.Terrarium.Tests.SprintCompositeVariantTests" classname="GardenVR.Terrarium.Tests.SprintCompositeVariantTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.002332" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1061" name="CaptureState_Sprint_StacksTheWinners_AndResets" fullname="GardenVR.Terrarium.Tests.SprintCompositeVariantTests.CaptureState_Sprint_StacksTheWinners_AndResets" methodname="CaptureState_Sprint_StacksTheWinners_AndResets" classname="GardenVR.Terrarium.Tests.SprintCompositeVariantTests" runstate="Runnable" seed="1990101018" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000976" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1062" name="SetLook_FlipsTheLook_AndKeepsTheState" fullname="GardenVR.Terrarium.Tests.SprintCompositeVariantTests.SetLook_FlipsTheLook_AndKeepsTheState" methodname="SetLook_FlipsTheLook_AndKeepsTheState" classname="GardenVR.Terrarium.Tests.SprintCompositeVariantTests" runstate="Runnable" seed="238099989" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000472" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1063" name="StructuredGlassVariantTests" fullname="GardenVR.Terrarium.Tests.StructuredGlassVariantTests" classname="GardenVR.Terrarium.Tests.StructuredGlassVariantTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001147" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1064" name="CaptureState_S1_IsOptIn_AndDefaultStaysA" fullname="GardenVR.Terrarium.Tests.StructuredGlassVariantTests.CaptureState_S1_IsOptIn_AndDefaultStaysA" methodname="CaptureState_S1_IsOptIn_AndDefaultStaysA" classname="GardenVR.Terrarium.Tests.StructuredGlassVariantTests" runstate="Runnable" seed="1031224218" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000539" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1065" name="ThickGlassVariantTests" fullname="GardenVR.Terrarium.Tests.ThickGlassVariantTests" classname="GardenVR.Terrarium.Tests.ThickGlassVariantTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001460" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1066" name="CaptureState_S2_IsOptIn_ComposesAndResets" fullname="GardenVR.Terrarium.Tests.ThickGlassVariantTests.CaptureState_S2_IsOptIn_ComposesAndResets" methodname="CaptureState_S2_IsOptIn_ComposesAndResets" classname="GardenVR.Terrarium.Tests.ThickGlassVariantTests" runstate="Runnable" seed="1764697459" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000922" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1067" name="UrpMsaaTests" fullname="GardenVR.Terrarium.Tests.UrpMsaaTests" classname="GardenVR.Terrarium.Tests.UrpMsaaTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.001496" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1068" name="ActivePipelineAsset_Has4xMsaa_SoAlphaToCoverageWorksAtRuntime" fullname="GardenVR.Terrarium.Tests.UrpMsaaTests.ActivePipelineAsset_Has4xMsaa_SoAlphaToCoverageWorksAtRuntime" methodname="ActivePipelineAsset_Has4xMsaa_SoAlphaToCoverageWorksAtRuntime" classname="GardenVR.Terrarium.Tests.UrpMsaaTests" runstate="Runnable" seed="2102125876" result="Passed" start-time="2026-10-12 10:31:06Z" end-time="2026-10-12 10:31:06Z" duration="0.000951" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/terrarium\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,12 @@
+sundial-editmode result=Passed total=75 passed=75 failed=0 skipped=0
+sundial-playmode result=Passed total=49 passed=49 failed=0 skipped=0
+terrarium-editmode result=Passed total=55 passed=55 failed=0 skipped=0
+terrarium-playmode result=Passed total=49 passed=49 failed=0 skipped=0
+sundial-compile compiler/shader error entries=0
+terrarium-compile compiler/shader error entries=0
+build compiler/shader error entries=0
+CoreSourceFiles=42 MissingMetadata=0
+Tracked source diff: empty after reverting Unity-generated asset/settings side effects
+SHA256 91A36FA14DD3CCF390B99720805EDA0553DA1CA1108381B49C98C938F69DC256 C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Build\sundial\Sundial.exe
+SHA256 1083F6FD99F0E336EDBC83DA02BFEB2B8A4C9D319FFA9A3811DA4FBD323DF393 C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Build\sundial\Sundial_Data\Managed\GardenVR.Core.dll
+SHA256 8FF5D5BB0651D2912AE6BEFDE216148D544C800007A31FB161BCE118999DE97C C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Build\sundial\Sundial_Data\Managed\GardenVR.Sundial.dll

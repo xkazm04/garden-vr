@@ -1,0 +1,2679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="49" result="Passed" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:33:18Z" duration="30.1593865">
+  <test-suite type="TestSuite" id="1070" name="terrarium" fullname="terrarium" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:33:18Z" duration="30.159387" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1063" name="GardenVR.Terrarium.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/terrarium/Library/ScriptAssemblies/GardenVR.Terrarium.Tests.PlayMode.dll" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:33:18Z" duration="30.151078" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="4928" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1064" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:33:18Z" duration="30.150294" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1065" name="Terrarium" fullname="GardenVR.Terrarium" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:33:18Z" duration="30.149725" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1066" name="Tests" fullname="GardenVR.Terrarium.Tests" runstate="Runnable" testcasecount="49" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:33:18Z" duration="30.149069" total="49" passed="49" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="BoxBreathingPlaybackTests" fullname="GardenVR.Terrarium.Tests.BoxBreathingPlaybackTests" classname="GardenVR.Terrarium.Tests.BoxBreathingPlaybackTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:32:50Z" duration="2.148770" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="BoxBreathing_FourBreaths_ByPlayback" fullname="GardenVR.Terrarium.Tests.BoxBreathingPlaybackTests.BoxBreathing_FourBreaths_ByPlayback" methodname="BoxBreathing_FourBreaths_ByPlayback" classname="GardenVR.Terrarium.Tests.BoxBreathingPlaybackTests" runstate="Runnable" seed="213132097" result="Passed" start-time="2026-10-12 10:32:48Z" end-time="2026-10-12 10:32:50Z" duration="2.137226" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[OneWord] mesh PebbleA verts 42 size (0.011, 0.011, 0.006) center (-0.022, 0.024, 0.028)
+[OneWord] mesh PebbleB verts 42 size (0.008, 0.008, 0.005) center (0.012, 0.030, 0.026)
+[OneWord] mesh PebbleC verts 42 size (0.009, 0.008, 0.005) center (-0.031, 0.006, 0.027)
+[OneWord] mesh PebbleD verts 42 size (0.008, 0.007, 0.004) center (0.028, 0.014, 0.026)
+[OneWord] pebble meshes 4 from Assets/Art/Models/Pebbles.fbx
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=5.022
+[Terrarium] intent=Poke target=pebble.settings held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.pace held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.pace held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.breaths held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.breaths held=0.00 breaths=0/8
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.breaths held=0.00 breaths=0/3
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.settings held=0.00 breaths=0/4
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/4
+[Terrarium] event=InhaleStarted breaths=0
+[FirstRun] step=tour.desk t=2.503
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.003
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] event=HoldFullStarted breaths=0
+[FirstRun] step=tour.hold t=8.003
+[Terrarium] intent=Release target=jar held=8.20 breaths=0/4
+[FirstRun] step=tour.release t=10.236
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=HoldEmptyStarted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/4
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] event=HoldFullStarted breaths=1
+[Terrarium] intent=Release target=jar held=8.20 breaths=1/4
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=27.719
+[Terrarium] event=HoldEmptyStarted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/4
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] event=HoldFullStarted breaths=2
+[Terrarium] intent=Release target=jar held=8.20 breaths=2/4
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=HoldEmptyStarted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/4
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] event=HoldFullStarted breaths=3
+[Terrarium] intent=Release target=jar held=8.20 breaths=3/4
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] event=Answer breaths=4
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=RitualComplete breaths=4
+[FirstRun] step=tour.answer t=60.518
+answerAt=60.518
+[Terrarium] cue moss.ripple semitones 0
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1003" name="DaysPlaybackTests" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 10:32:50Z" end-time="2026-10-12 10:32:56Z" duration="5.897203" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1009" name="Day_BoundaryAt0300" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests.Day_BoundaryAt0300" methodname="Day_BoundaryAt0300" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" seed="197363795" result="Passed" start-time="2026-10-12 10:32:50Z" end-time="2026-10-12 10:32:50Z" duration="0.442812" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=6.794
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.484
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+]]></output>
+              </test-case>
+              <test-case id="1005" name="Days_MissedThenRecovered" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests.Days_MissedThenRecovered" methodname="Days_MissedThenRecovered" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" seed="2022382420" result="Passed" start-time="2026-10-12 10:32:50Z" end-time="2026-10-12 10:32:51Z" duration="0.948650" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=7.233
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.484
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+]]></output>
+              </test-case>
+              <test-case id="1006" name="Days_WeekFlowers" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests.Days_WeekFlowers" methodname="Days_WeekFlowers" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" seed="1585538600" result="Passed" start-time="2026-10-12 10:32:51Z" end-time="2026-10-12 10:32:54Z" duration="3.059253" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=8.184
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.483
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+]]></output>
+              </test-case>
+              <test-case id="1008" name="Save_CorruptOffersBackup" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests.Save_CorruptOffersBackup" methodname="Save_CorruptOffersBackup" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" seed="379010921" result="Passed" start-time="2026-10-12 10:32:54Z" end-time="2026-10-12 10:32:55Z" duration="0.496625" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=11.242
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.483
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=11.708
+]]></output>
+              </test-case>
+              <test-case id="1007" name="Save_SurvivesRelaunch" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests.Save_SurvivesRelaunch" methodname="Save_SurvivesRelaunch" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" seed="696744327" result="Passed" start-time="2026-10-12 10:32:55Z" end-time="2026-10-12 10:32:56Z" duration="0.945858" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=11.738
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.484
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] resume step=tour.answer t=0.000
+[Terrarium] interactive frame realtime=12.664
+]]></output>
+              </test-case>
+              <test-case id="1004" name="Slots_InnerLayerAndLean" fullname="GardenVR.Terrarium.Tests.DaysPlaybackTests.Slots_InnerLayerAndLean" methodname="Slots_InnerLayerAndLean" classname="GardenVR.Terrarium.Tests.DaysPlaybackTests" runstate="Runnable" seed="1977728904" result="Passed" start-time="2026-10-12 10:32:56Z" end-time="2026-10-12 10:32:56Z" duration="0.001538" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1010" name="FirstRunPlaybackTests" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 10:32:56Z" end-time="2026-10-12 10:33:00Z" duration="3.813066" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1014" name="FirstRun_IdleHintReturns" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests.FirstRun_IdleHintReturns" methodname="FirstRun_IdleHintReturns" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" seed="1234648223" result="Passed" start-time="2026-10-12 10:32:56Z" end-time="2026-10-12 10:32:56Z" duration="0.565210" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=12.687
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.000
+[Terrarium] cue jar.lid semitones 0
+[FirstRun] step=tour.hold t=8.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=9.500
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=13.383
+]]></output>
+              </test-case>
+              <test-case id="1013" name="FirstRun_NotOnFailedLoad" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests.FirstRun_NotOnFailedLoad" methodname="FirstRun_NotOnFailedLoad" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" seed="869062916" result="Passed" start-time="2026-10-12 10:32:56Z" end-time="2026-10-12 10:32:57Z" duration="0.046970" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=13.258
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=13.270
+]]></output>
+              </test-case>
+              <test-case id="1015" name="FirstRun_ReducedMotion_EndStates" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests.FirstRun_ReducedMotion_EndStates" methodname="FirstRun_ReducedMotion_EndStates" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" seed="575417036" result="Passed" start-time="2026-10-12 10:32:57Z" end-time="2026-10-12 10:32:58Z" duration="0.999702" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=13.299
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.000
+[Terrarium] cue jar.lid semitones 0
+[FirstRun] step=tour.hold t=8.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=15.517
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=19.400
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=30.600
+answerAt=30.600
+[Terrarium] cue moss.ripple semitones 0
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] cue seed.appear semitones 0
+[FirstRun] step=tour.seeds t=34.600
+[FirstRun] step=tour.voice t=34.600
+[FirstRun] step=tour.done t=34.600
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=6/6
+[Terrarium] intent=Poke target=seed.water held=0.00 breaths=6/6
+]]></output>
+              </test-case>
+              <test-case id="1012" name="FirstRun_ResumeAfterQuit" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests.FirstRun_ResumeAfterQuit" methodname="FirstRun_ResumeAfterQuit" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" seed="246609225" result="Passed" start-time="2026-10-12 10:32:58Z" end-time="2026-10-12 10:32:58Z" duration="0.229944" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=14.303
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.484
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] resume step=tour.breathe t=0.000
+[Terrarium] event=RitualOffered breaths=0
+[Terrarium] event=RitualOffered breaths=0
+[Terrarium] interactive frame realtime=14.461
+]]></output>
+              </test-case>
+              <test-case id="1011" name="FirstRun_SixBreaths" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests.FirstRun_SixBreaths" methodname="FirstRun_SixBreaths" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" seed="993802490" result="Passed" start-time="2026-10-12 10:32:58Z" end-time="2026-10-12 10:33:00Z" duration="1.968465" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=14.533
+[FirstRun] step=tour.desk t=2.517
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.017
+[Terrarium] cue jar.lid semitones 0
+[FirstRun] step=tour.hold t=8.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=4.00 breaths=0/6
+[FirstRun] step=tour.release t=13.017
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=4.20 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=23.300
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=4.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=4.10 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=4.30 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=4.40 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=63.099
+answerAt=63.099
+[Terrarium] cue moss.ripple semitones 0
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] cue seed.appear semitones 0
+[FirstRun] step=tour.seeds t=67.100
+[FirstRun] step=tour.voice t=67.100
+[FirstRun] step=tour.done t=67.100
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=6/6
+[Terrarium] intent=Poke target=seed.water held=0.00 breaths=6/6
+answerAt=63.099
+[FirstRun] timeline tour.room=0.000 tour.desk=2.517 tour.arrive=4.017 tour.hold=8.000 tour.release=13.017 tour.breathe=23.300 tour.answer=63.099 tour.seeds=67.100 tour.voice=67.100 tour.done=67.100
+]]></output>
+              </test-case>
+              <test-case id="1016" name="Record_FirstRun" fullname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests.Record_FirstRun" methodname="Record_FirstRun" classname="GardenVR.Terrarium.Tests.FirstRunPlaybackTests" runstate="Runnable" seed="941972067" result="Passed" start-time="2026-10-12 10:33:00Z" end-time="2026-10-12 10:33:00Z" duration="0.001038" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="3600000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1017" name="GatePlaybackTests" fullname="GardenVR.Terrarium.Tests.GatePlaybackTests" classname="GardenVR.Terrarium.Tests.GatePlaybackTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-12 10:33:00Z" end-time="2026-10-12 10:33:02Z" duration="1.863447" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1020" name="Canonical_EndState" fullname="GardenVR.Terrarium.Tests.GatePlaybackTests.Canonical_EndState" methodname="Canonical_EndState" classname="GardenVR.Terrarium.Tests.GatePlaybackTests" runstate="Runnable" seed="1014892781" result="Passed" start-time="2026-10-12 10:33:00Z" end-time="2026-10-12 10:33:01Z" duration="1.426243" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] interactive frame realtime=16.502
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.483
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+[Terrarium] cue moss.ripple semitones 0
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] cue seed.appear semitones 0
+[FirstRun] step=tour.seeds t=20.567
+[FirstRun] step=tour.voice t=20.567
+[FirstRun] step=tour.done t=20.567
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] interactive frame realtime=17.061
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[Terrarium] cue moss.ripple semitones 0
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=17.624
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=17.650
+[Terrarium] intent=PinchHold target=jar.cork held=0.00 breaths=0/6
+[Terrarium] cue lookback.shimmer semitones 0
+[Terrarium] event=LookBackBegin breaths=0
+[Terrarium] intent=Release target=jar.cork held=2.50 breaths=0/6
+endstate-sha256=ce41afb66dcf948eed8ea88ba92d0dcbdc2d5eeb0366b8f44bf77ad1ae389bcb
+endstate-json={"firstRun":{"step":"tour.done","state":{"phase":"Complete","breaths":6,"uncoil":1,"fog":0,"fronds":1,"flowers":0,"dewToday":0,"vitality":1,"rituals":1}},"normalDay":{"step":"tour.done","state":{"phase":"Complete","breaths":6,"uncoil":1,"fog":0,"fronds":2,"flowers":0,"dewToday":0,"vitality":1,"rituals":2}},"missedDay":{"step":"tour.done","state":{"phase":"Waiting","breaths":0,"uncoil":0,"fog":0,"fronds":1,"flowers":0,"dewToday":0,"vitality":0.7,"rituals":1}},"day7":{"step":"tour.done","state":{"phase":"Waiting","breaths":0,"uncoil":0,"fog":0,"fronds":6,"flowers":1,"dewToday":0,"vitality":1,"rituals":6}}}
+]]></output>
+              </test-case>
+              <test-case id="1018" name="ReducedMotion_ShowsEndStates" fullname="GardenVR.Terrarium.Tests.GatePlaybackTests.ReducedMotion_ShowsEndStates" methodname="ReducedMotion_ShowsEndStates" classname="GardenVR.Terrarium.Tests.GatePlaybackTests" runstate="Runnable" seed="1652246328" result="Passed" start-time="2026-10-12 10:33:01Z" end-time="2026-10-12 10:33:02Z" duration="0.401489" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=17.925
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.02 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.550
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.433
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.633
+answerAt=16.633
+]]></output>
+              </test-case>
+              <test-case id="1019" name="Response_WithinTwoFrames" fullname="GardenVR.Terrarium.Tests.GatePlaybackTests.Response_WithinTwoFrames" methodname="Response_WithinTwoFrames" classname="GardenVR.Terrarium.Tests.GatePlaybackTests" runstate="Runnable" seed="1049278086" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.034730" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="120000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=18.329
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+response-dt=0
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1021" name="HabitsPlaybackTests" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.763743" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1023" name="Checkin_Today_GrowsLeaf" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests.Checkin_Today_GrowsLeaf" methodname="Checkin_Today_GrowsLeaf" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" seed="1269991753" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.217351" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue seed.appear semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=18.365
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=label.walk.today held=0.00 breaths=0/6
+[Terrarium] cue habit.pluck semitones 0
+[FirstRun] step=tour.desk t=2.517
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.017
+[Terrarium] cue jar.lid semitones 0
+]]></output>
+              </test-case>
+              <test-case id="1024" name="Checkin_Yesterday_DatedYesterday" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests.Checkin_Yesterday_DatedYesterday" methodname="Checkin_Yesterday_DatedYesterday" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" seed="1490411217" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.214722" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue seed.appear semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=18.584
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=label.walk.yesterday held=0.00 breaths=0/6
+[Terrarium] cue habit.pluck semitones 0
+[FirstRun] step=tour.desk t=2.517
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.017
+[Terrarium] cue jar.lid semitones 0
+]]></output>
+              </test-case>
+              <test-case id="1027" name="Habits_FourthIgnored" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests.Habits_FourthIgnored" methodname="Habits_FourthIgnored" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" seed="452840683" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.084291" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue seed.appear semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=18.796
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=seed.water held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=seed.read held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=seed.stretch held=0.00 breaths=0/6
+]]></output>
+              </test-case>
+              <test-case id="1022" name="Habits_PlantThree" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests.Habits_PlantThree" methodname="Habits_PlantThree" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" seed="398130724" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.068182" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue seed.appear semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=18.882
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=seed.water held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=seed.read held=0.00 breaths=0/6
+]]></output>
+              </test-case>
+              <test-case id="1026" name="Undo_FlushOnPause_Commits" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests.Undo_FlushOnPause_Commits" methodname="Undo_FlushOnPause_Commits" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" seed="1175066693" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.076027" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue seed.appear semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=18.949
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=label.walk.today held=0.00 breaths=0/6
+[Terrarium] cue habit.pluck semitones 0
+[Terrarium] event=PauseLatched breaths=0
+[Terrarium] cue pause.hold semitones 0
+]]></output>
+              </test-case>
+              <test-case id="1025" name="Undo_InsideWindow_Restores" fullname="GardenVR.Terrarium.Tests.HabitsPlaybackTests.Undo_InsideWindow_Restores" methodname="Undo_InsideWindow_Restores" classname="GardenVR.Terrarium.Tests.HabitsPlaybackTests" runstate="Runnable" seed="1644145354" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:02Z" duration="0.101667" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue seed.appear semitones 0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=19.030
+[Terrarium] intent=Poke target=seed.walk held=0.00 breaths=0/6
+[Terrarium] intent=Poke target=label.walk.today held=0.00 breaths=0/6
+[Terrarium] cue habit.pluck semitones 0
+[Terrarium] intent=Poke target=undo.walk held=0.00 breaths=0/6
+[Terrarium] cue habit.undo semitones 0
+[FirstRun] step=tour.desk t=2.517
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1028" name="JourneyTests" fullname="GardenVR.Terrarium.Tests.JourneyTests" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:07Z" duration="5.008415" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1036" name="Day7_LookBack" fullname="GardenVR.Terrarium.Tests.JourneyTests.Day7_LookBack" methodname="Day7_LookBack" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="606534548" result="Passed" start-time="2026-10-12 10:33:02Z" end-time="2026-10-12 10:33:03Z" duration="0.311193" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=19.128
+[Terrarium] intent=PinchHold target=jar.cork held=0.00 breaths=0/6
+[Terrarium] cue lookback.shimmer semitones 0
+[Terrarium] event=LookBackBegin breaths=0
+[Terrarium] intent=Release target=jar.cork held=2.50 breaths=0/6
+]]></output>
+              </test-case>
+              <test-case id="1035" name="MissedDay_IsQuiet" fullname="GardenVR.Terrarium.Tests.JourneyTests.MissedDay_IsQuiet" methodname="MissedDay_IsQuiet" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="1254648063" result="Passed" start-time="2026-10-12 10:33:03Z" end-time="2026-10-12 10:33:03Z" duration="0.035599" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="120000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=19.440
+]]></output>
+              </test-case>
+              <test-case id="1031" name="PauseAt_Exhale1" fullname="GardenVR.Terrarium.Tests.JourneyTests.PauseAt_Exhale1" methodname="PauseAt_Exhale1" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="425132817" result="Passed" start-time="2026-10-12 10:33:03Z" end-time="2026-10-12 10:33:03Z" duration="0.721845" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=19.477
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.684
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] intent=PalmOpen target=- held=0.00 breaths=1/6
+[Terrarium] event=PauseLatched breaths=1
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=Resumed breaths=1
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=6.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=17.567
+answerAt=17.567
+]]></output>
+              </test-case>
+              <test-case id="1030" name="PauseAt_Inhale1" fullname="GardenVR.Terrarium.Tests.JourneyTests.PauseAt_Inhale1" methodname="PauseAt_Inhale1" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="1685320141" result="Passed" start-time="2026-10-12 10:33:03Z" end-time="2026-10-12 10:33:05Z" duration="1.106557" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=20.279
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=PalmOpen target=- held=0.00 breaths=0/6
+[Terrarium] event=PauseLatched breaths=0
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] intent=Release target=jar held=0.85 breaths=0/6
+[FirstRun] step=tour.release t=1.034
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=Resumed breaths=0
+[Terrarium] intent=Release target=jar held=1.30 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=6.567
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=17.767
+answerAt=17.767
+]]></output>
+              </test-case>
+              <test-case id="1032" name="PauseAt_Inhale3" fullname="GardenVR.Terrarium.Tests.JourneyTests.PauseAt_Inhale3" methodname="PauseAt_Inhale3" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="1230533225" result="Passed" start-time="2026-10-12 10:33:05Z" end-time="2026-10-12 10:33:05Z" duration="0.871331" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=21.405
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.684
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.567
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] event=PauseLatched breaths=2
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=0.80 breaths=2/6
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=Resumed breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=18.267
+answerAt=18.267
+]]></output>
+              </test-case>
+              <test-case id="1033" name="PauseAt_Inhale6" fullname="GardenVR.Terrarium.Tests.JourneyTests.PauseAt_Inhale6" methodname="PauseAt_Inhale6" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="204730779" result="Passed" start-time="2026-10-12 10:33:05Z" end-time="2026-10-12 10:33:06Z" duration="0.733637" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=22.184
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.684
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.567
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=PalmOpen target=- held=0.00 breaths=5/6
+[Terrarium] event=PauseLatched breaths=5
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] intent=Release target=jar held=0.80 breaths=5/6
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=Resumed breaths=5
+[Terrarium] intent=Release target=jar held=1.40 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=17.867
+answerAt=17.867
+]]></output>
+              </test-case>
+              <test-case id="1029" name="PauseAt_Waiting" fullname="GardenVR.Terrarium.Tests.JourneyTests.PauseAt_Waiting" methodname="PauseAt_Waiting" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="2022480965" result="Passed" start-time="2026-10-12 10:33:06Z" end-time="2026-10-12 10:33:07Z" duration="0.650918" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=22.915
+[Terrarium] intent=PalmOpen target=- held=0.00 breaths=0/6
+[Terrarium] event=PauseLatched breaths=0
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=Resumed breaths=0
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=2.284
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=6.167
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=17.367
+answerAt=17.367
+]]></output>
+              </test-case>
+              <test-case id="1034" name="Resume_OffersCutOffRitual" fullname="GardenVR.Terrarium.Tests.JourneyTests.Resume_OffersCutOffRitual" methodname="Resume_OffersCutOffRitual" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="1483453676" result="Passed" start-time="2026-10-12 10:33:07Z" end-time="2026-10-12 10:33:07Z" duration="0.466529" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=23.573
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] event=RitualOffered breaths=0
+[Terrarium] interactive frame realtime=23.616
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] intent=Pinch target=prompt.continue held=0.00 breaths=0/6
+[Terrarium] event=Continue breaths=0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=Resumed breaths=0
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+]]></output>
+              </test-case>
+              <test-case id="1037" name="Settings_PebblesToggle" fullname="GardenVR.Terrarium.Tests.JourneyTests.Settings_PebblesToggle" methodname="Settings_PebblesToggle" classname="GardenVR.Terrarium.Tests.JourneyTests" runstate="Runnable" seed="1142793759" result="Passed" start-time="2026-10-12 10:33:07Z" end-time="2026-10-12 10:33:07Z" duration="0.108071" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="120000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=24.034
+[Terrarium] intent=Poke target=pebble.settings held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.mute held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.bed held=0.00 breaths=0/6
+[Terrarium] cue bed.night semitones 0
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.voice held=0.00 breaths=0/6
+[Terrarium] cue bed.night semitones 0
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.motion held=0.00 breaths=0/6
+[Terrarium] cue bed.night semitones 0
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.set.mute held=0.00 breaths=0/6
+[Terrarium] cue bed.night semitones 0
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Poke target=pebble.settings held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1038" name="OneWordPlaybackTests" fullname="GardenVR.Terrarium.Tests.OneWordPlaybackTests" classname="GardenVR.Terrarium.Tests.OneWordPlaybackTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 10:33:07Z" end-time="2026-10-12 10:33:08Z" duration="0.487939" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1040" name="OneWord_AlreadyKept_Stays" fullname="GardenVR.Terrarium.Tests.OneWordPlaybackTests.OneWord_AlreadyKept_Stays" methodname="OneWord_AlreadyKept_Stays" classname="GardenVR.Terrarium.Tests.OneWordPlaybackTests" runstate="Runnable" seed="2042348600" result="Passed" start-time="2026-10-12 10:33:07Z" end-time="2026-10-12 10:33:07Z" duration="0.111883" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="120000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=24.148
+[Terrarium] intent=Pinch target=word.stone.0 held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=word.stone.4 held=0.00 breaths=0/6
+]]></output>
+              </test-case>
+              <test-case id="1039" name="OneWord_PickedAndKept" fullname="GardenVR.Terrarium.Tests.OneWordPlaybackTests.OneWord_PickedAndKept" methodname="OneWord_PickedAndKept" classname="GardenVR.Terrarium.Tests.OneWordPlaybackTests" runstate="Runnable" seed="399957417" result="Passed" start-time="2026-10-12 10:33:07Z" end-time="2026-10-12 10:33:08Z" duration="0.374835" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=24.261
+[Terrarium] intent=Pinch target=word.stone.4 held=0.00 breaths=0/6
+[Terrarium] cue pebble.tap semitones 0
+[Terrarium] intent=Pinch target=word.stone.0 held=0.00 breaths=0/6
+[Terrarium] intent=PinchHold target=jar.cork held=0.00 breaths=0/6
+[Terrarium] cue lookback.shimmer semitones 0
+[Terrarium] event=LookBackBegin breaths=0
+[Terrarium] intent=Release target=jar.cork held=2.50 breaths=0/6
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1041" name="RitualPlaybackTests" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-12 10:33:08Z" end-time="2026-10-12 10:33:17Z" duration="9.158031" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1047" name="Ritual_AutoPace_Counts" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_AutoPace_Counts" methodname="Ritual_AutoPace_Counts" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="1081156296" result="Passed" start-time="2026-10-12 10:33:08Z" end-time="2026-10-12 10:33:08Z" duration="0.189065" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] event=AutoPaceOn breaths=0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=24.639
+[Terrarium] event=InhaleStarted breaths=0
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.000
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+]]></output>
+              </test-case>
+              <test-case id="1043" name="Ritual_FidgetsIgnored" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_FidgetsIgnored" methodname="Ritual_FidgetsIgnored" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="1495713801" result="Passed" start-time="2026-10-12 10:33:08Z" end-time="2026-10-12 10:33:10Z" duration="1.793399" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=24.818
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=0.40 breaths=0/6
+[FirstRun] step=tour.release t=0.384
+[Terrarium] event=ShortInhaleIgnored breaths=0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=0.40 breaths=0/6
+[Terrarium] event=ShortInhaleIgnored breaths=0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=0.40 breaths=0/6
+[Terrarium] event=ShortInhaleIgnored breaths=0
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] cue jar.land semitones 0
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=4.00 breaths=0/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=4.20 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=17.867
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=4.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=4.10 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=4.30 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=4.40 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=57.666
+answerAt=57.666
+]]></output>
+              </test-case>
+              <test-case id="1044" name="Ritual_PauseAtBreath3_Resumes" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_PauseAtBreath3_Resumes" methodname="Ritual_PauseAtBreath3_Resumes" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="406324052" result="Passed" start-time="2026-10-12 10:33:10Z" end-time="2026-10-12 10:33:12Z" duration="2.426617" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=26.662
+[Terrarium] event=InhaleStarted breaths=0
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] intent=Release target=jar held=4.00 breaths=0/6
+[FirstRun] step=tour.release t=3.984
+[Terrarium] cue jar.land semitones 0
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=4.20 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=14.267
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=PalmOpen target=- held=0.00 breaths=2/6
+[Terrarium] event=PauseLatched breaths=2
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] event=Resumed breaths=2
+[Terrarium] intent=Release target=jar held=4.00 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=4.20 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=4.10 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=4.30 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=63.866
+answerAt=63.866
+]]></output>
+              </test-case>
+              <test-case id="1048" name="Ritual_PauseOver60_AsksToContinue" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_PauseOver60_AsksToContinue" methodname="Ritual_PauseOver60_AsksToContinue" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="887458863" result="Passed" start-time="2026-10-12 10:33:12Z" end-time="2026-10-12 10:33:15Z" duration="2.676836" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=29.098
+[Terrarium] event=InhaleStarted breaths=0
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] intent=Release target=jar held=4.00 breaths=0/6
+[FirstRun] step=tour.release t=3.984
+[Terrarium] cue jar.land semitones 0
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=PalmOpen target=- held=0.00 breaths=1/6
+[Terrarium] event=PauseLatched breaths=1
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] event=ContinuePrompt breaths=1
+[Terrarium] intent=Release target=jar held=2.20 breaths=1/6
+[Terrarium] intent=Pinch target=prompt.continue held=0.00 breaths=1/6
+[Terrarium] event=Continue breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=Resumed breaths=1
+[Terrarium] intent=Release target=jar held=4.00 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=79.570
+]]></output>
+              </test-case>
+              <test-case id="1046" name="Ritual_Response_TwoFrames" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_Response_TwoFrames" methodname="Ritual_Response_TwoFrames" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="728778768" result="Passed" start-time="2026-10-12 10:33:15Z" end-time="2026-10-12 10:33:15Z" duration="0.040621" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=31.721
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+]]></output>
+              </test-case>
+              <test-case id="1042" name="Ritual_SixBreaths_ByPlayback" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_SixBreaths_ByPlayback" methodname="Ritual_SixBreaths_ByPlayback" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="160353094" result="Passed" start-time="2026-10-12 10:33:15Z" end-time="2026-10-12 10:33:16Z" duration="1.518447" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="360000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] event=SixBreaths breaths=0
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=31.763
+[Terrarium] event=InhaleStarted breaths=0
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] intent=Release target=jar held=4.00 breaths=0/6
+[FirstRun] step=tour.release t=3.984
+[Terrarium] cue jar.land semitones 0
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=4.20 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=14.267
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] intent=Release target=jar held=4.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=4.10 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=4.30 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=4.40 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=54.066
+answerAt=54.066
+[Terrarium] cue moss.ripple semitones 0
+]]></output>
+              </test-case>
+              <test-case id="1045" name="Ritual_TrackingLost2s_Bridged_Or_Paused" fullname="GardenVR.Terrarium.Tests.RitualPlaybackTests.Ritual_TrackingLost2s_Bridged_Or_Paused" methodname="Ritual_TrackingLost2s_Bridged_Or_Paused" classname="GardenVR.Terrarium.Tests.RitualPlaybackTests" runstate="Runnable" seed="729257390" result="Passed" start-time="2026-10-12 10:33:16Z" end-time="2026-10-12 10:33:17Z" duration="0.510497" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=33.276
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] event=InhaleStarted breaths=0
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.000
+[Terrarium] intent=Release target=jar held=4.00 breaths=0/6
+[FirstRun] step=tour.release t=4.484
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue pause.hold semitones 0
+[Terrarium] event=Paused breaths=1
+[Terrarium] event=Resumed breaths=1
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] intent=Release target=jar held=4.00 breaths=1/6
+[Terrarium] event=ShortInhaleIgnored breaths=1
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1049" name="RitualRecordTests" fullname="GardenVR.Terrarium.Tests.RitualRecordTests" classname="GardenVR.Terrarium.Tests.RitualRecordTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.002575" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1050" name="Record_SixBreathSequence" fullname="GardenVR.Terrarium.Tests.RitualRecordTests.Record_SixBreathSequence" methodname="Record_SixBreathSequence" classname="GardenVR.Terrarium.Tests.RitualRecordTests" runstate="Runnable" seed="2016529193" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.001557" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="1200000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1051" name="SeasonPlaybackTests" fullname="GardenVR.Terrarium.Tests.SeasonPlaybackTests" classname="GardenVR.Terrarium.Tests.SeasonPlaybackTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.032119" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1052" name="Season_WeekOneIsLocked_LaterWeeksOnlyAdd" fullname="GardenVR.Terrarium.Tests.SeasonPlaybackTests.Season_WeekOneIsLocked_LaterWeeksOnlyAdd" methodname="Season_WeekOneIsLocked_LaterWeeksOnlyAdd" classname="GardenVR.Terrarium.Tests.SeasonPlaybackTests" runstate="Runnable" seed="221724726" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.031587" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=33.799
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1053" name="ThreeGoodThingsPlaybackTests" fullname="GardenVR.Terrarium.Tests.ThreeGoodThingsPlaybackTests" classname="GardenVR.Terrarium.Tests.ThreeGoodThingsPlaybackTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.393571" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1055" name="ThreeGoodThings_AlreadyDone_DoesNotGrowAgain" fullname="GardenVR.Terrarium.Tests.ThreeGoodThingsPlaybackTests.ThreeGoodThings_AlreadyDone_DoesNotGrowAgain" methodname="ThreeGoodThings_AlreadyDone_DoesNotGrowAgain" classname="GardenVR.Terrarium.Tests.ThreeGoodThingsPlaybackTests" runstate="Runnable" seed="840402379" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.243512" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="120000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=33.818
+[Terrarium] intent=Pinch target=glad.leaf.0 held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=glad.leaf.0 held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=glad.leaf.1 held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=glad.leaf.2 held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=glad.leaf.0 held=0.00 breaths=0/6
+]]></output>
+              </test-case>
+              <test-case id="1054" name="ThreeGoodThings_ThreeDrops_CountsTheDay" fullname="GardenVR.Terrarium.Tests.ThreeGoodThingsPlaybackTests.ThreeGoodThings_ThreeDrops_CountsTheDay" methodname="ThreeGoodThings_ThreeDrops_CountsTheDay" classname="GardenVR.Terrarium.Tests.ThreeGoodThingsPlaybackTests" runstate="Runnable" seed="423202064" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.149210" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] interactive frame realtime=34.059
+[Terrarium] intent=Pinch target=glad.leaf.0 held=0.00 breaths=0/6
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] intent=Pinch target=glad.leaf.0 held=0.00 breaths=0/6
+[Terrarium] intent=Pinch target=glad.leaf.1 held=0.00 breaths=0/6
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] intent=Pinch target=glad.leaf.2 held=0.00 breaths=0/6
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] event=GladDone breaths=0
+[FirstRun] step=tour.desk t=2.500
+[Terrarium] intent=Pinch target=glad.leaf.0 held=0.00 breaths=0/6
+[Terrarium] cue jar.land semitones 0
+[FirstRun] step=tour.arrive t=4.000
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1056" name="VoiceGuidePolicyTests" fullname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests" classname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.007349" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1059" name="Bed_DucksUnderVoice" fullname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests.Bed_DucksUnderVoice" methodname="Bed_DucksUnderVoice" classname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests" runstate="Runnable" seed="1880893864" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.002824" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1060" name="VoiceCatalog_MatchesTheFrozenLines" fullname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests.VoiceCatalog_MatchesTheFrozenLines" methodname="VoiceCatalog_MatchesTheFrozenLines" classname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests" runstate="Runnable" seed="768597798" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.001231" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1058" name="VoiceGuide_CutsWhenUserIsFaster" fullname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests.VoiceGuide_CutsWhenUserIsFaster" methodname="VoiceGuide_CutsWhenUserIsFaster" classname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests" runstate="Runnable" seed="913401911" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.001374" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="VoiceGuide_NeverLeadsTheHold" fullname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests.VoiceGuide_NeverLeadsTheHold" methodname="VoiceGuide_NeverLeadsTheHold" classname="GardenVR.Terrarium.Tests.VoiceGuidePolicyTests" runstate="Runnable" seed="605878328" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:17Z" duration="0.000734" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1061" name="VoiceShellTests" fullname="GardenVR.Terrarium.Tests.VoiceShellTests" classname="GardenVR.Terrarium.Tests.VoiceShellTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:18Z" duration="0.570107" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1062" name="VoiceShell_AfterFirstAnswer_TogglesAndRemembers" fullname="GardenVR.Terrarium.Tests.VoiceShellTests.VoiceShell_AfterFirstAnswer_TogglesAndRemembers" methodname="VoiceShell_AfterFirstAnswer_TogglesAndRemembers" classname="GardenVR.Terrarium.Tests.VoiceShellTests" runstate="Runnable" seed="721478071" result="Passed" start-time="2026-10-12 10:33:17Z" end-time="2026-10-12 10:33:18Z" duration="0.569479" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[FirstRun] step=tour.room t=0.000
+[Terrarium] event=intent breaths=0
+[Terrarium] event=state-changed breaths=0
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=0/6
+[Terrarium] interactive frame realtime=34.222
+[Terrarium] event=InhaleStarted breaths=0
+[Terrarium] intent=Release target=jar held=1.50 breaths=0/6
+[FirstRun] step=tour.release t=1.484
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=1
+[Terrarium] event=intent breaths=1
+[Terrarium] event=state-changed breaths=1
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=1/6
+[Terrarium] event=InhaleStarted breaths=1
+[Terrarium] cue jar.land semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=1/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=1
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=2
+[FirstRun] step=tour.breathe t=5.367
+[Terrarium] event=intent breaths=2
+[Terrarium] event=state-changed breaths=2
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=2/6
+[Terrarium] event=InhaleStarted breaths=2
+[Terrarium] cue jar.lid semitones 0
+[Terrarium] intent=Release target=jar held=1.50 breaths=2/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=2
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=3
+[Terrarium] event=intent breaths=3
+[Terrarium] event=state-changed breaths=3
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=3/6
+[Terrarium] event=InhaleStarted breaths=3
+[Terrarium] intent=Release target=jar held=1.50 breaths=3/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=3
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=4
+[Terrarium] event=intent breaths=4
+[Terrarium] event=state-changed breaths=4
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=4/6
+[Terrarium] event=InhaleStarted breaths=4
+[Terrarium] intent=Release target=jar held=1.50 breaths=4/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=4
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=5
+[Terrarium] event=intent breaths=5
+[Terrarium] event=state-changed breaths=5
+[Terrarium] intent=PinchHold target=jar held=0.00 breaths=5/6
+[Terrarium] event=InhaleStarted breaths=5
+[Terrarium] intent=Release target=jar held=1.50 breaths=5/6
+[Terrarium] cue fog.hiss semitones 0
+[Terrarium] event=ExhaleStarted breaths=5
+[Terrarium] event=Answer breaths=6
+[Terrarium] cue answer.chime semitones 0
+[Terrarium] cue breath.exhale.end semitones 0
+[Terrarium] event=BreathCounted breaths=6
+[Terrarium] event=RitualComplete breaths=6
+[FirstRun] step=tour.answer t=16.567
+answerAt=16.567
+[Terrarium] cue moss.ripple semitones 0
+[Terrarium] cue dew.drop semitones 0
+[Terrarium] cue seed.appear semitones 0
+[FirstRun] step=tour.seeds t=20.567
+[FirstRun] step=tour.voice t=20.567
+[FirstRun] step=tour.done t=20.567
+[Terrarium] intent=Poke target=shell.voice held=0.00 breaths=6/6
+[Terrarium] cue amb.room semitones 0
+[Terrarium] event=SessionStart breaths=0
+[Terrarium] interactive frame realtime=34.766
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/terrarium\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
