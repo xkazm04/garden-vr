@@ -1,0 +1,11 @@
+editmode result=Passed total=98 passed=98 failed=0 skipped=0
+playmode result=Passed total=74 passed=74 failed=0 skipped=0
+view-preview result=Passed total=1 passed=1 failed=0 skipped=0
+editmode compiler/shader/build errors=0
+playmode compiler/shader/build errors=0
+build compiler/shader/build errors=0
+Build Succeeded apps\sundial\Build\sundial\Sundial.exe
+SHA256=91a36fa14dd3ccf390b99720805eda0553da1ca1108381b49c98c938f69dc256
+Unity project editor processes remaining=0
+PNG ingest: 6 files; proof failures 0; bytes 20302598 -> 18413867
+B6 acceptance interaction tests: NOT IMPLEMENTED; input-package scope blocker

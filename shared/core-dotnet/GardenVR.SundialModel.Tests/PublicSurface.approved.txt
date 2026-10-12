@@ -74,6 +74,7 @@ GardenVR.Sundial.SundialService field public static System.Boolean DevSeedOnFres
 GardenVR.Sundial.SundialService field public static System.Nullable<System.Boolean> FreshReducedMotion
 GardenVR.Sundial.SundialService method public GardenVR.Core.GardenDay Today()
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef AcceptInterview(System.Int32 index, System.String arc)
+GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef EnsureBreakHabit()
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef HabitAt(System.String arcKey, System.Int32 row)
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef HabitForArc(System.String arcKey)
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef PlantPreset(GardenVR.Sundial.SeedPreset preset)

@@ -1,0 +1,2 @@
+Presentation-only preview using core samples, not PC input.
+Eye distance=3m; SecondsLeft=13; ray hits break.eye
