@@ -22,3 +22,15 @@ Pack for the owner read on 2026-10-23. Each row is pass, fail, or needs-owner. H
 | A5 | pass | host | orchestration/runs/sundial/T-SUN-019/measure.json | DialG1 dial: 18 draws, 7456 tris, 16 renderers, 0 shadow casters, every listed texture <= 1024. Post-processing is off on GardenURP, GardenRenderer, and SeatedRig. transparentMeanLayers 1.194 is recorded on the dial. |
 | A6 | needs-owner | owner | orchestration/runs/sundial/T-SUN-019/loudness.txt | Mix remeasured at -20.9 LUFS and -4.2 dBFS true peak. Voice stems sit 10.0 to 10.1 dB above bed.midday (narration-margin.txt). The T-SUN-012 cue table places vo.sun.out.01 at 2.503 s and 9.303 s. Owner listen is still open. |
 | A7 | needs-owner | owner | orchestration/runs/sundial/T-SUN-019/playmode.xml | ReducedMotion_ShowsEndStates passed in 0.258 s. FirstRun_ReducedMotion and Dusk_ReducedMotion_SameTiming also passed. Owner watch of the 60 s capture orchestration/runs/sundial/T-SUN-009/dusk.mp4 is still open. |
+
+## B2 upgrade frame (T-SUN-059, 2026-10-12)
+
+The nine-profile record at DialG1 is a gate frame for the upgrade. All four B2 PlayMode checks pass; the full
+Sundial suites pass (75 EditMode, 55 PlayMode). This adds evidence without changing the art scores above.
+
+- [Nine plants, names and zone dots](../../orchestration/runs/sundial/T-SUN-059/DialG1-nine-plants.png)
+- [Same-framing comparison with the record artboard](../../orchestration/runs/sundial/T-SUN-059/DialG1-record-side-by-side.jpg)
+- [Weekly habit on look](../../orchestration/runs/sundial/T-SUN-059/DialG1-weekly-look.png)
+- [Verification, strings and limitations](../../orchestration/runs/sundial/T-SUN-059/REPORT.md)
+
+Monthly totals and the four rim tabs belong to B9. B12 will collect the complete set of upgrade frames.

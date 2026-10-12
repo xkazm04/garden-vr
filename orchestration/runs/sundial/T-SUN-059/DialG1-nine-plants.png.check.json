@@ -1,0 +1,10 @@
+{
+  "meanLuma": 0.596586,
+  "blackFrac": 0.000125,
+  "whiteFrac": 0.000104,
+  "magentaFrac": 0,
+  "width": 1824,
+  "height": 1024,
+  "sha256": "11dea933563bcbd62a26ddf7fd9194ff6f508268fd1cf52bd56f3fbaf2ad349e",
+  "capturePngSha256": "848e5028d73bec5bb63cc0d283c275a035f413ce53f3287284c56c1ba633adbb"
+}
