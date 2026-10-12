@@ -46,6 +46,20 @@ namespace GardenVR.Core
     /// <summary>What the garden knows about today when the user reflects. Habit names only; nothing else leaves.</summary>
     public sealed class ReflectionContext
     {
+        /// <summary>Only names of live habits actually kept today. No missed habits or other history.</summary>
+        public static ReflectionContext ForToday(IReadOnlyList<HabitDef> habits, Ledger ledger, int today, Func<HabitDef, string> nameOf = null)
+        {
+            var context = new ReflectionContext();
+            if (habits == null || ledger == null) return context;
+            foreach (var habit in habits)
+                if (habit != null && !habit.ArchivedDay.HasValue && ledger.IsKept(habit.Id, today))
+                {
+                    string name = HabitProfiles.CleanName(nameOf == null ? habit.Name : nameOf(habit));
+                    if (name != null) context.KeptToday.Add(name);
+                }
+            return context;
+        }
+
         public string Weekday;
         public List<string> KeptToday = new List<string>();
         public List<string> PlannedNotKept = new List<string>();

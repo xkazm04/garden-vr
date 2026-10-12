@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.2164948">
+  <test-suite type="TestSuite" id="1113" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="82" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.216495" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1105" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="82" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.208904" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="42808" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1106" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="82" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.207609" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1107" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="82" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.206529" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1108" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="82" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.203513" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1109" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="82" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.202042" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1065" name="ReflectionTests" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:17Z" duration="4.199370" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1070" name="Journal_Delete_Empties" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_Delete_Empties" methodname="Journal_Delete_Empties" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1166286045" result="Passed" start-time="2026-10-12 13:19:13Z" end-time="2026-10-12 13:19:14Z" duration="1.289194" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.061
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+                <test-case id="1073" name="Journal_SevenLines_FitCard" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_SevenLines_FitCard" methodname="Journal_SevenLines_FitCard" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1438356805" result="Passed" start-time="2026-10-12 13:19:14Z" end-time="2026-10-12 13:19:14Z" duration="0.486385" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.838
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+]]></output>
+                </test-case>
+                <test-case id="1072" name="Journal_WeekPage_ShowsOnlySelectedWeek" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_WeekPage_ShowsOnlySelectedWeek" methodname="Journal_WeekPage_ShowsOnlySelectedWeek" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="637290316" result="Passed" start-time="2026-10-12 13:19:14Z" end-time="2026-10-12 13:19:15Z" duration="0.434323" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.318
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+]]></output>
+                </test-case>
+                <test-case id="1071" name="Reflection_CancelAndDelete_RejectLateReply" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_CancelAndDelete_RejectLateReply" methodname="Reflection_CancelAndDelete_RejectLateReply" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1083951841" result="Passed" start-time="2026-10-12 13:19:15Z" end-time="2026-10-12 13:19:15Z" duration="0.140751" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.751
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+                <test-case id="1068" name="Reflection_DirtyLine_FallsBack" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_DirtyLine_FallsBack" methodname="Reflection_DirtyLine_FallsBack" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="808675370" result="Passed" start-time="2026-10-12 13:19:15Z" end-time="2026-10-12 13:19:15Z" duration="0.096586" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.884
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1067" name="Reflection_Speech_FakeClient_KeepsModelLine" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_Speech_FakeClient_KeepsModelLine" methodname="Reflection_Speech_FakeClient_KeepsModelLine" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="590594579" result="Passed" start-time="2026-10-12 13:19:15Z" end-time="2026-10-12 13:19:16Z" duration="0.404494" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.982
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1066" name="Reflection_Stone_KeepsScriptedLine" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_Stone_KeepsScriptedLine" methodname="Reflection_Stone_KeepsScriptedLine" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1264593748" result="Passed" start-time="2026-10-12 13:19:16Z" end-time="2026-10-12 13:19:17Z" duration="1.218392" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.394
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1069" name="Save_HoldsNoTranscript" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Save_HoldsNoTranscript" methodname="Save_HoldsNoTranscript" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="425469627" result="Passed" start-time="2026-10-12 13:19:17Z" end-time="2026-10-12 13:19:17Z" duration="0.115922" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=6.611
+[Sundial] cue amb.kitchen
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

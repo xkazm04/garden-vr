@@ -297,6 +297,7 @@ namespace GardenVR.Sundial
             }
             TouchVoice();
             if (_voice != null) _voice.OnComplete();
+            GetComponent<ReflectionController>()?.Offer();
         }
 
         void AdvanceAmount(float dt)

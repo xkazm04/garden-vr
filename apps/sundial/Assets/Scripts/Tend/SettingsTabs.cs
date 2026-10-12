@@ -19,6 +19,11 @@ namespace GardenVR.Sundial
         public const string BedsId = "tab.settings.beds";
         public const string VoiceId = "tab.settings.voice";
         public const string MotionId = "tab.settings.motion";
+        public const string DeleteJournalId = "tab.settings.journal";
+        public const string ConfirmJournalId = "tab.settings.journal.confirm";
+        public const string CancelJournalId = "tab.settings.journal.cancel";
+        public bool ConfirmingJournal { get; private set; }
+        GameObject _deleteJournal, _confirmJournal, _cancelJournal;
         public const string CueTap = "tab.tap";
 
         public const string TabLabel = "Settings";
@@ -72,11 +77,21 @@ namespace GardenVR.Sundial
             if (id == TabId)
             {
                 Open = !Open;
+                ConfirmingJournal = false;
+                RefreshJournal();
                 if (_sheet != null) _sheet.SetActive(Open);
                 Tap();
                 return true;
             }
             if (!Open) return false;
+            if (id == DeleteJournalId) { ConfirmingJournal = true; RefreshJournal(); Tap(); return true; }
+            if (id == CancelJournalId && ConfirmingJournal) { ConfirmingJournal = false; RefreshJournal(); Tap(); return true; }
+            if (id == ConfirmJournalId && ConfirmingJournal)
+            {
+                _controller.GetComponent<ReflectionController>()?.ForgetJournal();
+                if (_service.DeleteJournal()) { ConfirmingJournal = false; RefreshJournal(); }
+                Tap(); return true;
+            }
             Row row = FindRow(id);
             if (row == null) return false;
             row.Toggle(_service);
@@ -138,14 +153,14 @@ namespace GardenVR.Sundial
             var paper = new GameObject("paper");
             paper.transform.SetParent(_sheet.transform, false);
             paper.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            paper.transform.localPosition = new Vector3(0f, 0.016f, 0.002f);
-            paper.transform.localScale = new Vector3(0.220f, 0.188f, 1f);
+            paper.transform.localPosition = new Vector3(0f, -.008f, 0.002f);
+            paper.transform.localScale = new Vector3(0.220f, 0.230f, 1f);
             paper.AddComponent<MeshFilter>().sharedMesh = _quad;
             var paperRenderer = paper.AddComponent<MeshRenderer>();
             paperRenderer.sharedMaterial = _inkMat;
             paperRenderer.shadowCastingMode = ShadowCastingMode.Off;
             paperRenderer.receiveShadows = false;
-            InkLetter.Tint(paperRenderer, InkLetter.Note(0.220f / 0.188f), Color.white);
+            InkLetter.Tint(paperRenderer, InkLetter.Note(0.220f / 0.230f), Color.white);
 
             float[] ys = { 0.056f, 0.030f, 0.004f, -0.022f };
             for (int i = 0; i < _rows.Length; i++)
@@ -157,7 +172,21 @@ namespace GardenVR.Sundial
                 row.Mark = MakeMark(line.transform);
             }
             _sheet.SetActive(false);
+            _deleteJournal = MakeTarget(_sheet.transform, DeleteJournalId, "Delete the journal", DeleteJournalId, .16f, .021f);
+            _deleteJournal.transform.localPosition = new Vector3(0, -.049f, -.012f);
+            _confirmJournal = MakeTarget(_sheet.transform, ConfirmJournalId, "Delete all lines? Yes", ConfirmJournalId, .16f, .021f);
+            _confirmJournal.transform.localPosition = new Vector3(0, -.049f, -.012f);
+            _cancelJournal = MakeTarget(_sheet.transform, CancelJournalId, "Keep the journal", CancelJournalId, .16f, .021f);
+            _cancelJournal.transform.localPosition = new Vector3(0, -.071f, -.012f);
+            RefreshJournal();
             Open = false;
+        }
+
+        void RefreshJournal()
+        {
+            if (_deleteJournal != null) _deleteJournal.SetActive(!ConfirmingJournal);
+            if (_confirmJournal != null) _confirmJournal.SetActive(ConfirmingJournal);
+            if (_cancelJournal != null) _cancelJournal.SetActive(ConfirmingJournal);
         }
 
         GameObject MakeTarget(Transform parent, string name, string text, string id, float width, float height)

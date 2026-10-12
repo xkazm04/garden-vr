@@ -1,0 +1,28 @@
+Hold to tell the garden about today
+Choose a word for today
+A moment for today
+Reflect
+Reflect again
+Done
+kept in the notebook
+Delete the journal
+Delete all lines? Yes
+Keep the journal
+Journal
+No lines kept this week
+Earlier week
+Later week
+to
+calm
+tired
+glad
+full
+quiet
+light
+A calm day, kept gently.
+A tired day. You still came back to the garden.
+A glad day. Something good grew today.
+A full day, and you made room for this.
+A quiet day. The garden kept you company.
+A light day, carried easily.
+{habit name} is in the garden.

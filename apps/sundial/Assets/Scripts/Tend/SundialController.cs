@@ -179,6 +179,7 @@ namespace GardenVR.Sundial
             if (week != null) week.SetSource(source);
             SpeechController speech = GetComponent<SpeechController>();
             if (speech != null) speech.SetSource(source);
+            GetComponent<ReflectionController>()?.SetSource(source);
         }
 
         /// <summary>
@@ -237,6 +238,10 @@ namespace GardenVR.Sundial
             _service = new SundialService(clock, directory);
             if (GetComponent<SpeechController>() == null)
                 gameObject.AddComponent<SpeechController>();
+            if (GetComponent<ReflectionController>() == null)
+                gameObject.AddComponent<ReflectionController>();
+            if (GetComponent<ReflectionModal>() == null)
+                gameObject.AddComponent<ReflectionModal>();
             EnsureAudio();
             PushAudio();
             if (GetComponent<FirstRunWizard>() == null)

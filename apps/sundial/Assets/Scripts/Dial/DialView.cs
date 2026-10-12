@@ -1668,7 +1668,8 @@ namespace GardenVR.Sundial
                 if (on && tex != null) SetMain(renderer, tex, tint);
             }
             Collider box = plant.GetComponent<Collider>();
-            if (box != null) box.enabled = on;
+            if (box != null) box.enabled = on && !(GetComponent<ReflectionController>()?.Open ?? false)
+                && !(GetComponent<SettingsTabs>()?.Open ?? false);
             PlacePlant(slot, plant);
             if (row != 0 || bloomRenderers == null || arc >= bloomRenderers.Length || bloomRenderers[arc] == null) return;
             Renderer bloomRenderer = bloomRenderers[arc];

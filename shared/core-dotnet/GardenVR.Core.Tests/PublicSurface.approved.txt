@@ -128,6 +128,7 @@ GardenVR.Core.CoachGuards method public static System.Boolean IsClean(System.Str
 GardenVR.Core.CoachJournal ctor public ()
 GardenVR.Core.CoachJournal method public GardenVR.Core.JsonArray Write()
 GardenVR.Core.CoachJournal method public System.Boolean Keep(System.Int32 day, System.String line)
+GardenVR.Core.CoachJournal method public System.Collections.Generic.List<GardenVR.Core.CoachJournal.Entry> WeekEnding(System.Int32 day)
 GardenVR.Core.CoachJournal method public System.String On(System.Int32 day)
 GardenVR.Core.CoachJournal method public System.Void Clear()
 GardenVR.Core.CoachJournal method public static GardenVR.Core.CoachJournal Read(GardenVR.Core.JsonObject root)
@@ -637,6 +638,7 @@ GardenVR.Core.ReflectionContext ctor public ()
 GardenVR.Core.ReflectionContext field public System.Collections.Generic.List<System.String> KeptToday
 GardenVR.Core.ReflectionContext field public System.Collections.Generic.List<System.String> PlannedNotKept
 GardenVR.Core.ReflectionContext field public System.String Weekday
+GardenVR.Core.ReflectionContext method public static GardenVR.Core.ReflectionContext ForToday(System.Collections.Generic.IReadOnlyList<GardenVR.Core.HabitDef> habits, GardenVR.Core.Ledger ledger, System.Int32 today, System.Func<GardenVR.Core.HabitDef,System.String> nameOf = null)
 GardenVR.Core.ReflectionResult ctor public ()
 GardenVR.Core.ReflectionResult field public GardenVR.Core.CoachFailure Failure
 GardenVR.Core.ReflectionResult field public System.Boolean FromModel
@@ -707,6 +709,7 @@ GardenVR.Core.SaveStore<T> field public const System.String TempName = save.json
 GardenVR.Core.SaveStore<T> method public GardenVR.Core.LoadResult<T> Load()
 GardenVR.Core.SaveStore<T> method public GardenVR.Core.LoadResult<T> Restore()
 GardenVR.Core.SaveStore<T> method public System.Void Save(T doc)
+GardenVR.Core.SaveStore<T> method public System.Void SaveAndForgetHistory(T doc)
 GardenVR.Core.ScheduleKind field public System.Int32 value__
 GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind Daily = 0
 GardenVR.Core.ScheduleKind field public const GardenVR.Core.ScheduleKind TimesPerWeek = 1

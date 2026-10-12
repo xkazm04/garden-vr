@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Failed(Child)" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.209975">
+  <test-suite type="TestSuite" id="1112" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="81" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.209975" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1104" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="81" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.202140" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="20396" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1105" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="81" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.200727" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1106" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="81" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.198923" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1107" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="81" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.195643" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestSuite" id="1108" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="81" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.194550" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-suite type="TestFixture" id="1065" name="ReflectionTests" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:19Z" duration="2.192045" total="7" passed="3" failed="4" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[One or more child tests had errors]]></message>
+                </failure>
+                <test-case id="1070" name="Journal_Delete_Empties" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_Delete_Empties" methodname="Journal_Delete_Empties" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="626802770" result="Failed" label="Error" start-time="2026-10-12 12:58:16Z" end-time="2026-10-12 12:58:17Z" duration="0.750188" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                    <stack-trace><![CDATA[  at GardenVR.Capture.FrameGrab.RenderToTexture (UnityEngine.Camera cam, System.Int32 width, System.Int32 height, System.Int32 msaa) [0x00028] in C:\Users\kazda\kiro\gvr-sundial\shared\packages\com.gardenvr.capture\Runtime\FrameGrab.cs:14
+  at GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Shot (UnityEngine.Camera cam, System.String path) [0x00000] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\RecordTilesTests.cs:424
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Capture (System.String name) [0x0000c] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:102
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests+<Journal_Delete_Empties>d__25.MoveNext () [0x001f0] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:183
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52 ]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.362
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+                <test-case id="1072" name="Journal_WeekPage_ShowsOnlySelectedWeek" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Journal_WeekPage_ShowsOnlySelectedWeek" methodname="Journal_WeekPage_ShowsOnlySelectedWeek" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="619038884" result="Failed" label="Error" start-time="2026-10-12 12:58:17Z" end-time="2026-10-12 12:58:17Z" duration="0.243611" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                    <stack-trace><![CDATA[  at GardenVR.Capture.FrameGrab.RenderToTexture (UnityEngine.Camera cam, System.Int32 width, System.Int32 height, System.Int32 msaa) [0x00028] in C:\Users\kazda\kiro\gvr-sundial\shared\packages\com.gardenvr.capture\Runtime\FrameGrab.cs:14
+  at GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Shot (UnityEngine.Camera cam, System.String path) [0x00000] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\RecordTilesTests.cs:424
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Capture (System.String name) [0x0000c] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:102
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests+<Journal_WeekPage_ShowsOnlySelectedWeek>d__27.MoveNext () [0x00173] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:216
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52 ]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.665
+[Sundial] cue amb.kitchen
+[Sundial] cue dial.appear
+]]></output>
+                </test-case>
+                <test-case id="1071" name="Reflection_CancelAndDelete_RejectLateReply" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_CancelAndDelete_RejectLateReply" methodname="Reflection_CancelAndDelete_RejectLateReply" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="2037224774" result="Passed" start-time="2026-10-12 12:58:17Z" end-time="2026-10-12 12:58:18Z" duration="0.110605" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=3.894
+[Sundial] cue amb.kitchen
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+[Sundial] cue tab.tap
+]]></output>
+                </test-case>
+                <test-case id="1068" name="Reflection_DirtyLine_FallsBack" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_DirtyLine_FallsBack" methodname="Reflection_DirtyLine_FallsBack" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1481630308" result="Passed" start-time="2026-10-12 12:58:18Z" end-time="2026-10-12 12:58:18Z" duration="0.088938" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.003
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1067" name="Reflection_Speech_FakeClient_KeepsModelLine" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_Speech_FakeClient_KeepsModelLine" methodname="Reflection_Speech_FakeClient_KeepsModelLine" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="790861416" result="Failed" label="Error" start-time="2026-10-12 12:58:18Z" end-time="2026-10-12 12:58:18Z" duration="0.170501" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                    <stack-trace><![CDATA[  at GardenVR.Capture.FrameGrab.RenderToTexture (UnityEngine.Camera cam, System.Int32 width, System.Int32 height, System.Int32 msaa) [0x00028] in C:\Users\kazda\kiro\gvr-sundial\shared\packages\com.gardenvr.capture\Runtime\FrameGrab.cs:14
+  at GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Shot (UnityEngine.Camera cam, System.String path) [0x00000] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\RecordTilesTests.cs:424
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Capture (System.String name) [0x0000c] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:102
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests+<Reflection_Speech_FakeClient_KeepsModelLine>d__22.MoveNext () [0x001b3] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:153
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52 ]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.101
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1066" name="Reflection_Stone_KeepsScriptedLine" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Reflection_Stone_KeepsScriptedLine" methodname="Reflection_Stone_KeepsScriptedLine" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1815699077" result="Failed" label="Error" start-time="2026-10-12 12:58:18Z" end-time="2026-10-12 12:58:18Z" duration="0.714994" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <failure>
+                    <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                    <stack-trace><![CDATA[  at GardenVR.Capture.FrameGrab.RenderToTexture (UnityEngine.Camera cam, System.Int32 width, System.Int32 height, System.Int32 msaa) [0x00028] in C:\Users\kazda\kiro\gvr-sundial\shared\packages\com.gardenvr.capture\Runtime\FrameGrab.cs:14
+  at GardenVR.Sundial.Tests.PlayMode.RecordTilesTests.Shot (UnityEngine.Camera cam, System.String path) [0x00000] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\RecordTilesTests.cs:424
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Capture (System.String name) [0x0000c] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:102
+  at GardenVR.Sundial.Tests.PlayMode.ReflectionTests+<Reflection_Stone_KeepsScriptedLine>d__21.MoveNext () [0x0016e] in C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Assets\Tests\PlayMode\ReflectionTests.cs:129
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__8.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@80f691d4262b\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:52 ]]></stack-trace>
+                  </failure>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.269
+[Sundial] cue amb.kitchen
+[Sundial] cue dusk.chime
+]]></output>
+                </test-case>
+                <test-case id="1069" name="Save_HoldsNoTranscript" fullname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests.Save_HoldsNoTranscript" methodname="Save_HoldsNoTranscript" classname="GardenVR.Sundial.Tests.PlayMode.ReflectionTests" runstate="Runnable" seed="1624528344" result="Passed" start-time="2026-10-12 12:58:18Z" end-time="2026-10-12 12:58:19Z" duration="0.101121" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.988
+[Sundial] cue amb.kitchen
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
