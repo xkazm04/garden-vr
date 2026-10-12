@@ -123,7 +123,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.Greater(focus.DrawnDegrees, 80f);
 
             string save = File.ReadAllText(savePath);
-            Assert.IsTrue(save.Contains("\"SchemaVersion\":1"), save);
+            Assert.IsTrue(save.Contains("\"SchemaVersion\":2"), save);
             Assert.IsTrue(save.Contains("\"Source\":\"Ritual\""), save);
             Assert.IsTrue(save.Contains("\"HabitId\":\"top3\""), save);
             Assert.IsTrue(save.Contains("\"Phase\":\"Complete\""), save);

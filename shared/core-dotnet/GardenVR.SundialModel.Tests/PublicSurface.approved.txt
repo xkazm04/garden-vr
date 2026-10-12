@@ -52,18 +52,22 @@ GardenVR.Sundial.SundialArcs method public static System.String TileId(System.St
 GardenVR.Sundial.SundialCodec method public static GardenVR.Core.JsonObject Write(GardenVR.Sundial.SundialSave save)
 GardenVR.Sundial.SundialCodec method public static GardenVR.Sundial.SundialSave Read(GardenVR.Core.JsonObject obj)
 GardenVR.Sundial.SundialSave ctor public ()
+GardenVR.Sundial.SundialSave field public GardenVR.Core.CoachJournal Journal
 GardenVR.Sundial.SundialSave field public GardenVR.Core.FocusSnapshot Focus
 GardenVR.Sundial.SundialSave field public GardenVR.Sundial.SundialSettings Settings
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue> Extra
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> HabitExtra
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> TendExtra
+GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.CountEvent> Counts
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.GratitudeMark> Gratitude
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.HabitDef> Habits
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.List<GardenVR.Core.TendEvent> Tends
 GardenVR.Sundial.SundialSave field public System.Int32 SchemaVersion
+GardenVR.Sundial.SundialSave field public System.Nullable<System.Int32> LastVisitDay
 GardenVR.Sundial.SundialSave field public System.String FirstRunStep
+GardenVR.Sundial.SundialSave field public System.String InstallKey
 GardenVR.Sundial.SundialService ctor public (GardenVR.Core.IClock clock, System.String directory)
-GardenVR.Sundial.SundialService field public const System.Int32 SchemaVersion = 1
+GardenVR.Sundial.SundialService field public const System.Int32 SchemaVersion = 2
 GardenVR.Sundial.SundialService field public const System.String DevSeedStep = dev-seed
 GardenVR.Sundial.SundialService field public static System.Boolean DevSeedOnFresh
 GardenVR.Sundial.SundialService field public static System.Nullable<System.Boolean> FreshReducedMotion
@@ -89,6 +93,7 @@ GardenVR.Sundial.SundialService method public System.Boolean TryStartFocus()
 GardenVR.Sundial.SundialService method public System.Int32 LiveCount(System.String habitId)
 GardenVR.Sundial.SundialService method public System.Int32 LiveInArc(System.String arcKey)
 GardenVR.Sundial.SundialService method public System.Void Arm(System.String habitId)
+GardenVR.Sundial.SundialService method public System.Void CompleteLaunch()
 GardenVR.Sundial.SundialService method public System.Void JumpTo(System.DateTimeOffset instant)
 GardenVR.Sundial.SundialService method public System.Void SetBeds(System.Boolean on)
 GardenVR.Sundial.SundialService method public System.Void SetFirstRunStep(System.String step)
@@ -122,10 +127,16 @@ GardenVR.Sundial.SundialService property get public System.String StateJson
 GardenVR.Sundial.SundialSettings ctor public ()
 GardenVR.Sundial.SundialSettings field public System.Boolean Beds
 GardenVR.Sundial.SundialSettings field public System.Boolean Boil
+GardenVR.Sundial.SundialSettings field public System.Boolean BreakPoses
+GardenVR.Sundial.SundialSettings field public System.Boolean CoachOptIn
 GardenVR.Sundial.SundialSettings field public System.Boolean Mute
+GardenVR.Sundial.SundialSettings field public System.Boolean Nudges
 GardenVR.Sundial.SundialSettings field public System.Boolean ReducedMotion
 GardenVR.Sundial.SundialSettings field public System.Boolean Voice
+GardenVR.Sundial.SundialSettings field public System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue> Extra
+GardenVR.Sundial.SundialSettings field public System.Collections.Generic.List<GardenVR.Core.NudgeWindow> NudgeWindows
 GardenVR.Sundial.SundialSettings field public System.Int32 BoundaryMin
+GardenVR.Sundial.SundialSettings field public System.Int32 CatchUpDepth
 GardenVR.Sundial.SundialSettings field public System.Int32 DuskMin
 GardenVR.Sundial.SundialSettings field public System.Int32 MiddayMin
 GardenVR.Sundial.SundialSettings field public System.Int32 MorningMin

@@ -54,7 +54,7 @@ namespace GardenVR.Sundial
     /// </summary>
     public sealed class SundialService
     {
-        public const int SchemaVersion = 1;
+        public const int SchemaVersion = 2;
         public const string DevSeedStep = "dev-seed";
 
         /// <summary>
@@ -69,6 +69,7 @@ namespace GardenVR.Sundial
         readonly SteppingClock _clock;
         readonly SaveStore<SundialSave> _store;
         bool _readOnly;
+        bool _launchCompleted;
         SundialSave _save;
         Ledger _ledger;
         DeferredTend _deferred;
@@ -123,9 +124,36 @@ namespace GardenVR.Sundial
             if (clock == null) throw new ArgumentNullException(nameof(clock));
             if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("directory is null, empty or whitespace", nameof(directory));
             _clock = new SteppingClock(clock);
-            _store = new SaveStore<SundialSave>(new DiskSaveIo(directory), SchemaVersion, CreateFresh, SundialCodec.Read, SundialCodec.Write, null);
+            _store = new SaveStore<SundialSave>(new DiskSaveIo(directory), SchemaVersion, CreateFresh, SundialCodec.Read, SundialCodec.Write,
+                new[] { new MigrationStep(1, "sundial-upgrade-state", UpgradeToSchema2) });
             LoadResult<SundialSave> result = _store.Load();
             Bind(result);
+        }
+
+        // Add defaults in place so SaveStore can snapshot the original and preserve unknown data.
+        static void UpgradeToSchema2(JsonObject obj)
+        {
+            JsonObject defaults = SundialCodec.Write(new SundialSave());
+            foreach (string member in new[] { "Counts", "Journal", "LastVisitDay", "InstallKey" })
+                if (!obj.Has(member)) obj.Set(member, defaults.Get(member));
+            if (!obj.Has("Settings") || obj.Get("Settings").IsNull)
+                obj.Set("Settings", new JsonObject());
+            JsonObject settings = obj.Get("Settings").AsObject();
+            JsonObject defaultSettings = defaults.Get("Settings").AsObject();
+            foreach (string member in new[] { "CoachOptIn", "CatchUpDepth", "NudgeWindows", "Nudges", "BreakPoses" })
+                if (!settings.Has(member)) settings.Set(member, defaultSettings.Get(member));
+        }
+
+        /// <summary>
+        /// Called once after the launch catch-up offer closes (or immediately when there is no offer).
+        /// Loading alone leaves LastVisitDay intact so the offer can read the previous visit.
+        /// </summary>
+        public void CompleteLaunch()
+        {
+            if (_launchCompleted || _readOnly || Outcome == LoadOutcome.Failed) return;
+            _save.LastVisitDay = Today().Index;
+            Persist();
+            _launchCompleted = true;
         }
 
         /// <summary>Takes a load result into the outcome fields, the document, ledger, gratitude, deferred tend and focus.</summary>
@@ -649,6 +677,7 @@ namespace GardenVR.Sundial
             return new SundialSave
             {
                 SchemaVersion = SchemaVersion,
+                InstallKey = RelayProtocol.NewInstallKey(),
                 Habits = new List<HabitDef>(),
                 Tends = new List<TendEvent>(),
                 Settings = new SundialSettings(),

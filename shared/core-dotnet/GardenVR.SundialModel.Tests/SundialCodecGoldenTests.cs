@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using GardenVR.Core;
 using GardenVR.Sundial;
@@ -30,6 +31,35 @@ public class SundialCodecGoldenTests
     {
         SundialSave save = SundialCodec.Read(Json.ParseObject(Input));
         Assert.Equal(Golden, Json.Write(SundialCodec.Write(save)));
+    }
+
+    [Fact]
+    public void Schema1_migrates_to_the_schema2_golden_without_losing_the_old_document()
+    {
+        string dir = Path.Combine(Path.GetTempPath(), "sundial-golden-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        try
+        {
+            // The codec fixture deliberately has an id-less habit; a running service needs a real habit id.
+            string input = Input.Replace("{\"PresetKey\":\"walk\"", "{\"Id\":\"walk\",\"PresetKey\":\"walk\"");
+            File.WriteAllText(Path.Combine(dir, "save.json"), input);
+            var clock = new FixedClock(DateTimeOffset.FromUnixTimeMilliseconds(1760000000000L), TimeZoneInfo.Utc);
+            var service = new SundialService(clock, dir);
+            Assert.Equal(LoadOutcome.Migrated, service.Outcome);
+            Assert.Equal(input, File.ReadAllText(Path.Combine(dir, "save.snapshot.json")));
+            Assert.Matches("^[0-9a-f]{32}$", service.Save.InstallKey);
+            // Only the random install key is normalised; all other bytes remain pinned.
+            service.Save.InstallKey = "0123456789abcdef0123456789abcdef";
+            string expected = Golden.Replace("\"SchemaVersion\":1", "\"SchemaVersion\":2")
+                .Replace("\"Id\":\"\",\"PresetKey\":\"walk\"", "\"Id\":\"walk\",\"PresetKey\":\"walk\"")
+                .Replace("\"Mute\":false}", "\"Mute\":false,\"CoachOptIn\":false,\"CatchUpDepth\":2,"
+                    + "\"NudgeWindows\":[{\"StartTicks\":378000000000,\"EndTicks\":432000000000},"
+                    + "{\"StartTicks\":522000000000,\"EndTicks\":612000000000}],\"Nudges\":true,\"BreakPoses\":true}")
+                .Replace("\"Top\":true", "\"Counts\":[],\"Journal\":[],\"LastVisitDay\":null,"
+                    + "\"InstallKey\":\"0123456789abcdef0123456789abcdef\",\"Top\":true");
+            Assert.Equal(expected, Json.Write(SundialCodec.Write(service.Save)));
+        }
+        finally { Directory.Delete(dir, true); }
     }
 
     [Fact]

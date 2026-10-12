@@ -246,6 +246,12 @@ namespace GardenVR.Sundial
             }
         }
 
+        /// <summary>
+        /// B8 subscribes before Start, offers catch-up using Service.Save.LastVisitDay, then calls the
+        /// supplied completion when the card closes. With no subscriber, the launch completes immediately.
+        /// </summary>
+        public event Action<Action> LaunchCatchUp;
+
         void Start()
         {
             if (!Application.isPlaying) return;
@@ -255,6 +261,8 @@ namespace GardenVR.Sundial
                 if (keyboard != null) SetSource(keyboard);
             }
             BeginSweep();
+            if (LaunchCatchUp == null) _service.CompleteLaunch();
+            else LaunchCatchUp(_service.CompleteLaunch);
         }
 
         void OnEnable() { Subscribe(); }

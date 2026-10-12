@@ -20,6 +20,12 @@ namespace GardenVR.Sundial
         public bool Boil = true;
         /// <summary>Silences every bus. Off by default, so a fresh dial is quiet only when the user asks.</summary>
         public bool Mute;
+        public bool CoachOptIn;
+        public int CatchUpDepth = CatchUp.DefaultDepth;
+        public List<NudgeWindow> NudgeWindows = new List<NudgeWindow>(NudgePlanner.DefaultWindows);
+        public bool Nudges = true;
+        public bool BreakPoses = true;
+        public Dictionary<string, JsonValue> Extra;
     }
 
     /// <summary>
@@ -37,6 +43,10 @@ namespace GardenVR.Sundial
         public List<GratitudeMark> Gratitude = new List<GratitudeMark>();
         /// <summary>The open or finished shadow hour. Null when no hour has been started.</summary>
         public FocusSnapshot Focus;
+        public List<CountEvent> Counts = new List<CountEvent>();
+        public CoachJournal Journal = new CoachJournal();
+        public int? LastVisitDay;
+        public string InstallKey;
         public Dictionary<string, JsonValue> Extra;
         public Dictionary<string, Dictionary<string, JsonValue>> HabitExtra;
         public Dictionary<string, Dictionary<string, JsonValue>> TendExtra;
@@ -47,12 +57,14 @@ namespace GardenVR.Sundial
     {
         static readonly string[] RootKnown =
         {
-            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Focus"
+            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Focus",
+            "Counts", "Journal", "LastVisitDay", "InstallKey"
         };
 
         static readonly string[] RootKnownWithGratitude =
         {
-            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude", "Focus"
+            "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude", "Focus",
+            "Counts", "Journal", "LastVisitDay", "InstallKey"
         };
 
         public static SundialSave Read(JsonObject obj)
@@ -71,6 +83,12 @@ namespace GardenVR.Sundial
             save.Habits = LedgerJson.ReadHabits(obj, save.HabitExtra, RowChoices);
             save.TendExtra = new Dictionary<string, Dictionary<string, JsonValue>>();
             save.Tends = LedgerJson.ReadTends(obj, save.TendExtra, RowChoices);
+            save.Counts = QuantityJson.ReadCounts(obj);
+            save.Journal = CoachJournal.Read(obj);
+            if (obj.Has("LastVisitDay") && !obj.Get("LastVisitDay").IsNull)
+                save.LastVisitDay = obj.Get("LastVisitDay").AsInt();
+            save.InstallKey = LedgerJson.StringMember(obj, "InstallKey");
+            if (string.IsNullOrEmpty(save.InstallKey)) save.InstallKey = RelayProtocol.NewInstallKey();
             if (obj.Has("FirstRunStep") && !obj.Get("FirstRunStep").IsNull)
                 save.FirstRunStep = obj.Get("FirstRunStep").AsString();
             return save;
@@ -83,12 +101,21 @@ namespace GardenVR.Sundial
             obj.Set("SchemaVersion", JsonValue.Number(save.SchemaVersion < 1 ? SundialService.SchemaVersion : save.SchemaVersion));
             obj.Set("Habits", LedgerJson.WriteHabits(save.Habits, save.HabitExtra, RowChoices));
             obj.Set("Tends", LedgerJson.WriteTends(save.Tends, save.TendExtra));
-            obj.Set("Settings", WriteSettings(save.Settings ?? new SundialSettings()));
+            bool upgrade = save.SchemaVersion != 1;
+            obj.Set("Settings", WriteSettings(save.Settings ?? new SundialSettings(), upgrade));
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
             if (save.Gratitude != null && save.Gratitude.Count > 0)
                 obj.Set("Gratitude", WriteGratitude(save.Gratitude));
             if (save.Focus != null && !string.IsNullOrEmpty(save.Focus.Phase) && save.Focus.Phase != "Idle")
                 obj.Set("Focus", WriteFocus(save.Focus));
+            if (upgrade)
+            {
+                obj.Set("Counts", QuantityJson.WriteCounts(save.Counts));
+                obj.Set("Journal", (save.Journal ?? new CoachJournal()).Write());
+                obj.Set("LastVisitDay", save.LastVisitDay.HasValue ? JsonValue.Number(save.LastVisitDay.Value) : JsonValue.Null());
+                if (string.IsNullOrEmpty(save.InstallKey)) save.InstallKey = RelayProtocol.NewInstallKey();
+                obj.Set("InstallKey", JsonValue.String(save.InstallKey));
+            }
             obj.Restore(save.Extra);
             return obj;
         }
@@ -106,10 +133,30 @@ namespace GardenVR.Sundial
             if (obj.Has("ReducedMotion")) settings.ReducedMotion = obj.Get("ReducedMotion").AsBool();
             if (obj.Has("Boil")) settings.Boil = obj.Get("Boil").AsBool();
             if (obj.Has("Mute")) settings.Mute = obj.Get("Mute").AsBool();
+            if (obj.Has("CoachOptIn")) settings.CoachOptIn = obj.Get("CoachOptIn").AsBool();
+            if (obj.Has("CatchUpDepth")) settings.CatchUpDepth = CatchUp.Depth(obj.Get("CatchUpDepth").AsInt());
+            if (obj.Has("Nudges")) settings.Nudges = obj.Get("Nudges").AsBool();
+            if (obj.Has("BreakPoses")) settings.BreakPoses = obj.Get("BreakPoses").AsBool();
+            if (obj.Has("NudgeWindows") && obj.Get("NudgeWindows").Kind == JsonKind.Array)
+            {
+                settings.NudgeWindows = new List<NudgeWindow>();
+                JsonArray rows = obj.Get("NudgeWindows").AsArray();
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    if (rows[i].Kind != JsonKind.Object) continue;
+                    JsonObject row = rows[i].AsObject();
+                    if (!row.Has("StartTicks") || !row.Has("EndTicks")) continue;
+                    if (row.Get("StartTicks").Kind != JsonKind.Number || row.Get("EndTicks").Kind != JsonKind.Number) continue;
+                    settings.NudgeWindows.Add(new NudgeWindow(TimeSpan.FromTicks(row.Get("StartTicks").AsLong()),
+                        TimeSpan.FromTicks(row.Get("EndTicks").AsLong())));
+                }
+            }
+            settings.Extra = obj.Passthrough("BoundaryMin", "MorningMin", "MiddayMin", "DuskMin", "Voice", "Beds",
+                "ReducedMotion", "Boil", "Mute", "CoachOptIn", "CatchUpDepth", "NudgeWindows", "Nudges", "BreakPoses");
             return settings;
         }
 
-        static JsonObject WriteSettings(SundialSettings settings)
+        static JsonObject WriteSettings(SundialSettings settings, bool upgrade)
         {
             var obj = new JsonObject();
             obj.Set("BoundaryMin", JsonValue.Number(settings.BoundaryMin));
@@ -121,6 +168,23 @@ namespace GardenVR.Sundial
             obj.Set("ReducedMotion", JsonValue.Bool(settings.ReducedMotion));
             obj.Set("Boil", JsonValue.Bool(settings.Boil));
             obj.Set("Mute", JsonValue.Bool(settings.Mute));
+            if (upgrade)
+            {
+                obj.Set("CoachOptIn", JsonValue.Bool(settings.CoachOptIn));
+                obj.Set("CatchUpDepth", JsonValue.Number(CatchUp.Depth(settings.CatchUpDepth)));
+                var windows = new JsonArray();
+                foreach (NudgeWindow window in settings.NudgeWindows ?? new List<NudgeWindow>(NudgePlanner.DefaultWindows))
+                {
+                    var row = new JsonObject();
+                    row.Set("StartTicks", JsonValue.Number(window.Start.Ticks));
+                    row.Set("EndTicks", JsonValue.Number(window.End.Ticks));
+                    windows.Add(row);
+                }
+                obj.Set("NudgeWindows", windows);
+                obj.Set("Nudges", JsonValue.Bool(settings.Nudges));
+                obj.Set("BreakPoses", JsonValue.Bool(settings.BreakPoses));
+            }
+            obj.Restore(settings.Extra);
             return obj;
         }
 
