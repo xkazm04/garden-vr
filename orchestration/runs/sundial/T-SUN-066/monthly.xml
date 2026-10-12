@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.7523731">
+  <test-suite type="TestSuite" id="1127" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.752373" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1119" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.740257" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="42492" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1120" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.738123" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1121" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.736270" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1122" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.731940" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1123" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="94" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.729862" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1066" name="MonthlyRecordTests" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:59Z" duration="3.725498" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1068" name="MonthTotal_OnLook" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.MonthTotal_OnLook" methodname="MonthTotal_OnLook" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="800759091" result="Passed" start-time="2026-10-12 14:02:55Z" end-time="2026-10-12 14:02:58Z" duration="2.702816" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="300000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=4.194
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1071" name="NoConsecutiveCountString" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.NoConsecutiveCountString" methodname="NoConsecutiveCountString" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="946596941" result="Passed" start-time="2026-10-12 14:02:58Z" end-time="2026-10-12 14:02:58Z" duration="0.164037" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.865
+[Sundial] cue amb.kitchen
+]]></output>
+                </test-case>
+                <test-case id="1069" name="Quantity_ReachTarget_TendsOnce" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.Quantity_ReachTarget_TendsOnce" methodname="Quantity_ReachTarget_TendsOnce" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="919514053" result="Passed" start-time="2026-10-12 14:02:58Z" end-time="2026-10-12 14:02:58Z" duration="0.336701" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] cue tile.ink
+[Sundial] first-interactive t=6.032
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tile.ink
+[Sundial] cue tend.undo
+]]></output>
+                </test-case>
+                <test-case id="1070" name="Quantity_Undo_ReversesTend" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.Quantity_Undo_ReversesTend" methodname="Quantity_Undo_ReversesTend" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="2047493750" result="Passed" start-time="2026-10-12 14:02:58Z" end-time="2026-10-12 14:02:59Z" duration="0.309187" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] cue tile.ink
+[Sundial] first-interactive t=6.369
+[Sundial] cue amb.kitchen
+[Sundial] cue tile.ink
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[Sundial] cue tend.undo
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+]]></output>
+                </test-case>
+                <test-case id="1067" name="ZoneTabs_FillFromLedger" fullname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests.ZoneTabs_FillFromLedger" methodname="ZoneTabs_FillFromLedger" classname="GardenVR.Sundial.Tests.PlayMode.MonthlyRecordTests" runstate="Runnable" seed="576728706" result="Passed" start-time="2026-10-12 14:02:59Z" end-time="2026-10-12 14:02:59Z" duration="0.196118" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[Sundial] cue dial.appear
+[Sundial] first-interactive t=6.693
+[Sundial] cue amb.kitchen
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

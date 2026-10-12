@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="82864017-9c88-4dc1-bd43-43ef2405534f" name="kazda@KAZIHO 2026-10-12 16:06:34" runUser="KAZIHO\kazda" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-10-12T16:06:34.3271697+02:00" queuing="2026-10-12T16:06:34.3271699+02:00" start="2026-10-12T16:06:33.7587378+02:00" finish="2026-10-12T16:06:34.3572681+02:00" />
+  <TestSettings name="default" id="3800871e-9007-448c-b6c6-d7f4913cc4b6">
+    <Deployment runDeploymentRoot="kazda_KAZIHO_2026-10-12_16_06_34" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="4d341c62-1e38-41d7-ab50-bd3c2d203d4f" testId="169cb3b3-d1cf-1dbe-c6e9-95c945d42a0c" testName="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Arm_holds_the_tend_for_six_seconds_then_writes_it" computerName="KAZIHO" duration="00:00:00.0011611" startTime="2026-10-12T16:06:34.3064820+02:00" endTime="2026-10-12T16:06:34.3064820+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4d341c62-1e38-41d7-ab50-bd3c2d203d4f" />
+    <UnitTestResult executionId="bb2d1070-1466-43b6-be28-1cffca8bd673" testId="f47b6f1c-036b-756e-d3a6-55d480e233b9" testName="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Yesterday_is_offered_once_and_lands_late_as_a_backfill" computerName="KAZIHO" duration="00:00:00.0022569" startTime="2026-10-12T16:06:34.3064064+02:00" endTime="2026-10-12T16:06:34.3064064+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bb2d1070-1466-43b6-be28-1cffca8bd673" />
+    <UnitTestResult executionId="6a30d3c0-17b0-4322-955a-b83049e29d78" testId="eac67457-a5c6-a976-7a3c-3d77e58929e5" testName="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Day1_has_one_frond_and_full_vitality_on_the_origin_day" computerName="KAZIHO" duration="00:00:00.0000894" startTime="2026-10-12T16:06:34.3061711+02:00" endTime="2026-10-12T16:06:34.3061712+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6a30d3c0-17b0-4322-955a-b83049e29d78" />
+    <UnitTestResult executionId="6adf4f7c-3c88-4fa4-b449-8cdb76e2f1a6" testId="136793c0-3205-2bbc-e761-834a48852d68" testName="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Recovered_lifts_the_garden_and_keeps_both_fronds" computerName="KAZIHO" duration="00:00:00.0000861" startTime="2026-10-12T16:06:34.2862506+02:00" endTime="2026-10-12T16:06:34.2862507+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6adf4f7c-3c88-4fa4-b449-8cdb76e2f1a6" />
+    <UnitTestResult executionId="9e90e7c1-c022-4dba-954a-301dc73e3a5c" testId="711e025b-91f2-7b45-383d-14fce0c4050d" testName="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Offer_is_true_once" computerName="KAZIHO" duration="00:00:00.0001207" startTime="2026-10-12T16:06:34.3063693+02:00" endTime="2026-10-12T16:06:34.3063694+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9e90e7c1-c022-4dba-954a-301dc73e3a5c" />
+    <UnitTestResult executionId="d776d6a8-5334-4f3b-b33e-c1ffcd97c6e2" testId="9a69f9b7-9561-32d0-6d6b-69bbc475f42f" testName="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Day7_skips_one_day_and_still_flowers" computerName="KAZIHO" duration="00:00:00.0001605" startTime="2026-10-12T16:06:34.2860892+02:00" endTime="2026-10-12T16:06:34.2860893+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d776d6a8-5334-4f3b-b33e-c1ffcd97c6e2" />
+    <UnitTestResult executionId="de65e61a-6ef5-4200-8ea6-ed5958d4ea9b" testId="51fecdcf-c55e-ff92-57df-76849d4f8119" testName="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Undo_before_the_write_always_works_and_leaves_no_row" computerName="KAZIHO" duration="00:00:00.0017497" startTime="2026-10-12T16:06:34.3063274+02:00" endTime="2026-10-12T16:06:34.3063274+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="de65e61a-6ef5-4200-8ea6-ed5958d4ea9b" />
+    <UnitTestResult executionId="318b4c90-3913-46c9-80df-94952dacc61d" testId="74a89ad6-0efc-5d9b-0225-a947694137a2" testName="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Shown_leaves_count_the_held_tend_before_it_lands" computerName="KAZIHO" duration="00:00:00.0082253" startTime="2026-10-12T16:06:34.2861823+02:00" endTime="2026-10-12T16:06:34.2861823+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="318b4c90-3913-46c9-80df-94952dacc61d" />
+    <UnitTestResult executionId="12398cf1-600e-4864-9b81-2379ae453ee4" testId="f03d3588-0e99-5ad5-08b0-599f1722ef14" testName="GardenVR.TerrariumModel.Tests.FirstRunStepsTests.A_later_step_is_further_along" computerName="KAZIHO" duration="00:00:00.0041110" startTime="2026-10-12T16:06:34.2852553+02:00" endTime="2026-10-12T16:06:34.2852553+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="12398cf1-600e-4864-9b81-2379ae453ee4" />
+    <UnitTestResult executionId="e004ad94-3b37-4ef2-9525-4992a1639601" testId="792a8771-5ae4-4d95-5df5-8ae8b580bcd3" testName="GardenVR.TerrariumModel.Tests.FirstRunStepsTests.A_saved_unfinished_step_resumes_and_a_finished_or_missing_one_does_not" computerName="KAZIHO" duration="00:00:00.0001681" startTime="2026-10-12T16:06:34.2861126+02:00" endTime="2026-10-12T16:06:34.2861126+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e004ad94-3b37-4ef2-9525-4992a1639601" />
+    <UnitTestResult executionId="63d41210-6dcf-46a1-bb47-01609777b085" testId="669de65b-2c51-eafb-74eb-fded8bdcc5c1" testName="GardenVR.TerrariumModel.Tests.FirstRunStepsTests.A_fresh_garden_runs_the_tour_and_a_failed_load_never_does" computerName="KAZIHO" duration="00:00:00.0000536" startTime="2026-10-12T16:06:34.2861666+02:00" endTime="2026-10-12T16:06:34.2861667+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="63d41210-6dcf-46a1-bb47-01609777b085" />
+    <UnitTestResult executionId="eaef7f87-f960-47fb-bd93-e6160961c941" testId="7253054e-308d-dff7-90e2-ac40b98ee72b" testName="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Planting_refuses_a_repeat_an_unknown_preset_and_a_full_garden" computerName="KAZIHO" duration="00:00:00.0019257" startTime="2026-10-12T16:06:34.3064460+02:00" endTime="2026-10-12T16:06:34.3064460+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eaef7f87-f960-47fb-bd93-e6160961c941" />
+    <UnitTestResult executionId="88dcc46c-5a6e-4e50-be49-4f10fc8f3c60" testId="4f990b55-0bf2-b5be-35c5-6e5e88f494c6" testName="GardenVR.TerrariumModel.Tests.GardenJourneyTests.An_unknown_journey_name_is_refused" computerName="KAZIHO" duration="00:00:00.0004583" startTime="2026-10-12T16:06:34.2862157+02:00" endTime="2026-10-12T16:06:34.2862158+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="88dcc46c-5a6e-4e50-be49-4f10fc8f3c60" />
+    <UnitTestResult executionId="0905b6d6-2d3b-463a-94dd-59a8548cc2a4" testId="1e3b5dbc-c7e5-8d6d-88df-9ae9c86f45b8" testName="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Missed2_droops_without_losing_the_frond" computerName="KAZIHO" duration="00:00:00.0058776" startTime="2026-10-12T16:06:34.2835910+02:00" endTime="2026-10-12T16:06:34.2836058+02:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0905b6d6-2d3b-463a-94dd-59a8548cc2a4" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Missed2_droops_without_losing_the_frond" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="1e3b5dbc-c7e5-8d6d-88df-9ae9c86f45b8">
+      <Execution id="0905b6d6-2d3b-463a-94dd-59a8548cc2a4" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.GardenJourneyTests" name="Missed2_droops_without_losing_the_frond" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Arm_holds_the_tend_for_six_seconds_then_writes_it" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="169cb3b3-d1cf-1dbe-c6e9-95c945d42a0c">
+      <Execution id="4d341c62-1e38-41d7-ab50-bd3c2d203d4f" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.CompanionHabitsTests" name="Arm_holds_the_tend_for_six_seconds_then_writes_it" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.FirstRunStepsTests.A_saved_unfinished_step_resumes_and_a_finished_or_missing_one_does_not" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="792a8771-5ae4-4d95-5df5-8ae8b580bcd3">
+      <Execution id="e004ad94-3b37-4ef2-9525-4992a1639601" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.FirstRunStepsTests" name="A_saved_unfinished_step_resumes_and_a_finished_or_missing_one_does_not" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Day7_skips_one_day_and_still_flowers" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="9a69f9b7-9561-32d0-6d6b-69bbc475f42f">
+      <Execution id="d776d6a8-5334-4f3b-b33e-c1ffcd97c6e2" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.GardenJourneyTests" name="Day7_skips_one_day_and_still_flowers" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.FirstRunStepsTests.A_fresh_garden_runs_the_tour_and_a_failed_load_never_does" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="669de65b-2c51-eafb-74eb-fded8bdcc5c1">
+      <Execution id="63d41210-6dcf-46a1-bb47-01609777b085" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.FirstRunStepsTests" name="A_fresh_garden_runs_the_tour_and_a_failed_load_never_does" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Offer_is_true_once" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="711e025b-91f2-7b45-383d-14fce0c4050d">
+      <Execution id="9e90e7c1-c022-4dba-954a-301dc73e3a5c" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.CompanionHabitsTests" name="Offer_is_true_once" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.FirstRunStepsTests.A_later_step_is_further_along" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="f03d3588-0e99-5ad5-08b0-599f1722ef14">
+      <Execution id="12398cf1-600e-4864-9b81-2379ae453ee4" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.FirstRunStepsTests" name="A_later_step_is_further_along" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Yesterday_is_offered_once_and_lands_late_as_a_backfill" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="f47b6f1c-036b-756e-d3a6-55d480e233b9">
+      <Execution id="bb2d1070-1466-43b6-be28-1cffca8bd673" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.CompanionHabitsTests" name="Yesterday_is_offered_once_and_lands_late_as_a_backfill" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Shown_leaves_count_the_held_tend_before_it_lands" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="74a89ad6-0efc-5d9b-0225-a947694137a2">
+      <Execution id="318b4c90-3913-46c9-80df-94952dacc61d" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.CompanionHabitsTests" name="Shown_leaves_count_the_held_tend_before_it_lands" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Undo_before_the_write_always_works_and_leaves_no_row" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="51fecdcf-c55e-ff92-57df-76849d4f8119">
+      <Execution id="de65e61a-6ef5-4200-8ea6-ed5958d4ea9b" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.CompanionHabitsTests" name="Undo_before_the_write_always_works_and_leaves_no_row" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Day1_has_one_frond_and_full_vitality_on_the_origin_day" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="eac67457-a5c6-a976-7a3c-3d77e58929e5">
+      <Execution id="6a30d3c0-17b0-4322-955a-b83049e29d78" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.GardenJourneyTests" name="Day1_has_one_frond_and_full_vitality_on_the_origin_day" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.CompanionHabitsTests.Planting_refuses_a_repeat_an_unknown_preset_and_a_full_garden" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="7253054e-308d-dff7-90e2-ac40b98ee72b">
+      <Execution id="eaef7f87-f960-47fb-bd93-e6160961c941" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.CompanionHabitsTests" name="Planting_refuses_a_repeat_an_unknown_preset_and_a_full_garden" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.GardenJourneyTests.Recovered_lifts_the_garden_and_keeps_both_fronds" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="136793c0-3205-2bbc-e761-834a48852d68">
+      <Execution id="6adf4f7c-3c88-4fa4-b449-8cdb76e2f1a6" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.GardenJourneyTests" name="Recovered_lifts_the_garden_and_keeps_both_fronds" />
+    </UnitTest>
+    <UnitTest name="GardenVR.TerrariumModel.Tests.GardenJourneyTests.An_unknown_journey_name_is_refused" storage="c:\users\kazda\kiro\gvr-sundial\shared\core-dotnet\gardenvr.terrariummodel.tests\bin\debug\net9.0\gardenvr.terrariummodel.tests.dll" id="4f990b55-0bf2-b5be-35c5-6e5e88f494c6">
+      <Execution id="88dcc46c-5a6e-4e50-be49-4f10fc8f3c60" />
+      <TestMethod codeBase="C:\Users\kazda\kiro\gvr-sundial\shared\core-dotnet\GardenVR.TerrariumModel.Tests\bin\Debug\net9.0\GardenVR.TerrariumModel.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="GardenVR.TerrariumModel.Tests.GardenJourneyTests" name="An_unknown_journey_name_is_refused" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="169cb3b3-d1cf-1dbe-c6e9-95c945d42a0c" executionId="4d341c62-1e38-41d7-ab50-bd3c2d203d4f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f47b6f1c-036b-756e-d3a6-55d480e233b9" executionId="bb2d1070-1466-43b6-be28-1cffca8bd673" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="eac67457-a5c6-a976-7a3c-3d77e58929e5" executionId="6a30d3c0-17b0-4322-955a-b83049e29d78" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="136793c0-3205-2bbc-e761-834a48852d68" executionId="6adf4f7c-3c88-4fa4-b449-8cdb76e2f1a6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="711e025b-91f2-7b45-383d-14fce0c4050d" executionId="9e90e7c1-c022-4dba-954a-301dc73e3a5c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9a69f9b7-9561-32d0-6d6b-69bbc475f42f" executionId="d776d6a8-5334-4f3b-b33e-c1ffcd97c6e2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="51fecdcf-c55e-ff92-57df-76849d4f8119" executionId="de65e61a-6ef5-4200-8ea6-ed5958d4ea9b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="74a89ad6-0efc-5d9b-0225-a947694137a2" executionId="318b4c90-3913-46c9-80df-94952dacc61d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f03d3588-0e99-5ad5-08b0-599f1722ef14" executionId="12398cf1-600e-4864-9b81-2379ae453ee4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="792a8771-5ae4-4d95-5df5-8ae8b580bcd3" executionId="e004ad94-3b37-4ef2-9525-4992a1639601" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="669de65b-2c51-eafb-74eb-fded8bdcc5c1" executionId="63d41210-6dcf-46a1-bb47-01609777b085" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7253054e-308d-dff7-90e2-ac40b98ee72b" executionId="eaef7f87-f960-47fb-bd93-e6160961c941" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4f990b55-0bf2-b5be-35c5-6e5e88f494c6" executionId="88dcc46c-5a6e-4e50-be49-4f10fc8f3c60" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e3b5dbc-c7e5-8d6d-88df-9ae9c86f45b8" executionId="0905b6d6-2d3b-463a-94dd-59a8548cc2a4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="14" executed="14" passed="14" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.8.2+699d445a1a (64-bit .NET 9.0.11)&#xD;
+[xUnit.net 00:00:00.05]   Discovering: GardenVR.TerrariumModel.Tests&#xD;
+[xUnit.net 00:00:00.10]   Discovered:  GardenVR.TerrariumModel.Tests&#xD;
+[xUnit.net 00:00:00.11]   Starting:    GardenVR.TerrariumModel.Tests&#xD;
+[xUnit.net 00:00:00.19]   Finished:    GardenVR.TerrariumModel.Tests&#xD;
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>
