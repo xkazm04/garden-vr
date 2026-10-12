@@ -1,0 +1,10 @@
+editmode result=Passed total=75 passed=75 failed=0 skipped=0
+playmode result=Passed total=51 passed=51 failed=0 skipped=0
+editmode compiler/shader/build error entries=0
+playmode compiler/shader/build error entries=0
+build compiler/shader/build error entries=0
+OriginalPlayerSaveUnchanged=True SHA256=D07E3AE7860B3301A4279A75B59E81D06D434CDF43936A4D4331713C918D3DAC
+apps/sundial/Build/sundial/Sundial.exe bytes=667136 SHA256=91A36FA14DD3CCF390B99720805EDA0553DA1CA1108381B49C98C938F69DC256
+apps/sundial/Build/sundial/Sundial_Data/Managed/GardenVR.Sundial.dll bytes=220160 SHA256=6D7A2C989E5C973158212BC44FBC015776529E2C74D6E53653DCD720C6CCA755
+apps/sundial/Build/sundial/Sundial_Data/Managed/GardenVR.Core.dll bytes=116224 SHA256=1083F6FD99F0E336EDBC83DA02BFEB2B8A4C9D319FFA9A3811DA4FBD323DF393
+UnityEditorProcesses=0
