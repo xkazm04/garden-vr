@@ -110,15 +110,27 @@ namespace GardenVR.Sundial.Tests.PlayMode
         [UnityTest] public IEnumerator Relay_NeverAnsweringSocket_IsAbortedAfterFlowBudget()
         {
             using (var server = new LocalServer(null))
+            using (var relay = new InFlightRelay(server.Url, _save.InstallKey,
+                CoachPrompts.Reflection(CoachVoice.Sundial, "private words", null)))
             {
+                // Establish the unanswered request before starting the short flow budget. Otherwise
+                // a busy editor can abort before connect and leave the server waiting in Accept forever.
+                yield return Complete(server.RequestReceived, "loopback request received");
+                Assert.IsFalse(relay.Work.IsCompleted, "server must leave the real request unanswered");
                 _config.RelayUrl = server.Url;
                 _config.BudgetSeconds = 0.5f;
                 _save.Settings.CoachOptIn = true;
-                var call = new SundialCoach(() => _save, _config).ReflectAsync("private words", null, "quiet");
-                yield return Complete(call);
+                var call = new SundialCoach(() => _save, _config, key => relay)
+                    .ReflectAsync("private words", null, "quiet");
+                yield return Complete(call, "flow timeout and fallback");
                 Assert.AreEqual(CoachFailure.Timeout, call.Result.Failure);
-                yield return Complete(server.Work);
+                Assert.IsFalse(call.Result.FromModel);
+                Assert.AreEqual(ScriptedCoach.Reflection("quiet", null), call.Result.Line);
+                yield return Complete(relay.Work, "relay abort");
+                Assert.AreEqual(CoachFailure.Timeout, relay.Work.Result.Failure);
+                yield return Complete(server.Work, "socket disconnect");
                 Assert.IsTrue(server.Disconnected, "UnityWebRequest must abort the socket, not just abandon its Task");
+                LogAssert.NoUnexpectedReceived();
             }
         }
 
@@ -145,11 +157,11 @@ namespace GardenVR.Sundial.Tests.PlayMode
             }
         }
 
-        static IEnumerator Complete(Task task)
+        static IEnumerator Complete(Task task, string stage = "task")
         {
             float deadline = Time.realtimeSinceStartup + 5;
             while (!task.IsCompleted && Time.realtimeSinceStartup < deadline) yield return null;
-            Assert.IsTrue(task.IsCompleted, "Task did not complete within 5 seconds");
+            Assert.IsTrue(task.IsCompleted, stage + " did not complete within 5 seconds");
             if (task.IsFaulted) throw task.Exception;
             Assert.IsFalse(task.IsCanceled);
         }
@@ -169,6 +181,36 @@ namespace GardenVR.Sundial.Tests.PlayMode
                 Task.FromResult(CoachReply.Failed(CoachFailure.Refused));
         }
 
+        // Only the test's connection setup precedes the budget. CoachFlow still supplies cancellation,
+        // and the real RelayCoachClient still owns Abort and disposal on Unity's main thread.
+        sealed class InFlightRelay : ICoachClient, IDisposable
+        {
+            readonly CancellationTokenSource _cancel = new CancellationTokenSource();
+            readonly string _envelope;
+            CancellationTokenRegistration _registration;
+            public readonly Task<CoachReply> Work;
+
+            public InFlightRelay(string url, string key, CoachRequest request)
+            {
+                _envelope = RelayProtocol.Encode(request);
+                Work = new RelayCoachClient(url, key).AskAsync(request, _cancel.Token);
+            }
+
+            public Task<CoachReply> AskAsync(CoachRequest request, CancellationToken cancel)
+            {
+                Assert.AreEqual(_envelope, RelayProtocol.Encode(request));
+                _registration = cancel.Register(() => _cancel.Cancel());
+                return Work;
+            }
+
+            public void Dispose()
+            {
+                _registration.Dispose();
+                _cancel.Cancel();
+                _cancel.Dispose();
+            }
+        }
+
         // Loopback only, ephemeral port, no relay/model dependency. Read bytes to respect UTF-8 Content-Length.
         sealed class LocalServer : IDisposable
         {
@@ -177,6 +219,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             public string Url, Headers, Body;
             public bool Disconnected;
             public Task Work;
+            readonly TaskCompletionSource<bool> _requestReceived = new TaskCompletionSource<bool>();
+            public Task RequestReceived => _requestReceived.Task;
 
             public LocalServer(string reply)
             {
@@ -211,6 +255,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
                         read += count;
                     }
                     Body = Encoding.UTF8.GetString(body);
+                    _requestReceived.SetResult(true);
                     if (reply == null)
                     {
                         try { Disconnected = await stream.ReadAsync(one, 0, 1) == 0; }
