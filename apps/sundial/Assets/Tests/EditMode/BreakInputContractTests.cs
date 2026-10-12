@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using GardenVR.Input;
 using NUnit.Framework;
 using UnityEngine;
@@ -7,29 +8,83 @@ namespace GardenVR.Sundial.Tests.EditMode
 {
     public class BreakInputContractTests
     {
-        [Test]
-        public void PcPalm_CurrentContractCannotDistinguishReleaseFromContinuedHold()
+        static void Lifecycle(KeyboardMouseIntentSource provider, string method, params object[] args) => typeof(KeyboardMouseIntentSource).GetMethod(method, BindingFlags.Instance | BindingFlags.NonPublic).Invoke(provider, args);
+        static readonly Ray Ray = new Ray(Vector3.zero, Vector3.forward);
+        static void Tick(KbmIntentMapper mapper, bool held, float dt = .1f, bool middle = false)
         {
-            var released = Replay(false);
-            var held = Replay(true);
-            CollectionAssert.AreEqual(released, held,
-                "If the provider gains held palm state, replace this blocker reproduction with the B6 integration test.");
-            Assert.AreEqual(1, held.FindAll(s => s.StartsWith("PalmOpen")).Count);
-            Assert.AreEqual(0, released.FindAll(s => s.StartsWith("Release")).Count);
-            Debug.Log("[B6 input blocker] P held for 0.7s then released and P held for 4s produce identical intent streams: one PalmOpen, no Release. IHandIntentSource exposes no palm state.");
+            mapper.Tick(new RawKbm { P = held && !middle, MiddleMouse = held && middle, Dt = dt }, () => Ray);
         }
 
-        static List<string> Replay(bool keepHolding)
+        [Test]
+        public void PcPalm_ContractDistinguishesReleaseFromContinuedHold()
         {
-            var mapper = new KbmIntentMapper { ResolveTargetId = _ => "mark.0" };
-            var events = new List<string>();
-            mapper.Intent += i => events.Add(i.Kind + ":" + i.Held + ":" + i.Strength + ":" + i.TargetId);
+            var released = new KbmIntentMapper(); var held = new KbmIntentMapper();
+            var a = new List<HandIntentKind>(); var b = new List<HandIntentKind>();
+            released.Intent += i => a.Add(i.Kind); held.Intent += i => b.Add(i.Kind);
+            int releases = 0; released.PalmReleased += () => releases++;
             for (int i = 0; i < 240; i++)
-                mapper.Tick(new RawKbm { P = keepHolding || i < 42, Dt = 1f / 60f },
-                    () => new Ray(Vector3.zero, Vector3.forward));
-            Assert.IsFalse(mapper.IsPinching);
-            Assert.AreEqual(0, mapper.PinchStrength);
-            return events;
+            {
+                Tick(released, i < 42, 1f / 60); Tick(held, true, 1f / 60);
+            }
+            CollectionAssert.AreEqual(a, b, "legacy intent stream stays compatible");
+            Assert.AreEqual(1, b.FindAll(k => k == HandIntentKind.PalmOpen).Count);
+            Assert.IsFalse(released.PalmHeld); Assert.IsTrue(held.PalmHeld);
+            Assert.AreEqual(1, releases);
+        }
+
+        [TestCase(false), TestCase(true)]
+        public void PcPalm_PressHoldRelease_OneCommit(bool middle)
+        {
+            var mapper = new KbmIntentMapper(); int commits = 0, releases = 0;
+            mapper.Intent += i => { if (i.Kind == HandIntentKind.PalmOpen) commits++; };
+            mapper.PalmReleased += () => { Assert.IsFalse(mapper.PalmHeld); releases++; };
+            Tick(mapper, true, .1f, middle);
+            Assert.IsTrue(mapper.PalmHeld); Assert.AreEqual(0, commits);
+            for (int i = 0; i < 4; i++) Tick(mapper, true, .1f, middle);
+            Assert.AreEqual(0, commits, "no early commit before 0.6 s");
+            Tick(mapper, true, .1f, middle); Assert.AreEqual(1, commits);
+            for (int i = 0; i < 40; i++) Tick(mapper, true, .1f, middle);
+            Assert.AreEqual(1, commits);
+            Tick(mapper, false); Tick(mapper, false);
+            Assert.IsFalse(mapper.PalmHeld); Assert.AreEqual(1, releases);
+            Tick(mapper, true, .6f, middle); Assert.AreEqual(2, commits);
+        }
+
+        [Test]
+        public void PcPalm_TrackingLoss_RequiresFreshGesture()
+        {
+            var mapper = new KbmIntentMapper(); int releases = 0;
+            mapper.PalmReleased += () => releases++;
+            Tick(mapper, true); mapper.CancelPalmHold(); mapper.CancelPalmHold();
+            Assert.IsFalse(mapper.PalmHeld); Assert.AreEqual(1, releases);
+            Tick(mapper, true, 4); Assert.IsFalse(mapper.PalmHeld);
+            Tick(mapper, false); Tick(mapper, true); Assert.IsTrue(mapper.PalmHeld);
+        }
+
+        [Test]
+        public void PcPalm_ProviderFocusLossAndDisable_ReleaseBeforePause()
+        {
+            var go = new GameObject("palm provider test");
+            try
+            {
+                var provider = go.AddComponent<KeyboardMouseIntentSource>();
+                Lifecycle(provider, "OnEnable"); // EditMode does not run MonoBehaviour lifecycle automatically.
+                var mapper = (KbmIntentMapper)typeof(KeyboardMouseIntentSource)
+                    .GetField("_mapper", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(provider);
+                IPalmStateSource palm = provider;
+                int releases = 0, pauses = 0;
+                palm.PalmReleased += () => releases++;
+                provider.SystemPause += () => { Assert.IsFalse(palm.PalmHeld); pauses++; };
+                Tick(mapper, true, .7f); Assert.IsTrue(palm.PalmHeld);
+                Lifecycle(provider, "OnApplicationFocus", false);
+                Assert.IsFalse(palm.PalmHeld); Assert.AreEqual(1, releases); Assert.AreEqual(1, pauses);
+                Lifecycle(provider, "OnApplicationFocus", true);
+                Tick(mapper, true); Assert.IsFalse(palm.PalmHeld);
+                Tick(mapper, false); Tick(mapper, true);
+                Lifecycle(provider, "OnDisable");
+                Assert.IsFalse(palm.PalmHeld); Assert.AreEqual(2, releases);
+            }
+            finally { Object.DestroyImmediate(go); }
         }
     }
 }
