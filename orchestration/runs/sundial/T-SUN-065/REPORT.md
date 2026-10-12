@@ -134,7 +134,9 @@ total 7911704 -> 6527834, saved 1383870 bytes; proof failures 0; applied
 
 All three PNG proofs passed (full per-image output in `lossless.txt`). Image check JSON preserves the original
 capture PNG hash and records the final ingested hash; image statistics and pixels are unchanged. All three report
-magenta fraction 0. `git diff --check` passed.
+magenta fraction 0. The code diff passed `git diff --check`. The evidence staging check found duplicated carriage
+returns in two captured text summaries and one trailing space in a PlayMode output line; these were normalized
+in a follow-up evidence commit, with test outcomes and raw logs unchanged. The final staged diff check passed.
 
 ## Development failures and cleanup
 

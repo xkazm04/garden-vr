@@ -1582,7 +1582,7 @@
 [Sundial] cue tile.ink
 [Sundial] cue bloom.flutter
 [Sundial] cue tab.tap
-[Review] hints Look=mouse Pinch=click PinchHold=Space or mouse Release=release Poke=F PalmOpen=hold P | Look halo=True | Pinch tend top3=1 | PinchHold duskActive=True | Release breaths=1 | Poke settingsOpen=True | PalmOpen dismissed=True | clock=2026-10-03 14:20Z dev-seed | 
+[Review] hints Look=mouse Pinch=click PinchHold=Space or mouse Release=release Poke=F PalmOpen=hold P | Look halo=True | Pinch tend top3=1 | PinchHold duskActive=True | Release breaths=1 | Poke settingsOpen=True | PalmOpen dismissed=True | clock=2026-10-03 14:20Z dev-seed |
 ]]></output>
                 </test-case>
               </test-suite>
