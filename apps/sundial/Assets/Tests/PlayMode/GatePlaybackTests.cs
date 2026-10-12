@@ -80,10 +80,10 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(125f, controller.View.gnomonDeg, 0.75f, "the shadow should already sit at now");
             Assert.IsFalse(controller.View.boil, "reduced motion stops the boil");
             Assert.IsTrue(controller.View.reducedMotion);
-            Assert.AreEqual(FirstRunSteps.PickMorning, controller.Wizard.Step);
-            GameObject packet = GameObject.Find("seed.morning");
-            Assert.IsNotNull(packet, "the packets should already be up");
-            Assert.Greater(packet.transform.localPosition.y, controller.View.faceY, "a packet still rising is not the end pose");
+            Assert.AreEqual(Onboarding.OptIn, controller.Wizard.Step);
+            GameObject packet = GameObject.Find("interview.off");
+            Assert.IsNotNull(packet, "the consent choices should already be up");
+            Assert.Greater(packet.transform.localPosition.y, controller.View.faceY, "the consent card has its end pose");
             Assert.IsFalse(controller.View.showPlants);
 
             yield return Boot(SundialPlay.FreshDir(), Clock(2026, 10, 3, 14, 20), true, true, c => controller = c);

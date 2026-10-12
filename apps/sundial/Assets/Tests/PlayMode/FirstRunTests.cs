@@ -71,6 +71,9 @@ namespace GardenVR.Sundial.Tests.PlayMode
         public IEnumerator FirstRun_ResumeAfterQuit()
         {
             string dir = SundialPlay.FreshDir();
+            // A legacy save must resume its original preset step without restarting the interview.
+            SundialService.DevSeedOnFresh = false;
+            new SundialService(SundialPlay.Clock1420(), dir).SetFirstRunStep(FirstRunSteps.PickMorning);
             SundialController first = null;
             yield return Boot(false, c => first = c, dir);
             string script =
@@ -153,9 +156,9 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.IsTrue(controller.Wizard.Running);
             Assert.GreaterOrEqual(controller.View.appear, 0.99f, "reduced motion draws the dial at once");
             Assert.AreEqual(125f, controller.View.gnomonDeg, 0.75f, "reduced motion leaves the shadow in place");
-            Assert.AreEqual(FirstRunSteps.PickMorning, controller.Wizard.Step);
+            Assert.AreEqual(Onboarding.OptIn, controller.Wizard.Step);
             Assert.IsFalse(controller.View.showPlants, "seeds have not dropped yet");
-            Assert.IsNotNull(GameObject.Find("seed.morning"), "packets should already be up");
+            Assert.IsNotNull(GameObject.Find("interview.off"), "consent choices should already be up");
         }
 
         static IEnumerator Boot(bool reduced, Action<SundialController> ready, string dir = null)

@@ -54,6 +54,7 @@ GardenVR.Sundial.SundialCodec method public static GardenVR.Sundial.SundialSave 
 GardenVR.Sundial.SundialSave ctor public ()
 GardenVR.Sundial.SundialSave field public GardenVR.Core.CoachJournal Journal
 GardenVR.Sundial.SundialSave field public GardenVR.Core.FocusSnapshot Focus
+GardenVR.Sundial.SundialSave field public GardenVR.Core.OnboardingDraft Interview
 GardenVR.Sundial.SundialSave field public GardenVR.Sundial.SundialSettings Settings
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue> Extra
 GardenVR.Sundial.SundialSave field public System.Collections.Generic.Dictionary<System.String,System.Collections.Generic.Dictionary<System.String,GardenVR.Core.JsonValue>> HabitExtra
@@ -72,6 +73,7 @@ GardenVR.Sundial.SundialService field public const System.String DevSeedStep = d
 GardenVR.Sundial.SundialService field public static System.Boolean DevSeedOnFresh
 GardenVR.Sundial.SundialService field public static System.Nullable<System.Boolean> FreshReducedMotion
 GardenVR.Sundial.SundialService method public GardenVR.Core.GardenDay Today()
+GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef AcceptInterview(System.Int32 index, System.String arc)
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef HabitAt(System.String arcKey, System.Int32 row)
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef HabitForArc(System.String arcKey)
 GardenVR.Sundial.SundialService method public GardenVR.Core.HabitDef PlantPreset(GardenVR.Sundial.SeedPreset preset)

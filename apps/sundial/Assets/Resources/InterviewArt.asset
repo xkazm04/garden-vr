@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eb33c9d48794f73850eb3db7d2cf23f, type: 3}
+  m_Name: InterviewArt
+  m_EditorClassIdentifier:
+  Packets:
+  - {fileID: 2800000, guid: 8dcff084cf440c741b124841c73b4663, type: 3}
+  - {fileID: 2800000, guid: 648a034abffbe8e4fb19bd3e4702cb4a, type: 3}
+  - {fileID: 2800000, guid: 7be6caad836bd46419cc1e79c8efacf2, type: 3}

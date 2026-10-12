@@ -166,6 +166,8 @@ namespace GardenVR.Sundial
 
         public static int Index(string step)
         {
+            if (step == Onboarding.FirstTend) return Index(FirstTend);
+            if (Onboarding.IsStep(step)) return 2;
             if (string.IsNullOrEmpty(step)) return -1;
             for (int i = 0; i < Order.Length; i++)
             {
@@ -182,8 +184,8 @@ namespace GardenVR.Sundial
 
         public static bool WaitsForIntent(string step)
         {
-            return step == PickMorning || step == PickMidday || step == PickWinddown
-                || step == FirstTend || step == BreathsOffer || step == Breaths;
+            return Onboarding.IsStep(step) || step == PickMorning || step == PickMidday || step == PickWinddown
+                || step == FirstTend || step == Onboarding.FirstTend || step == BreathsOffer || step == Breaths;
         }
 
         public static string PickArc(string step)
@@ -196,6 +198,8 @@ namespace GardenVR.Sundial
 
         public static string Next(string step)
         {
+            if (step == Onboarding.FirstTend) return Done;
+            if (step == Sweep) return Onboarding.OptIn;
             int index = Index(step);
             if (index < 0 || index + 1 >= Order.Length) return null;
             return Order[index + 1];

@@ -1,3 +1,9 @@
+{"t":3.00,"intent":"Pinch","target":"interview.off"}
+{"t":3.20,"intent":"Pinch","target":"interview.skip"}
+{"t":3.40,"intent":"Pinch","target":"interview.skip"}
+{"t":3.60,"intent":"Pinch","target":"interview.skip"}
+{"t":3.80,"intent":"Pinch","target":"interview.skip"}
+{"t":4.20,"intent":"Pinch","target":"interview.presets"}
 {"t":18.00,"intent":"Look","target":"seed.morning","dur":1.20}
 {"t":20.00,"intent":"Pinch","target":"seed.morning"}
 {"t":21.00,"intent":"Pinch","target":"seed.morning.water"}

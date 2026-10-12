@@ -476,7 +476,7 @@ namespace GardenVR.Sundial
             if (habit.Kind == HabitKind.InAppRitual) return;
             // A second pinch the same day, or a pinch while one tend is still waiting, leaves the picture alone.
             if (_service.IsPending) return;
-            if (plant.Window[6] != TileState.Today) return;
+            if (!SundialRules.CanTendToday(plant.Window[6])) return;
 
             _service.Arm(habit.Id);
             Play(CueTock, At(SundialArcs.PlantId(arc, row)));
