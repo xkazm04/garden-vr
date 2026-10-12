@@ -1,0 +1,24 @@
+Newly reachable B6 strings (BreakView existed as an unattached preview in T-SUN-063):
+Take a break
+Pause break
+Continue break
+Take your time
+Pinch continue when ready
+Reach to each mark
+stretch {N} of 3
+Hold an open palm
+Hold a pinch
+{provider binding hint}   {N} of 3
+A moment by the window
+Looking away holds your place
+Rest your eyes here
+{N} s
+
+New controller strings:
+Make room for a break habit
+Break complete
+Break complete. Habit could not be tended.
+
+Reused habit name: Break
+Reused provider hints: hold P; Space or mouse
+No em dash, medical claim, missed-day penalty or streak counter.
