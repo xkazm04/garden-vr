@@ -373,7 +373,8 @@ namespace GardenVR.Sundial
         HabitDef WindHabit()
         {
             if (_sundial == null || _sundial.Service == null) return null;
-            return _sundial.Service.HabitForArc("winddown");
+            var habit = _sundial.Service.HabitForArc("winddown");
+            return SundialRules.IsBreathHabit(habit) ? habit : null;
         }
 
         PlantState WindPlant()

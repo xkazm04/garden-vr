@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.3979813">
+  <test-suite type="TestSuite" id="1101" name="sundial" fullname="sundial" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.397981" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="PlayMode" />
+    </properties>
+    <test-suite type="Assembly" id="1093" name="GardenVR.Sundial.Tests.PlayMode.dll" fullname="C:/Users/kazda/kiro/gvr-sundial/apps/sundial/Library/ScriptAssemblies/GardenVR.Sundial.Tests.PlayMode.dll" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.389485" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="51464" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="PlayMode" />
+        <property name="EditorOnly" value="False" />
+      </properties>
+      <test-suite type="TestSuite" id="1094" name="GardenVR" fullname="GardenVR" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.384368" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1095" name="Sundial" fullname="GardenVR.Sundial" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.383052" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1096" name="Tests" fullname="GardenVR.Sundial.Tests" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.381769" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1097" name="PlayMode" fullname="GardenVR.Sundial.Tests.PlayMode" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.380541" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1039" name="InterviewTests" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:01:01Z" duration="3.377449" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1042" name="FirstRun_Interview_Resumes_AtSavedStep" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_Resumes_AtSavedStep" methodname="FirstRun_Interview_Resumes_AtSavedStep" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="548911040" result="Passed" start-time="2026-10-12 12:00:57Z" end-time="2026-10-12 12:00:59Z" duration="1.324274" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=5.309
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.03
+[FirstRun] step=fr.interview.q1 t=0.07
+[FirstRun] step=fr.interview.q2 t=0.10
+[FirstRun] step=fr.interview.q2 t=0.00
+[Sundial] first-interactive t=5.510
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q3 t=0.03
+[FirstRun] step=fr.interview.waiting t=0.07
+[FirstRun] step=fr.interview.review t=0.08
+[Sundial] cue seed.drop
+[FirstRun] step=fr.interview.review t=0.00
+[Sundial] first-interactive t=5.779
+[Sundial] cue amb.kitchen
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=0.10
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.13
+[FirstRun] step=fr.breaths.offer t=0.13
+]]></output>
+                </test-case>
+                <test-case id="1040" name="FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" methodname="FirstRun_Interview_ScriptedCoach_FirstTendUnder60s" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="36991214" result="Passed" start-time="2026-10-12 12:00:59Z" end-time="2026-10-12 12:01:00Z" duration="1.249961" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[Sundial] first-interactive t=5.978
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.sweep t=1.20
+[FirstRun] step=fr.interview.optin t=2.70
+[FirstRun] step=fr.interview.q0 t=2.72
+[FirstRun] step=fr.interview.q1 t=2.75
+[FirstRun] step=fr.interview.q2 t=2.78
+[FirstRun] step=fr.interview.q3 t=2.82
+[FirstRun] step=fr.interview.waiting t=2.85
+[FirstRun] step=fr.interview.review t=2.87
+[Sundial] cue seed.drop
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=4.22
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=4.25
+[FirstRun] step=fr.breaths.offer t=4.25
+]]></output>
+                </test-case>
+                <test-case id="1041" name="FirstRun_Interview_Skips_AllFourQuestions" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.FirstRun_Interview_Skips_AllFourQuestions" methodname="FirstRun_Interview_Skips_AllFourQuestions" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1562371560" result="Passed" start-time="2026-10-12 12:01:00Z" end-time="2026-10-12 12:01:00Z" duration="0.308006" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=7.234
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.05
+[FirstRun] step=fr.interview.q1 t=0.08
+[FirstRun] step=fr.interview.q2 t=0.12
+[FirstRun] step=fr.interview.q3 t=0.15
+[FirstRun] step=fr.interview.waiting t=0.18
+[FirstRun] step=fr.interview.review t=0.20
+[FirstRun] step=fr.caption t=0.33
+[FirstRun] step=fr.packets t=0.35
+[FirstRun] step=fr.pick.morning t=0.35
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.midday t=0.42
+[Sundial] cue packet.open
+[FirstRun] step=fr.pick.winddown t=0.48
+[Sundial] cue packet.open
+[FirstRun] step=fr.drop t=0.55
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=0.57
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.60
+[FirstRun] step=fr.breaths.offer t=0.60
+]]></output>
+                </test-case>
+                <test-case id="1043" name="Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" fullname="GardenVR.Sundial.Tests.PlayMode.InterviewTests.Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" methodname="Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy" classname="GardenVR.Sundial.Tests.PlayMode.InterviewTests" runstate="Runnable" seed="1992785895" result="Passed" start-time="2026-10-12 12:01:00Z" end-time="2026-10-12 12:01:01Z" duration="0.479014" asserts="0">
+                  <properties>
+                    <property name="_JOINTYPE" value="UnityCombinatorial" />
+                    <property name="Timeout" value="180000" />
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[[FirstRun] step=fr.appear t=0.00
+[Sundial] cue dial.appear
+[FirstRun] step=fr.sweep t=0.02
+[FirstRun] step=fr.interview.optin t=0.02
+[Sundial] first-interactive t=7.532
+[Sundial] cue amb.kitchen
+[FirstRun] step=fr.interview.q0 t=0.03
+[FirstRun] step=fr.interview.q1 t=3.02
+[FirstRun] step=fr.interview.q2 t=3.05
+[FirstRun] step=fr.interview.q3 t=3.08
+[FirstRun] step=fr.interview.waiting t=3.12
+[FirstRun] step=fr.interview.review t=3.13
+[FirstRun] step=fr.interview.review t=0.00
+[Sundial] first-interactive t=7.865
+[Sundial] cue amb.kitchen
+[Sundial] cue seed.drop
+[FirstRun] step=fr.firsttend t=0.07
+[Sundial] cue tend.tock
+[Sundial] cue tile.ink
+[Sundial] cue bloom.flutter
+[FirstRun] firstTendAt=0.10
+[FirstRun] step=fr.breaths.offer t=0.10
+Saving results to: C:/Users/kazda/AppData/LocalLow/DefaultCompany/sundial\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

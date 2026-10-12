@@ -552,12 +552,12 @@ namespace GardenVR.Sundial.Tests.PlayMode
             FirstRunWizard wizard = controller.Wizard;
             Assert.IsNotNull(wizard);
             Assert.IsTrue(wizard.Running, "first run did not start");
-            Assert.AreEqual(FirstRunSteps.PickMorning, wizard.Step);
-            GameObject captionGo = GameObject.Find("DayCaption");
-            Assert.IsNotNull(captionGo, "DayCaption");
+            Assert.AreEqual(Onboarding.OptIn, wizard.Step);
+            GameObject captionGo = GameObject.Find("InterviewConsent");
+            Assert.IsNotNull(captionGo, "InterviewConsent");
             TextMesh caption = captionGo.GetComponent<TextMesh>();
             Assert.IsNotNull(caption);
-            Assert.AreEqual(SeedCatalog.DayCaption, caption.text);
+            Assert.AreEqual(FirstRunWizard.ConsentLine, caption.text);
             Assert.AreEqual(InkLetter.Hand, caption.font, "first-run caption is Patrick Hand");
             Assert.IsNotNull(captionGo.transform.Find("paper"), "caption sits on a paper tag");
             Camera cam = PoseDial();

@@ -1,0 +1,18 @@
+editmode: result=Passed total=97 passed=97 failed=0
+playmode: result=Passed total=73 passed=73 failed=0
+  FirstRun_Interview_Resumes_AtSavedStep: Passed (0.455408 s)
+  FirstRun_Interview_ScriptedCoach_FirstTendUnder60s: Passed (0.946942 s)
+  FirstRun_Interview_Skips_AllFourQuestions: Passed (0.283783 s)
+  Interview_ConsentAndQuestion_AreVisible_OptInPersists: Passed (0.715127 s)
+  Interview_Speech_UnknownCue_ArcChoice_PauseAndPrivacy: Passed (0.492265 s)
+editmode: compiler/shader/build errors=0
+playmode: compiler/shader/build errors=0
+build: compiler/shader/build errors=0
+Build Succeeded C:\Users\kazda\kiro\gvr-sundial\apps\sundial\Build\sundial\Sundial.exe
+terrarium-compile: compiler/shader/build errors=0
+DialG1-onboarding-consent.png: (1824, 1024); SHA256=4bb921ab1e4ef325c27c76888f11de7768f01d11c23ad66965933739be7ebe9e
+DialG1-onboarding-packets.png: (1824, 1024); SHA256=733a900c97625c8002c47a7df93310c607ca0423d8e695d248ee6d27aad8c30f
+DialG1-onboarding-question.png: (1824, 1024); SHA256=2a23d5f9b20ed9f864f72dd18ea2291e189bce6055fb82f1ca984c7cf3e393bc
+DialG1-onboarding.png: (1824, 1024); SHA256=ba188bc559e2f1be027ec5a78b363dcf7b853bbb8bad3cf4c1a5361e08ff8ab3
+App direct keyboard/mouse reads=0
+String census: no em dash; no CoachGuards medical/count/guilt matches

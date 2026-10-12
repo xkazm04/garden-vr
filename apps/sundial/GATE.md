@@ -34,3 +34,16 @@ Sundial suites pass (75 EditMode, 55 PlayMode). This adds evidence without chang
 - [Verification, strings and limitations](../../orchestration/runs/sundial/T-SUN-059/REPORT.md)
 
 Monthly totals and the four rim tabs belong to B9. B12 will collect the complete set of upgrade frames.
+
+## B5 onboarding frame (T-SUN-062, 2026-10-12)
+
+The first-run interview at DialG1 is the onboarding gate frame. The coach-off path includes four skippable
+questions, packet acceptance/decline, a first tend, and resumable progress. The four unshaded zone tabs now appear
+with the first plant; B9 still owns their monthly fill and totals. This does not change the owner's art scores.
+
+- [One planted suggestion and two offered packets](../../orchestration/runs/sundial/T-SUN-062/DialG1-onboarding.png)
+- [Onboarding artboard, same-framing comparison](../../orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-side-by-side.jpg)
+- [Consent card](../../orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-consent.png)
+- [First question with speech unavailable](../../orchestration/runs/sundial/T-SUN-062/DialG1-onboarding-question.png)
+- [U1 timing](../../orchestration/runs/sundial/T-SUN-062/first-tend.txt)
+- [Verification, string census and limitations](../../orchestration/runs/sundial/T-SUN-062/REPORT.md)

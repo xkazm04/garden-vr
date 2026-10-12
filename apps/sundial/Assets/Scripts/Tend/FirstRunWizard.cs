@@ -16,7 +16,7 @@ namespace GardenVR.Sundial
     /// </summary>
     [DisallowMultipleComponent]
     [DefaultExecutionOrder(30)]
-    public sealed class FirstRunWizard : MonoBehaviour
+    public sealed partial class FirstRunWizard : MonoBehaviour
     {
         public const float AppearSeconds = 1.2f;
         public const float SweepSeconds = 1.5f;
@@ -79,6 +79,7 @@ namespace GardenVR.Sundial
             if (isActiveAndEnabled && _source != null)
             {
                 _source.Intent += OnIntent;
+                _source.SystemPause += PauseInterview;
                 _subscribed = true;
             }
         }
@@ -90,14 +91,14 @@ namespace GardenVR.Sundial
             if (!_running && _service != null && _service.Outcome == LoadOutcome.Failed)
                 return id == RestoreId;
             if (!_running) return false;
-            return id.StartsWith("seed.", StringComparison.Ordinal);
+            return id.StartsWith("seed.", StringComparison.Ordinal) || id.StartsWith("interview.", StringComparison.Ordinal);
         }
 
         /// <summary>During the journey only the due plant's pinch counts, and only on the tend step.</summary>
         public bool AllowsPlantTend(string arc)
         {
             if (!_running) return true;
-            if (_step != FirstRunSteps.FirstTend) return false;
+            if (_step != FirstRunSteps.FirstTend && _step != Onboarding.FirstTend) return false;
             return arc == DueArc();
         }
 
@@ -141,15 +142,17 @@ namespace GardenVR.Sundial
             if (_source != null && !_subscribed)
             {
                 _source.Intent += OnIntent;
+                _source.SystemPause += PauseInterview;
                 _subscribed = true;
             }
         }
 
-        void OnDisable() { Unsubscribe(); }
+        void OnDisable() { Unsubscribe(); PauseInterview(); }
 
         void OnDestroy()
         {
             Unsubscribe();
+            DisposeInterview();
             SuppressBreathOffer = false;
             if (_card != null) Destroy(_card);
             if (_white != null) Destroy(_white);
@@ -180,10 +183,12 @@ namespace GardenVR.Sundial
                 SuppressBreathOffer = false;
                 return;
             }
+            EnsureZoneTabs();
             if (!_running) return;
 
             _stepTime += dt;
             AdvanceCinematics();
+            UpdateInterview();
             WatchRitual();
             EnsureChrome();
             ApplyVisuals();
@@ -194,6 +199,7 @@ namespace GardenVR.Sundial
             if (!Application.isPlaying) return;
             Camera cam = Camera.main;
             if (cam == null) return;
+            PlaceInterview(cam);
             if (_caption != null && _caption.activeSelf)
                 FaceAway(cam, _caption.transform, _caption.transform.position);
             for (int i = 0; i < _packets.Length; i++)
@@ -223,7 +229,8 @@ namespace GardenVR.Sundial
                     _service.TryRestoreBackup();
                 return;
             }
-            if (!_running) return;
+            if (!_running || Held) return;
+            if (Onboarding.IsStep(_step)) { InterviewIntent(intent); return; }
             if (intent.Kind == HandIntentKind.Look)
             {
                 _lookId = intent.TargetId;
@@ -256,11 +263,11 @@ namespace GardenVR.Sundial
                     return;
                 }
             }
-            if (_step == FirstRunSteps.FirstTend && id == "plant." + DueArc() && _service.IsPending)
+            if ((_step == FirstRunSteps.FirstTend || _step == Onboarding.FirstTend) && id == "plant." + DueArc() && _service.IsPending)
             {
                 _firstTendAt = _appTime;
                 Debug.Log("[FirstRun] firstTendAt=" + _appTime.ToString("0.00", Inv));
-                Enter(FirstRunSteps.BreathsOffer);
+                Enter(_step == Onboarding.FirstTend ? FirstRunSteps.Done : FirstRunSteps.BreathsOffer);
             }
         }
 
@@ -304,6 +311,8 @@ namespace GardenVR.Sundial
             _stepTime = 0f;
             _open = false;
             ClearChips();
+            ClearInterviewChrome();
+            GetComponent<SpeechController>()?.CompleteCoachCall();
             if (_service != null) _service.SetFirstRunStep(step);
             Debug.Log("[FirstRun] step=" + step + " t=" + _appTime.ToString("0.00", Inv));
             if (step == FirstRunSteps.Appear && _controller != null)
@@ -347,6 +356,7 @@ namespace GardenVR.Sundial
 
         bool PlantsNow()
         {
+            if (Onboarding.IsStep(_step)) return _service.Save.Habits.Count > 0;
             return FirstRunSteps.Index(_step) > FirstRunSteps.Index(FirstRunSteps.Drop);
         }
 
@@ -366,12 +376,13 @@ namespace GardenVR.Sundial
 
         string DueArc()
         {
+            string current = "midday";
             if (_service != null && _service.State != null && _service.State.Arc.HasValue)
             {
                 string key = SundialArcs.Key(_service.State.Arc.Value.ToString());
-                if (!string.IsNullOrEmpty(key)) return key;
+                if (!string.IsNullOrEmpty(key)) current = key;
             }
-            return "midday";
+            return Onboarding.FirstTendArc(_service.Save.Habits, current) ?? current;
         }
 
         static SeedPreset PresetFromId(string id)
@@ -523,7 +534,7 @@ namespace GardenVR.Sundial
         void PlaceCaption()
         {
             if (_caption == null || _view == null) return;
-            bool show = FirstRunSteps.Index(_step) >= FirstRunSteps.Index(FirstRunSteps.Caption);
+            bool show = !Onboarding.IsStep(_step) && FirstRunSteps.Index(_step) >= FirstRunSteps.Index(FirstRunSteps.Caption);
             if (_caption.activeSelf != show) _caption.SetActive(show);
             if (!show) return;
             float radius = _view.faceRadius > 0.05f ? _view.faceRadius : 0.15f;
@@ -800,7 +811,7 @@ namespace GardenVR.Sundial
         void Unsubscribe()
         {
             if (!_subscribed) return;
-            if (_source != null) _source.Intent -= OnIntent;
+            if (_source != null) { _source.Intent -= OnIntent; _source.SystemPause -= PauseInterview; }
             _subscribed = false;
         }
     }

@@ -39,6 +39,7 @@ namespace GardenVR.Sundial
         public List<TendEvent> Tends = new List<TendEvent>();
         public SundialSettings Settings = new SundialSettings();
         public string FirstRunStep;
+        public OnboardingDraft Interview;
         /// <summary>Inked middays. Each row is a garden day and a symbol index. No note.</summary>
         public List<GratitudeMark> Gratitude = new List<GratitudeMark>();
         /// <summary>The open or finished shadow hour. Null when no hour has been started.</summary>
@@ -58,13 +59,13 @@ namespace GardenVR.Sundial
         static readonly string[] RootKnown =
         {
             "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Focus",
-            "Counts", "Journal", "LastVisitDay", "InstallKey"
+            "Counts", "Journal", "LastVisitDay", "InstallKey", "Interview"
         };
 
         static readonly string[] RootKnownWithGratitude =
         {
             "SchemaVersion", "Habits", "Tends", "Settings", "FirstRunStep", "Gratitude", "Focus",
-            "Counts", "Journal", "LastVisitDay", "InstallKey"
+            "Counts", "Journal", "LastVisitDay", "InstallKey", "Interview"
         };
 
         public static SundialSave Read(JsonObject obj)
@@ -85,6 +86,8 @@ namespace GardenVR.Sundial
             save.Tends = LedgerJson.ReadTends(obj, save.TendExtra, RowChoices);
             save.Counts = QuantityJson.ReadCounts(obj);
             save.Journal = CoachJournal.Read(obj);
+            if (obj.Has("Interview") && obj.Get("Interview").Kind == JsonKind.Object)
+                save.Interview = OnboardingDraft.Read(obj.Get("Interview").AsObject());
             if (obj.Has("LastVisitDay") && !obj.Get("LastVisitDay").IsNull)
                 save.LastVisitDay = obj.Get("LastVisitDay").AsInt();
             save.InstallKey = LedgerJson.StringMember(obj, "InstallKey");
@@ -104,6 +107,7 @@ namespace GardenVR.Sundial
             bool upgrade = save.SchemaVersion != 1;
             obj.Set("Settings", WriteSettings(save.Settings ?? new SundialSettings(), upgrade));
             obj.Set("FirstRunStep", save.FirstRunStep == null ? JsonValue.Null() : JsonValue.String(save.FirstRunStep));
+            if (save.Interview != null) obj.Set("Interview", save.Interview.Write());
             if (save.Gratitude != null && save.Gratitude.Count > 0)
                 obj.Set("Gratitude", WriteGratitude(save.Gratitude));
             if (save.Focus != null && !string.IsNullOrEmpty(save.Focus.Phase) && save.Focus.Phase != "Idle")

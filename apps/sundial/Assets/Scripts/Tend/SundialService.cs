@@ -373,6 +373,19 @@ namespace GardenVR.Sundial
             Persist();
         }
 
+        /// <summary>One save write owns both packet resolution and admission, so reload cannot plant twice.</summary>
+        public HabitDef AcceptInterview(int index, string arc)
+        {
+            var draft = _save?.Interview;
+            if (draft == null || !draft.Pending(index)) return null;
+            int selected = draft.Selected;
+            draft.Decisions[index] = 1;
+            draft.Selected = -1;
+            var habit = PlantProposal(draft.Proposals[index], arc);
+            if (habit == null) { draft.Decisions[index] = 0; draft.Selected = selected; }
+            return habit;
+        }
+
         /// <summary>
         /// Plants one preset on an arc. A second pinch on an arc that already has a habit keeps the first.
         /// </summary>
