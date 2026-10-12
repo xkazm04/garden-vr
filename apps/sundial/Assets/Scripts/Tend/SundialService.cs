@@ -456,6 +456,22 @@ namespace GardenVR.Sundial
             return Admit(habit);
         }
 
+        /// <summary>First-use break admission uses the same core capacity and arc rules as other habits.</summary>
+        public HabitDef EnsureBreakHabit()
+        {
+            if (Scrubbing || _readOnly || Outcome == LoadOutcome.Failed || _save == null) return null;
+            foreach (var habit in _save.Habits)
+                if (habit != null && !habit.ArchivedDay.HasValue && habit.PresetKey == BreakSession.PresetKey)
+                    return habit;
+            return Admit(new HabitDef
+            {
+                Id = "break-" + Guid.NewGuid().ToString("N"), PresetKey = BreakSession.PresetKey,
+                Name = "Break", Zone = LifeZone.Body, Kind = HabitKind.InAppRitual,
+                Group = SundialRules.LeastPopulatedArc(_save.Habits),
+                Species = SundialSpecies.ForPreset(BreakSession.PresetKey), CreatedDay = Today().Index
+            });
+        }
+
         HabitDef Admit(HabitDef habit)
         {
             if (!HabitProfiles.CanAdd(_save.Habits)) return null;
