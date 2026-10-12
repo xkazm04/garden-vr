@@ -12,6 +12,21 @@ namespace GardenVR.Core.Tests;
 public class RecordTests
 {
     [Fact]
+    public void Quantity_reload_at_the_same_instant_does_not_reuse_an_event_id()
+    {
+        var day = Day(2026, 10, 10);
+        var clock = ClockOn(day);
+        var tally = new QuantityTally();
+        var first = tally.Add("water", day, clock, Boundary);
+        tally = new QuantityTally(tally.Events);
+        var second = tally.Add("water", day, clock, Boundary);
+        Assert.NotEqual(first.Id, second.Id);
+        Assert.True(tally.Undo(second.Id, clock));
+        Assert.Null(first.UndoneAtUtcMs);
+        Assert.NotNull(second.UndoneAtUtcMs);
+        Assert.Equal(1, tally.Count("water", day.Index));
+    }
+    [Fact]
     public void Quantity_undo_availability_is_read_only_and_includes_six_seconds()
     {
         var clock = ClockOn(Day(2026, 10, 10));

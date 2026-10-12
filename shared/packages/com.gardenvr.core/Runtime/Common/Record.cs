@@ -162,7 +162,7 @@ namespace GardenVR.Core
         {
             if (events == null) return;
             foreach (var e in events)
-                if (e != null) _events.Add(e);
+                if (e != null) { _events.Add(e); _seq++; }
         }
 
         public IReadOnlyList<CountEvent> Events { get { return _events; } }
