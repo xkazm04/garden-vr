@@ -56,8 +56,19 @@ dotnet run --project shared/core-dotnet/GardenVR.CoachCli -- systems tools/relay
 
 ## Task W5 on the Windows machine
 
-1. Set `ANTHROPIC_API_KEY` and start the relay.
-2. Make one live call from the PC build, and time 20 calls for the section 7 latency mark (p95 4 s or less).
+For local work, use `COACH_BACKEND=cli`, check `/healthz` reports `backend: cli`, and give the development player's
+`RelayConfig` a 15-second budget. No API key is needed. Run one onboarding interview and one reflection, then time
+20 calls (10 of each kind), respecting the six-per-minute limit. Label these measurements `backend=cli`.
+
+The Sundial development player has an explicit `--relay-live-check <evidence-directory>` probe. It uses synthetic
+speech through the input seams, an isolated temporary save, and a transient localhost config. It verifies that live
+model proposals and a live reflection appear in the existing UI, captures both, and records 20 further calls.
+It is excluded from release players. The foreground runner in
+`orchestration/runs/sundial/T-SUN-068/run-live.ps1` starts the relay, checks its backend, waits for the player and stops
+the relay in `finally`. Build first with `GardenVR.Sundial.Editor.Build.WindowsDevelopment`.
+
+Results and the separate API gate row are in `docs/research/coach-eval/README.md`. The p95 <= 4 s competition mark
+remains **needs-owner** for `backend=api`, to be measured when the owner chooses that backend.
 
 Where the relay runs for the competition build (reachable by judges' headsets from 11-17 through judging) is still open
 question 5 in the plan.

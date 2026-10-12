@@ -1,0 +1,24 @@
+[RelayLive] backend=cli budget_ms=15000 speech=synthetic transport=UnityWebRequest
+[RelayLive] live_onboarding from_model=true packet_text_matches=true proposal_count=3
+[RelayLive] live_reflection from_model=true card_text_matches=true journal_matches=true
+[RelayLive] sample=1 backend=cli kind=Onboarding elapsed_ms=4650.331 from_model=True outcome=None
+[RelayLive] sample=2 backend=cli kind=Reflection elapsed_ms=4566.878 from_model=True outcome=None
+[RelayLive] sample=3 backend=cli kind=Onboarding elapsed_ms=4650.415 from_model=True outcome=None
+[RelayLive] sample=4 backend=cli kind=Reflection elapsed_ms=4267.118 from_model=True outcome=None
+[RelayLive] sample=5 backend=cli kind=Onboarding elapsed_ms=5000.590 from_model=True outcome=None
+[RelayLive] sample=6 backend=cli kind=Reflection elapsed_ms=4800.458 from_model=True outcome=None
+[RelayLive] sample=7 backend=cli kind=Onboarding elapsed_ms=3799.582 from_model=True outcome=None
+[RelayLive] sample=8 backend=cli kind=Reflection elapsed_ms=4550.543 from_model=True outcome=None
+[RelayLive] sample=9 backend=cli kind=Onboarding elapsed_ms=4933.665 from_model=True outcome=None
+[RelayLive] sample=10 backend=cli kind=Reflection elapsed_ms=7167.508 from_model=False outcome=Error
+[RelayLive] sample=11 backend=cli kind=Onboarding elapsed_ms=4267.733 from_model=True outcome=None
+[RelayLive] sample=12 backend=cli kind=Reflection elapsed_ms=3901.214 from_model=False outcome=Error
+[RelayLive] sample=13 backend=cli kind=Onboarding elapsed_ms=4666.817 from_model=True outcome=None
+[RelayLive] sample=14 backend=cli kind=Reflection elapsed_ms=4633.669 from_model=True outcome=None
+[RelayLive] sample=15 backend=cli kind=Onboarding elapsed_ms=4667.190 from_model=True outcome=None
+[RelayLive] sample=16 backend=cli kind=Reflection elapsed_ms=6333.906 from_model=True outcome=None
+[RelayLive] sample=17 backend=cli kind=Onboarding elapsed_ms=5200.590 from_model=True outcome=None
+[RelayLive] sample=18 backend=cli kind=Reflection elapsed_ms=5534.168 from_model=True outcome=None
+[RelayLive] sample=19 backend=cli kind=Onboarding elapsed_ms=4833.840 from_model=True outcome=None
+[RelayLive] sample=20 backend=cli kind=Reflection elapsed_ms=3784.636 from_model=True outcome=None
+[RelayLive] complete samples=20 backend=cli
