@@ -71,6 +71,7 @@ namespace GardenVR.Audio
         static int _muteCache = -1;
 
         CueManifest _manifest;
+        CueBank _bank;
         CueLog _log;
         float _now;
         float _duck;
@@ -135,6 +136,15 @@ namespace GardenVR.Audio
             if (!SuppressAutoLoad || !string.IsNullOrEmpty(LogPathOverride))
                 _log = CueLog.Open(LogPathOverride);
             if (SuppressAutoLoad) return;
+            // The bank is the one path for editor and player: a serialized asset a build includes.
+            _bank = Resources.Load<CueBank>(CueBank.ResourceName);
+            if (_bank != null && _bank.manifest != null)
+            {
+                LoadManifest(_bank.manifest.text);
+                return;
+            }
+            _bank = null;
+            // No bank (a project that has not built one yet): the editor-only folder path.
             string path = Path.Combine(Application.dataPath, "Audio", "cues.json");
             if (!File.Exists(path)) return;
             LoadManifest(File.ReadAllText(path));
@@ -362,7 +372,7 @@ namespace GardenVR.Audio
                 if (string.IsNullOrEmpty(clip)) continue;
                 float last;
                 if (memory.LastClipAt.TryGetValue(clip, out last) && _now - last < IdenticalWindow) continue;
-                if (!_synthetic && !File.Exists(ClipPath(clip))) continue;
+                if (!_synthetic && !ClipAvailable(clip)) continue;
                 memory.Chosen = index;
                 return clip;
             }
@@ -374,9 +384,15 @@ namespace GardenVR.Audio
             if (cue.clips == null) return false;
             for (int i = 0; i < cue.clips.Length; i++)
             {
-                if (!string.IsNullOrEmpty(cue.clips[i]) && File.Exists(ClipPath(cue.clips[i]))) return true;
+                if (!string.IsNullOrEmpty(cue.clips[i]) && ClipAvailable(cue.clips[i])) return true;
             }
             return false;
+        }
+
+        bool ClipAvailable(string relative)
+        {
+            if (_bank != null) return _bank.Find(relative) != null;
+            return File.Exists(ClipPath(relative));
         }
 
         static string ClipPath(string relative)
@@ -387,7 +403,7 @@ namespace GardenVR.Audio
         float ClipDuration(string clip)
         {
             if (_synthetic) return _syntheticSeconds;
-            AudioClip asset = LoadAsset(clip);
+            AudioClip asset = LoadClip(clip);
             if (asset != null && asset.length > 0.01f) return asset.length;
             return 1f;
         }
@@ -475,7 +491,7 @@ namespace GardenVR.Audio
         AudioSource StartSource(Active voice, CueDefinition cue, Transform at, float pitch)
         {
             if (_synthetic) return null;
-            AudioClip clip = LoadAsset(voice.Clip);
+            AudioClip clip = LoadClip(voice.Clip);
             if (clip == null) return null;
             AudioSource source = TakeSource();
             source.gameObject.SetActive(true);
@@ -531,6 +547,12 @@ namespace GardenVR.Audio
         static float Linear(float db)
         {
             return Mathf.Pow(10f, db / 20f);
+        }
+
+        AudioClip LoadClip(string relative)
+        {
+            if (_bank != null) return _bank.Find(relative);
+            return LoadAsset(relative);
         }
 
         static AudioClip LoadAsset(string relative)

@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 495eae3a21d8095428f088c0cd59bd70, type: 3}
+  m_Name: GardenAudioBank
+  m_EditorClassIdentifier: GardenVR.Audio::GardenVR.Audio.CueBank
+  manifest: {fileID: 4900000, guid: 9cdb5427ae7caf946886dc2353ed1946, type: 3}
+  clipPaths:
+  - Sfx/amb.kitchen.v1.ogg
+  - Sfx/dial.appear.v1.mp3
+  - Sfx/dial.appear.v2.mp3
+  - Sfx/tend.tock.v1.mp3
+  - Sfx/tend.tock.v2.mp3
+  - Sfx/tend.tock.v3.mp3
+  - Sfx/tile.ink.v1.mp3
+  - Sfx/tile.ink.v2.mp3
+  - Sfx/tile.ink.v3.mp3
+  - Sfx/tend.undo.v1.mp3
+  - Sfx/tend.undo.v2.mp3
+  - Sfx/tile.hatch.v1.mp3
+  - Sfx/tile.hatch.v2.mp3
+  - Sfx/packet.open.v1.mp3
+  - Sfx/packet.open.v2.mp3
+  - Sfx/seed.drop.v1.mp3
+  - Sfx/seed.drop.v2.mp3
+  - Sfx/bloom.flutter.v1.mp3
+  - Sfx/bloom.flutter.v2.mp3
+  - Sfx/dusk.chime.v1.mp3
+  - Sfx/dusk.chime.v2.mp3
+  - Sfx/dusk.chime.v3.mp3
+  - Sfx/tab.tap.v1.mp3
+  - Sfx/tab.tap.v2.mp3
+  - Music/bed.morning.ogg
+  - Music/bed.midday.ogg
+  - Music/bed.dusk.ogg
+  - Voice/vo.sun.open.01.mp3
+  - Voice/vo.sun.in.01.mp3
+  - Voice/vo.sun.in.02.mp3
+  - Voice/vo.sun.out.01.mp3
+  - Voice/vo.sun.out.02.mp3
+  - Voice/vo.sun.last.01.mp3
+  - Voice/vo.sun.close.01.mp3
+  - Voice/vo.sun.first.01.mp3
+  clips:
+  - {fileID: 8300000, guid: 85e07b4096bf59046b80dceed1570dd4, type: 3}
+  - {fileID: 8300000, guid: 4b79135cf56925649aa57a1187e23563, type: 3}
+  - {fileID: 8300000, guid: c4770dbafd25d5a47b332d679087b7a7, type: 3}
+  - {fileID: 8300000, guid: 9b829c8d57c5cda408f10cc1cb84196f, type: 3}
+  - {fileID: 8300000, guid: 070733714c49c0a41af434b563f34fbb, type: 3}
+  - {fileID: 8300000, guid: 06ae616df8b173d45b891d7169e7becc, type: 3}
+  - {fileID: 8300000, guid: e1415ca6eb86ae947b92d9576b9278d1, type: 3}
+  - {fileID: 8300000, guid: fb3328cc3982bf341979bb9676719849, type: 3}
+  - {fileID: 8300000, guid: 4e2485b90698e0443885e19625607928, type: 3}
+  - {fileID: 8300000, guid: 673ebf243bae40a41970306bde1f3e50, type: 3}
+  - {fileID: 8300000, guid: ce44a7dd8812e7f48873607576d27f73, type: 3}
+  - {fileID: 8300000, guid: da15989936780174692fd2e6c5f45d60, type: 3}
+  - {fileID: 8300000, guid: f0bec64dc61f8d7479f12e3d57f38b11, type: 3}
+  - {fileID: 8300000, guid: fb23f048896a622478a8abbe5b42f543, type: 3}
+  - {fileID: 8300000, guid: 7d7cd9c88f5a7c2408f498c1ae4f13a9, type: 3}
+  - {fileID: 8300000, guid: 408aab5281921ed499c966663c841881, type: 3}
+  - {fileID: 8300000, guid: fc93f070645c854499a184d8e3838aea, type: 3}
+  - {fileID: 8300000, guid: a0ff52932b5bde74ca248579db7c643c, type: 3}
+  - {fileID: 8300000, guid: 6cd7a6c8921629c49a8c954b3d616897, type: 3}
+  - {fileID: 8300000, guid: abfdeb5a99e91eb4d823da7a58d44802, type: 3}
+  - {fileID: 8300000, guid: e3253430c78bbc34087d141a868a159c, type: 3}
+  - {fileID: 8300000, guid: 245885e6bbaf759469c2a0406f8757c9, type: 3}
+  - {fileID: 8300000, guid: 39f85cc7a29764148b5b66372fae4ac4, type: 3}
+  - {fileID: 8300000, guid: 763322f54c47bc64bb67bb9d5c0be367, type: 3}
+  - {fileID: 8300000, guid: ee05839066cd91d4caebae353d9c3fa6, type: 3}
+  - {fileID: 8300000, guid: 2f38235397124554689e698291a621d9, type: 3}
+  - {fileID: 8300000, guid: 1ca35a8a14b60134faed8899135130c2, type: 3}
+  - {fileID: 8300000, guid: db53352de48342b418988450ca1b37d5, type: 3}
+  - {fileID: 8300000, guid: e3f0d7c030d2fe2409d3c0ed27434b6e, type: 3}
+  - {fileID: 8300000, guid: a4cdd588ef17b7d4b9513c1cdfbec690, type: 3}
+  - {fileID: 8300000, guid: 047d0ab6f1b2ae54abe80977eeb45d17, type: 3}
+  - {fileID: 8300000, guid: 2151d1a5554de404b9b9fc458a2b7c1f, type: 3}
+  - {fileID: 8300000, guid: 471bb351ad7d5494b8e55d5020bbe0e3, type: 3}
+  - {fileID: 8300000, guid: 08e3e6cb7c2cdb34cb5ec6bc51c54204, type: 3}
+  - {fileID: 8300000, guid: 1c08c311332f9aa469965bc927beca95, type: 3}
