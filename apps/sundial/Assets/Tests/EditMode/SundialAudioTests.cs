@@ -73,6 +73,25 @@ namespace GardenVR.Sundial.Tests.EditMode
         }
 
         [Test]
+        public void Bank_CarriesTheManifestAndEveryClip_SoAPlayerCanPlayThem()
+        {
+            // A player has no Assets/Audio folder and no AssetDatabase: the serialized bank is its only source.
+            CueBank bank = Resources.Load<CueBank>(CueBank.ResourceName);
+            Assert.IsNotNull(bank, "Assets/Audio/Resources/GardenAudioBank.asset is missing (Garden VR > Audio > Rebuild Cue Bank)");
+            Assert.IsNotNull(bank.manifest, "bank has no manifest");
+            string disk = File.ReadAllText(Path.Combine(Application.dataPath, "Audio", "cues.json"));
+            Assert.AreEqual(disk, bank.manifest.text, "bank manifest is stale");
+            CueManifest manifest = CueManifest.Parse(bank.manifest.text);
+            for (int i = 0; i < manifest.cues.Length; i++)
+            {
+                CueDefinition cue = manifest.cues[i];
+                if (cue.placeholder) continue;
+                for (int c = 0; c < cue.clips.Length; c++)
+                    Assert.IsNotNull(bank.Find(cue.clips[c]), cue.id + " clip not in bank: " + cue.clips[c]);
+            }
+        }
+
+        [Test]
         public void Scripts_OnlyCallCueIdsThatExist()
         {
             CueManifest manifest = CueManifest.Parse(File.ReadAllText(Path.Combine(Application.dataPath, "Audio", "cues.json")));
