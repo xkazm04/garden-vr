@@ -104,6 +104,37 @@ namespace GardenVR.Sundial.Tests.EditMode
             Assert.IsTrue(DeclaresRoomLightKeyword("#pragma multi_compile_fragment _ _GVR_ROOMLIGHT"));
         }
 
+        [Test]
+        public void TheRoomLightFormulaAndItsGlobalsAreWrittenOnce()
+        {
+            string fx = Path.GetFullPath(Path.Combine(
+                Application.dataPath, "..", "..", "..", "shared", "packages", "com.gardenvr.fx", "Runtime", "Shaders"));
+            var sources = new List<string>();
+            foreach (string path in Directory.GetFiles(fx))
+                if (path.EndsWith(".shader") || path.EndsWith(".hlsl")) sources.Add(StripComments(File.ReadAllText(path)));
+            Assert.AreEqual(1, CountSites(sources), "gain formula sites (_GvrRoomParams.y)");
+            Assert.AreEqual(1, CountDeclarations(sources), "float4 _GvrRoomParams declarations");
+
+            // Seeded control: two copies must count as two.
+            var twice = new List<string> { "float4 _GvrRoomParams; x = _GvrRoomParams.y;", "float4 _GvrRoomParams; y = _GvrRoomParams.y;" };
+            Assert.AreEqual(2, CountSites(twice));
+            Assert.AreEqual(2, CountDeclarations(twice));
+        }
+
+        static int CountSites(List<string> sources)
+        {
+            int n = 0;
+            foreach (string code in sources) n += System.Text.RegularExpressions.Regex.Matches(code, @"_GvrRoomParams\.y").Count;
+            return n;
+        }
+
+        static int CountDeclarations(List<string> sources)
+        {
+            int n = 0;
+            foreach (string code in sources) n += System.Text.RegularExpressions.Regex.Matches(code, @"float4\s+_GvrRoomParams").Count;
+            return n;
+        }
+
         static string StripComments(string code)
         {
             code = System.Text.RegularExpressions.Regex.Replace(code, @"/\*.*?\*/", " ", System.Text.RegularExpressions.RegexOptions.Singleline);
