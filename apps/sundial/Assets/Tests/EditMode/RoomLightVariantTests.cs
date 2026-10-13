@@ -82,6 +82,40 @@ namespace GardenVR.Sundial.Tests.EditMode
         }
 
         [Test]
+        public void EveryShaderThatReadsTheCookieCompilesTheRoomLightKeyword()
+        {
+            // The shader list comes from the folder, not from this test, so a new cookie reader is covered on arrival.
+            string fx = Path.GetFullPath(Path.Combine(
+                Application.dataPath, "..", "..", "..", "shared", "packages", "com.gardenvr.fx", "Runtime", "Shaders"));
+            var readers = new List<string>();
+            foreach (string path in Directory.GetFiles(fx, "*.shader"))
+            {
+                string code = StripComments(File.ReadAllText(path));
+                if (!code.Contains("_GvrRoomCookie")) continue;
+                readers.Add(Path.GetFileName(path));
+                Assert.IsTrue(DeclaresRoomLightKeyword(code),
+                    Path.GetFileName(path) + " reads the room-light cookie but never compiles _GVR_ROOMLIGHT");
+            }
+            Assert.GreaterOrEqual(readers.Count, 4, string.Join(", ", readers));
+
+            // Seeded control: a pragma that survives only in a comment does not count.
+            Assert.IsFalse(DeclaresRoomLightKeyword(StripComments(
+                "// #pragma multi_compile _ _GVR_ROOMLIGHT\n/* #pragma multi_compile_fragment _ _GVR_ROOMLIGHT */\nfloat d = _GvrRoomCookie;")));
+            Assert.IsTrue(DeclaresRoomLightKeyword("#pragma multi_compile_fragment _ _GVR_ROOMLIGHT"));
+        }
+
+        static string StripComments(string code)
+        {
+            code = System.Text.RegularExpressions.Regex.Replace(code, @"/\*.*?\*/", " ", System.Text.RegularExpressions.RegexOptions.Singleline);
+            return System.Text.RegularExpressions.Regex.Replace(code, @"//[^\n]*", " ");
+        }
+
+        static bool DeclaresRoomLightKeyword(string code)
+        {
+            return System.Text.RegularExpressions.Regex.IsMatch(code, @"#pragma\s+multi_compile(_fragment|_vertex)?\s+_\s+_GVR_ROOMLIGHT\b");
+        }
+
+        [Test]
         public void TheCookieIsCappedAndBrighterOnTheWindowSide()
         {
             Assert.LessOrEqual(RoomLightGlobals.Amplitude, 0.15f);
