@@ -47,6 +47,9 @@ Your plan: `docs/plans/<your-app>.md`. The programme: `docs/PLAN.md`. Art target
 - Verify before you claim: run the tests, capture the screenshot, read the log. A claim you did not run is "not run".
 - **Commit atomically** on your own branch (`agent/<app>`), one commit per finished sub-step, with a clear message.
   Never push. Never rewrite history. Never commit `Library/`, `Temp/`, `Logs/`, builds or `.env`.
+- Sundial PlayMode tests write their captures to a temp folder by default, so a test run leaves the committed
+  `orchestration/runs/sundial/T-SUN-xxx` evidence alone. When a run IS producing your task's evidence, set
+  `GARDENVR_EVIDENCE_DIR=1` (the task folder) or `GARDENVR_EVIDENCE_DIR=<path>` before launching Unity.
 - Commit the REPORT, results XML, captures and small summaries; leave raw Unity/build `.log` files on disk, untracked
   (quote the lines that matter in the REPORT).
 - If you cannot meet the acceptance, the REPORT's first status line is `Status: blocked` followed by the exact blocker
