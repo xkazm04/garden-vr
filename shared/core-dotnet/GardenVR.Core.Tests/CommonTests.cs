@@ -256,6 +256,21 @@ public class CommonTests
     }
 
     [Fact]
+    public void DeferredTend_commits_under_the_boundary_it_was_armed_with()
+    {
+        var early = TimeSpan.FromHours(1);
+        var clock = ClockAt(2026, 10, 5, 2, 0);
+        var day = GardenDay.From(clock.Now, early);
+        Assert.Equal(day.Index, GardenDay.From(clock.Now, Boundary).Index + 1);
+        var ledger = new Ledger();
+        var held = new DeferredTend(ledger);
+        held.Arm("water", day, TendSource.Pinch, clock, early);
+        var ev = held.Flush();
+        Assert.NotNull(ev);
+        Assert.True(ledger.IsKept("water", day.Index));
+    }
+
+    [Fact]
     public void Backfill_yesterday_once_is_late_and_uses_the_real_timestamp()
     {
         var clock = ClockAt(2026, 10, 5, 18, 42);

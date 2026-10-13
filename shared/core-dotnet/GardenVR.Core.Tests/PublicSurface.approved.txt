@@ -196,6 +196,7 @@ GardenVR.Core.DeferredTend method public GardenVR.Core.TendEvent Flush()
 GardenVR.Core.DeferredTend method public GardenVR.Core.TendEvent Tick(GardenVR.Core.IClock clock)
 GardenVR.Core.DeferredTend method public System.Boolean Undo()
 GardenVR.Core.DeferredTend method public System.Void Arm(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.TendSource source, GardenVR.Core.IClock clock)
+GardenVR.Core.DeferredTend method public System.Void Arm(System.String habitId, GardenVR.Core.GardenDay day, GardenVR.Core.TendSource source, GardenVR.Core.IClock clock, System.TimeSpan boundary)
 GardenVR.Core.DeferredTend property get public System.Boolean IsPending
 GardenVR.Core.DiskSaveIo ctor public (System.String directory)
 GardenVR.Core.DiskSaveIo field public System.Func<System.IO.Stream,System.IO.Stream> WrapWrite

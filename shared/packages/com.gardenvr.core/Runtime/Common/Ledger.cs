@@ -259,6 +259,7 @@ namespace GardenVR.Core
         TendSource _source;
         DateTimeOffset _armedAt;
         TimeZoneInfo _zone;
+        TimeSpan _boundary;
 
         public DeferredTend(Ledger ledger)
         {
@@ -270,6 +271,12 @@ namespace GardenVR.Core
 
         public void Arm(string habitId, GardenDay day, TendSource source, IClock clock)
         {
+            Arm(habitId, day, source, clock, GardenDay.DefaultBoundary);
+        }
+
+        /// <summary>Commits against <paramref name="boundary"/>, the one the caller used to pick <paramref name="day"/>.</summary>
+        public void Arm(string habitId, GardenDay day, TendSource source, IClock clock, TimeSpan boundary)
+        {
             if (string.IsNullOrEmpty(habitId)) throw new ArgumentException("habitId is null or empty", nameof(habitId));
             if (clock == null) throw new ArgumentNullException(nameof(clock));
             if (_pending) throw new InvalidOperationException("a tend is already waiting to commit");
@@ -279,6 +286,7 @@ namespace GardenVR.Core
             _source = source;
             _armedAt = clock.Now;
             _zone = clock.Zone ?? TimeZoneInfo.Utc;
+            _boundary = boundary;
         }
 
         /// <summary>Commits when the held tend is at least <see cref="WindowSeconds"/> old. Otherwise returns null.</summary>
@@ -308,7 +316,7 @@ namespace GardenVR.Core
         TendEvent Commit()
         {
             _pending = false;
-            var result = _ledger.Tend(_habitId, _day, _source, new FixedClock(_armedAt, _zone));
+            var result = _ledger.Tend(_habitId, _day, _source, new FixedClock(_armedAt, _zone), _boundary);
             return result.Event;
         }
     }
