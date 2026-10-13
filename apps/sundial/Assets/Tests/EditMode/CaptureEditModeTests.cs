@@ -160,6 +160,17 @@ namespace GardenVR.Sundial.Tests.EditMode
         }
 
         [Test]
+        public void Framings_RejectAnUnusableFov()
+        {
+            foreach (string fov in new[] { "0", "-5", "180", "1e999" })
+            {
+                string json = "{\"overrides\":{\"DialG1\":{\"fov\":" + fov + "}}}";
+                Assert.Throws<FormatException>(() => Framings.Parse(json), "fov " + fov);
+            }
+            Assert.AreEqual(179f, Framings.Parse("{\"overrides\":{\"DialG1\":{\"fov\":179}}}").Get("DialG1").Fov, 0.0001f);
+        }
+
+        [Test]
         public void Crops_SamePixelRows()
         {
             RgbaImage a = RgbaImage.Alloc(4, 2, new Color32(1, 0, 0, 255));

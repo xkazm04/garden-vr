@@ -181,6 +181,8 @@ namespace GardenVR.Capture
                 throw new FormatException("new framing " + framing.Name + " needs eye, lookAt and fov");
             if (framing.Width <= 0 || framing.Height <= 0)
                 throw new FormatException("framing " + framing.Name + " needs a positive resolution");
+            if (!(framing.Fov > 0f && framing.Fov < 180f))
+                throw new FormatException("framing " + framing.Name + " needs a fov between 0 and 180 degrees");
             return framing;
         }
 
