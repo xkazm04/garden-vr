@@ -76,7 +76,7 @@ namespace GardenVR.Sundial.Tests.EditMode
             string card = File.ReadAllText(Path.Combine(fx, "FCard.shader"));
             string catcher = File.ReadAllText(Path.Combine(fx, "FShadowCatcher.shader"));
             StringAssert.Contains("multi_compile_fragment _ _GVR_ROOMLIGHT", toon);
-            StringAssert.Contains("_GvrRoomCookie", toon);
+            StringAssert.Contains("RoomLight.hlsl", toon);
             StringAssert.Contains("multi_compile_fragment _ _GVR_ROOMLIGHT", card);
             StringAssert.Contains("_Offset", catcher);
         }
@@ -91,7 +91,7 @@ namespace GardenVR.Sundial.Tests.EditMode
             foreach (string path in Directory.GetFiles(fx, "*.shader"))
             {
                 string code = StripComments(File.ReadAllText(path));
-                if (!code.Contains("_GvrRoomCookie")) continue;
+                if (!code.Contains("_GvrRoomCookie") && !code.Contains("RoomLight.hlsl")) continue;
                 readers.Add(Path.GetFileName(path));
                 Assert.IsTrue(DeclaresRoomLightKeyword(code),
                     Path.GetFileName(path) + " reads the room-light cookie but never compiles _GVR_ROOMLIGHT");
@@ -110,10 +110,16 @@ namespace GardenVR.Sundial.Tests.EditMode
             string fx = Path.GetFullPath(Path.Combine(
                 Application.dataPath, "..", "..", "..", "shared", "packages", "com.gardenvr.fx", "Runtime", "Shaders"));
             var sources = new List<string>();
+            var where = new List<string>();
             foreach (string path in Directory.GetFiles(fx))
-                if (path.EndsWith(".shader") || path.EndsWith(".hlsl")) sources.Add(StripComments(File.ReadAllText(path)));
-            Assert.AreEqual(1, CountSites(sources), "gain formula sites (_GvrRoomParams.y)");
-            Assert.AreEqual(1, CountDeclarations(sources), "float4 _GvrRoomParams declarations");
+            {
+                if (!path.EndsWith(".shader") && !path.EndsWith(".hlsl")) continue;
+                string code = StripComments(File.ReadAllText(path));
+                sources.Add(code);
+                where.Add(Path.GetFileName(path) + " sites=" + CountSites(new List<string> { code }) + " decl=" + CountDeclarations(new List<string> { code }));
+            }
+            Assert.AreEqual(1, CountSites(sources), "gain formula sites (_GvrRoomParams.y): " + string.Join(", ", where));
+            Assert.AreEqual(1, CountDeclarations(sources), "float4 _GvrRoomParams declarations: " + string.Join(", ", where));
 
             // Seeded control: two copies must count as two.
             var twice = new List<string> { "float4 _GvrRoomParams; x = _GvrRoomParams.y;", "float4 _GvrRoomParams; y = _GvrRoomParams.y;" };
@@ -131,7 +137,7 @@ namespace GardenVR.Sundial.Tests.EditMode
         static int CountDeclarations(List<string> sources)
         {
             int n = 0;
-            foreach (string code in sources) n += System.Text.RegularExpressions.Regex.Matches(code, @"float4\s+_GvrRoomParams").Count;
+            foreach (string code in sources) n += System.Text.RegularExpressions.Regex.Matches(code, @"float4\s+_GvrRoomParams\b").Count;
             return n;
         }
 

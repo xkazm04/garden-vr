@@ -217,10 +217,12 @@ namespace GardenVR.Sundial.Tests.EditMode
             string leaf = File.ReadAllText(Path.Combine(fx, "FLeaf.shader"));
             StringAssert.Contains("multi_compile _ _GVR_ROOMLIGHT", leaf);
             // The cookie is read once per vertex at the plant's base point, so a fragment of the plant takes no extra sample.
-            StringAssert.Contains("SAMPLE_TEXTURE2D_LOD(_GvrRoomCookie", leaf);
+            StringAssert.Contains("RoomLightGainLod(", leaf);
+            string include = File.ReadAllText(Path.Combine(fx, "RoomLight.hlsl"));
+            StringAssert.Contains("SAMPLE_TEXTURE2D_LOD(_GvrRoomCookie", include);
             StringAssert.Contains("0.985", leaf);
-            // The same cap and bias as Toon and Card, from the same globals.
-            StringAssert.Contains("_GvrRoomParams.y", leaf);
+            // The same cap and bias as Toon and Card, from the same include and globals.
+            StringAssert.Contains("_GvrRoomParams.y", include);
             StringAssert.DoesNotContain("_ScreenParams", leaf);
             StringAssert.DoesNotContain("ComputeScreenPos", leaf);
             StringAssert.DoesNotContain("unity_StereoEyeIndex", leaf);

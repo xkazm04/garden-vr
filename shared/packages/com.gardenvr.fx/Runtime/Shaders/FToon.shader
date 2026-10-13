@@ -64,10 +64,8 @@ Shader "Fidelity/Toon"
         TEXTURE2D(_TileTex); SAMPLER(sampler_TileTex);
         TEXTURE2D(_ControlTex); SAMPLER(sampler_ControlTex);
         TEXTURE2D(_PaperH); SAMPLER(sampler_PaperH);
-        // Spike S2 globals, set by DialView. Outside the material CBUFFER so the SRP batcher is unchanged.
-        TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
-        float4x4 _GvrRoomW2C;
-        float4 _GvrRoomParams;
+        // Spike S2 cookie globals and RoomLightGain(wp), set by DialView. Outside the material CBUFFER so the SRP batcher is unchanged.
+        #include "Packages/com.gardenvr.fx/Runtime/Shaders/RoomLight.hlsl"
         CBUFFER_START(UnityPerMaterial)
             float4 _MainTex_ST;
             float4 _TileTex_ST;
@@ -94,15 +92,6 @@ Shader "Fidelity/Toon"
             float a = SAMPLE_TEXTURE2D(_PaperH, sampler_PaperH, frac(uv1 + hA)).r;
             float b = SAMPLE_TEXTURE2D(_PaperH, sampler_PaperH, frac(uv2 + hB)).r;
             return lerp(a, b, Hash22(cell + float2(2.2, 8.4)).x);
-        }
-        // d in -1..1 from the room-light cookie at a world point. params: x = cookie size (m), y = amplitude.
-        float RoomLightGain(float3 wp)
-        {
-            float3 lp = mul(_GvrRoomW2C, float4(wp, 1.0)).xyz;
-            float2 uv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
-            float d = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, uv).r * 2.0 - 1.0;
-            // The cap is on the encoded (display) luma, so the linear multiply is that gain to the 2.2.
-            return pow(1.0 + _GvrRoomParams.y * clamp(d * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
         }
         float BoilClock()
         {

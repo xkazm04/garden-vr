@@ -46,9 +46,7 @@ Shader "Fidelity/Leaf"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
             // Global, set by RoomLightGlobals. Outside the material CBUFFER on purpose.
-            TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
-            float4x4 _GvrRoomW2C;
-            float4 _GvrRoomParams;
+            #include "Packages/com.gardenvr.fx/Runtime/Shaders/RoomLight.hlsl"
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color, _Lit, _Shade;
@@ -77,10 +75,7 @@ Shader "Fidelity/Leaf"
                 #if defined(_GVR_ROOMLIGHT)
                 {
                     // The plant's base point (the object origin), so the cookie does not smear up the plant.
-                    float3 lp = mul(_GvrRoomW2C, float4(TransformObjectToWorld(float3(0, 0, 0)), 1.0)).xyz;
-                    float2 cuv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
-                    float cd = SAMPLE_TEXTURE2D_LOD(_GvrRoomCookie, sampler_GvrRoomCookie, cuv, 0).r * 2.0 - 1.0;
-                    o.room = (half)pow(1.0 + _GvrRoomParams.y * clamp(cd * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
+                    o.room = (half)RoomLightGainLod(TransformObjectToWorld(float3(0, 0, 0)));
                 }
                 #endif
                 return o;

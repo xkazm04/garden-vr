@@ -58,9 +58,7 @@ Shader "Fidelity/SoilMound"
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
             TEXTURE2D(_PaperH); SAMPLER(sampler_PaperH);
             TEXTURE2D(_WashTex); SAMPLER(sampler_WashTex);
-            TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
-            float4x4 _GvrRoomW2C;
-            float4 _GvrRoomParams;
+            #include "Packages/com.gardenvr.fx/Runtime/Shaders/RoomLight.hlsl"
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 float4 _PaperH_ST;
@@ -72,13 +70,6 @@ Shader "Fidelity/SoilMound"
             struct A { float4 pos : POSITION; float3 n : NORMAL; float2 uv : TEXCOORD0; half4 col : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V { float4 pos : SV_POSITION; float2 uv : TEXCOORD0; float3 wn : TEXCOORD1; float3 wp : TEXCOORD2; float3 op : TEXCOORD3; half4 col : TEXCOORD4; UNITY_VERTEX_OUTPUT_STEREO };
             float h31(float3 p) { p = frac(p * 0.1031); p += dot(p, p.zyx + 31.32); return frac((p.x + p.y) * p.z); }
-            float RoomLightGain(float3 wp)
-            {
-                float3 lp = mul(_GvrRoomW2C, float4(wp, 1.0)).xyz;
-                float2 uv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
-                float d = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, uv).r * 2.0 - 1.0;
-                return pow(1.0 + _GvrRoomParams.y * clamp(d * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
-            }
             V vert (A i)
             {
                 V o;

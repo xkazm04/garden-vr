@@ -56,9 +56,7 @@ Shader "Fidelity/Card"
             #pragma multi_compile_fragment _ _GVR_ROOMLIGHT
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
-            TEXTURE2D(_GvrRoomCookie); SAMPLER(sampler_GvrRoomCookie);
-            float4x4 _GvrRoomW2C;
-            float4 _GvrRoomParams;
+            #include "Packages/com.gardenvr.fx/Runtime/Shaders/RoomLight.hlsl"
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
                 half4 _Color, _Color2;
@@ -128,10 +126,7 @@ Shader "Fidelity/Card"
                     #if defined(_GVR_ROOMLIGHT)
                     {
                         // The card's base point, so the whole plant takes one value and the cookie does not smear up it.
-                        float3 lp = mul(_GvrRoomW2C, float4(i.wp.x, TransformObjectToWorld(float3(0, 0, 0)).y, i.wp.z, 1.0)).xyz;
-                        float2 cuv = lp.xz / max(_GvrRoomParams.x, 1e-4) + 0.5;
-                        float cd = SAMPLE_TEXTURE2D(_GvrRoomCookie, sampler_GvrRoomCookie, cuv).r * 2.0 - 1.0;
-                        half cg = (half)pow(1.0 + _GvrRoomParams.y * clamp(cd * _GvrRoomParams.z + _GvrRoomParams.w, -1.0, 1.0), 2.2);
+                        half cg = (half)RoomLightGain(float3(i.wp.x, TransformObjectToWorld(float3(0, 0, 0)).y, i.wp.z));
                         half cpeak = max(max(c.r, c.g), max(c.b, 1e-3));
                         c.rgb *= min(cg, max((half)1.0, (half)(0.985 / cpeak)));
                     }
