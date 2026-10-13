@@ -66,8 +66,13 @@ namespace GardenVR.Core
 
         sealed class Parser
         {
+            // Saves nest a handful of levels. The cap turns a hostile or corrupt file into a FormatException,
+            // which Load reports as a failed parse, instead of a stack overflow nothing can catch.
+            const int MaxDepth = 64;
+
             readonly string _s;
             int _i;
+            int _depth;
 
             public Parser(string text) { _s = text; }
 
@@ -85,8 +90,13 @@ namespace GardenVR.Core
                 SkipWs();
                 if (_i >= _s.Length) throw Error("truncated");
                 char c = _s[_i];
-                if (c == '{') return ParseObject();
-                if (c == '[') return ParseArray();
+                if (c == '{' || c == '[')
+                {
+                    if (++_depth > MaxDepth) throw Error("nested deeper than " + MaxDepth.ToString(CultureInfo.InvariantCulture));
+                    JsonValue nested = c == '{' ? (JsonValue)ParseObject() : ParseArray();
+                    _depth--;
+                    return nested;
+                }
                 if (c == '"') return JsonValue.String(ParseString());
                 if (c == 't') { Literal("true"); return JsonValue.Bool(true); }
                 if (c == 'f') { Literal("false"); return JsonValue.Bool(false); }

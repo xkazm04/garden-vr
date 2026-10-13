@@ -350,6 +350,38 @@ public class CommonTests
     }
 
     [Fact]
+    public void Json_nesting_past_64_levels_is_a_format_error()
+    {
+        Assert.Equal(64, Depth(Json.Parse(Nested(64))));
+        Assert.Throws<FormatException>(() => Json.Parse(Nested(65)));
+        Assert.Throws<FormatException>(() => Json.ParseObject("{\"a\":" + Nested(64) + "}"));
+    }
+
+    [Fact]
+    public void Json_hostile_depth_fails_closed_instead_of_overflowing_the_stack()
+    {
+        Assert.Throws<FormatException>(() => Json.Parse(new string('[', 200000)));
+    }
+
+    static string Nested(int depth)
+    {
+        return new string('[', depth) + new string(']', depth);
+    }
+
+    static int Depth(JsonValue value)
+    {
+        int depth = 0;
+        while (value.Kind == JsonKind.Array)
+        {
+            depth++;
+            var array = value.AsArray();
+            if (array.Count == 0) break;
+            value = array[0];
+        }
+        return depth;
+    }
+
+    [Fact]
     public void Json_round_trip_keeps_escapes_and_unknown_members()
     {
         const string raw = "{\"SchemaVersion\":1,\"Name\":\"caf\\u00e9\",\"note\":\"line\\nquote\\\"slash\\\\\",\"extra\":{\"z\":true},\"n\":1.5,\"flag\":false,\"z\":null,\"list\":[1,\"a\"]}";
