@@ -431,7 +431,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         static string RunDir()
         {
             string root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", ".."));
-            return Path.Combine(root, "orchestration", "runs", "sundial", "T-SUN-025");
+            return SundialEvidence.Dir("T-SUN-025");
         }
 
         static Camera PoseDial()

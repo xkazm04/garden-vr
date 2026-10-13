@@ -45,7 +45,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         BreakPcInput _input;
         Camera _camera;
         float _delta;
-        static string RunDir => Path.GetFullPath(Path.Combine(Application.dataPath, "../../../orchestration/runs/sundial/T-SUN-071"));
+        static string RunDir => SundialEvidence.Dir("T-SUN-071");
         [SetUp] public void Setup() { _delta = Time.captureDeltaTime; }
         [UnityTearDown] public IEnumerator Cleanup()
         {

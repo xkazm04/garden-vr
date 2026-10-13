@@ -16,7 +16,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         float _delta;
         string _dir;
         static readonly DateTimeOffset Now = new DateTimeOffset(2026, 10, 20, 14, 20, 0, TimeSpan.Zero);
-        string Evidence => Path.GetFullPath(Path.Combine(Application.dataPath, "../../../orchestration/runs/sundial/T-SUN-066"));
+        string Evidence => SundialEvidence.Dir("T-SUN-066");
         [SetUp] public void Setup() { _delta = Time.captureDeltaTime; }
         [UnityTearDown] public IEnumerator Cleanup()
         {
