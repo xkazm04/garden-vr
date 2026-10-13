@@ -1,6 +1,6 @@
 # Garden VR Room (`com.gardenvr.room`)
 
-PC stand-in for the headset: a seated eye, a curved room plate, and a desk anchor. Quest replaces the providers later. App code talks to `IRoomProvider` and `IPlacementProvider`.
+PC stand-in for the headset: a seated eye, a flat room plate card, and a desk anchor. Quest replaces the providers later. App code talks to `IRoomProvider` and `IPlacementProvider`.
 
 Owner: terrarium (`docs/PLAN.md`). Sundial consumes the prefab. Do not edit this package from Sundial; ask for changes with `REQUEST-room.md`.
 

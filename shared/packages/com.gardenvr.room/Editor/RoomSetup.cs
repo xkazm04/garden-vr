@@ -14,7 +14,6 @@ namespace GardenVR.Room.Editor
     public static class RoomSetup
     {
         public const string PrefabPath = "Packages/com.gardenvr.room/Runtime/Prefabs/SeatedRig.prefab";
-        public const string MeshPath = "Packages/com.gardenvr.room/Runtime/Meshes/RoomPlateCurve.asset";
         public const string TraceMeshPath = "Packages/com.gardenvr.room/Runtime/Meshes/DeskTraceQuad.asset";
         public const string PlateMaterialPath = "Packages/com.gardenvr.room/Runtime/Prefabs/RoomPlate.mat";
         public const string TraceMaterialPath = "Packages/com.gardenvr.room/Runtime/Prefabs/DeskTrace.mat";
@@ -25,7 +24,6 @@ namespace GardenVR.Room.Editor
             EnsureFolder("Packages/com.gardenvr.room/Runtime/Prefabs");
             EnsureFolder("Packages/com.gardenvr.room/Runtime/Meshes");
 
-            SaveMesh(MeshPath, RoomPlateMesh.Curve(RoomPlateMesh.Radius, 80f, 65f, 64, 32));
             Mesh traceMesh = SaveMesh(TraceMeshPath, RoomPlateMesh.TraceQuad());
             Material plateMaterial = SavePlateMaterial();
             Material traceMaterial = SaveTraceMaterial();
