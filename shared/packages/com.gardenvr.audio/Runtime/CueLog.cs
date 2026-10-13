@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -12,7 +13,7 @@ namespace GardenVR.Audio
     public sealed class CueLog
     {
         readonly string _path;
-        readonly bool _enabled;
+        bool _enabled;
 
         public string Path { get { return _path; } }
         public bool Enabled { get { return _enabled; } }
@@ -38,9 +39,18 @@ namespace GardenVR.Audio
             if (string.IsNullOrEmpty(path))
                 path = System.IO.Path.Combine(Application.persistentDataPath, "logs", "cues.jsonl");
 
-            string dir = System.IO.Path.GetDirectoryName(path);
-            if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
-            File.WriteAllText(path, string.Empty, new UTF8Encoding(false));
+            try
+            {
+                string dir = System.IO.Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+                File.WriteAllText(path, string.Empty, new UTF8Encoding(false));
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException || e is ArgumentException || e is NotSupportedException)
+            {
+                // A development log must never stop the service that owns it from loading its cues.
+                Debug.LogWarning("cue log off: " + path + ": " + e.Message);
+                return new CueLog(null, false);
+            }
             return new CueLog(path, true);
         }
 
@@ -59,7 +69,16 @@ namespace GardenVR.Audio
                 + "\",\"bus\":\"" + Esc(bus)
                 + "\",\"gainDb\":" + F(gainDb)
                 + ",\"pos\":" + posJson + "}";
-            File.AppendAllText(_path, line + "\n", new UTF8Encoding(false));
+            try
+            {
+                File.AppendAllText(_path, line + "\n", new UTF8Encoding(false));
+            }
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
+            {
+                // Play has already started the voice. A locked log file turns the log off instead of throwing into the caller.
+                _enabled = false;
+                Debug.LogWarning("cue log off: " + _path + ": " + e.Message);
+            }
         }
 
         static string F(float value)

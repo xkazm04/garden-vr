@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using GardenVR.Audio;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace GardenVR.Terrarium.Tests
 {
@@ -192,6 +193,34 @@ namespace GardenVR.Terrarium.Tests
             Assert.AreEqual(announced, svc.PlaceholderAnnouncements);
             Assert.IsFalse(svc.Play("no.such"));
             Assert.IsTrue(svc.Announced("no.such"));
+        }
+
+        [Test]
+        public void CueLog_ThatCannotBeWritten_TurnsOffInsteadOfThrowing()
+        {
+            string dir = Path.Combine(Application.temporaryCachePath, "cuelog-" + System.Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(dir);
+            try
+            {
+                LogAssert.Expect(LogType.Warning, new Regex("^cue log off"));
+                CueLog unopenable = CueLog.Open(dir);
+                Assert.IsFalse(unopenable.Enabled, "a directory is not a log file");
+
+                string path = Path.Combine(dir, "cues.jsonl");
+                CueLog log = CueLog.Open(path);
+                Assert.IsTrue(log.Enabled);
+                using (new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                {
+                    LogAssert.Expect(LogType.Warning, new Regex("^cue log off"));
+                    log.Append(1f, "tend", "Sfx/a.wav", "interaction", 0f, null);
+                }
+                Assert.IsFalse(log.Enabled, "a locked file turns the log off");
+                log.Append(2f, "tend", "Sfx/a.wav", "interaction", 0f, null);
+            }
+            finally
+            {
+                Directory.Delete(dir, true);
+            }
         }
 
         [Test]
