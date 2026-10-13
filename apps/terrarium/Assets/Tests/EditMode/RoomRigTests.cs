@@ -193,6 +193,35 @@ namespace GardenVR.Terrarium.Tests
         }
 
         [Test]
+        public void RestPitch_FollowsEyeHeightAndDeskChangesAfterBind()
+        {
+            SeatedRig rig = MakeRig(out _, out _);
+            var deskGo = new GameObject("desk");
+            _owned.Add(deskGo);
+            deskGo.transform.SetParent(rig.transform, false);
+            var desk = deskGo.AddComponent<PcDeskAnchor>();
+            desk.Height = PcDeskAnchor.DefaultHeight;
+            desk.Distance = PcDeskAnchor.TerrariumDistance;
+            var anchorGo = new GameObject("RoomPlateAnchor");
+            _owned.Add(anchorGo);
+            anchorGo.transform.SetParent(rig.transform, false);
+            rig.SetPlateAnchor(anchorGo.transform);
+
+            rig.EyeHeight = 1.2f;
+            float raised = Mathf.Atan2(1.2f - PcDeskAnchor.DefaultHeight, PcDeskAnchor.TerrariumDistance) * Mathf.Rad2Deg;
+            Assert.AreEqual(raised, rig.RestPitchDegrees, 0.02f, "eye height");
+            Assert.AreEqual(1.2f, anchorGo.transform.localPosition.y, 0.0001f, "plate anchor height");
+
+            desk.Distance = PcDeskAnchor.SundialDistance;
+            float farther = Mathf.Atan2(1.2f - PcDeskAnchor.DefaultHeight, PcDeskAnchor.SundialDistance) * Mathf.Rad2Deg;
+            Assert.AreEqual(farther, rig.RestPitchDegrees, 0.02f, "desk distance");
+
+            desk.Height = 0.9f;
+            float higher = Mathf.Atan2(1.2f - 0.9f, PcDeskAnchor.SundialDistance) * Mathf.Rad2Deg;
+            Assert.AreEqual(higher, rig.RestPitchDegrees, 0.02f, "desk height");
+        }
+
+        [Test]
         public void RestPitch_CanSitTheHeroLowerInTheFrame()
         {
             SeatedRig rig = MakeRig(out _, out Transform pivot);

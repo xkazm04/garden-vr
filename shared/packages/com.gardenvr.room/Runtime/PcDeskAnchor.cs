@@ -87,6 +87,9 @@ namespace GardenVR.Room
         {
             transform.localPosition = new Vector3(_lateral, _height, _distance);
             transform.localRotation = Quaternion.identity;
+            // The rig's rest pitch aims at this pose, so a moved desk re-aims the eye and the plate anchor.
+            SeatedRig rig = GetComponentInParent<SeatedRig>(true);
+            if (rig != null) rig.ApplyRest();
         }
 
         /// <summary>Reset the edge trace. It stays hidden until <see cref="TraceDelaySeconds"/>, then draws, then raises Placed once.</summary>

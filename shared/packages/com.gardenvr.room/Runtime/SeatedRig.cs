@@ -54,6 +54,7 @@ namespace GardenVR.Room
             {
                 _eyeHeight = value;
                 ApplyBody();
+                ApplyRest();
             }
         }
 
