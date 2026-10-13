@@ -141,7 +141,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Camera camera = RecordTilesTests.PoseDial();
             RecordTilesTests.AttachPlate(camera);
             yield return Look("plant.midday");
-            string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../../orchestration/runs/sundial/T-SUN-059"));
+            string dir = SundialEvidence.Dir("T-SUN-059");
             Directory.CreateDirectory(dir);
             RecordTilesTests.Shot(camera, Path.Combine(dir, "DialG1-nine-plants.png"));
             File.WriteAllText(Path.Combine(dir, "capture-state.json"), service.StateJson);

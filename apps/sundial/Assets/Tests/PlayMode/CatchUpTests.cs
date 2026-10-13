@@ -31,7 +31,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         string _dir;
         float _delta;
         int _today;
-        string Evidence => Path.GetFullPath(Path.Combine(Application.dataPath, "../../../orchestration/runs/sundial/T-SUN-065"));
+        string Evidence => SundialEvidence.Dir("T-SUN-065");
         [SetUp] public void Setup() { _delta = Time.captureDeltaTime; }
         [UnityTearDown] public IEnumerator Cleanup()
         {

@@ -779,7 +779,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         {
             string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
             if (!string.IsNullOrEmpty(env)) return env;
-            return Path.Combine(RepoRoot(), "orchestration", "runs", "sundial", "T-SUN-020");
+            return SundialEvidence.Dir("T-SUN-020");
         }
 
         static void ComposePair(string dir, string shotName, string referencePath)

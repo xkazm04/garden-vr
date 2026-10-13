@@ -256,7 +256,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         {
             string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
             string dir = string.IsNullOrEmpty(env)
-                ? Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "orchestration", "runs", "sundial", "T-SUN-019"))
+                ? SundialEvidence.Dir("T-SUN-019")
                 : env;
             Directory.CreateDirectory(dir);
             return dir;

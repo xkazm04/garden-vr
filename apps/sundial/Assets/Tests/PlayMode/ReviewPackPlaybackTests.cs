@@ -120,7 +120,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         static void WriteLog(string text)
         {
             string root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", ".."));
-            string dir = Path.Combine(root, "orchestration", "runs", "sundial", "T-SUN-032");
+            string dir = SundialEvidence.Dir("T-SUN-032");
             Directory.CreateDirectory(dir);
             File.WriteAllText(Path.Combine(dir, "playback-controls.txt"), text);
         }

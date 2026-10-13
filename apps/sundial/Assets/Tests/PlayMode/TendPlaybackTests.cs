@@ -215,7 +215,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.IsTrue(controller.UndoVisible || controller.View.pulse > 0f, "no visual on the pinch frame");
             Debug.Log("[playback] intent t=0.00 kind=Pinch frame=" + pinchFrame);
             Debug.Log("[playback] state-changed frame=" + Time.frameCount + " dtFrames=" + dtFrames);
-            string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", "..", "orchestration", "runs", "sundial", "T-SUN-019"));
+            string dir = SundialEvidence.Dir("T-SUN-019");
             string env = Environment.GetEnvironmentVariable("GARDEN_RUN_DIR");
             if (!string.IsNullOrEmpty(env)) dir = env;
             Directory.CreateDirectory(dir);
@@ -260,7 +260,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
         public static string EvidenceDir()
         {
             string root = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "..", ".."));
-            string dir = Path.Combine(root, "orchestration", "runs", "sundial", "T-SUN-008");
+            string dir = SundialEvidence.Dir("T-SUN-008");
             Directory.CreateDirectory(dir);
             return dir;
         }

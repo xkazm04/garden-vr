@@ -28,7 +28,7 @@ namespace GardenVR.Sundial.Tests.PlayMode
             SundialPlay.FixedStep();
             var session = new BreakSession(true);
             var view = c.gameObject.AddComponent<BreakView>();
-            string dir = Path.GetFullPath(Path.Combine(Application.dataPath, "../../../orchestration/runs/sundial/T-SUN-063"));
+            string dir = SundialEvidence.Dir("T-SUN-063");
             Directory.CreateDirectory(dir);
             RecordTilesTests.DisableAsyncShaders();
             var cam = RecordTilesTests.PoseDial(); RecordTilesTests.AttachPlate(cam);
