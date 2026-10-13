@@ -165,6 +165,8 @@ namespace GardenVR.Input
 
         void UpdateHold(in RawKbm raw, float dt, Ray ray)
         {
+            // Only Toggle mode can end a latch, so leaving Toggle mode ends it.
+            if (HoldMode != HoldMode.Toggle) _latched = false;
             if (HoldMode == HoldMode.Toggle && Pressed(raw.Space, _prev.Space))
                 _latched = !_latched;
 

@@ -132,6 +132,20 @@ namespace GardenVR.Terrarium.Tests
         }
 
         [Test]
+        public void SwitchingToHoldMode_ReleasesALatchedPinch()
+        {
+            var mapper = new KbmIntentMapper { HoldMode = HoldMode.Toggle };
+            var sink = new Sink(mapper);
+            mapper.Tick(Frame(0.5f, space: true), Forward);
+            Assert.IsTrue(mapper.IsPinching);
+
+            mapper.HoldMode = HoldMode.Hold;
+            mapper.Tick(Frame(0.5f), Forward);
+            Assert.IsFalse(mapper.IsPinching, "a latch from Toggle mode has no key to end it in Hold mode");
+            Assert.AreEqual(1, sink.Count(HandIntentKind.Release));
+        }
+
+        [Test]
         public void PalmOpen_FiresAtPointSixAndNotAtPointFive()
         {
             var early = new KbmIntentMapper();
