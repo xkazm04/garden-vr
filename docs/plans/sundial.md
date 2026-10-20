@@ -4,7 +4,10 @@ App: `apps/sundial` (Unity 6.6 URP). Agent: Grok "sundial" on `agent/sundial`. A
 pushed to hand-drawn / anime linework living in the real room** - mix hand-drawn art and reality. Programme, gates and
 dates: `docs/PLAN.md`. Style bible: `docs/art/sundial-style.md`. Audio: `docs/audio/AUDIO-BIBLE.md`.
 
-Sources (relative to `C:\Users\kazda\kiro\personas\.contest\`):
+Binding facts: `docs/knowledge/contest-record.md` (competition rules, device and glasses facts, owner intent; a
+"TOOLING.md" citation below means its section 2). This plan restates what it uses from the rounds, so it stands on
+its own. The sources below are provenance, relative to the contest folder `C:\Users\kazda\kiro\personas\.contest\` on
+the owner's machine, and may be absent on yours (missing-input rule in `AGENTS.md`):
 
 - Round 1 design: `arena/habit-garden/entries/claude-claude-opus-5-5_high/variant-2/index.html` (+ `NOTES.md`): the bet,
   scope, first-minute timeline (FIG 3.1), normal day (FIG 3.2), rolling-window rules, gestures, data model

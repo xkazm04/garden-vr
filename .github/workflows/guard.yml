@@ -1,0 +1,60 @@
+# The gate for every commit that reaches GitHub, whoever made it.
+#
+# The pre-commit hook (tools/guard/hooks) only runs in a checkout whose core.hooksPath points at it. The agent loop sets
+# that for agent commits; host and human commits get it only after the owner's one-time
+# `git config core.hooksPath tools/guard/hooks`. This workflow re-runs the same checks on every push and pull request,
+# so a commit that skipped the hook still turns a check red. It runs only commands the repo already declares
+# (AGENTS.md "## Commands", tools/guard/README.md). Guard rule C1 fails if one of the checks below is removed.
+name: guard
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: guard (AGENTS.md rules)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # --all reads main's merge history for V2, and --range diffs the pushed commits.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Guard self-test
+        run: node tools/guard/check.mjs --self-test
+      - name: Every tracked file
+        run: node tools/guard/check.mjs --all
+      - name: Every file the pushed commits changed
+        shell: bash
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          HEAD_SHA="$(git rev-parse HEAD)"
+          # A new branch or a force push has no usable "before"; compare against where it left main instead.
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null || [ -z "${BASE//0/}" ]; then
+            BASE="$(git merge-base origin/main "$HEAD_SHA" 2>/dev/null || true)"
+          fi
+          if [ -z "$BASE" ] || [ "$BASE" = "$HEAD_SHA" ]; then
+            echo "no earlier commit to compare against; the --all step above covered every tracked file"
+            exit 0
+          fi
+          node tools/guard/check.mjs --range "$BASE..$HEAD_SHA"
+
+  core:
+    name: core tests and analyzer ratchet
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+      # Directory.Build.props switches the analyzers on and promotes the ratchet's rules to errors, so a promoted rule
+      # that regresses fails here even when the commit skipped every local hook.
+      - name: Core tests
+        run: dotnet test shared/core-dotnet

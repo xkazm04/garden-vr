@@ -1,0 +1,67 @@
+# Garden VR editor and analyzer baseline. Line endings follow .gitattributes (lf).
+#
+# The [*.cs] analyzer severities below run in every `dotnet test shared/core-dotnet` build, through
+# shared/core-dotnet/Directory.Build.props (EnableNETAnalyzers, EnforceCodeStyleInBuild). That build compiles the pure
+# C# core (shared/packages/com.gardenvr.core/Runtime) and its tests. Every rule here is a warning; a rule is promoted
+# in Directory.Build.props (WarningsAsErrors) once a build shows 0 hits for it, and from then on a hit fails the build.
+# Promoted: CA2242, CA2200, CA2241, CA2245, CA1304, CA1310. Keep each promoted line at warning (or error): its line here
+# is what switches it on, and guard rule B1 fails if one is removed or turned down. Unity reads none of this when it
+# compiles the apps; in the apps it gives editor hints only.
+root = true
+
+[*]
+end_of_line = lf
+
+[*.cs]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Formatting, as the code is written today: Allman braces, single-line blocks and guard clauses without braces kept.
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_space_after_keywords_in_control_flow_statements = true
+dotnet_sort_system_directives_first = true
+csharp_prefer_braces = false:silent
+
+# The formatter in the build: IDE0055 reports any line that the settings above would reformat.
+dotnet_diagnostic.IDE0055.severity = warning
+
+# Bug patterns that matter for the core's rules and saves. Each one is a class of mistake the core already fixed by
+# hand once (non-finite values, culture-dependent parsing, dropped results); see the fix(core-*) history.
+# NaN compared with == is always false; use double.IsNaN.
+dotnet_diagnostic.CA2242.severity = warning
+# Parsing or formatting without an explicit culture; save files and schedules must read the same on every machine.
+dotnet_diagnostic.CA1305.severity = warning
+dotnet_diagnostic.CA1304.severity = warning
+dotnet_diagnostic.CA1310.severity = warning
+# A result that is computed and dropped, such as an ignored TryParse or a new object never used.
+dotnet_diagnostic.CA1806.severity = warning
+# string.Format with the wrong number of arguments.
+dotnet_diagnostic.CA2241.severity = warning
+# `throw ex;` loses the stack trace.
+dotnet_diagnostic.CA2200.severity = warning
+# An exception thrown from a property getter, Equals, GetHashCode or ToString.
+dotnet_diagnostic.CA1065.severity = warning
+# Assigning a property to itself, a copy-paste slip that compiles.
+dotnet_diagnostic.CA2245.severity = warning
+
+[*.{mjs,js,yaml,yml}]
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+
+[*.py]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false

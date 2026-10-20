@@ -146,14 +146,17 @@ namespace GardenVR.Sundial
             foreach (var line in _lines) if (line != null) { line.gameObject.SetActive(false); Destroy(line.gameObject); }
             _lines.Clear();
             // A compact continuous hand contour, with unequal fingers and a folded thumb for the pinch.
-            Vector2[] points = pose == HandPose.PalmOpen ? new[] {
+            Vector2[] points = pose == HandPose.PalmOpen ? new[]
+            {
                 new Vector2(-9,-16), new Vector2(-10,-7), new Vector2(-17,2), new Vector2(-17,6),
                 new Vector2(-14,7), new Vector2(-8,1), new Vector2(-9,19), new Vector2(-7,22),
                 new Vector2(-5,21), new Vector2(-3,7), new Vector2(-3,25), new Vector2(0,27),
                 new Vector2(2,25), new Vector2(3,8), new Vector2(5,22), new Vector2(8,23),
                 new Vector2(10,21), new Vector2(8,6), new Vector2(12,16), new Vector2(15,16),
                 new Vector2(16,13), new Vector2(12,-6), new Vector2(8,-16)
-            } : new[] {
+            }
+            : new[]
+            {
                 new Vector2(-9,-16), new Vector2(-10,-7), new Vector2(-15,0), new Vector2(-14,8),
                 new Vector2(-7,17), new Vector2(1,20), new Vector2(8,18), new Vector2(10,14),
                 new Vector2(7,11), new Vector2(1,13), new Vector2(-4,8), new Vector2(3,5),

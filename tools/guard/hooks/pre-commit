@@ -1,0 +1,3 @@
+#!/bin/sh
+# Garden VR pre-commit: blocks a commit that breaks an AGENTS.md rule. Install: tools/guard/README.md.
+exec node "$(git rev-parse --show-toplevel)/tools/guard/check.mjs" --staged

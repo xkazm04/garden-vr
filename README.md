@@ -33,7 +33,7 @@ The reference frames are the art targets, not screenshots of the apps.
 | **1a. Vertical slice** | Sat 10-03 to Fri 10-09 | Per app: input, seated rig, hero object, core rules, the hero ritual end to end with scripted playback | **Review R1** Fri 10-09: owner plays both PC builds |
 | **1b. Art and audio** | Sat 10-10 to Fri 10-16 | Art passes at reference framing, sound effects, narration, music beds | **Review R2** Fri 10-16: owner scores side-by-sides and the mix |
 | **1c. Journey and polish** | Sat 10-17 to Fri 10-23 | First run, missed day, day 7, settings, pause/resume, budgets, gate pack | Gate pack Thu 10-22 |
-| **Gate** | **Fri 10-23** | Per app: go to Quest, extend one week, or park | Decision record `docs/decisions/0004` |
+| **Gate** | **Fri 10-23** | Per app: go to Quest, extend one week, or park | Decision record 0004 in `docs/decisions/` |
 | **2. Quest integration** | Sat 10-24 to Wed 11-11 | Only apps that passed: XR hands, passthrough, table anchor, device performance; headset sessions 10-27, 11-03, 11-10 | Release candidate |
 | **3. Submission** | Thu 11-12 to Tue 11-17 | Competition release channel, demo video under 3 minutes, tagline, form, install check 11-16 | **Submitted Tue 11-17** (deadline Wed 11-18) |
 | Post-MVP | from 11-19 | More habits and in-app rituals from each app's backlog | - |
@@ -111,14 +111,17 @@ The apps are built by autonomous coding agents under a single orchestrator:
 - **The orchestrator (Claude)** checks the agents hourly, verifies evidence, merges into `main` and keeps the queues full.
   Agents never push; `main` is the only branch published here.
 
-Rules every agent follows: [`AGENTS.md`](AGENTS.md). Decisions: [`docs/decisions/`](docs/decisions/) (Unity for both
+Rules every agent follows: [`AGENTS.md`](AGENTS.md). How every change, by an agent or a person, is gated (hook, CI,
+Definition of Done): [`CONTRIBUTING.md`](CONTRIBUTING.md). Reporting a vulnerability: [`SECURITY.md`](SECURITY.md). Decisions: [`docs/decisions/`](docs/decisions/) (Unity for both
 apps, PC-first hand intents, shared packages with one branch per agent).
 
 ## Where the design came from
 
 A three-round design contest: three competing product designs, technical spikes in Unity and the Immersive Web SDK,
-and a fidelity gate that rendered both chosen art styles in both stacks against the owner's reference frames. Summary
-and provenance in [`docs/contest/`](docs/contest/).
+and a fidelity gate that rendered both chosen art styles in both stacks against the owner's reference frames. The
+facts the plan binds on (competition rules, device facts, the owner's intent) and where each came from are in
+[`docs/knowledge/contest-record.md`](docs/knowledge/contest-record.md). The contest material itself stays on the
+owner's machine.
 
 ## Licence
 

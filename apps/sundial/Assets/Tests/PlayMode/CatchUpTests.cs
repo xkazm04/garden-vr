@@ -33,7 +33,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
         int _today;
         string Evidence => SundialEvidence.Dir("T-SUN-065");
         [SetUp] public void Setup() { _delta = Time.captureDeltaTime; }
-        [UnityTearDown] public IEnumerator Cleanup()
+        [UnityTearDown]
+        public IEnumerator Cleanup()
         {
             yield return SundialPlay.Unload();
             SundialController.SaveDirectoryOverride = null; SundialController.ClockOverride = null;
@@ -47,9 +48,18 @@ namespace GardenVR.Sundial.Tests.PlayMode
             var save = new SundialSave { LastVisitDay = first ? (int?)null : _today - 3, FirstRunStep = FirstRunSteps.Done };
             save.Settings.CatchUpDepth = depth;
             string[] names = { "Drink water", "Read a page", "Call home" };
-            for (int i = 0; i < habits; i++) save.Habits.Add(new HabitDef {
-                Id = "habit" + i, Name = names[i % 3], PresetKey = "water", Group = SundialArcs.FromIndex(i % 3),
-                Row = i / 3, Slot = i % 3, Kind = HabitKind.LifeCheckIn, CreatedDay = _today - 9 });
+            for (int i = 0; i < habits; i++)
+                save.Habits.Add(new HabitDef
+                {
+                    Id = "habit" + i,
+                    Name = names[i % 3],
+                    PresetKey = "water",
+                    Group = SundialArcs.FromIndex(i % 3),
+                    Row = i / 3,
+                    Slot = i % 3,
+                    Kind = HabitKind.LifeCheckIn,
+                    CreatedDay = _today - 9
+                });
             File.WriteAllText(Path.Combine(_dir, "save.json"), Json.Write(SundialCodec.Write(save)));
             SundialService.DevSeedOnFresh = false;
             SundialController.SaveDirectoryOverride = _dir; SundialController.ClockOverride = _clock;
@@ -79,7 +89,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
                 Assert.AreEqual(target.Id, hit.collider.GetComponent<IntentTarget>()?.Id, target.Id + " obstructed");
             }
         }
-        [UnityTest] public IEnumerator CatchUp_TwoDaysAway_OffersTwoDays()
+        [UnityTest]
+        public IEnumerator CatchUp_TwoDaysAway_OffersTwoDays()
         {
             yield return Boot(); Assert.IsTrue(Card.Open);
             Assert.AreEqual(6, Card.Items.Count);
@@ -92,7 +103,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             yield return SundialPlay.LoadMain(c => _c = c); yield return null;
             Assert.IsFalse(Card.Open, "same-day relaunch must not repeat the card");
         }
-        [UnityTest] public IEnumerator CatchUp_Logged_IsHatchedLate()
+        [UnityTest]
+        public IEnumerator CatchUp_Logged_IsHatchedLate()
         {
             yield return Boot(); var item = Card.Items[0]; string id = CatchUpCard.RowId(item);
             yield return Emit(id); yield return Emit(id);
@@ -105,12 +117,14 @@ namespace GardenVR.Sundial.Tests.PlayMode
             var reloaded = new SundialService(_clock, _dir);
             Assert.AreEqual(TileState.Late, reloaded.PlantFor(reloaded.Save.Habits[0]).Window[4]);
         }
-        [UnityTest] public IEnumerator CatchUp_FirstVisit_ShowsNothing()
+        [UnityTest]
+        public IEnumerator CatchUp_FirstVisit_ShowsNothing()
         {
             yield return Boot(first: true); Assert.IsFalse(Card.Open); Assert.IsEmpty(Card.Items);
             Assert.IsEmpty(_c.Ledger.Events); Assert.AreEqual(_today, Disk().LastVisitDay);
         }
-        [UnityTest] public IEnumerator CatchUp_DepthOne_QuestionAlsoLogsLate()
+        [UnityTest]
+        public IEnumerator CatchUp_DepthOne_QuestionAlsoLogsLate()
         {
             yield return Boot(depth: 1); Assert.AreEqual(3, Card.Items.Count);
             Assert.IsTrue(Card.Items.All(x => x.Day.Index == _today - 1));
@@ -123,7 +137,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.IsTrue(_c.Ledger.Events.Single().Late);
             Assert.AreEqual(TileState.Late, _c.Service.PlantFor(_c.Service.Save.Habits[0]).Window[5]);
         }
-        [UnityTest] public IEnumerator CatchUp_Pages_Pause_AndBackgroundIntents()
+        [UnityTest]
+        public IEnumerator CatchUp_Pages_Pause_AndBackgroundIntents()
         {
             yield return Boot(depth: 3, habits: 9); // Last visit excludes its own day: two days, eighteen rows.
             Assert.AreEqual(18, Card.Items.Count);
@@ -139,7 +154,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.AreEqual(item.Habit.Id, _c.Ledger.Events.Single().HabitId);
             yield return Emit(null, HandIntentKind.PalmOpen); Assert.IsFalse(_c.Dismissed);
         }
-        [UnityTest] public IEnumerator CatchUp_WeeklyTarget_RefreshesRemainingRows()
+        [UnityTest]
+        public IEnumerator CatchUp_WeeklyTarget_RefreshesRemainingRows()
         {
             yield return Boot(habits: 1);
             _c.Service.Save.Habits[0].Schedule = HabitSchedule.PerWeek(1);
@@ -148,7 +164,8 @@ namespace GardenVR.Sundial.Tests.PlayMode
             Assert.IsFalse(_c.Service.LogCatchUp(stale).Ok); Assert.AreEqual(1, _c.Ledger.Events.Count);
             Assert.IsTrue(Card.Open); yield return Emit(CatchUpCard.DoneId); Assert.IsFalse(Card.Open);
         }
-        [UnityTest] public IEnumerator CatchUp_DayRollover_RefreshesStaleRows()
+        [UnityTest]
+        public IEnumerator CatchUp_DayRollover_RefreshesStaleRows()
         {
             yield return Boot(); var stale = Card.Items[0];
             _clock.Now = _clock.Now.AddDays(1); yield return null; yield return null;

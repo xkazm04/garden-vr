@@ -1,0 +1,4 @@
+#!/bin/sh
+# Garden VR pre-merge-commit: blocks a merge (the host's `git merge --no-ff agent/<app>`) that breaks an AGENTS.md rule.
+# Install: tools/guard/README.md.
+exec node "$(git rev-parse --show-toplevel)/tools/guard/check.mjs" --staged
