@@ -1,8 +1,13 @@
 # Garden VR - the programme
 
-Written 2026-10-02 (Friday) by the planning lead. Binding inputs: the owner's decisions of 2026-10-02 (two apps, both
-Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, and the contest record under
-`C:\Users\kazda\kiro\personas\.contest\` (paths below are relative to it unless absolute).
+Written 2026-10-02 (Friday) by the planning lead. Binding inputs, all in this repository: the owner's decisions of
+2026-10-02 (two apps, both Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, and the
+contest record `docs/knowledge/contest-record.md`. That record holds every competition, tooling and owner-intent fact
+this plan depends on, and section 5 there maps each goal, decision and risk below to its fact.
+
+Provenance only: the contest folder `C:\Users\kazda\kiro\personas\.contest\` on the owner's machine. Paths such as
+`staging/...` and `arena/...` below are relative to it. It may be absent on your machine. If it is, use the contest
+record, and follow the missing-input rule in `AGENTS.md` for anything the record lacks.
 
 | Read next | For |
 |---|---|
@@ -11,12 +16,13 @@ Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, 
 | `docs/art/terrarium-style.md`, `docs/art/sundial-style.md` | style bibles and the reference framings |
 | `docs/audio/AUDIO-BIBLE.md` | sound direction, cue lists, loudness, credits |
 | `docs/knowledge/registry-consult.md` | which registry standards shaped this plan, deviations, lessons to forge |
+| `docs/knowledge/contest-record.md` | the competition rules, device facts and owner intent this plan binds on |
 | `orchestration/queue/<app>/` | the first task queues |
 
 ## 1. Goals
 
 1. **Two entries worth judging** in the Meta VR Start Developer Competition 2026, Productivity track, New Experience
-   division; entries close **2026-11-18** (`staging/habit-garden/data/COMPETITION.md`). The track names "habits tied to
+   division; entries close **2026-11-18** (`docs/knowledge/contest-record.md` section 1). The track names "habits tied to
    a recurring context (morning routine, commute, wind-down)" in its own words; Terrarium owns wind-down, Sundial owns
    the whole day.
 2. **The competition scope is the MVP.** Each app's MVP is the "In" column of its round-1 report, re-cut for Unity and
@@ -26,11 +32,11 @@ Unity 6.6 URP, PC-first, Quest only after a gate), `docs/decisions/0001..0003`, 
    with keyboard and mouse standing in for hands through `com.gardenvr.input` (decision 0002). No headset work, no ADB.
 4. **Quest only for an app that passes the gate** in section 4. The Quest swap must be a provider change (XR hands
    provider, passthrough room provider, anchor provider), not a rewrite.
-5. **Honest habits, everywhere** (`AGENTS.md` rule 3; round-1 reports; TOOLING.md section C): growth only rises, a missed
+5. **Honest habits, everywhere** (`AGENTS.md` rule 3; round-1 reports; habit research in the contest record, section 2): growth only rises, a missed
    day is quiet and recoverable, no streak counters, nothing turns red or dies.
 
 Non-goals before 2026-11-18: accounts, cloud sync, notifications, LLM features, controllers, roomscale, Meta VR Glasses
-beyond a simulator profile (the glasses ship spring 2027, `data/TOOLING.md` section B).
+beyond a simulator profile (the glasses ship spring 2027, contest record section 2).
 
 Amended 2026-10-09 by `docs/decisions/0015-product-upgrade-daily-life-garden.md`: the product grows into a daily-life
 garden (custom habits in zones, hand-tracked breaks, AI onboarding and reflection); quiet headset nudges and an opt-in
@@ -64,7 +70,7 @@ Today is Friday 2026-10-02. Weeks run Saturday to Friday so each ends with an ow
 | 1a. Vertical slice | 10-03 to Fri 10-09 | Each app: input, rig, hero port, core wired, the hero ritual end to end with scripted playback (M0-M1) | **Review R1 Fri 10-09**: owner plays both PC builds for 10 min |
 | 1b. Art and audio | 10-10 to Fri 10-16 | Art passes at reference framing with dual-anchor parity; cue lists generated; narration; music beds (M2-M4) | **Review R2 Fri 10-16**: owner scores side-by-sides and the mixdowns |
 | 1c. Journey and polish | 10-17 to Fri 10-23 | First run, missed day, day 7, settings, pause/resume, budgets, gate pack (M5-M6) | **Gate G Fri 10-23** |
-| **Gate decision** | **Fri 2026-10-23** | Owner reads each app's gate pack, plays each PC build cold, decides per app: Quest / extend one week / park | Decision recorded as `docs/decisions/0004-quest-gate.md` |
+| **Gate decision** | **Fri 2026-10-23** | Owner reads each app's gate pack, plays each PC build cold, decides per app: Quest / extend one week / park | Decision recorded as ADR 0004 (quest gate) in `docs/decisions/` |
 | **2. Quest integration** | Sat 10-24 to Wed 11-11 | Only apps that passed: XR hands provider, passthrough, table + anchor, Operator e2e in XR Simulator, device perf; headset sessions H1-H3 | RC build Wed 11-11 |
 | **3. Submission** | Thu 11-12 to Tue 11-17 | Competition release channel, demo video (<3 min), 140-char tagline, 500-word form, H4 install check from the invite URL | **Submitted Tue 11-17**; Wed 11-18 is buffer (entries close) |
 | Post-MVP | from 11-19 | Backlog in each app plan, section 9 | - |
@@ -143,15 +149,18 @@ Unity project; two Unity instances never open the same project path.
 
 `queue/<app>/` -> `running/` -> `done/` or `failed/` (by `tools/orchestrate/agent-loop.mjs`), then **verified** by the
 host. The loop moves a task to `done/` when the agent left `REPORT.md`; that is a self-report. The host's verification
-is a separate state: the host appends `verified: <sha> <date>` or `rejected: <reason>` to the task file in `done/` and
-records it in `STATUS.md`. A downstream task in the same queue may start on a self-reported upstream, but **the host
+is a separate state: the host appends `verified: <sha> <date>` or `rejected: <reason>` to the task file in `done/`,
+records it in `STATUS.md`, and commits one verdict line to `docs/knowledge/verifications.jsonl` (the tracked record;
+`orchestration/` is not tracked; format in `docs/AI_HARNESS.md`, Definition of Done step 9). A downstream task in the same queue may start on a self-reported upstream, but **the host
 never merges an unverified task**, and a rejected upstream sends its dependants back to `queue/`.
 
 Each task file carries `id, app, title, depends, estimate_min, touches` and the sections Goal, Read first, Steps,
-Acceptance (Windows commands), Evidence, Out of scope. Cross-queue dependencies are allowed (`depends: [T-SUN-002]` in a
+Acceptance (Windows commands), Evidence, Out of scope. New tasks are cut from `tools/orchestrate/prompts/task-template.md`,
+which records its `prompt_version` in the task. The prompts the loop sends are versioned beside it (README there, guard
+rule P1). Cross-queue dependencies are allowed (`depends: [T-SUN-002]` in a
 Terrarium task).
 
-At dispatch the host records the base commit; verification reads the work as `git diff <base>..agent/<app>`, not
+At dispatch the loop records the base commit (`base` in `tasks.jsonl`, with the task's `head`); verification reads the work as `git diff <base>..agent/<app>`, not
 against the agent's own claims (registry `diff-from-the-recorded-base`).
 
 ### Hourly host check (every hour while agents run; faster when a task just finished)
@@ -160,18 +169,28 @@ against the agent's own claims (registry `diff-from-the-recorded-base`).
    process CPU. Verdict per agent: `observed-changes` / `observed-quiet` / `could-not-observe` (registry
    `passive-signal-ingestion`). Quiet for 90 min with a task running and no CPU: check the environment first (Unity
    licence, editor lock, sleep, ElevenLabs refusal, GPU) before blaming the model (registry `clear-the-environment-first`).
-2. **Verify each newly done task** on a clean checkout of `agent/<app>` at its head:
+2. **Verify each newly done task** on a clean checkout of `agent/<app>` at its head. This is the short form of the
+   Definition of Done in `docs/AI_HARNESS.md`, the single full list. A task that fails any step is `rejected: <reason>`.
    - restore the oracles from the base commit (the task's test files, playback scripts, acceptance scripts) and note any
      agent edit to them as a separate finding (registry `grade-with-checks-the-run-could-not-touch`);
    - re-run every Acceptance command in the task, with the same timeouts; read results XML (collected count > 0,
      failed = 0), not exit codes alone;
+   - `dotnet test shared/core-dotnet` passes;
+   - `node tools/guard/check.mjs --all` and `--range <base>..agent/<app> --as agent/<app>` report 0 errors (the loop's
+     `orchestration/runs/<app>/<id>/guard.txt` is the first look, the host re-run is the verdict); each `W1` warning
+     from the range run matches a path in `touches:` and the report flags it;
    - `git diff --stat <base>..HEAD` touches only the task's `touches:` plus the agent's owned paths (section 5, ownership);
      `git check-ignore` on committed paths finds no `Library/`, `Temp/`, `Logs/`, builds, `.env`;
    - read the evidence (open the PNGs, watch the MP4); a capture that is black or magenta is a failed capture;
+   - a visual change carries the side-by-side against the art reference, and one that touches a gate frame gets the A3
+     blind judge, run by the host (advisory; only the owner's A1 rating certifies);
    - termination cause recorded: finished / ceiling / refused / crashed / unknown.
 3. **Merge** verified work to `main` (`git merge --no-ff agent/<app>`), run `dotnet test shared/core-dotnet` and a
    batchmode compile of BOTH apps on `main` (a shared-package change must not break the other app), then confirm with
-   `git log -1 --stat` that the merge is the one intended.
+   `git log -1 --stat` that the merge is the one intended. Then commit the task's verdict line to
+   `docs/knowledge/verifications.jsonl` (a rejection gets its line without a merge), written by
+   `node tools/orchestrate/verdict.mjs --app <app> --task <id> --merge <sha>` with the checks re-run (AI_HARNESS step 9); on `main`,
+   `node tools/guard/check.mjs --all` fails on an agent merge that has no line (V2).
 4. **Queue**: keep 3-5 ready tasks per agent; write new tasks from the plan's milestones and the reports' "next" notes;
    requeue failed tasks with a sharpened task file (fix the instruction before changing model or effort, registry
    `instruction-defect-before-tier-escalation`).
@@ -312,7 +331,7 @@ in `orchestration/queue/` are the first ~2.5 days each.
 | Reference frames are image-model frames with impossible light (green-lit hands, refraction) | high | medium | Platform limits listed in each art bible are excluded from parity; spec anchor alongside the frame anchor | host |
 | Shared-package edits by the non-owner, or a change that breaks the other app | medium | medium | Path ownership table; host refuses foreign diffs; both apps compile on `main` before a merge lands | host |
 | ElevenLabs credits drain or reset loses them | medium | medium | Pots per app, guard reserve, ledger; host checks the reset rule 10-03 | host |
-| Owner time (a parallel harder VR entry, `data/OWNER-INTENT.md`) | high | high | Exactly three PC reviews (R1, R2, G) with prepared packs; four headset sessions in Phase 2 | host |
+| Owner time (a parallel harder VR entry, contest record section 3) | high | high | Exactly three PC reviews (R1, R2, G) with prepared packs; four headset sessions in Phase 2 | host |
 | Quest phase too short (19 days) for passthrough, anchors, perf | medium | high | Quest-readiness notes keep every device seam behind a provider; round 2/3 already built APKs with hand tracking + passthrough (`habit-garden-r2-r3/.../variant-1/index.html` section 07) | host from 10-24 |
 | Unity on Windows workarounds re-bite (MSI admin, EPERM package cache, Gamma colour, Operator layer twice, Vulkan dzn crash, JDK missing) | medium | medium | The 12 workarounds in `arena/habit-garden-r2/entries/claude-claude-opus-5-5_high-v1/variant-1/index.html` section 04 and its `RUNBOOK.md`; reuse, do not rediscover | Phase 2 tasks |
 | Wellness copy drifts into claims | low | high | No medical words in any string or narration; host greps every string list at the gate | host, owner |

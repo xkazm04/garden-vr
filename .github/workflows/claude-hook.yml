@@ -1,0 +1,23 @@
+# Keeps tools/guard/claude-hook.mjs (the Claude Code PreToolUse hook that sends a Claude session's commits and merges
+# through the guard; tools/guard/README.md, "Claude sessions, without core.hooksPath") honest: its self-test checks each
+# allow/refuse decision against command fixtures. Plain Node, no dependencies.
+name: claude-hook
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    name: claude hook self-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Claude hook self-test
+        run: node tools/guard/claude-hook.mjs --self-test

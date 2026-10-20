@@ -47,9 +47,12 @@ namespace GardenVR.Sundial.Tests.PlayMode
             var save = new SundialSave { LastVisitDay = first ? (int?)null : _today - 3, FirstRunStep = FirstRunSteps.Done };
             save.Settings.CatchUpDepth = depth;
             string[] names = { "Drink water", "Read a page", "Call home" };
-            for (int i = 0; i < habits; i++) save.Habits.Add(new HabitDef {
-                Id = "habit" + i, Name = names[i % 3], PresetKey = "water", Group = SundialArcs.FromIndex(i % 3),
-                Row = i / 3, Slot = i % 3, Kind = HabitKind.LifeCheckIn, CreatedDay = _today - 9 });
+            for (int i = 0; i < habits; i++)
+                save.Habits.Add(new HabitDef
+                {
+                    Id = "habit" + i, Name = names[i % 3], PresetKey = "water", Group = SundialArcs.FromIndex(i % 3),
+                    Row = i / 3, Slot = i % 3, Kind = HabitKind.LifeCheckIn, CreatedDay = _today - 9
+                });
             File.WriteAllText(Path.Combine(_dir, "save.json"), Json.Write(SundialCodec.Write(save)));
             SundialService.DevSeedOnFresh = false;
             SundialController.SaveDirectoryOverride = _dir; SundialController.ClockOverride = _clock;

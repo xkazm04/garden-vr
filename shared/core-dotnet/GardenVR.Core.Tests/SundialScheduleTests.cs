@@ -25,7 +25,8 @@ public class SundialScheduleTests
     public void Weekly_days_never_miss_and_tally_resets_on_Monday()
     {
         var habit = new HabitDef { Id = "call", CreatedDay = Saturday.Index - 30, Schedule = HabitSchedule.PerWeek(3) };
-        var ledger = new Ledger(new[] {
+        var ledger = new Ledger(new[]
+        {
             new TendEvent { Id = "a", HabitId = "call", Day = Saturday.Index - 4 },
             new TendEvent { Id = "b", HabitId = "call", Day = Saturday.Index - 2, Late = true },
             new TendEvent { Id = "c", HabitId = "call", Day = Saturday.Index - 7 },

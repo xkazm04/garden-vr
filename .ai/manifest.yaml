@@ -8,3 +8,26 @@ registry:
   local: ../ai-registry
 skills:
   - scan-sweep
+# The registry skill version this repo's sweeps run against (the `version:` in the skill's SKILL.md). The skill's lens
+# prompts stay in the registry, shared by every adopter; bump the pin when a sweep runs on a newer skill, so a change
+# in sweep behaviour can be traced to a skill release (tools/orchestrate/prompts/README.md).
+skillVersions:
+  scan-sweep: 4.4.0
+# Which guidance file wins. CLAUDE.md is an adapter that defers to AGENTS.md; tools/guard/check.mjs fails when the
+# CLAUDE.md Commands block drifts from the AGENTS.md one (G1), or when this file stops naming AGENTS.md canonical or
+# misses one of its commands below (G2).
+guidance:
+  canonical: AGENTS.md
+  adapters: [CLAUDE.md]
+  plan: docs/PLAN.md
+  harness: docs/AI_HARNESS.md
+# The same commands as the "## Commands" block in AGENTS.md. <app> is terrarium or sundial; <out> is the run folder.
+commands:
+  test-core: dotnet test shared/core-dotnet
+  guard: node tools/guard/check.mjs --all
+  guard-staged: node tools/guard/check.mjs --staged
+  guard-selftest: node tools/guard/check.mjs --self-test
+  unity-editmode: >-
+    Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe" -ArgumentList '-batchmode','-nographics','-projectPath','apps/<app>','-runTests','-testPlatform','EditMode','-testResults','<out>/editmode.xml','-logFile','<out>/editmode.log'
+  unity-playmode: >-
+    Start-Process -Wait -FilePath "C:/Program Files/Unity/Hub/Editor/6000.6.4f1/Editor/Unity.exe" -ArgumentList '-batchmode','-projectPath','apps/<app>','-runTests','-testPlatform','PlayMode','-testResults','<out>/playmode.xml','-logFile','<out>/playmode.log'

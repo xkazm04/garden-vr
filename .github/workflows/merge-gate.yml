@@ -1,0 +1,33 @@
+# Advisory: says, in every run, whether a red guard check can block a merge into main.
+#
+# guard.yml re-runs the guard and the core tests on every push and pull request, but a red check only blocks a merge
+# where main requires those jobs as status checks. That is a GitHub setting only the owner can change, and no clone can
+# read it, so this job asks the GitHub API (tools/guard/protection.mjs) and prints required / not required / unknown per
+# gate job, with a warning annotation and a step-summary line whenever the guard does not block. It always passes: a red
+# probe would block nothing either. Do not make this job a required check; require the two jobs of guard.yml
+# (tools/guard/README.md, "Making CI block a merge").
+name: merge gate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    name: merge gate (advisory, do not require)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Probe self-test
+        run: node tools/guard/protection.mjs --self-test
+      - name: Does a red guard check block a merge into main?
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/guard/protection.mjs

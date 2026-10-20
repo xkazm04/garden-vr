@@ -9,8 +9,8 @@ provider is decided (section 7). **Sundial carries the upgrade; Terrarium is par
 |---|---|
 | `docs/PLAN.md` | the programme this plan re-scopes (sections 1, 3, 4) |
 | `docs/plans/terrarium.md`, `docs/plans/sundial.md` | each app's current MVP, rules and backlog |
-| `docs/decisions/0004`, `0012` | additive core work while no Unity licence exists (step A / step B) |
-| `docs/decisions/0006` | one competition entry; Garden VR is the safer bet |
+| `docs/decisions/0004-refactoring-without-a-unity-licence.md`, `docs/decisions/0012-unity-work-staged-dotnet-reached-code-refactors-now.md` | additive core work while no Unity licence exists (step A / step B) |
+| `docs/decisions/0006-one-competition-entry.md` | one competition entry; Garden VR is the safer bet |
 
 ## 1. Why upgrade: what the docs show
 

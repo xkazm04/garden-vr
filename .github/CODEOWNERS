@@ -1,0 +1,31 @@
+# Who reviews what on GitHub. The host-owned rows mirror the ownership table in docs/PLAN.md section 5 (last row) and
+# HOST_OWNED in tools/guard/check.mjs; the gate rows are the files whose loosening is owner-reserved (PLAN section 5,
+# merge policy). Agents never push, so every pull request that reaches these paths (a Dependabot bump, an outside
+# contribution) asks the owner for review. App paths have no row: they belong to the agents, and the host verifies
+# them through the Definition of Done in docs/AI_HARNESS.md before anything reaches main.
+#
+# Later rows win. Keep this list in step with HOST_OWNED when the ownership table changes.
+
+# Host-owned (PLAN section 5, ownership table)
+/AGENTS.md                         @xkazm04
+/CLAUDE.md                         @xkazm04
+/docs/                             @xkazm04
+/.ai/                              @xkazm04
+/tools/orchestrate/                @xkazm04
+/tools/guard/                      @xkazm04
+/tools/audio/elevenlabs.mjs        @xkazm04
+*.csproj                           @xkazm04
+/apps/*/Packages/manifest.json     @xkazm04
+
+# Gates and their configuration (loosening any of these is owner-reserved)
+/.github/                          @xkazm04
+/.editorconfig                     @xkazm04
+/.gitignore                        @xkazm04
+/.gitattributes                    @xkazm04
+/shared/core-dotnet/Directory.Build.props @xkazm04
+/shared/core-dotnet/GardenVR.sln   @xkazm04
+
+# Contributor-facing policy
+/README.md                         @xkazm04
+/CONTRIBUTING.md                   @xkazm04
+/SECURITY.md                       @xkazm04

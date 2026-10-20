@@ -8,6 +8,8 @@ Sources: `staging/habit-garden/ART-STYLE-STORYBOARD.md` (A1-03 entry: palette, p
 `staging/habit-garden/OWNER-CHOICE.md` (follow-ups F1-F3, extra negatives), the owner's frames
 `shared/assets/art-reference/A1-03-night-moss-{1,2}.png`, round 3 (`arena/habit-garden-r2-r3/entries/claude-claude-opus-5-5_high-v1/variant-1/index.html`
 sections 01, 04-06). Paths relative to `C:\Users\kazda\kiro\personas\.contest\` unless they start with `shared/`.
+That folder is provenance and may be absent on your machine: the storyboard and owner choice are copied to
+`docs/art/`, and the rest of what this bible uses is restated below (`docs/knowledge/contest-record.md`).
 
 ## 1. Palette
 

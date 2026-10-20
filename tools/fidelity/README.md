@@ -116,6 +116,12 @@ The gate can fail. The summary prints the rates either way. Owner picks in
 `sheet.json` (`chosen_by: owner` and `judge_winner`) are appended to
 `judge/golden.jsonl`. Cohen's kappa is reported at 30 labels, floor 0.6.
 Until the gate passes and kappa meets that floor, the judge is advisory.
+The full bar for leaving advisory is `docs/decisions/0017-art-judge-gate-criteria.md`: at least 12 labels per frame,
+kappa's 95% lower bound at least 0.4, raw agreement at least 80%, and an inversion rate of at most 10% per frame. Once
+met, the judge gates by veto only and never certifies. To leave advisory, a calibration record must carry
+`kappa.per_frame`, `kappa.ci95_low` and `kappa.agreement`, which `--calibrate` does not write yet.
+`shared/core-dotnet/GardenVR.Core.Tests/ArtJudgeGateTests.cs` fails a record that says `"advisory": false` without
+them, and any judge input that is neither in the checkout nor on its list of 8 host-side frames.
 
 `--crops` is used only when the criterion name is a region and every image
 is already 1824x1024. Crops are padded to at least 256 px on the short side.

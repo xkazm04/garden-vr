@@ -151,3 +151,37 @@ Search commands used (all against the registry at that commit, never its working
   set Active Input Handling to the Input System (2) or Both before the first build and smoke-test one key in the player log.
   Domain: game-production / Unity build pipeline.
   Registry: declined (b) project lesson - a Unity player-settings pitfall fails the General bar; the general half (a liveness smoke does not prove input is handled) is already in game-production / ship-pipeline-gating / post-cook-process-liveness-smoke. The entry belongs in the consumer's own corpus (engine-pitfall-corpus shape) (registry 739f4a86)
+
+- **2026-10-05 A guard wired into the agent's process tree binds the agents and nobody else.** The pre-commit guard
+  (755a709) ran only where the agent loop injected `core.hooksPath` through `GIT_CONFIG_*`. Every host, human and
+  automation-lane commit since (the guard's own commits included) skipped it, and `core.hooksPath` is owner-reserved
+  shared config that no lane may set. The fix that does not depend on anyone's local config is a pipeline that re-runs
+  the same checks on whatever reaches the remote (`.github/workflows/guard.yml`), plus a guard rule (C1) that keeps the
+  pipeline's checks from being quietly removed. The same pass found that the plan's binding inputs had been untracked
+  with the contest folder, so a clone planned from half the facts (now `docs/knowledge/contest-record.md`, rule D1).
+  Domain: software-engineering / quality-gates; agent-operations / agent-instruction-files.
+
+- **2026-10-05 A record check written from the documented commit message never fires on the real one.** Guard rule V2
+  ("every agent merge on main has a verdict line") looks for git's default subject, `Merge branch 'agent/<app>'`. Every
+  host merge on main is titled by hand: `merge agent/sundial: S4b soil crescent ...`, `merge agent/terrarium: sprint
+  composite ...`. So once the ledger reaches main, V2 would report a fully recorded history while no merge has a line,
+  and its self-test passes because its fixtures use the documented subject too. Fix (not yet made; it needs a session
+  that can run `node tools/guard/check.mjs --self-test`): match `^merge (branch )?'?agent/(terrarium|sundial)\b`
+  case-insensitively, keep the `into agent/` exclusion, and add a fixture copied from a real merge subject. Rule: build
+  a check's fixtures from the real artefact (`git log --merges` on main), not from the doc that describes it. Domain:
+  software-engineering / quality-gates.
+
+- **2026-10-05 A CI check is a gate only where the branch requires it.** The docs called `guard.yml` "the gate". But the
+  host merges locally and pushes `main` directly, so CI reads a commit that has already landed: red is a report, not a
+  block, until the owner makes the guard jobs required status checks on `main` and routes `main` through a pull request
+  (a required check refuses a direct push of an unchecked commit). That setting lives on GitHub, not in git, so a clone
+  cannot see it. `tools/guard/protection.mjs` now asks the API in every CI run (`.github/workflows/merge-gate.yml`).
+  It does not fail, and H1 does not fail CI over the setting: a red check that is not required blocks nothing, and
+  turning every push red over a setting nobody pushing can change teaches everyone to ignore red.
+  Not measured yet (needs a shell and `gh`):
+  - which first-parent commits on main since 755a709 today's rules would reject (`check.mjs --range C^..C --as main`,
+    ignoring H1);
+  - which main SHAs went red in CI (`gh run list --workflow guard.yml --branch main`).
+
+  Git does not record whether a hook ran, so "which commits skipped the hook" has no direct answer. Rule: before calling
+  a pipeline a gate, name the setting that makes its red stop a merge. Domain: software-engineering / quality-gates.

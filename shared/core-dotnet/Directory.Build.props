@@ -1,0 +1,28 @@
+<Project>
+  <!--
+    Analyzer and format baseline for the pure C# core and its tests, so `dotnet test shared/core-dotnet` runs it on
+    every build. The analyzers ship with the .NET SDK (no package; a new package is an owner-reserved change). They are
+    off by default for netstandard2.1, the core's target, so they are switched on here. The rules and their severities
+    are in the repo-root .editorconfig.
+
+    Ratchet: a rule starts as a warning, so the build stays green. Once a build shows 0 hits for it, it is promoted into
+    WarningsAsErrors below, and from then on a hit fails `dotnet test shared/core-dotnet`. It is never demoted again:
+    guard rule B1 (tools/guard/check.mjs, PROMOTED) fails when a promoted id leaves this list, is put in NoWarn, or is
+    turned below a warning in .editorconfig. Promote a rule here and in PROMOTED together.
+
+    Promoted (a static read of the core and its tests found 0 hits; each hit would be a real bug):
+      CA2242 NaN compared with ==, CA2200 `throw ex;`, CA2241 string.Format argument count, CA2245 self-assignment,
+      CA1304 and CA1310 culture-dependent casing and string comparison.
+    Pending, still warnings:
+      CA1305 has known hits (Sundial/StretchSession.cs `Time.ToString("0.00")`, Common/SaveStore.cs `int.ToString()`,
+      the tests' `Guid.ToString("N")`); fix them, then promote. CA1806, CA1065 and IDE0055 are unmeasured: read the
+      warning list of a `dotnet build shared/core-dotnet` and promote each one that shows 0 hits.
+  -->
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);CA2242;CA2200;CA2241;CA2245;CA1304;CA1310</WarningsAsErrors>
+  </PropertyGroup>
+</Project>
