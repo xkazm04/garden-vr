@@ -19,11 +19,11 @@ jobs:
     name: guard (AGENTS.md rules)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # --all reads main's merge history for V2, and --range diffs the pushed commits.
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
       - name: Guard self-test
@@ -50,8 +50,8 @@ jobs:
     name: core tests and analyzer ratchet
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 9.0.x
       # Directory.Build.props switches the analyzers on and promotes the ratchet's rules to errors, so a promoted rule
