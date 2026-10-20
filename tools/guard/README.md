@@ -224,7 +224,7 @@ reformat sweep of agent-owned code. A hit names `path:line finding`; fix it by h
 
 ### The formatter in CI
 
-`.github/workflows/format.yml` runs `dotnet format whitespace --folder` on every push and pull request. It covers what
+A format workflow (not yet landed; the version harvested from ascent/runner failed CI and was left out, see the Harvest issue) would run `dotnet format whitespace --folder` on every push and pull request. It would cover what
 the test does not, such as spacing inside a line, and it reaches the app code Unity compiles, which no build here
 does. Folder mode needs no project file. Scope is the same as `FormatRuleTests` (`apps/<app>/Assets`, `shared/packages`,
 `shared/core-dotnet`, without `TextMesh Pro/`, `Samples/`, `bin/` and `obj/`). It has two steps:
