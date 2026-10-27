@@ -10,4 +10,4 @@ color-matcher==0.6.0
 choix==0.4.1
 opencv-python==5.0.0.93
 pillow==13.0.0
-transformers==5.20.1
+transformers==5.20.2
