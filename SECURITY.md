@@ -24,7 +24,7 @@ What to expect:
   to bypass the guard, to reach a credential, or to get work onto `main` without the host's verification
   (`docs/AI_HARNESS.md`, Definition of Done) is in scope. Agents hold no credential that can push.
 - The paid-service guards, for example `tools/audio/elevenlabs.mjs`, which enforces a credit reserve.
-- The CI workflow in `.github/workflows/` and the dependencies Dependabot watches (`.github/dependabot.yml`).
+- The CI workflow in `.github/workflows/` and the dependencies the repository builds from.
 
 Out of scope: the Unity editor and engine themselves, the third-party services' own platforms, and anything that
 needs physical access to the owner's machine.

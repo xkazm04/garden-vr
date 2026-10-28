@@ -50,9 +50,8 @@ The same checks run in three places, so skipping one of them does not skip the c
 
 ## Dependencies and security
 
-- [`.github/dependabot.yml`](.github/dependabot.yml) watches the GitHub Actions, the core's NuGet test packages, the
-  Sundial art scripts' npm package and the fidelity lab's pip packages every week. A version bump is owner-reserved,
-  so its pull requests are proposals for the owner. The Unity packages are not watched: Dependabot cannot read them,
+- Dependabot version updates are switched off (the owner removed the config on 2026-10-28), so no pull request proposes
+  a bump. A version bump is owner-reserved. The Unity packages were never watched: Dependabot cannot read them,
   and they move with the editor version.
 - Report a vulnerability privately as described in [`SECURITY.md`](SECURITY.md), never in a public issue.
 
