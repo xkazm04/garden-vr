@@ -16,8 +16,24 @@ cd C:\ai; C:\ai\venv\Scripts\python <repo>\tools\gen3d\install_trellis_host.py
 # a failed install.py leaves a partial pixi env that makes the node try (and fail) to scan in isolation; move it away:
 move %LOCALAPPDATA%\Programs\comfy-env\.pixi\envs %LOCALAPPDATA%\Programs\comfy-env\.pixi\envs_failed
 # one upstream bug against this ComfyUI build (SparseStructureFlowModel reads self.device before it has parameters):
-cd C:\ai\ComfyUI\custom_nodes\ComfyUI-TRELLIS2; git apply <repo>\tools\gen3d\patches\trellis2-device-arg.patch
+python <repo>\tools\gen3d\vendored.py reset tree     # checks out both pins.json commits, applies tools\gen3d\patches\
 ```
+
+## Reset (one authority)
+
+`C:\ai\ComfyUI` and its `custom_nodes\ComfyUI-TRELLIS2` are git checkouts and build workspaces at once. Do not reset them
+with git: `git checkout .`, `git reset --hard` and `git stash` silently drop the patch (it rides as an uncommitted edit),
+and `git clean -fdx` at the ComfyUI root deletes the ignored `/models/` weights. `tools/gen3d/vendored.py` is the only
+reset, graded by what each grade keeps:
+
+```
+python tools/gen3d/vendored.py check            # each tree == its pin + its patches (arena_local.sh runs this first)
+python tools/gen3d/vendored.py reset bytecode   # drop __pycache__; keeps tree, venv, weights
+python tools/gen3d/vendored.py reset tree       # re-checkout the pins, re-apply patches; keeps venv, weights; saves drift as a .diff first
+python tools/gen3d/vendored.py reset reinstall  # venv + weights: by hand from Install above, never automated
+```
+
+A fix made by hand in a vendored tree is drift until it is a file in `patches/` and listed in `vendored.py`.
 
 Weights (`microsoft/TRELLIS.2-4B`, DINOv3 conditioner, BiRefNet) download from Hugging Face on the first run (about 10 min at 10 MB/s).
 
